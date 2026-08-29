@@ -94,6 +94,24 @@ The site ships with **marked placeholders** wherever real data is needed. Search
 
 ## Deploy
 
-Pushing to `main` publishes to GitHub Pages via `.github/workflows/deploy.yml`
-(Settings → Pages → Source: **GitHub Actions**). Update the canonical/OG URLs in
-each page's `<head>`, plus `sitemap.xml` and `robots.txt`, if the domain changes.
+**Live: https://technotaau.github.io/loksankalp-1/**
+
+Pages is served from the `gh-pages` branch. Pushing to `main` runs
+`.github/workflows/deploy.yml`, which validates the site with `tools/check.py`,
+fast-forwards `gh-pages`, and then polls the live URL until it serves 200.
+A failing check blocks the publish.
+
+If the canonical domain changes, update the `canonical` and `og:url` tags in each
+page's `<head>`, plus `sitemap.xml` and `robots.txt`.
+
+### Two settings still worth changing by hand
+
+Neither is reachable from a workflow — `GITHUB_TOKEN` cannot be granted the
+`administration: write` scope these need:
+
+1. **Default branch is still `claude/website-hindi-content-build-f4hhg9`.**
+   Settings → Branches → change it to `main`, so clones and the repo homepage
+   land on the right branch.
+2. **Pages source** is the legacy branch mode. Settings → Pages → Source:
+   *GitHub Actions* is the modern path; see the comment at the top of
+   `deploy.yml` for the job swap it needs.
