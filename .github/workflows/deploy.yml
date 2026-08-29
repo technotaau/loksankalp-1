@@ -25,6 +25,10 @@ jobs:
       - name: Validate HTML and internal links
         run: python3 tools/check.py
       - uses: actions/configure-pages@v5
+        with:
+          # Creates the Pages site on first run using the workflow's own
+          # pages:write permission, so nobody has to flip it by hand.
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
