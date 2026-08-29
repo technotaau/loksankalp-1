@@ -1,13 +1,6 @@
+# Pages source is "GitHub Actions", so a push to main builds and deploys
+# directly — no gh-pages branch, no manual publish step.
 name: Deploy to GitHub Pages
-
-# GitHub Pages for this repo is served from the `gh-pages` branch, so this
-# workflow validates `main` and then fast-forwards `gh-pages` to it.
-#
-# To move to the newer "GitHub Actions" Pages source instead:
-#   Settings → Pages → Source: GitHub Actions,
-# then swap the `publish` job for actions/configure-pages + upload-pages-artifact
-# + deploy-pages. Note that a workflow's GITHUB_TOKEN cannot create the Pages
-# site itself — that needs `administration: write`, which is not grantable here.
 
 on:
   push:
@@ -15,47 +8,27 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  publish:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Validate HTML, links, a11y and SEO
         run: python3 tools/check.py
-
-      - name: Publish to gh-pages
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git push origin HEAD:gh-pages
-
-      # A push made with GITHUB_TOKEN does not trigger other workflows, so the
-      # branch-source Pages build never fires for the push above: gh-pages moves
-      # forward while the served site stays where it was. Verify what is actually
-      # being served rather than trusting a green push, and fail if it is stale.
-      - name: Verify the live site matches this commit
-        run: |
-          url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/index.html"
-          want=$(sha256sum index.html | cut -d" " -f1)
-          for i in $(seq 1 12); do
-            got=$(curl -fsS "$url" 2>/dev/null | sha256sum | cut -d" " -f1) || got=none
-            [ "$got" = "$want" ] && { echo "live site matches $GITHUB_SHA"; exit 0; }
-            echo "attempt $i: served content does not match yet"
-            sleep 15
-          done
-          echo "::error::gh-pages was updated but the live site still serves older content."
-          echo "::error::A branch-source Pages site rebuilds on a push event, and GitHub does"
-          echo "::error::not fire those for GITHUB_TOKEN pushes, so no build ran."
-          echo "::error::Fix once: Settings -> Pages -> Source: GitHub Actions, then replace the"
-          echo "::error::publish step with configure-pages + upload-pages-artifact + deploy-pages."
-          echo "::error::Meanwhile publish by hand from a normal account: git push origin main:gh-pages"
-          exit 1
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

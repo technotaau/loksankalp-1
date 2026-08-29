@@ -106,28 +106,17 @@ A failing check blocks the publish.
 If the canonical domain changes, update the `canonical` and `og:url` tags in each
 page's `<head>`, plus `sitemap.xml` and `robots.txt`.
 
-### One setting that needs a human click
+### How publishing works
 
-**Settings → Pages → Source: GitHub Actions.**
+Pages source is **GitHub Actions**. A push to `main` runs
+`.github/workflows/deploy.yml`, which validates the site with `tools/check.py`
+and deploys it. A failing check blocks the deploy. Nothing manual.
 
-Pages is currently served from the `gh-pages` branch. A branch-source Pages site
-rebuilds on a push event — but GitHub deliberately does not fire workflows for a
-push made with `GITHUB_TOKEN`, so when CI updates `gh-pages` the site does *not*
-rebuild. CI reports success while publishing nothing. A workflow cannot fix this
-itself: creating or reconfiguring a Pages site needs `administration: write`,
-which `GITHUB_TOKEN` cannot be granted.
+The `gh-pages` branch is left over from the earlier branch-source setup and is no
+longer used; it can be deleted.
 
-Until that switch is flipped, publish by pushing `gh-pages` from a normal account:
+If the canonical domain changes, update the `canonical` and `og:url` tags in each
+page's `<head>`, plus `sitemap.xml` and `robots.txt`.
 
-```bash
-git push origin main:gh-pages
-```
-
-After flipping it, copy `docs/deploy-actions-source.yml` over
-`.github/workflows/deploy.yml` — deploys then become fully automatic.
-
-CI verifies what the live site actually serves and fails if it is stale, so a
-deploy can never again report success while publishing nothing.
-
-Also worth changing: the **default branch** is still
+One thing still worth changing: the **default branch** is
 `claude/website-hindi-content-build-f4hhg9`. Settings → Branches → set it to `main`.
