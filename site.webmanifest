@@ -1,0 +1,22 @@
+{
+  "name": "लोकसंकल्प — नशे की सामाजिक स्वीकृति के विरुद्ध जनआंदोलन",
+  "short_name": "लोकसंकल्प",
+  "description": "नशे को नहीं, संस्कारों को सामाजिक स्वीकृति। संकल्प लें, ग्राम सभा आयोजित करें, सहायता प्राप्त करें।",
+  "lang": "hi",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffdf8",
+  "theme_color": "#17307a",
+  "icons": [
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/img/logo-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "मेरा संकल्प", "url": "mera-sankalp.html" },
+    { "name": "ग्राम सभा", "url": "gram-sabha.html" },
+    { "name": "सहायता केंद्र", "url": "sahayata-kendra.html" }
+  ]
+}

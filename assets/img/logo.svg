@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="ls-logo-title">
+  <title id="ls-logo-title">लोकसंकल्प — नशे की सामाजिक स्वीकृति के विरुद्ध जनआंदोलन</title>
+  <defs>
+    <linearGradient id="ringA" gradientUnits="userSpaceOnUse" x1="17" y1="231" x2="495" y2="231">
+      <stop offset="0" stop-color="#E8730C"/>
+      <stop offset="1" stop-color="#F5B301"/>
+    </linearGradient>
+    <linearGradient id="ringB" gradientUnits="userSpaceOnUse" x1="495" y1="281" x2="17" y2="281">
+      <stop offset="0" stop-color="#F5B301"/>
+      <stop offset="1" stop-color="#1B7A34"/>
+    </linearGradient>
+    <radialGradient id="sunG" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#F5B301"/>
+      <stop offset="1" stop-color="#E8730C"/>
+    </radialGradient>
+    <path id="arcTop" fill="none" d="M68.06 187.6A200 200 0 0 1 443.94 187.6"/>
+    <path id="arcBot" fill="none" d="M47.4 331.9A222 222 0 0 0 464.6 331.9"/>
+    <g id="fig" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="0" cy="-86" r="13" stroke="none"/>
+      <path d="M-12-70q12-5 24 0l-2 33q-10 4-20 0z" stroke="none"/>
+      <path d="M-12-68-31-93M12-68 31-93" fill="none" stroke-width="9"/>
+      <path d="M-7-37-10 0M7-37 10 0" fill="none" stroke-width="9"/>
+    </g>
+  </defs>
+
+  <g id="lg-ring" fill="none" stroke-linecap="round" stroke-width="10">
+    <path d="M17.32 230.92A240 240 0 0 1 494.68 230.92" stroke="url(#ringA)"/>
+    <path d="M494.68 281.08A240 240 0 0 1 17.32 281.08" stroke="url(#ringB)"/>
+  </g>
+
+  <g id="lg-text-top" font-family="'Tiro Devanagari Hindi','Noto Serif Devanagari',Georgia,serif" font-weight="700">
+    <text font-size="23" fill="#17307A" letter-spacing="0.4">
+      <textPath href="#arcTop" startOffset="50%" text-anchor="middle">नशे की सामाजिक स्वीकृति के विरुद्ध</textPath>
+    </text>
+    <text x="256" y="98" font-size="18" fill="#E8730C" text-anchor="middle" letter-spacing="1.5">— जनआंदोलन —</text>
+  </g>
+
+  <g id="lg-scene">
+    <g id="lg-sun">
+      <g stroke-linecap="round" stroke-width="7">
+        <path d="M210 193.4 188.6 175.4" stroke="#F5B301"/>
+        <path d="M220.7 183.5 204.3 160.8" stroke="#E8730C"/>
+        <path d="M233.5 176.4 223 150.4" stroke="#F5B301"/>
+        <path d="M247.6 172.6 243.7 144.9" stroke="#E8730C"/>
+        <path d="M262.3 172.3 265.2 144.5" stroke="#F5B301"/>
+        <path d="M276.5 175.6 286.1 149.3" stroke="#E8730C"/>
+        <path d="M289.5 182.3 305.2 159" stroke="#F5B301"/>
+        <path d="M300.6 191.9 321.4 173.2" stroke="#E8730C"/>
+      </g>
+      <circle cx="256" cy="232" r="54" fill="url(#sunG)" opacity=".92"/>
+    </g>
+
+    <g id="lg-right">
+      <g id="lg-tree" fill="#1B7A34">
+        <path d="M399 292v-66h10v66z" fill="#17307A"/>
+        <circle cx="390" cy="202" r="22"/>
+        <circle cx="406" cy="188" r="26"/>
+        <circle cx="420" cy="204" r="20"/>
+        <circle cx="404" cy="214" r="19"/>
+      </g>
+      <g id="lg-house" fill="none" stroke="#17307A" stroke-width="7" stroke-linejoin="round">
+        <path d="M330 292v-38h52v38"/>
+        <path d="M322 258 356 230 390 258"/>
+        <path d="M348 266h16v16h-16zM356 266v16M348 274h16" stroke-width="5"/>
+      </g>
+      <g id="lg-family" fill="#2A2E3F" stroke="#2A2E3F" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="346" cy="262" r="7"/>
+        <path d="M338 269q8-4 16 0l-2 16h-12z"/>
+        <path d="M341 285 340 296M351 285 352 296" fill="none" stroke-width="5.5"/>
+        <path d="M354 272 364 280M338 272 334 285" fill="none" stroke-width="4.5"/>
+        <circle cx="370" cy="272" r="6"/>
+        <path d="M364 278q6-3 12 0l-1.5 12h-9z"/>
+        <path d="M366 290 365 296M374 290 375 296" fill="none" stroke-width="4.5"/>
+        <circle cx="394" cy="262" r="7"/>
+        <path d="M386 269q8-4 16 0l-2 16h-12z"/>
+        <path d="M389 285 388 296M399 285 400 296" fill="none" stroke-width="5.5"/>
+        <path d="M386 272 376 280M402 272 406 285" fill="none" stroke-width="4.5"/>
+      </g>
+    </g>
+
+    <g id="lg-people">
+      <use href="#fig" transform="translate(208 300) scale(.84)" color="#E8730C"/>
+      <use href="#fig" transform="translate(306 300) scale(.84)" color="#1B7A34"/>
+      <use href="#fig" transform="translate(256 298) scale(1.22)" color="#17307A"/>
+    </g>
+
+    <path id="lg-ground" d="M80 306q176-34 352 0v16q-176-34-352 0z" fill="#17307A"/>
+
+    <g id="lg-noDrugs">
+      <g fill="#16192B" transform="translate(128 196)">
+        <rect x="-25.5" y="-28" width="11" height="5.5" rx="2"/>
+        <rect x="-24" y="-24" width="8" height="10" rx="1.5"/>
+        <path d="M-29-16q0-5 5-7h8q5 2 5 7v28a4 4 0 0 1-4 4h-10a4 4 0 0 1-4-4z"/>
+        <g transform="rotate(-45 12 -11)">
+          <rect x="4" y="-16" width="18" height="10" rx="2"/>
+          <rect x="-4" y="-13" width="8" height="4" rx="1.2"/>
+          <rect x="-6.5" y="-18" width="3.5" height="14" rx="1.5"/>
+          <rect x="22" y="-12.2" width="11" height="2.4" rx="1.2"/>
+        </g>
+        <rect x="6" y="12" width="22" height="11" rx="5.5" transform="rotate(-25 17 17.5)"/>
+        <rect x="-3" y="20" width="20" height="10" rx="5" transform="rotate(-25 7 25)"/>
+      </g>
+      <g fill="none" stroke="#D32F2F" stroke-width="12" stroke-linecap="round">
+        <circle cx="128" cy="196" r="44"/>
+        <path d="M96.9 164.9 159.1 227.1"/>
+      </g>
+    </g>
+  </g>
+
+  <text id="lg-wordmark" x="256" y="390" text-anchor="middle" font-size="70" font-weight="700"
+        font-family="'Tiro Devanagari Hindi','Noto Serif Devanagari',Georgia,serif">
+    <tspan fill="#17307A">लोक</tspan><tspan fill="#1B7A34">संकल्प</tspan>
+  </text>
+
+  <g id="lg-hands">
+    <path d="M256 443C236 428 228 420 228 412a15 15 0 0 1 28-4z" fill="#17307A"/>
+    <path d="M256 443c20-15 28-23 28-31a15 15 0 0 0-28-4z" fill="#1B7A34"/>
+    <path d="M256 409v34" stroke="#FFFDF8" stroke-width="2.5" fill="none"/>
+    <g fill="none" stroke="#17307A" stroke-width="3.5" stroke-linecap="round">
+      <path d="M190 435q20-11 36-5"/>
+      <path d="M322 435q-20-11-36-5"/>
+    </g>
+  </g>
+
+  <text id="lg-text-bottom" font-family="'Tiro Devanagari Hindi','Noto Serif Devanagari',Georgia,serif"
+        font-weight="700" font-size="20" fill="#17307A" letter-spacing="0.3">
+    <textPath href="#arcBot" startOffset="50%" text-anchor="middle">नशे को नहीं, संस्कारों को सामाजिक स्वीकृति</textPath>
+  </text>
+</svg>
