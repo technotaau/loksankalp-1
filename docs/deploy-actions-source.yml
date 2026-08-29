@@ -1,0 +1,35 @@
+# Drop-in replacement for .github/workflows/deploy.yml, to use AFTER
+# Settings → Pages → Source has been set to "GitHub Actions".
+# With that source, deploys are fully automatic — no branch push, no manual step.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate HTML, links, a11y and SEO
+        run: python3 tools/check.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

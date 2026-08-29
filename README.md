@@ -123,9 +123,11 @@ Until that switch is flipped, publish by pushing `gh-pages` from a normal accoun
 git push origin main:gh-pages
 ```
 
-After flipping it, replace the `Publish to gh-pages` step with
-`actions/configure-pages` + `actions/upload-pages-artifact` + `actions/deploy-pages`
-and deploys become fully automatic.
+After flipping it, copy `docs/deploy-actions-source.yml` over
+`.github/workflows/deploy.yml` — deploys then become fully automatic.
+
+CI verifies what the live site actually serves and fails if it is stale, so a
+deploy can never again report success while publishing nothing.
 
 Also worth changing: the **default branch** is still
 `claude/website-hindi-content-build-f4hhg9`. Settings → Branches → set it to `main`.

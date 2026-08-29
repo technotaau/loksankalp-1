@@ -39,22 +39,23 @@ jobs:
           git push origin HEAD:gh-pages
 
       # A push made with GITHUB_TOKEN does not trigger other workflows, so the
-      # Pages "pages build and deployment" job never fires for the push above and
-      # the branch updates without the site being rebuilt. Say so loudly rather
-      # than reporting a green deploy that published nothing.
-      - name: Warn if Pages did not rebuild
+      # branch-source Pages build never fires for the push above: gh-pages moves
+      # forward while the served site stays where it was. Verify what is actually
+      # being served rather than trusting a green push, and fail if it is stale.
+      - name: Verify the live site matches this commit
         run: |
-          echo "::warning::gh-pages updated, but a GITHUB_TOKEN push cannot trigger the Pages build."
-          echo "::warning::Fix once in Settings -> Pages -> Source: GitHub Actions, then switch this"
-          echo "::warning::job to configure-pages + upload-pages-artifact + deploy-pages."
-
-      - name: Wait for the deployment to serve
-        run: |
-          url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
+          url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/index.html"
+          want=$(sha256sum index.html | cut -d" " -f1)
           for i in $(seq 1 12); do
-            code=$(curl -sS -o /dev/null -w "%{http_code}" -L "$url" || true)
-            echo "attempt $i: HTTP $code"
-            [ "$code" = "200" ] && { echo "live at $url"; exit 0; }
+            got=$(curl -fsS "$url" 2>/dev/null | sha256sum | cut -d" " -f1) || got=none
+            [ "$got" = "$want" ] && { echo "live site matches $GITHUB_SHA"; exit 0; }
+            echo "attempt $i: served content does not match yet"
             sleep 15
           done
-          echo "::warning::site did not return 200 within 5 minutes; check Settings → Pages"
+          echo "::error::gh-pages was updated but the live site still serves older content."
+          echo "::error::A branch-source Pages site rebuilds on a push event, and GitHub does"
+          echo "::error::not fire those for GITHUB_TOKEN pushes, so no build ran."
+          echo "::error::Fix once: Settings -> Pages -> Source: GitHub Actions, then replace the"
+          echo "::error::publish step with configure-pages + upload-pages-artifact + deploy-pages."
+          echo "::error::Meanwhile publish by hand from a normal account: git push origin main:gh-pages"
+          exit 1
