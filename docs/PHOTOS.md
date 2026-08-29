@@ -41,6 +41,11 @@ only what the banner in the frame actually says — no claim beyond that.
 
 ## Rules
 
+0. **No credit / "आयोजक एवं सहयोगी" section.** Decided by the project owner.
+   The organisations named on the banner in `abhiyan-banner.jpg` are not
+   reproduced as site text, and no affiliation is claimed anywhere.
+   The photograph may still be used — a banner visible inside a photograph is
+   part of the scene, not a claim the site is making.
 1. **No face is named.** These are photographs of identifiable private individuals at a
    public event. Captions describe the event, never a person.
 2. **No invented claims.** A caption may repeat what the banner in the frame says and
