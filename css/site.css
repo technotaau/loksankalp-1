@@ -410,6 +410,69 @@ body { padding-bottom: 68px; }
   border-radius: 999px; padding: .15rem .7rem;
 }
 
+
+/* ---------- Photographs ----------
+   Campaign photographs of real gatherings. Every one is served in two sizes
+   with WebP first, so a phone on 3G never pulls a desktop-weight file.
+   Aspect boxes are fixed so nothing shifts while the image loads. */
+.photo { margin: 0; position: relative; }
+.photo > picture, .photo > img { display: block; }
+.photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  border-radius: var(--ls-radius); background: var(--ls-surface-alt);
+}
+.photo--wide   { aspect-ratio: 3 / 2; }
+.photo--banner { aspect-ratio: 16 / 7; }
+.photo--square { aspect-ratio: 1 / 1; }
+.photo > picture { display: block; height: 100%; }
+.photo figcaption {
+  margin-top: .55rem; font-size: .9rem; color: var(--ls-ink-soft); line-height: 1.6;
+}
+.section--ink .photo figcaption { color: #c6d1f2; }
+
+/* Photo grid for the gallery */
+.photo-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.photo-grid .photo { aspect-ratio: auto; }
+.photo-grid .photo img { aspect-ratio: 3 / 2; }
+
+/* A hero backed by a photograph rather than the illustration.
+   The scrim is what keeps the Devanagari readable over a busy crowd shot —
+   without it the title fails contrast against light kurtas and sky. */
+.hero--photo .hero__bg { opacity: 1; }
+.hero--photo::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(255,253,248,.94) 0%, rgba(255,253,248,.80) 38%,
+                    rgba(255,253,248,.86) 68%, rgba(255,253,248,.97) 100%);
+}
+@media (max-width: 40rem) {
+  /* Portrait phones show far less of a wide crowd shot, so lean the scrim
+     heavier — legibility beats the photograph here. */
+  .hero--photo::before { background: rgba(255,253,248,.9); }
+}
+
+/* Story cards carrying a real thumbnail instead of the gradient block */
+.story__thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+.story__thumb--photo { background: var(--ls-surface-alt); }
+.story__thumb--photo::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.35) 100%);
+}
+.story__thumb--photo svg { position: relative; z-index: 1; filter: drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+
+/* Page header carrying a photograph behind the title */
+.page-head--photo { position: relative; isolation: isolate; overflow: hidden; }
+.page-head--photo img {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.page-head--photo::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(135deg, rgba(15,32,88,.92) 0%, rgba(23,48,122,.86) 55%, rgba(17,86,35,.88) 100%);
+}
+
+/* Page: dashboard */
+
 /* Data tables */
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--ls-radius); border: 1px solid var(--ls-border); }
 table.data { width: 100%; border-collapse: collapse; background: var(--ls-surface); font-size: .97rem; }

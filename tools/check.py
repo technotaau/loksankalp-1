@@ -28,6 +28,7 @@ class Doc(HTMLParser):
         self.stack, self.mismatch = [], []
         self.headings, self.ids, self.links = [], set(), []
         self.imgs_no_alt, self.labels, self.inputs = 0, set(), []
+        self.srcs, self.imgs_no_dims = [], 0
         self.icon_refs, self.h1 = [], 0
         self.title, self.in_title, self.desc, self.canonical = '', False, '', ''
         self.lang = ''
@@ -53,8 +54,15 @@ class Doc(HTMLParser):
             self.ids.add(a['id'])
         if tag == 'a' and 'href' in a:
             self.links.append(a['href'])
-        if tag == 'img' and 'alt' not in a:
-            self.imgs_no_alt += 1
+        if tag == 'img':
+            if 'alt' not in a:
+                self.imgs_no_alt += 1
+            if a.get('src'):
+                self.srcs.append(a['src'])
+            if not (a.get('width') and a.get('height')):
+                self.imgs_no_dims += 1
+        if tag == 'source' and a.get('srcset'):
+            self.srcs.extend(u.strip().split(' ')[0] for u in a['srcset'].split(','))
         if tag == 'use':
             h = a.get('href') or a.get('xlink:href') or ''
             if '#' in h:
@@ -131,6 +139,14 @@ def check_html(path, known_icons, page_ids):
     # --- accessibility ---
     if d.imgs_no_alt:
         err(rel, f"{d.imgs_no_alt} <img> without alt")
+    if d.imgs_no_dims:
+        warn(rel, f"{d.imgs_no_dims} <img> without width/height (causes layout shift)")
+    for img_src in d.srcs:                       # not `src`: that holds the page text
+        if img_src.startswith(('http://', 'https://', 'data:')):
+            continue
+        sp = os.path.normpath(os.path.join(os.path.dirname(path), img_src))
+        if not os.path.exists(sp):
+            err(rel, f'image file missing -> {img_src}')
     for _id, name, _t, wrapped, aria in d.inputs:
         if wrapped or aria:
             continue
