@@ -25,7 +25,10 @@ body {
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  overflow-wrap: break-word;
 }
+
+.wrap, .site-header__bar { max-width: 100%; }
 h1, h2, h3, h4 {
   font-family: var(--ls-font-head);
   line-height: 1.35;
@@ -66,10 +69,14 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .section-head { text-align: center; margin-bottom: clamp(2rem, 4vw, 3rem); }
 .section-head p { margin-inline: auto; color: var(--ls-ink-soft); }
 .eyebrow {
+  /* No uppercase or wide tracking here: both are Latin conventions that pull
+     Devanagari conjuncts and matras apart and make the label hard to read.
+     Weight, size and colour carry the emphasis instead. */
   display: inline-block; margin-bottom: .55rem;
-  font-size: .84rem; font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; color: var(--ls-saffron-dk);
+  font-size: .9rem; font-weight: 700; letter-spacing: .01em;
+  color: var(--ls-saffron-dk);
 }
+.eyebrow:lang(en) { text-transform: uppercase; letter-spacing: .12em; font-size: .84rem; }
 .section--ink .eyebrow { color: var(--ls-gold); }
 
 .grid { display: grid; gap: clamp(1rem, 2.4vw, 1.6rem); }
@@ -88,17 +95,18 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
   display: flex; align-items: center; gap: 1rem;
   min-height: 72px; padding-block: .5rem;
 }
-.brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; flex: 0 0 auto; }
-.brand img { width: 54px; height: 54px; }
+.brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; flex: 0 1 auto; min-width: 0; }
+.brand > span { min-width: 0; }
+.brand img { width: 54px; height: 54px; flex: 0 0 54px; }
 .brand__name {
   font-family: var(--ls-font-head); font-size: 1.5rem; font-weight: 700;
   color: var(--ls-blue-dark); line-height: 1.1;
 }
 .brand__name em { font-style: normal; color: var(--ls-green); }
-.brand__tag { display: block; font-size: .72rem; color: var(--ls-ink-soft); font-family: var(--ls-font-body); line-height: 1.3; }
+.brand__tag { display: block; font-size: .72rem; color: var(--ls-ink-soft); font-family: var(--ls-font-body); line-height: 1.3; max-width: 26ch; }
 
 .nav-toggle {
-  margin-left: auto; display: inline-flex; align-items: center; gap: .5rem;
+  margin-left: auto; flex: 0 0 auto; display: inline-flex; align-items: center; gap: .5rem;
   min-height: var(--ls-tap); padding: .5rem .9rem;
   background: var(--ls-blue-dark); color: #fff; border: 0;
   border-radius: 10px; font-weight: 700; cursor: pointer;
@@ -395,12 +403,22 @@ body { padding-bottom: 68px; }
 
 /* Placeholder marker for data the team must supply */
 .is-placeholder { border-style: dashed; }
-.placeholder-note {
+.placeholder-note, .story__body .placeholder-note, .card .placeholder-note {
   display: inline-flex; align-items: center; gap: .4rem;
   font-size: .8rem; font-weight: 700; letter-spacing: .04em;
   color: var(--ls-ink-soft); background: #f1f2f6;
   border-radius: 999px; padding: .15rem .7rem;
 }
+
+/* Data tables */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--ls-radius); border: 1px solid var(--ls-border); }
+table.data { width: 100%; border-collapse: collapse; background: var(--ls-surface); font-size: .97rem; }
+table.data caption { caption-side: top; text-align: start; padding: .9rem 1rem; color: var(--ls-ink-soft); font-size: .92rem; }
+table.data th, table.data td { padding: .75rem 1rem; text-align: start; border-bottom: 1px solid var(--ls-border); }
+table.data thead th { background: var(--ls-surface-alt); color: var(--ls-blue-dark); font-family: var(--ls-font-head); white-space: nowrap; }
+table.data td { font-variant-numeric: tabular-nums; }
+table.data tbody tr:last-child td { border-bottom: 0; }
+table.data tbody tr:hover { background: #fbfcff; }
 
 /* Page header (inner pages) */
 .page-head {

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="ls-og-title">
+  <title id="ls-og-title">लोकसंकल्प — नशे को नहीं, संस्कारों को सामाजिक स्वीकृति</title>
+  <defs>
+    <linearGradient id="ogWash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17307A" stop-opacity=".10"/>
+      <stop offset=".55" stop-color="#F5B301" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#1B7A34" stop-opacity=".12"/>
+    </linearGradient>
+    <linearGradient id="ogA" gradientUnits="userSpaceOnUse" x1="6" y1="58" x2="122" y2="58">
+      <stop offset="0" stop-color="#E8730C"/>
+      <stop offset="1" stop-color="#F5B301"/>
+    </linearGradient>
+    <linearGradient id="ogB" gradientUnits="userSpaceOnUse" x1="122" y1="70" x2="6" y2="70">
+      <stop offset="0" stop-color="#F5B301"/>
+      <stop offset="1" stop-color="#1B7A34"/>
+    </linearGradient>
+    <radialGradient id="ogSun" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#F5B301"/>
+      <stop offset="1" stop-color="#E8730C"/>
+    </radialGradient>
+    <g id="ogFig" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="0" cy="-86" r="14" stroke="none"/>
+      <path d="M-13-70q13-5 26 0l-2 33q-11 4-22 0z" stroke="none"/>
+      <path d="M-13-68-32-93M13-68 32-93" fill="none" stroke-width="11"/>
+      <path d="M-7-37-10 0M7-37 10 0" fill="none" stroke-width="11"/>
+    </g>
+    <g id="ogMark">
+      <g fill="none" stroke-linecap="round" stroke-width="5.5">
+        <path d="M6.32 57.94A58 58 0 0 1 121.68 57.94" stroke="url(#ogA)"/>
+        <path d="M121.68 70.06A58 58 0 0 1 6.32 70.06" stroke="url(#ogB)"/>
+      </g>
+      <g stroke-linecap="round" stroke-width="4.5">
+        <path d="M45.2 52.8 36.2 46.5" stroke="#F5B301"/>
+        <path d="M50.2 47.6 43.5 38.8" stroke="#E8730C"/>
+        <path d="M56.5 44.3 52.9 33.8" stroke="#F5B301"/>
+        <path d="M63.6 43 63.4 32" stroke="#E8730C"/>
+        <path d="M70.7 44 73.9 33.5" stroke="#F5B301"/>
+        <path d="M77.2 47.2 83.5 38.2" stroke="#E8730C"/>
+        <path d="M82.4 52.2 91.2 45.5" stroke="#F5B301"/>
+      </g>
+      <circle cx="64" cy="66" r="20" fill="url(#ogSun)"/>
+      <use href="#ogFig" transform="translate(41 85) scale(.29)" color="#E8730C"/>
+      <use href="#ogFig" transform="translate(87 85) scale(.29)" color="#1B7A34"/>
+      <use href="#ogFig" transform="translate(64 84) scale(.4)" color="#17307A"/>
+      <path d="M22 82q42-10 84 0v8q-42-10-84 0z" fill="#17307A"/>
+    </g>
+  </defs>
+
+  <rect width="1200" height="630" fill="#FFFDF8"/>
+  <rect width="1200" height="630" fill="url(#ogWash)"/>
+
+  <g id="og-mark">
+    <circle cx="230" cy="300" r="168" fill="#FFFFFF" opacity=".7"/>
+    <use href="#ogMark" transform="translate(90 160) scale(2.19)"/>
+  </g>
+
+  <g id="og-copy" font-family="'Tiro Devanagari Hindi','Noto Serif Devanagari',Georgia,serif">
+    <text x="440" y="212" font-size="28" fill="#E8730C" font-weight="700" letter-spacing="1">नशे की सामाजिक स्वीकृति के विरुद्ध जनआंदोलन</text>
+    <text x="440" y="352" font-size="118" font-weight="700">
+      <tspan fill="#17307A">लोक</tspan><tspan fill="#1B7A34">संकल्प</tspan>
+    </text>
+    <path d="M440 392h150" stroke="#E8730C" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <text x="440" y="462" font-size="33" fill="#16192B">नशे को नहीं, संस्कारों को सामाजिक स्वीकृति</text>
+  </g>
+
+  <g id="og-bar">
+    <rect x="0" y="612" width="300" height="18" fill="#17307A"/>
+    <rect x="300" y="612" width="300" height="18" fill="#E8730C"/>
+    <rect x="600" y="612" width="300" height="18" fill="#F5B301"/>
+    <rect x="900" y="612" width="300" height="18" fill="#1B7A34"/>
+  </g>
+</svg>

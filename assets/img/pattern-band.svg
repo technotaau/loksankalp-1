@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+  <g id="pb-wave" fill="none" stroke-linecap="round">
+    <path d="M0 30q15-9 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0" stroke="#17307A" stroke-width="1.6" opacity=".22"/>
+    <path d="M0 30q15 9 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0" stroke="#1B7A34" stroke-width="1.6" opacity=".18"/>
+  </g>
+  <g id="pb-dots" opacity=".38">
+    <circle cx="12.5" cy="15" r="3.2" fill="#17307A"/>
+    <circle cx="37.5" cy="45" r="2.4" fill="#1B7A34"/>
+    <circle cx="62.5" cy="15" r="3.2" fill="#E8730C"/>
+    <circle cx="87.5" cy="45" r="2.4" fill="#17307A"/>
+    <circle cx="112.5" cy="15" r="3.2" fill="#1B7A34"/>
+    <circle cx="137.5" cy="45" r="2.4" fill="#E8730C"/>
+    <circle cx="162.5" cy="15" r="3.2" fill="#17307A"/>
+    <circle cx="187.5" cy="45" r="2.4" fill="#1B7A34"/>
+    <circle cx="212.5" cy="15" r="3.2" fill="#E8730C"/>
+    <circle cx="237.5" cy="45" r="2.4" fill="#17307A"/>
+    <circle cx="262.5" cy="15" r="3.2" fill="#1B7A34"/>
+    <circle cx="287.5" cy="45" r="2.4" fill="#E8730C"/>
+    <circle cx="312.5" cy="15" r="3.2" fill="#17307A"/>
+    <circle cx="337.5" cy="45" r="2.4" fill="#1B7A34"/>
+    <circle cx="362.5" cy="15" r="3.2" fill="#E8730C"/>
+    <circle cx="387.5" cy="45" r="2.4" fill="#17307A"/>
+    <circle cx="412.5" cy="15" r="3.2" fill="#1B7A34"/>
+    <circle cx="437.5" cy="45" r="2.4" fill="#E8730C"/>
+    <circle cx="462.5" cy="15" r="3.2" fill="#17307A"/>
+    <circle cx="487.5" cy="45" r="2.4" fill="#1B7A34"/>
+    <circle cx="512.5" cy="15" r="3.2" fill="#E8730C"/>
+    <circle cx="537.5" cy="45" r="2.4" fill="#17307A"/>
+    <circle cx="562.5" cy="15" r="3.2" fill="#1B7A34"/>
+    <circle cx="587.5" cy="45" r="2.4" fill="#E8730C"/>
+    <circle cx="612.5" cy="15" r="3.2" fill="#17307A"/>
+    <circle cx="637.5" cy="45" r="2.4" fill="#1B7A34"/>
+    <circle cx="662.5" cy="15" r="3.2" fill="#E8730C"/>
+    <circle cx="687.5" cy="45" r="2.4" fill="#17307A"/>
+    <circle cx="712.5" cy="15" r="3.2" fill="#1B7A34"/>
+    <circle cx="737.5" cy="45" r="2.4" fill="#E8730C"/>
+    <circle cx="762.5" cy="15" r="3.2" fill="#17307A"/>
+    <circle cx="787.5" cy="45" r="2.4" fill="#1B7A34"/>
+    <circle cx="812.5" cy="15" r="3.2" fill="#E8730C"/>
+    <circle cx="837.5" cy="45" r="2.4" fill="#17307A"/>
+    <circle cx="862.5" cy="15" r="3.2" fill="#1B7A34"/>
+    <circle cx="887.5" cy="45" r="2.4" fill="#E8730C"/>
+    <circle cx="912.5" cy="15" r="3.2" fill="#17307A"/>
+    <circle cx="937.5" cy="45" r="2.4" fill="#1B7A34"/>
+    <circle cx="962.5" cy="15" r="3.2" fill="#E8730C"/>
+    <circle cx="987.5" cy="45" r="2.4" fill="#17307A"/>
+    <circle cx="1012.5" cy="15" r="3.2" fill="#1B7A34"/>
+    <circle cx="1037.5" cy="45" r="2.4" fill="#E8730C"/>
+    <circle cx="1062.5" cy="15" r="3.2" fill="#17307A"/>
+    <circle cx="1087.5" cy="45" r="2.4" fill="#1B7A34"/>
+    <circle cx="1112.5" cy="15" r="3.2" fill="#E8730C"/>
+    <circle cx="1137.5" cy="45" r="2.4" fill="#17307A"/>
+    <circle cx="1162.5" cy="15" r="3.2" fill="#1B7A34"/>
+    <circle cx="1187.5" cy="45" r="2.4" fill="#E8730C"/>
+  </g>
+</svg>
