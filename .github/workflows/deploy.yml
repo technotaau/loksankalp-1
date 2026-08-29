@@ -38,10 +38,20 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git push origin HEAD:gh-pages
 
+      # A push made with GITHUB_TOKEN does not trigger other workflows, so the
+      # Pages "pages build and deployment" job never fires for the push above and
+      # the branch updates without the site being rebuilt. Say so loudly rather
+      # than reporting a green deploy that published nothing.
+      - name: Warn if Pages did not rebuild
+        run: |
+          echo "::warning::gh-pages updated, but a GITHUB_TOKEN push cannot trigger the Pages build."
+          echo "::warning::Fix once in Settings -> Pages -> Source: GitHub Actions, then switch this"
+          echo "::warning::job to configure-pages + upload-pages-artifact + deploy-pages."
+
       - name: Wait for the deployment to serve
         run: |
           url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
-          for i in $(seq 1 20); do
+          for i in $(seq 1 12); do
             code=$(curl -sS -o /dev/null -w "%{http_code}" -L "$url" || true)
             echo "attempt $i: HTTP $code"
             [ "$code" = "200" ] && { echo "live at $url"; exit 0; }

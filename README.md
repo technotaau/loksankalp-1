@@ -106,14 +106,26 @@ A failing check blocks the publish.
 If the canonical domain changes, update the `canonical` and `og:url` tags in each
 page's `<head>`, plus `sitemap.xml` and `robots.txt`.
 
-### Two settings still worth changing by hand
+### One setting that needs a human click
 
-Neither is reachable from a workflow — `GITHUB_TOKEN` cannot be granted the
-`administration: write` scope these need:
+**Settings → Pages → Source: GitHub Actions.**
 
-1. **Default branch is still `claude/website-hindi-content-build-f4hhg9`.**
-   Settings → Branches → change it to `main`, so clones and the repo homepage
-   land on the right branch.
-2. **Pages source** is the legacy branch mode. Settings → Pages → Source:
-   *GitHub Actions* is the modern path; see the comment at the top of
-   `deploy.yml` for the job swap it needs.
+Pages is currently served from the `gh-pages` branch. A branch-source Pages site
+rebuilds on a push event — but GitHub deliberately does not fire workflows for a
+push made with `GITHUB_TOKEN`, so when CI updates `gh-pages` the site does *not*
+rebuild. CI reports success while publishing nothing. A workflow cannot fix this
+itself: creating or reconfiguring a Pages site needs `administration: write`,
+which `GITHUB_TOKEN` cannot be granted.
+
+Until that switch is flipped, publish by pushing `gh-pages` from a normal account:
+
+```bash
+git push origin main:gh-pages
+```
+
+After flipping it, replace the `Publish to gh-pages` step with
+`actions/configure-pages` + `actions/upload-pages-artifact` + `actions/deploy-pages`
+and deploys become fully automatic.
+
+Also worth changing: the **default branch** is still
+`claude/website-hindi-content-build-f4hhg9`. Settings → Branches → set it to `main`.
