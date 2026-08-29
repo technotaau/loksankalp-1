@@ -1,0 +1,39 @@
+/* लोकसंकल्प — Design Tokens
+   Palette derived from the official logo (tiranga + prakriti). */
+
+:root {
+  /* Brand */
+  --ls-blue:        #17307a;  /* लोक — deep indigo, headings */
+  --ls-blue-dark:   #0f2058;
+  --ls-green:       #1b7a34;  /* संकल्प — growth, family, tree */
+  --ls-green-dark:  #115623;
+  --ls-saffron:     #e8730c;  /* energy, call-to-action */
+  --ls-saffron-dk:  #c25c05;
+  --ls-red:         #d32f2f;  /* prohibition mark — warnings only */
+  --ls-gold:        #f5b301;
+
+  /* Surface */
+  --ls-bg:          #fffdf8;
+  --ls-surface:     #ffffff;
+  --ls-surface-alt: #f4f6fb;
+  --ls-border:      #e3e6ef;
+
+  /* Text — min 4.5:1 on --ls-bg */
+  --ls-ink:         #16192b;
+  --ls-ink-soft:    #4a5068;
+
+  /* Type — Devanagari first, large for low-vision / low-literacy readers */
+  --ls-font-head: "Tiro Devanagari Hindi", "Noto Serif Devanagari", Georgia, serif;
+  --ls-font-body: "Noto Sans Devanagari", "Hind", system-ui, -apple-system, sans-serif;
+
+  --ls-fs-hero:  clamp(2rem, 6vw, 3.75rem);
+  --ls-fs-h2:    clamp(1.5rem, 3.5vw, 2.25rem);
+  --ls-fs-body:  clamp(1.0625rem, 1.6vw, 1.1875rem); /* ≥17px baseline */
+  --ls-lh-body:  1.85;   /* Devanagari matras need air */
+
+  /* Spacing / shape */
+  --ls-radius:   14px;
+  --ls-tap:      48px;   /* minimum touch target */
+  --ls-shadow:   0 2px 12px rgba(23, 48, 122, .08);
+  --ls-maxw:     1120px;
+}
