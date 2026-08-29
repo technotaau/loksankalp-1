@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>लोकसंकल्प डैशबोर्ड — लोकसंकल्प</title>
+<meta name="description" content="लोकसंकल्प डैशबोर्ड — राज्य, जिला, ब्लॉक और ग्राम स्तर पर जुड़े गाँव, आयोजित सभाएँ, गठित समितियाँ और संकल्पों की पारदर्शी प्रगति।">
+<meta name="theme-color" content="#17307a">
+<link rel="canonical" href="https://technotaau.github.io/loksankalp-1/dashboard.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="लोकसंकल्प">
+<meta property="og:locale" content="hi_IN">
+<meta property="og:title" content="लोकसंकल्प डैशबोर्ड — लोकसंकल्प">
+<meta property="og:description" content="परिवर्तन की पारदर्शी तस्वीर — राज्य से गाँव तक अभियान की प्रगति एक जगह।">
+<meta property="og:url" content="https://technotaau.github.io/loksankalp-1/dashboard.html">
+<meta property="og:image" content="https://technotaau.github.io/loksankalp-1/assets/img/og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/logo-mark.svg">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Tiro+Devanagari+Hindi&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">मुख्य सामग्री पर जाएँ</a>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <div class="wrap site-header__bar">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo-mark.svg" alt="" width="54" height="54">
+      <span>
+        <span class="brand__name">लोक<em>संकल्प</em></span>
+        <span class="brand__tag">नशे की सामाजिक स्वीकृति के विरुद्ध जनआंदोलन</span>
+      </span>
+    </a>
+
+    <a class="header-login" href="login.html">
+      <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-users"></use></svg>लॉगिन
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" hidden>
+      <svg class="nav-toggle__open" aria-hidden="true"><use href="assets/img/icons.svg#ic-menu"></use></svg>
+      <svg class="nav-toggle__close" aria-hidden="true"><use href="assets/img/icons.svg#ic-close"></use></svg>
+      मेन्यू
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="मुख्य मेन्यू">
+      <ul>
+        <li><a href="index.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-home"></use></svg>होम</a></li>
+        <li><a href="mera-sankalp.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>मेरा संकल्प</a></li>
+        <li><a href="gram-sabha.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>ग्राम सभा</a></li>
+        <li><a href="good-parenting.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-parenting"></use></svg>Good&nbsp;Parenting</a></li>
+        <li><a href="yuva-manch.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-youth"></use></svg>युवा मंच</a></li>
+        <li><a href="sahayata-kendra.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg>सहायता केंद्र</a></li>
+        <li><a href="shikshak-network.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-teacher"></use></svg>शिक्षक नेटवर्क</a></li>
+        <li><a href="safalta-kahaniyan.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-story"></use></svg>सफलता कहानियाँ</a></li>
+        <li><a href="sansadhan.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-resource"></use></svg>संसाधन</a></li>
+        <li><a href="dashboard.html" aria-current="page"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-dashboard"></use></svg>डैशबोर्ड</a></li>
+        <li><a class="nav-login" href="login.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-users"></use></svg>लॉगिन</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= PAGE HEAD ================= -->
+<section class="page-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="ब्रेडक्रम्ब">
+      <ol>
+        <li><a href="index.html">होम</a></li>
+        <li>लोकसंकल्प डैशबोर्ड</li>
+      </ol>
+    </nav>
+    <p class="eyebrow">प्रगति एवं पारदर्शिता</p>
+    <h1>लोकसंकल्प डैशबोर्ड</h1>
+    <p class="lead">परिवर्तन की पारदर्शी तस्वीर</p>
+  </div>
+</section>
+
+<!-- ================= परिचय ================= -->
+<section class="section">
+  <div class="wrap stack">
+    <p>यह डैशबोर्ड राज्य, जिला, ब्लॉक और ग्राम स्तर पर अभियान की प्रगति को प्रदर्शित करेगा।</p>
+    <p>आँकड़े ग्राम समितियों, शिक्षकों और समन्वयकों द्वारा भेजी गई रिपोर्ट से बनते हैं। जो गाँव रिपोर्ट भेजता है, उसकी मेहनत यहाँ दिखाई देती है। इसलिए हर सभा की रिपोर्ट भेजना ज़रूरी है।</p>
+    <p><span class="placeholder-note">इस पृष्ठ के सभी आँकड़े अभी placeholder हैं</span></p>
+  </div>
+</section>
+
+<!-- ================= स्तर चुनें ================= -->
+<section class="section section--tint" aria-labelledby="star">
+  <div class="wrap split">
+    <div class="stack">
+      <p class="eyebrow">खोज</p>
+      <h2 id="star">स्तर चुनें</h2>
+      <p>ऊपर से नीचे की ओर चुनते जाइए — जैसे-जैसे आप नीचे जाएँगे, तस्वीर उतनी ही नज़दीक की होगी।</p>
+      <ul class="cluster mt-2">
+        <li class="chip">राज्य</li>
+        <li class="chip" aria-hidden="true">→</li>
+        <li class="chip">जिला</li>
+        <li class="chip" aria-hidden="true">→</li>
+        <li class="chip">ब्लॉक</li>
+        <li class="chip" aria-hidden="true">→</li>
+        <li class="chip">गाँव</li>
+      </ul>
+      <ol class="steps mt-2">
+        <li><strong>राज्य</strong> — पूरे राजस्थान की कुल स्थिति।</li>
+        <li><strong>जिला</strong> — जिले के गाँव, सभाएँ और समितियाँ।</li>
+        <li><strong>ब्लॉक</strong> — ब्लॉक की पंचायतवार प्रगति।</li>
+        <li><strong>गाँव</strong> — आपके अपने गाँव का पूरा विवरण।</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <div class="card__ic"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-search"></use></svg></div>
+      <h3>अपना क्षेत्र चुनें</h3>
+      <form class="form mt-2" data-demo="dash-done">
+        <div class="field">
+          <label for="d-rajya">राज्य</label>
+          <select id="d-rajya" name="rajya">
+            <option>राजस्थान</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="d-jila">जिला</label>
+          <select id="d-jila" name="jila">
+            <option value="">जिला चुनें</option>
+            <option>जयपुर</option>
+            <option>जोधपुर</option>
+            <option>उदयपुर</option>
+            <option>अजमेर</option>
+            <option>बीकानेर</option>
+            <option>कोटा</option>
+            <option>अलवर</option>
+            <option>भरतपुर</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="d-block">ब्लॉक</label>
+          <select id="d-block" name="block">
+            <option value="">पहले जिला चुनें</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="d-gaon">गाँव</label>
+          <select id="d-gaon" name="gaon">
+            <option value="">पहले ब्लॉक चुनें</option>
+          </select>
+        </div>
+        <p><button class="btn btn--primary btn--block" type="submit"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-search"></use></svg>प्रगति देखें</button></p>
+        <p class="form-note"><span class="placeholder-note">चयन बैकएंड जुड़ने पर सजीव आँकड़ों से जुड़ जाएगा</span></p>
+      </form>
+
+      <div id="dash-done" class="callout mt-2" hidden>
+        <h3>चयन सुरक्षित</h3>
+        <p>आपने जो क्षेत्र चुना है, उसका विस्तृत विवरण डेटा स्रोत जुड़ते ही यहीं दिखाई देगा।</p>
+        <p><span class="placeholder-note">डेमो — अभी सजीव आँकड़े उपलब्ध नहीं</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= प्रमुख संकेतक ================= -->
+<section class="section" aria-labelledby="sanketak">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">एक नज़र में</p>
+      <h2 id="sanketak">प्रमुख संकेतक</h2>
+      <p>ये आठ संकेतक बताते हैं कि अभियान कहाँ तक पहुँचा है।</p>
+    </div>
+    <div class="counters">
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg><b data-count="3250">3,250</b><span>जुड़े हुए गाँव</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-calendar"></use></svg><b data-count="4120">4,120</b><span>आयोजित सभाएँ</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-committee"></use></svg><b data-count="2100">2,100</b><span>गठित समितियाँ</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg><b data-count="520000">5,20,000</b><span>संकल्प लेने वाले नागरिक</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-teacher"></use></svg><b data-count="18450">18,450</b><span>प्रशिक्षित शिक्षक</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-youth"></use></svg><b data-count="1260">1,260</b><span>सक्रिय युवा क्लब</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-story"></use></svg><b data-count="950">950</b><span>सफलता कहानियाँ</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg><b data-count="7800">7,800</b><span>सहायता सेवाओं से जुड़े व्यक्ति</span></div>
+    </div>
+    <p class="center mt-2"><span class="placeholder-note">आँकड़े placeholder हैं — डेटा स्रोत जुड़ने तक इन्हें वास्तविक न मानें</span></p>
+  </div>
+</section>
+
+<!-- ================= जिलेवार प्रगति ================= -->
+<section class="section section--tint" aria-labelledby="jilewar">
+  <div class="wrap stack">
+    <div class="section-head">
+      <p class="eyebrow">तालिका</p>
+      <h2 id="jilewar">जिलेवार प्रगति</h2>
+      <p>तालिका को दाएँ-बाएँ खिसकाकर पूरी पंक्ति देखी जा सकती है।</p>
+    </div>
+    <p class="center"><span class="placeholder-note">नीचे दिए गए सभी अंक placeholder हैं</span></p>
+    <div style="overflow-x:auto">
+      <table style="width:100%;min-width:36rem;border-collapse:collapse;background:var(--ls-surface);border:1px solid var(--ls-border);border-radius:14px">
+        <caption style="caption-side:top;text-align:start;padding:.8rem;color:var(--ls-ink-soft);font-size:.95rem">राजस्थान — चयनित जिलों की लोकसंकल्प प्रगति (placeholder आँकड़े)</caption>
+        <thead>
+          <tr>
+            <th scope="col" style="padding:.7rem .8rem;border-bottom:2px solid var(--ls-border);text-align:start">जिला</th>
+            <th scope="col" style="padding:.7rem .8rem;border-bottom:2px solid var(--ls-border);text-align:start">जुड़े गाँव</th>
+            <th scope="col" style="padding:.7rem .8rem;border-bottom:2px solid var(--ls-border);text-align:start">सभाएँ</th>
+            <th scope="col" style="padding:.7rem .8rem;border-bottom:2px solid var(--ls-border);text-align:start">समितियाँ</th>
+            <th scope="col" style="padding:.7rem .8rem;border-bottom:2px solid var(--ls-border);text-align:start">संकल्प</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border);text-align:start">जयपुर</th>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">420</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">560</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">280</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">72,000</td>
+          </tr>
+          <tr>
+            <th scope="row" style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border);text-align:start">जोधपुर</th>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">380</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">495</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">245</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">64,500</td>
+          </tr>
+          <tr>
+            <th scope="row" style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border);text-align:start">उदयपुर</th>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">345</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">430</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">225</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">58,200</td>
+          </tr>
+          <tr>
+            <th scope="row" style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border);text-align:start">अजमेर</th>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">310</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">395</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">205</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">51,400</td>
+          </tr>
+          <tr>
+            <th scope="row" style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border);text-align:start">बीकानेर</th>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">265</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">330</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">170</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">43,800</td>
+          </tr>
+          <tr>
+            <th scope="row" style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border);text-align:start">कोटा</th>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">240</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">300</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">155</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">39,600</td>
+          </tr>
+          <tr>
+            <th scope="row" style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border);text-align:start">अलवर</th>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">295</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">370</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">190</td>
+            <td style="padding:.7rem .8rem;border-bottom:1px solid var(--ls-border)">47,300</td>
+          </tr>
+          <tr>
+            <th scope="row" style="padding:.7rem .8rem;text-align:start">भरतपुर</th>
+            <td style="padding:.7rem .8rem">225</td>
+            <td style="padding:.7rem .8rem">285</td>
+            <td style="padding:.7rem .8rem">145</td>
+            <td style="padding:.7rem .8rem">36,900</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p><span class="placeholder-note">शेष जिले डेटा स्रोत जुड़ने पर जोड़े जाएँगे</span></p>
+    <div class="callout">
+      <p><strong>हमारा उद्देश्य —</strong> सामाजिक परिवर्तन को मापना, प्रेरित करना और विस्तार देना।</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="section section--ink">
+  <div class="wrap center stack">
+    <h2>अपने गाँव का अंक भी इसी तालिका में जोड़ें</h2>
+    <p style="margin-inline:auto">हर संकल्प और हर सभा की रिपोर्ट इस तस्वीर को सच्चा बनाती है।</p>
+    <p class="cluster cluster--center mt-2">
+      <a class="btn btn--primary btn--lg" href="mera-sankalp.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>मेरा संकल्प लें</a>
+      <a class="btn btn--ghost btn--lg" href="gram-sabha.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>सभा की रिपोर्ट भेजें</a>
+    </p>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html">
+          <img src="assets/img/logo-mark.svg" alt="" width="54" height="54">
+          <span><span class="brand__name">लोक<em>संकल्प</em></span></span>
+        </a>
+        <p style="margin-top:.8rem;color:#cfd8f2">नशे की सामाजिक स्वीकृति के विरुद्ध जनआंदोलन</p>
+        <p style="color:#ffd66b;font-family:var(--ls-font-head);font-size:1.05rem">संकल्प • सहभागिता • संवाद • परिवर्तन</p>
+      </div>
+      <nav aria-labelledby="f-nav1">
+        <h2 id="f-nav1">अभियान</h2>
+        <ul>
+          <li><a href="mera-sankalp.html">मेरा संकल्प</a></li>
+          <li><a href="gram-sabha.html">ग्राम लोकसंकल्प सभा</a></li>
+          <li><a href="good-parenting.html">Good Parenting केंद्र</a></li>
+          <li><a href="yuva-manch.html">युवा शक्ति मंच</a></li>
+          <li><a href="shikshak-network.html">शिक्षक परिवर्तन नेटवर्क</a></li>
+        </ul>
+      </nav>
+      <nav aria-labelledby="f-nav2">
+        <h2 id="f-nav2">सहायता एवं सामग्री</h2>
+        <ul>
+          <li><a href="sahayata-kendra.html">नशा मुक्ति सहायता केंद्र</a></li>
+          <li><a href="safalta-kahaniyan.html">सफलता कहानियाँ</a></li>
+          <li><a href="sansadhan.html">ज्ञान एवं संसाधन केंद्र</a></li>
+          <li><a href="dashboard.html">लोकसंकल्प डैशबोर्ड</a></li>
+          <li><a href="samman.html">सम्मान एवं प्रेरणा</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h2>संपर्क</h2>
+        <ul class="footer-contact">
+          <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-mail"></use></svg><span><a href="mailto:info@example.org">info@example.org</a><br><span class="placeholder-note">placeholder</span></span></li>
+          <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-phone"></use></svg><span>हेल्पलाइन: <a href="tel:+910000000000">0000-000-000</a><br><span class="placeholder-note">placeholder</span></span></li>
+          <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pin"></use></svg><span>राजस्थान, भारत</span></li>
+        </ul>
+        <div class="socials">
+          <a href="#" aria-label="फ़ेसबुक (placeholder)"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-external"></use></svg></a>
+          <a href="#" aria-label="यूट्यूब (placeholder)"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-play"></use></svg></a>
+          <a href="#" aria-label="व्हाट्सएप (placeholder)"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-chat"></use></svg></a>
+          <a href="#" aria-label="एक्स / ट्विटर (placeholder)"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-external"></use></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© <span id="year">2026</span> लोकसंकल्प — नशामुक्त समाज हेतु जनआंदोलन।</p>
+      <p>“नशे को नहीं, संस्कारों को सामाजिक स्वीकृति”</p>
+    </div>
+  </div>
+  <div class="tricolor-bar" aria-hidden="true"></div>
+</footer>
+
+<!-- ================= MOBILE ACTION BAR ================= -->
+<nav class="action-bar" aria-label="मुख्य कार्य">
+  <a class="action-bar--pledge" href="mera-sankalp.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>संकल्प लें</a>
+  <a href="gram-sabha.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>ग्राम सभा</a>
+  <a href="sahayata-kendra.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg>सहायता</a>
+</nav>
+
+<script src="js/site.js" defer></script>
+</body>
+</html>
