@@ -88,8 +88,12 @@
 <main id="main">
 
 <!-- ================= HERO ================= -->
-<section class="hero">
-  <img class="hero__bg" src="assets/img/hero-scene.svg" alt="" aria-hidden="true" width="1440" height="720" fetchpriority="high">
+<section class="hero hero--photo">
+  <picture>
+    <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/rally-group-temple-760.webp">
+    <source type="image/webp" srcset="assets/img/photos/rally-group-temple-1400.webp">
+    <img class="hero__bg" src="assets/img/photos/rally-group-temple-1400.jpg" alt="" aria-hidden="true" width="1400" height="931" fetchpriority="high">
+  </picture>
   <div class="wrap hero__inner">
     <img class="hero__logo" src="assets/img/logo.svg" alt="लोकसंकल्प का प्रतीक चिह्न" width="190" height="190" fetchpriority="high">
     <h1 class="hero__title"><span class="b">लोक</span><span class="g">संकल्प</span></h1>
@@ -287,6 +291,14 @@
         </ul>
         <p><a class="btn btn--secondary" href="gram-sabha.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>सभा की रिपोर्ट भेजें</a></p>
       </div>
+      <figure class="photo photo--wide">
+        <picture>
+          <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/gram-sabha-meeting-760.webp">
+          <source type="image/webp" srcset="assets/img/photos/gram-sabha-meeting-1400.webp">
+          <img src="assets/img/photos/gram-sabha-meeting-1400.jpg" alt="ग्राम सभा में मंच पर बैठे अतिथि और सामने ज़मीन पर बैठे ग्रामवासी" width="1400" height="931" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>ग्राम लोकसंकल्प सभा — सामूहिक संवाद</figcaption>
+      </figure>
       <div class="card is-placeholder center">
         <div class="card__ic" style="margin-inline:auto"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pin"></use></svg></div>
         <h3>राजस्थान — जिलेवार प्रगति</h3>
@@ -394,6 +406,68 @@
       <h3>सम्मान एवं प्रेरणा</h3>
       <p>ग्राम, शिक्षक, विद्यालय, युवा क्लब और परिवार सम्मान — अच्छे कार्यों को पहचान।</p>
     </a>
+  </div>
+</section>
+
+
+<!-- ================= अभियान की झलक ================= -->
+<section class="section section--tint" aria-labelledby="jhalak">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">अभियान की झलक</p>
+      <h2 id="jhalak">गाँव-गाँव में लोकसंकल्प</h2>
+      <p>ग्राम सभा, ट्रैक्टर रैली, सामूहिक संकल्प और विद्यालयों की भागीदारी — कुछ दृश्य।</p>
+    </div>
+    <div class="photo-grid">
+      <figure class="photo ">
+        <picture>
+          <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/tractor-rally-aerial-760.webp">
+          <source type="image/webp" srcset="assets/img/photos/tractor-rally-aerial-1400.webp">
+          <img src="assets/img/photos/tractor-rally-aerial-1400.jpg" alt="गाँव की सड़क पर कतार में चलते ट्रैक्टर, आगे नशामुक्ति रैली का बैनर, ऊपर से लिया गया दृश्य" width="1400" height="803" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>ट्रैक्टर रैली में गाँव की भागीदारी</figcaption>
+      </figure>
+      <figure class="photo ">
+        <picture>
+          <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/sankalp-shapath-760.webp">
+          <source type="image/webp" srcset="assets/img/photos/sankalp-shapath-1400.webp">
+          <img src="assets/img/photos/sankalp-shapath-1400.jpg" alt="पंक्ति में खड़े लोग हाथ आगे बढ़ाकर नशामुक्ति का संकल्प लेते हुए" width="1400" height="931" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>सामूहिक संकल्प</figcaption>
+      </figure>
+      <figure class="photo ">
+        <picture>
+          <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/manav-shrinkhala-aerial-760.webp">
+          <source type="image/webp" srcset="assets/img/photos/manav-shrinkhala-aerial-1400.webp">
+          <img src="assets/img/photos/manav-shrinkhala-aerial-1400.jpg" alt="विद्यालय के मैदान में विद्यार्थी पंक्तिबद्ध खड़े होकर संदेश की आकृति बनाते हुए, ऊपर से लिया गया दृश्य" width="1400" height="934" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>विद्यार्थियों द्वारा मानव शृंखला</figcaption>
+      </figure>
+      <figure class="photo ">
+        <picture>
+          <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/yuva-flags-courtyard-760.webp">
+          <source type="image/webp" srcset="assets/img/photos/yuva-flags-courtyard-1400.webp">
+          <img src="assets/img/photos/yuva-flags-courtyard-1400.jpg" alt="तिरंगा थामे युवाओं का समूह मंदिर प्रांगण में" width="1400" height="931" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>युवाओं की सहभागिता</figcaption>
+      </figure>
+      <figure class="photo ">
+        <picture>
+          <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/sabha-standing-crowd-760.webp">
+          <source type="image/webp" srcset="assets/img/photos/sabha-standing-crowd-1400.webp">
+          <img src="assets/img/photos/sabha-standing-crowd-1400.jpg" alt="शेड के नीचे हरी दरी पर खड़े ग्रामवासी" width="1400" height="931" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>सभा में ग्रामवासियों की उपस्थिति</figcaption>
+      </figure>
+      <figure class="photo ">
+        <picture>
+          <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/vidyalaya-assembly-760.webp">
+          <source type="image/webp" srcset="assets/img/photos/vidyalaya-assembly-1400.webp">
+          <img src="assets/img/photos/vidyalaya-assembly-1400.jpg" alt="विद्यालय के मैदान में कतारों में बैठे विद्यार्थी" width="887" height="590" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>विद्यालय में नशामुक्ति संवाद</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 

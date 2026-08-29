@@ -416,34 +416,40 @@ body { padding-bottom: 68px; }
    with WebP first, so a phone on 3G never pulls a desktop-weight file.
    Aspect boxes are fixed so nothing shifts while the image loads. */
 .photo { margin: 0; position: relative; }
-.photo > picture, .photo > img { display: block; }
+.photo > picture { display: block; }
+/* The aspect ratio lives on the image, not the figure. Putting it on the figure
+   and stretching the image to height:100% collapses the box whenever the figure
+   has no height of its own — which is exactly what happens inside a grid. */
 .photo img {
-  width: 100%; height: 100%; object-fit: cover;
+  display: block; width: 100%; height: auto;
   border-radius: var(--ls-radius); background: var(--ls-surface-alt);
 }
-.photo--wide   { aspect-ratio: 3 / 2; }
-.photo--banner { aspect-ratio: 16 / 7; }
-.photo--square { aspect-ratio: 1 / 1; }
-.photo > picture { display: block; height: 100%; }
+.photo--wide img   { aspect-ratio: 3 / 2;  object-fit: cover; }
+.photo--banner img { aspect-ratio: 16 / 7; object-fit: cover; }
+.photo--square img { aspect-ratio: 1 / 1;  object-fit: cover; }
 .photo figcaption {
   margin-top: .55rem; font-size: .9rem; color: var(--ls-ink-soft); line-height: 1.6;
 }
 .section--ink .photo figcaption { color: #c6d1f2; }
 
 /* Photo grid for the gallery */
-.photo-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
-.photo-grid .photo { aspect-ratio: auto; }
-.photo-grid .photo img { aspect-ratio: 3 / 2; }
+.photo-grid { display: grid; gap: 1.4rem 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); align-items: start; }
+.photo-grid .photo img { aspect-ratio: 3 / 2; object-fit: cover; }
 
 /* A hero backed by a photograph rather than the illustration.
    The scrim is what keeps the Devanagari readable over a busy crowd shot —
    without it the title fails contrast against light kurtas and sky. */
-.hero--photo .hero__bg { opacity: 1; }
+.hero--photo .hero__bg { opacity: 1; z-index: -2; object-position: center 42%; }
+/* Over a photograph the scrim alone cannot guarantee contrast on every pixel —
+   a crowd shot has both white kurtas and dark doorways behind the same line. */
+.hero--photo .hero__title,
+.hero--photo .hero__sub,
+.hero--photo .hero__quote { text-shadow: 0 1px 10px rgba(255, 253, 248, .95), 0 0 3px rgba(255, 253, 248, .9); }
 .hero--photo::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(180deg, rgba(255,253,248,.94) 0%, rgba(255,253,248,.80) 38%,
-                    rgba(255,253,248,.86) 68%, rgba(255,253,248,.97) 100%);
+    linear-gradient(180deg, rgba(255,253,248,.90) 0%, rgba(255,253,248,.70) 34%,
+                    rgba(255,253,248,.74) 62%, rgba(255,253,248,.95) 100%);
 }
 @media (max-width: 40rem) {
   /* Portrait phones show far less of a wide crowd shot, so lean the scrim

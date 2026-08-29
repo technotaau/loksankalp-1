@@ -55,7 +55,9 @@ css/tokens.css          design tokens (colour, type scale, spacing)
 css/site.css            the entire stylesheet
 js/site.js              nav, counters, scroll reveal, demo form handling
 assets/img/             logo, icon sprite, hero illustration, OG card
-tools/check.py          QC harness (structure, links, a11y, SEO, SVG validity)
+assets/img/photos/      campaign photographs + responsive WebP/JPEG variants
+tools/check.py          QC harness (structure, links, a11y, SEO, images, SVG validity)
+tools/optimize_photos.py generates the responsive photo variants
 ```
 
 ## Run it locally
@@ -83,9 +85,9 @@ The site ships with **marked placeholders** wherever real data is needed. Search
 - [ ] Helpline number, contact email, office address (footer + `sahayata-kendra.html`)
 - [ ] Social media links (footer)
 - [ ] The original logo artwork — `assets/img/logo.svg` is a hand-built recreation
-- [ ] Real photographs for the hero and story cards
 - [ ] Live figures for the impact counters and `dashboard.html`
 - [ ] Real success stories (all current story cards are structural examples)
+- [ ] More photographs as the campaign grows — see `docs/PHOTOS.md`
 - [ ] Downloadable PDFs in `sansadhan.html`
 - [ ] A backend for the forms — they currently show a confirmation panel client-side.
       `js/site.js` handles any `<form data-demo="…">`; point the `action` at a real
