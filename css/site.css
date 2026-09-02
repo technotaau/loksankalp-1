@@ -467,6 +467,9 @@ body { padding-bottom: 68px; }
 /* Story cards carrying a real thumbnail instead of the gradient block */
 .story__thumb img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
 .story__thumb--photo { background: var(--ls-surface-alt); }
+/* The thumbnail fills the tile; the play mark stays centred by the grid. */
+.story__thumb--photo picture { position: absolute; inset: 0; display: block; }
+.story__thumb--photo img { width: 100%; height: 100%; object-fit: cover; }
 .story__thumb--photo::after {
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.35) 100%);
@@ -586,7 +589,9 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 .footer-grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
 .footer-contact li { display: grid; grid-template-columns: auto 1fr; gap: .6rem; align-items: start; }
 .footer-contact svg { width: 20px; height: 20px; margin-top: .32rem; color: var(--ls-gold); }
-.socials { display: flex; gap: .6rem; margin-top: .9rem; }
+/* Needs to outrank `.site-footer ul { display: grid }`, which otherwise
+   stacks the icons vertically now that this is a list. */
+.site-footer .socials { display: flex; gap: .6rem; margin-top: .9rem; list-style: none; padding: 0; flex-wrap: wrap; }
 .socials a {
   display: grid; place-items: center; width: var(--ls-tap); height: var(--ls-tap);
   border: 1px solid rgba(255,255,255,.25); border-radius: 12px;

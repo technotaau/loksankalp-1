@@ -27,6 +27,10 @@ the 1400px one.
 
 One upload was a byte-identical duplicate and was dropped.
 
+`video-abhiyan.jpg` is not a campaign photograph: it is the YouTube thumbnail for
+"सामाजिक सरोकारों के साथ - नशा मुक्त भारत अभियान", stored locally so the video
+cards do not hotlink to `i.ytimg.com`. Replace it if the video changes.
+
 ## Rules
 
 0. **No credit / "आयोजक एवं सहयोगी" section.** Decided by the project owner.

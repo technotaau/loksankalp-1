@@ -83,7 +83,7 @@ The site ships with **marked placeholders** wherever real data is needed. Search
 `placeholder-note` and `href="#"` to find them all:
 
 - [ ] Helpline number, contact email, office address (footer + `sahayata-kendra.html`)
-- [ ] Social media links (footer)
+- [x] Social media accounts — YouTube, Facebook, Instagram, X (footer, home follow row, JSON-LD `sameAs`)
 - [ ] The original logo artwork — `assets/img/logo.svg` is a hand-built recreation
 - [ ] Live figures for the impact counters and `dashboard.html`
 - [ ] Real success stories (all current story cards are structural examples)
