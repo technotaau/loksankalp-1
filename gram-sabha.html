@@ -51,7 +51,7 @@
     <nav class="site-nav" id="site-nav" aria-label="मुख्य मेन्यू">
       <ul>
         <li><a href="index.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-home"></use></svg>होम</a></li>
-        <li><a href="mera-sankalp.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>मेरा संकल्प</a></li>
+        <li><a href="mera-sankalp.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>संकल्प लें</a></li>
         <li><a href="gram-sabha.html" aria-current="page"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>ग्राम सभा</a></li>
         <li><a href="good-parenting.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-parenting"></use></svg>Good&nbsp;Parenting</a></li>
         <li><a href="yuva-manch.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-youth"></use></svg>युवा मंच</a></li>
@@ -208,8 +208,8 @@
       </div>
 
       <div class="field">
-        <label for="jila">जिला</label>
-        <select id="jila" name="jila">
+        <label for="jila">जिला <span aria-hidden="true">*</span></label>
+        <select id="jila" name="jila" required>
           <option value="">— जिला चुनें —</option>
           <option>जयपुर</option>
           <option>जोधपुर</option>
@@ -226,36 +226,34 @@
       </div>
 
       <div class="field">
-        <label for="tithi">सभा की तिथि</label>
-        <input type="date" id="tithi" name="tithi">
+        <label for="tithi">सभा की तिथि <span aria-hidden="true">*</span></label>
+        <input type="date" id="tithi" name="tithi" required>
       </div>
 
       <div class="field">
-        <label for="sankhya">प्रतिभागियों की संख्या</label>
-        <input type="number" id="sankhya" name="sankhya" min="0" inputmode="numeric">
+        <label for="sankhya">प्रतिभागियों की संख्या <span aria-hidden="true">*</span></label>
+        <input type="number" id="sankhya" name="sankhya" min="0" inputmode="numeric" required>
       </div>
 
       <fieldset>
-        <legend>क्या समिति गठित हुई?</legend>
+        <legend>क्या समिति गठित हुई? <span aria-hidden="true">*</span></legend>
         <div class="choices">
-          <label class="choice"><input type="radio" name="samiti" value="haan">हाँ</label>
+          <label class="choice"><input type="radio" name="samiti" value="haan" required>हाँ</label>
           <label class="choice"><input type="radio" name="samiti" value="nahin">नहीं</label>
         </div>
       </fieldset>
 
       <div class="field">
-        <label for="report-text">संक्षिप्त रिपोर्ट</label>
-        <textarea id="report-text" name="report" aria-describedby="report-hint"></textarea>
+        <label for="report-text">संक्षिप्त रिपोर्ट <span aria-hidden="true">*</span></label>
+        <textarea id="report-text" name="report" aria-describedby="report-hint" required></textarea>
         <span class="hint" id="report-hint">चार-पाँच पंक्तियाँ पर्याप्त हैं — क्या चर्चा हुई और क्या संकल्प लिया गया।</span>
       </div>
 
       <div class="field">
-        <label for="photo">फोटो अपलोड</label>
-        <input type="file" id="photo" name="photo" accept="image/*" multiple aria-describedby="photo-hint">
-        <span class="hint" id="photo-hint">सभा की फोटो, सामूहिक संकल्प की फोटो।</span>
+        <label for="photo">फोटो अपलोड <span aria-hidden="true">*</span></label>
+        <input type="file" id="photo" name="photo" accept="image/*" multiple required aria-describedby="photo-hint">
+        <span class="hint" id="photo-hint">सभा की फोटो, सामूहिक संकल्प की फोटो। एक साथ कई फोटो चुन सकते हैं।</span>
       </div>
-
-      <p class="form-note">रिपोर्ट में किसी व्यक्ति का नाम या फोटो उसकी अनुमति के बिना न भेजें।</p>
 
       <p>
         <button class="btn btn--primary btn--lg" type="submit">
@@ -318,7 +316,7 @@
       <nav aria-labelledby="f-nav1">
         <h2 id="f-nav1">अभियान</h2>
         <ul>
-          <li><a href="mera-sankalp.html">मेरा संकल्प</a></li>
+          <li><a href="mera-sankalp.html">संकल्प लें</a></li>
           <li><a href="gram-sabha.html">ग्राम लोकसंकल्प सभा</a></li>
           <li><a href="good-parenting.html">Good Parenting केंद्र</a></li>
           <li><a href="yuva-manch.html">युवा शक्ति मंच</a></li>

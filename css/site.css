@@ -87,9 +87,13 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 /* ---------- 4. Header & navigation ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(255, 253, 248, .96);
-  backdrop-filter: saturate(1.4) blur(8px);
+  background: rgba(255, 253, 248, .98);
   border-bottom: 1px solid var(--ls-border);
+  /* NO backdrop-filter here. It makes the header a containing block for
+     position:fixed descendants, which traps the open mobile menu inside the
+     header box instead of the viewport — the menu then renders a couple of
+     items tall with the page showing through. It is re-applied at desktop
+     widths, where the nav is static and nothing is trapped. */
 }
 .site-header__bar {
   display: flex; align-items: center; gap: 1rem;
@@ -119,8 +123,10 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .site-nav { display: none; }
 .site-nav[data-open="true"] {
   display: block;
-  position: fixed; inset: 72px 0 0; z-index: 99;
-  background: var(--ls-bg); overflow-y: auto;
+  /* Header height varies with how the brand tagline wraps, so it is measured
+     at runtime rather than hardcoded; 72px is only the pre-JS fallback. */
+  position: fixed; inset: var(--ls-header-h, 72px) 0 0; z-index: 99;
+  background: var(--ls-bg); overflow-y: auto; overscroll-behavior: contain;
   padding: 1rem 1.1rem 5.5rem;
   border-top: 1px solid var(--ls-border);
 }
@@ -148,6 +154,7 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
   /* Desktop: brand + login on the top row, the full menu on its own row below.
      Ten destinations do not fit beside the brand without shrinking them to
      an unreadable size, and this audience needs readable links. */
+  .site-header { backdrop-filter: saturate(1.4) blur(8px); }
   .site-header__bar { flex-wrap: wrap; min-height: 0; padding-block: .7rem 0; }
   .site-nav { display: block !important; flex: 1 0 100%; margin: 0; }
   .site-nav[data-open="true"] { position: static; padding: 0; border: 0; background: none; inset: auto; }

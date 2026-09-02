@@ -6,9 +6,24 @@
   /* --- Mobile navigation ------------------------------------------------ */
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.getElementById('site-nav');
+  var header = document.querySelector('.site-header');
   if (toggle && nav) {
     toggle.hidden = false;
+
+    // The open menu is a fixed panel that starts below the header. The header's
+    // height depends on how the brand tagline wraps, which differs across phone
+    // widths, so measure it instead of assuming a value.
+    var syncHeaderHeight = function () {
+      if (!header) return;
+      document.documentElement.style.setProperty(
+        '--ls-header-h', Math.round(header.getBoundingClientRect().height) + 'px');
+    };
+    syncHeaderHeight();
+    window.addEventListener('resize', syncHeaderHeight);
+    window.addEventListener('orientationchange', syncHeaderHeight);
+    if (window.ResizeObserver && header) new ResizeObserver(syncHeaderHeight).observe(header);
     var setOpen = function (open) {
+      if (open) syncHeaderHeight();
       toggle.setAttribute('aria-expanded', String(open));
       nav.setAttribute('data-open', String(open));
       document.documentElement.style.overflow = open && window.innerWidth < 992 ? 'hidden' : '';
