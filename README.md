@@ -82,7 +82,10 @@ CI runs it before every deploy — see `.github/workflows/deploy.yml`.
 The site ships with **marked placeholders** wherever real data is needed. Search for
 `placeholder-note` and `href="#"` to find them all:
 
-- [ ] Helpline number, contact email, office address (footer + `sahayata-kendra.html`)
+- [x] Contact email — info@loksankalp.org (footer, सहायता केंद्र, JSON-LD)
+- [ ] Helpline number. Until one exists the footer says "जल्द उपलब्ध होगी" and the
+      सहायता केंद्र buttons point at the email — never at a placeholder `tel:` link,
+      which would have dialled 00000 for someone in distress
 - [x] Social media accounts — YouTube, Facebook, Instagram, X (footer, home follow row, JSON-LD `sameAs`)
 - [ ] The original logo artwork — `assets/img/logo.svg` is a hand-built recreation
 - [ ] Live figures for the impact counters and `dashboard.html`
