@@ -4,10 +4,13 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    # The github-pages environment only accepts deployments from the repository's
-    # default branch, which is still claude/website-hindi-content-build-f4hhg9.
-    # Once the default branch is set to main, drop that second entry.
-    branches: [main, claude/website-hindi-content-build-f4hhg9]
+    # Only the repository's DEFAULT branch may deploy: the github-pages
+    # environment rejects every other ref, and a run from main would die at the
+    # environment gate — and, sharing the `pages` concurrency group with
+    # cancel-in-progress, would cancel the good run alongside it.
+    # The default branch is still claude/website-hindi-content-build-f4hhg9.
+    # Once it is switched to main, change this back to [main].
+    branches: [claude/website-hindi-content-build-f4hhg9]
   workflow_dispatch:
 
 permissions:
