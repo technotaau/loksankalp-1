@@ -317,6 +317,26 @@ body { padding-bottom: 68px; }
 .card--green   .card__ic { background: #e6f5ea; color: var(--ls-green-dark); }
 .card--red     .card__ic { background: #fdeaea; color: var(--ls-red); }
 
+/* A resource card that leads somewhere real. Villagers were reading these as
+   plain text, so the actions are spelled out instead of relying on the whole
+   card silently being a link. The title still covers the card for a big tap
+   target; the buttons sit above it. */
+.card--doc { position: relative; display: flex; flex-direction: column; }
+.card--doc h3 a, .card--doc h4 a { text-decoration: none; color: inherit; }
+.card--doc h3 a::after, .card--doc h4 a::after {
+  content: ""; position: absolute; inset: 0; border-radius: var(--ls-radius);
+}
+.card--doc h3 a:focus-visible::after, .card--doc h4 a:focus-visible::after {
+  outline: 3px solid var(--ls-saffron); outline-offset: 3px;
+}
+.card--doc:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(23,48,122,.13); border-color: #c9d6ff; }
+.card--doc { transition: transform .14s ease, box-shadow .16s ease, border-color .16s ease; }
+.card__actions {
+  display: flex; flex-wrap: wrap; gap: .5rem; margin-top: auto; padding-top: 1rem;
+  position: relative; z-index: 1;          /* above the title's cover layer */
+}
+.card__actions .btn { font-size: .97rem; padding: .58rem 1.05rem; min-height: 44px; }
+
 /* Pillars */
 .pillar { position: relative; text-align: center; }
 .pillar .card__ic { margin-inline: auto; width: 72px; height: 72px; }
