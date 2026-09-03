@@ -92,78 +92,6 @@
   </div>
 </section>
 
-<!-- ================= स्तर चुनें ================= -->
-<section class="section section--tint" aria-labelledby="star">
-  <div class="wrap split">
-    <div class="stack">
-      <p class="eyebrow">खोज</p>
-      <h2 id="star">स्तर चुनें</h2>
-      <p>ऊपर से नीचे की ओर चुनते जाइए — जैसे-जैसे आप नीचे जाएँगे, तस्वीर उतनी ही नज़दीक की होगी।</p>
-      <ul class="cluster mt-2">
-        <li class="chip">राज्य</li>
-        <li class="chip" aria-hidden="true">→</li>
-        <li class="chip">जिला</li>
-        <li class="chip" aria-hidden="true">→</li>
-        <li class="chip">ब्लॉक</li>
-        <li class="chip" aria-hidden="true">→</li>
-        <li class="chip">गाँव</li>
-      </ul>
-      <ol class="steps mt-2">
-        <li><strong>राज्य</strong> — पूरे राजस्थान की कुल स्थिति।</li>
-        <li><strong>जिला</strong> — जिले के गाँव, सभाएँ और समितियाँ।</li>
-        <li><strong>ब्लॉक</strong> — ब्लॉक की पंचायतवार प्रगति।</li>
-        <li><strong>गाँव</strong> — आपके अपने गाँव का पूरा विवरण।</li>
-      </ol>
-    </div>
-
-    <div class="card">
-      <div class="card__ic"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-search"></use></svg></div>
-      <h3>अपना क्षेत्र चुनें</h3>
-      <form class="form mt-2" data-demo="dash-done">
-        <div class="field">
-          <label for="d-rajya">राज्य</label>
-          <select id="d-rajya" name="rajya">
-            <option>राजस्थान</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="d-jila">जिला</label>
-          <select id="d-jila" name="jila">
-            <option value="">जिला चुनें</option>
-            <option>जयपुर</option>
-            <option>जोधपुर</option>
-            <option>उदयपुर</option>
-            <option>अजमेर</option>
-            <option>बीकानेर</option>
-            <option>कोटा</option>
-            <option>अलवर</option>
-            <option>भरतपुर</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="d-block">ब्लॉक</label>
-          <select id="d-block" name="block">
-            <option value="">पहले जिला चुनें</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="d-gaon">गाँव</label>
-          <select id="d-gaon" name="gaon">
-            <option value="">पहले ब्लॉक चुनें</option>
-          </select>
-        </div>
-        <p><button class="btn btn--primary btn--block" type="submit"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-search"></use></svg>प्रगति देखें</button></p>
-        <p class="form-note"><span class="placeholder-note">चयन बैकएंड जुड़ने पर सजीव आँकड़ों से जुड़ जाएगा</span></p>
-      </form>
-
-      <div id="dash-done" class="callout mt-2" hidden>
-        <h3>चयन सुरक्षित</h3>
-        <p>आपने जो क्षेत्र चुना है, उसका विस्तृत विवरण डेटा स्रोत जुड़ते ही यहीं दिखाई देगा।</p>
-        <p><span class="placeholder-note">डेमो — अभी सजीव आँकड़े उपलब्ध नहीं</span></p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ================= प्रमुख संकेतक ================= -->
 <section class="section" aria-labelledby="sanketak">
@@ -194,12 +122,11 @@
     <div class="section-head">
       <p class="eyebrow">तालिका</p>
       <h2 id="jilewar">जिलेवार प्रगति</h2>
-      <p>तालिका को दाएँ-बाएँ खिसकाकर पूरी पंक्ति देखी जा सकती है।</p>
+      <p>जिस जिले से प्रविष्टि आई है, वह यहाँ अपने आप जुड़ जाता है।</p>
     </div>
-    <p class="center"><span class="placeholder-note">नीचे दिए गए सभी अंक placeholder हैं</span></p>
     <div class="table-scroll">
       <table class="data">
-        <caption>राजस्थान — चयनित जिलों की लोकसंकल्प प्रगति (placeholder आँकड़े)</caption>
+        <caption>राजस्थान — जिलेवार लोकसंकल्प प्रगति</caption>
         <thead>
           <tr>
             <th scope="col">जिला</th>
@@ -209,72 +136,14 @@
             <th scope="col">संकल्प</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th scope="row">जयपुर</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th scope="row">जोधपुर</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th scope="row">उदयपुर</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th scope="row">अजमेर</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th scope="row">बीकानेर</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th scope="row">कोटा</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th scope="row">अलवर</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
-          <tr>
-            <th scope="row">भरतपुर</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-          </tr>
+        <tbody data-district-rows>
+          <tr><td colspan="5" class="center">आँकड़े जुड़ रहे हैं…</td></tr>
         </tbody>
       </table>
     </div>
-    <p><span class="placeholder-note">शेष जिले डेटा स्रोत जुड़ने पर जोड़े जाएँगे</span></p>
-    <div class="callout">
-      <p><strong>हमारा उद्देश्य —</strong> सामाजिक परिवर्तन को मापना, प्रेरित करना और विस्तार देना।</p>
-    </div>
   </div>
 </section>
+
 
 <!-- ================= CTA ================= -->
 <section class="section section--ink">

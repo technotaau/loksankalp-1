@@ -17,7 +17,7 @@ var FOLDER_NAME = 'लोकसंकल्प — फ़ॉर्म फ़ा�
 var MAX_FILES = 6;             // per submission
 var MAX_FILE_BYTES = 8 * 1024 * 1024;
 var MAX_TEXT = 4000;           // characters kept per field
-var CODE_VERSION = 2;          // bump when this file changes; shown in every response
+var CODE_VERSION = 3;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -141,6 +141,36 @@ function computeStats() {
     samman:     sammanRows.length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
+
+  // Per-district breakdown for the जिलेवार प्रगति table. Only districts that
+  // actually have activity appear, so no master list of districts is needed.
+  var byDistrict = {};
+  var touch = function (d) {
+    d = String(d || '').trim();
+    if (!d) return null;
+    if (!byDistrict[d]) byDistrict[d] = { gaon: {}, sabhaen: 0, samitiyan: 0, sankalp: 0 };
+    return byDistrict[d];
+  };
+  var jSankalp = FORMS.sankalp.fields.indexOf('jila');
+  var gSankalp = FORMS.sankalp.fields.indexOf('gaon');
+  sankalpRows.forEach(function (r) {
+    var d = touch(r[jSankalp + 1]); if (!d) return;
+    d.sankalp++;
+    var v = String(r[gSankalp + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
+  });
+  var jSabha = FORMS.sabha.fields.indexOf('jila');
+  var gSabha = FORMS.sabha.fields.indexOf('gaon');
+  sabhaRows.forEach(function (r) {
+    var d = touch(r[jSabha + 1]); if (!d) return;
+    d.sabhaen++;
+    if (String(r[samitiIdx + 1] || '').trim() === 'हाँ') d.samitiyan++;
+    var v = String(r[gSabha + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
+  });
+  stats.byDistrict = Object.keys(byDistrict).map(function (d) {
+    return { jila: d, gaon: Object.keys(byDistrict[d].gaon).length,
+             sabhaen: byDistrict[d].sabhaen, samitiyan: byDistrict[d].samitiyan,
+             sankalp: byDistrict[d].sankalp };
+  }).sort(function (a, b) { return (b.sabhaen + b.sankalp) - (a.sabhaen + a.sankalp); });
 
   // Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
   // Lets staff publish figures no form can produce.

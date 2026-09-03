@@ -99,8 +99,40 @@
           runCounter(el);
         });
         document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
+        renderDistricts(res.stats.byDistrict);
       })
       .catch(function () { /* leave the zeros in place */ });
+  }
+
+  /* Districts appear in the table only once a submission names them, so the
+     campaign never publishes a district it has not actually reached. */
+  function renderDistricts(list) {
+    var body = document.querySelector('[data-district-rows]');
+    if (!body) return;
+    // Absent (older deployed script) is not the same as empty (no entries yet);
+    // claiming "no districts" when the data simply was not sent would be wrong.
+    if (!list) {
+      body.innerHTML = '<tr><td colspan="5" class="center">जिलेवार आँकड़े उपलब्ध नहीं हैं।</td></tr>';
+      return;
+    }
+    if (!list.length) {
+      body.innerHTML = '<tr><td colspan="5" class="center">अभी किसी जिले से प्रविष्टि नहीं आई है।</td></tr>';
+      return;
+    }
+    body.innerHTML = '';
+    list.forEach(function (d) {
+      var tr = document.createElement('tr');
+      var th = document.createElement('th');
+      th.setAttribute('scope', 'row');
+      th.textContent = d.jila;
+      tr.appendChild(th);
+      ['gaon', 'sabhaen', 'samitiyan', 'sankalp'].forEach(function (k) {
+        var td = document.createElement('td');
+        td.textContent = nf.format(d[k] || 0);
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
   }
 
   /* --- Footer year ------------------------------------------------------ */
