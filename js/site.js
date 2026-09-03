@@ -183,11 +183,15 @@
       var out = document.getElementById(outId);
       var button = form.querySelector('[type="submit"]');
 
+      // Read the name up front: on success the form is reset before the
+      // confirmation renders, which would otherwise blank the certificate.
+      var naamField = form.querySelector('[name="naam"]');
+      var naamValue = naamField ? naamField.value.trim() : '';
+
       var finish = function (savedMessage) {
         if (out) {
           var slot = out.querySelector('[data-slot="naam"]');
-          var naam = form.querySelector('[name="naam"]');
-          if (slot && naam && naam.value.trim()) slot.textContent = naam.value.trim();
+          if (slot && naamValue) slot.textContent = naamValue;
           out.hidden = false;
           out.setAttribute('tabindex', '-1');
           out.focus();
