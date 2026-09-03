@@ -17,6 +17,7 @@ var FOLDER_NAME = 'लोकसंकल्प — फ़ॉर्म फ़ा�
 var MAX_FILES = 6;             // per submission
 var MAX_FILE_BYTES = 8 * 1024 * 1024;
 var MAX_TEXT = 4000;           // characters kept per field
+var CODE_VERSION = 2;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -83,9 +84,15 @@ function doGet(e) {
   var cache = CacheService.getScriptCache();
   var hit = cache.get('stats');
   if (hit) return json(hit);
-  var out = JSON.stringify({ ok: true, stats: computeStats() });
-  cache.put('stats', out, 60);           // a minute is plenty; keeps reads cheap
-  return json(out);
+  try {
+    var out = JSON.stringify({ ok: true, version: CODE_VERSION, stats: computeStats() });
+    cache.put('stats', out, 60);         // a minute is plenty; keeps reads cheap
+    return json(out);
+  } catch (err) {
+    // Return JSON rather than letting Apps Script serve an HTML error page,
+    // which the site could not parse and could not report usefully.
+    return reply(false, 'आँकड़े गिनने में समस्या: ' + err);
+  }
 }
 
 function computeStats() {
@@ -225,6 +232,6 @@ function timestamp() {
 
 function reply(ok, message) {
   return ContentService
-    .createTextOutput(JSON.stringify({ ok: ok, message: message }))
+    .createTextOutput(JSON.stringify({ ok: ok, version: CODE_VERSION, message: message }))
     .setMimeType(ContentService.MimeType.JSON);
 }

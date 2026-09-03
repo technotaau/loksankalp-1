@@ -16,6 +16,23 @@ code=$(curl -sS -L --max-time 45 -o /dev/null -w '%{http_code}' "$URL" 2>/dev/nu
 if printf '%s' "$body" | grep -q '"ok"'; then
   echo "✅ reachable anonymously — HTTP $code"
   printf '   response: %s\n' "$(printf '%s' "$body" | head -c 200)"
+
+  # A deployment keeps serving the code it was deployed with. Pasting a new
+  # Code.gs is not enough: the deployment must be pointed at a NEW version.
+  stats=$(curl -sS -L --max-time 45 "${URL}?stats=1" 2>/dev/null)
+  if printf '%s' "$stats" | grep -q '"stats"'; then
+    echo "✅ stats endpoint live"
+    printf '   %s\n' "$(printf '%s' "$stats" | head -c 260)"
+  else
+    echo "⚠️  stats endpoint NOT live — this deployment is running older code."
+    echo "    Apps Script editor:"
+    echo "      Deploy > Manage deployments > pencil (edit)"
+    echo "      Version:  New version      <-- the step that is easy to miss"
+    echo "      Deploy"
+    echo "    Clicking Deploy while Version still reads 'Version 1' redeploys"
+    echo "    the same old code. The URL does not change either way."
+    exit 1
+  fi
   exit 0
 fi
 

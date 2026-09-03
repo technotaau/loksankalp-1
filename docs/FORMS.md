@@ -68,10 +68,21 @@ commit और push करें। बस — फ़ॉर्म सहेजन
 
 1. Sheet → **Extensions → Apps Script**
 2. पूरा पुराना कोड हटाकर `Code.gs` का नया कोड चिपकाएँ → **Save**
-3. **Deploy → Manage deployments → ✏️ → Deploy**
-   *(URL वही रहेगा — `js/config.js` बदलने की ज़रूरत नहीं।)*
+3. **Deploy → Manage deployments → ✏️ (pencil)**
+4. **Version** की सूची में **New version** चुनें — यही सबसे ज़रूरी कदम है।
+   *Version 1* पर छोड़कर Deploy दबाने से पुराना कोड ही चलता रहेगा, और कहीं
+   कोई त्रुटि भी नहीं दिखेगी।
+5. **Deploy** दबाएँ। *(URL वही रहेगा — `js/config.js` बदलने की ज़रूरत नहीं।)*
 
-जाँच: ब्राउज़र में `<आपका URL>?stats=1` खोलें। `"stats"` वाला JSON दिखना चाहिए।
+जाँच: ब्राउज़र में `<आपका URL>?stats=1` खोलें।
+
+- सही: `{"ok":true,"version":2,"stats":{…}}`
+- पुराना कोड: `{"ok":true,"message":"लोकसंकल्प फ़ॉर्म सेवा चालू है"}` → ऊपर का
+  **New version** वाला कदम दोहराएँ।
+
+टर्मिनल से: `tools/check-form-endpoint.sh <URL>` — यह बता देगा कि deployment
+पुराना कोड चला रहा है या नहीं।
+
 तब तक डैशबोर्ड के अंक 0 ही रहेंगे — गलत संख्या कभी नहीं दिखेगी।
 
 ## चरण 5 — जाँचें
