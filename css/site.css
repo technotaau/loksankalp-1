@@ -534,9 +534,23 @@ body { padding-bottom: 68px; }
   margin-top: .4rem; text-align: center;
   font-size: .85rem; color: var(--ls-ink-soft); font-variant-numeric: tabular-nums;
 }
-.doc-actions { position: sticky; bottom: 78px; z-index: 20; display: flex; justify-content: center; pointer-events: none; }
-.doc-actions .btn { pointer-events: auto; box-shadow: 0 6px 20px rgba(23,48,122,.25); }
-@media (min-width: 62rem) { .doc-actions { bottom: 1.4rem; } }
+/* Follows the reader down all 14 pages, so it stays on one compact row: two
+   stacked full-width buttons would cover the page being read. */
+.doc-actions {
+  position: sticky; bottom: 78px; z-index: 20;
+  display: flex; gap: .45rem; flex-wrap: nowrap; justify-content: center;
+  pointer-events: none;
+}
+.doc-actions .btn {
+  pointer-events: auto; box-shadow: 0 6px 20px rgba(23,48,122,.25);
+  font-size: .95rem; padding: .55rem .9rem; min-height: 44px; white-space: nowrap;
+}
+/* It sits over page scans, so the outlined button needs its own ground. */
+.doc-actions .btn--ghost { background: var(--ls-surface); }
+@media (min-width: 62rem) {
+  .doc-actions { bottom: 1.4rem; gap: .6rem; }
+  .doc-actions .btn { font-size: 1.02rem; padding: .7rem 1.3rem; }
+}
 
 /* Data tables */
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--ls-radius); border: 1px solid var(--ls-border); }
