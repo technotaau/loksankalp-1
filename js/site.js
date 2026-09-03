@@ -81,6 +81,28 @@
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  /* --- Live figures ----------------------------------------------------
+     Counters start at 0 in the HTML and are raised once the real numbers
+     arrive from the Sheet. If the request fails they simply stay at 0 rather
+     than showing anything invented. */
+
+  var statEls = document.querySelectorAll('[data-stat]');
+  if (statEls.length && (window.LOKSANKALP_FORM_ENDPOINT || '').trim()) {
+    fetch((window.LOKSANKALP_FORM_ENDPOINT || '').trim() + '?stats=1')
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok || !res.stats) return;
+        Array.prototype.forEach.call(statEls, function (el) {
+          var v = res.stats[el.getAttribute('data-stat')];
+          if (typeof v !== 'number') return;
+          el.setAttribute('data-count', String(v));
+          runCounter(el);
+        });
+        document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
+      })
+      .catch(function () { /* leave the zeros in place */ });
+  }
+
   /* --- Footer year ------------------------------------------------------ */
   var yr = document.getElementById('year');
   if (yr) yr.textContent = new Date().getFullYear();

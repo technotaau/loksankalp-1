@@ -71,8 +71,92 @@ function doPost(e) {
   }
 }
 
-function doGet() {
-  return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
+/**
+ * GET ?stats=1  ->  the numbers shown on the home page and the dashboard.
+ * Everything is derived from the rows in this spreadsheet, so a figure only
+ * moves when a real submission arrives. Delete a row and the count drops.
+ */
+function doGet(e) {
+  if (!e || !e.parameter || !e.parameter.stats) {
+    return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
+  }
+  var cache = CacheService.getScriptCache();
+  var hit = cache.get('stats');
+  if (hit) return json(hit);
+  var out = JSON.stringify({ ok: true, stats: computeStats() });
+  cache.put('stats', out, 60);           // a minute is plenty; keeps reads cheap
+  return json(out);
+}
+
+function computeStats() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var sankalpRows  = rows(ss, FORMS.sankalp.tab);
+  var sabhaRows    = rows(ss, FORMS.sabha.tab);
+  var kahaniRows   = rows(ss, FORMS.kahani.tab);
+  var shikshakRows = rows(ss, FORMS.shikshak.tab);
+  var yuvaRows     = rows(ss, FORMS.yuva.tab);
+  var sammanRows   = rows(ss, FORMS.samman.tab);
+
+  // "जुड़े हुए गाँव" counts each village once, however many forms mention it.
+  var villages = {};
+  [[sankalpRows, FORMS.sankalp], [sabhaRows, FORMS.sabha],
+   [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva]].forEach(function (pair) {
+    var idx = pair[1].fields.indexOf('gaon');
+    if (idx < 0) return;
+    pair[0].forEach(function (r) {
+      var v = String(r[idx + 1] || '').trim();
+      if (v) villages[v.toLowerCase()] = 1;
+    });
+  });
+
+  var schools = {};
+  var vIdx = FORMS.shikshak.fields.indexOf('vidyalaya');
+  shikshakRows.forEach(function (r) {
+    var v = String(r[vIdx + 1] || '').trim();
+    if (v) schools[v.toLowerCase()] = 1;
+  });
+
+  var samitiIdx = FORMS.sabha.fields.indexOf('samiti');
+  var samitiyan = sabhaRows.filter(function (r) {
+    return String(r[samitiIdx + 1] || '').trim() === 'हाँ';
+  }).length;
+
+  var stats = {
+    gaon:       Object.keys(villages).length,
+    sabhaen:    sabhaRows.length,
+    samitiyan:  samitiyan,
+    sankalp:    sankalpRows.length,
+    shikshak:   shikshakRows.length,
+    vidyalaya:  Object.keys(schools).length,
+    yuvaClub:   yuvaRows.length,
+    kahaniyan:  kahaniRows.length,
+    samman:     sammanRows.length,
+    sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
+  };
+
+  // Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
+  // Lets staff publish figures no form can produce.
+  var manual = ss.getSheetByName('मैनुअल आँकड़े');
+  if (manual && manual.getLastRow() > 1) {
+    manual.getRange(2, 1, manual.getLastRow() - 1, 2).getValues().forEach(function (r) {
+      var k = String(r[0] || '').trim();
+      if (k && r[1] !== '' && !isNaN(Number(r[1]))) stats[k] = Number(r[1]);
+    });
+  }
+  return stats;
+}
+
+/** Data rows of a tab, header excluded; [] when the tab does not exist yet. */
+function rows(ss, name) {
+  var sh = ss.getSheetByName(name);
+  if (!sh || sh.getLastRow() < 2) return [];
+  return sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues()
+           .filter(function (r) { return String(r[0] || '').trim() !== ''; });
+}
+
+function json(text) {
+  return ContentService.createTextOutput(text).setMimeType(ContentService.MimeType.JSON);
 }
 
 // ---- helpers -------------------------------------------------------------
