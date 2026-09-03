@@ -38,6 +38,19 @@
    **Allow**। यह आपकी ही स्क्रिप्ट है, इसलिए सुरक्षित है।
 6. अंत में एक **Web app URL** मिलेगा। वह `/exec` पर ख़त्म होता है। उसे कॉपी करें।
 
+> **ज़रूरी जाँच —** URL को **private / incognito** विंडो में खोलें (जहाँ आप Google में
+> साइन-इन न हों)। वेबसाइट भी इसी तरह, बिना साइन-इन के, इस पते पर भेजती है।
+>
+> - सही: `{"ok":true,"message":"लोकसंकल्प फ़ॉर्म सेवा चालू है"}`
+> - ग़लत: Google का **"You need access"** पेज → *Who has access* **Anyone** नहीं है।
+>   ठीक करें: **Deploy → Manage deployments → ✏️ → Who has access: Anyone → Deploy**।
+>   पुरानी deployment को edit करने पर URL वही रहता है।
+>
+> टर्मिनल से जाँचने के लिए: `tools/check-form-endpoint.sh <URL>`
+
+**ध्यान दें:** *Anyone with Google account* नहीं, केवल **Anyone** चुनें। गाँव का
+कोई व्यक्ति फ़ॉर्म भरते समय Google में साइन-इन नहीं होता।
+
 ## चरण 4 — URL वेबसाइट में डालें
 
 `js/config.js` खोलें और URL को उद्धरण चिह्नों के बीच चिपकाएँ:
