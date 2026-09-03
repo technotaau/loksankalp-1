@@ -315,6 +315,12 @@ body { padding-bottom: 68px; }
 .card--link:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(23,48,122,.13); border-color: #c9d6ff; }
 .card--saffron .card__ic { background: #fff0e0; color: var(--ls-saffron-dk); }
 .card--green   .card__ic { background: #e6f5ea; color: var(--ls-green-dark); }
+.card--gold    .card__ic { background: #fdf1da; color: #7a4f00; }
+
+/* One line under a group heading saying who the group is for. Sits between
+   the heading and the cards, so it must not inherit the section-head
+   centring used elsewhere. */
+.group-note { color: var(--ls-ink-soft); margin-top: .35rem; margin-bottom: .2rem; }
 .card--red     .card__ic { background: #fdeaea; color: var(--ls-red); }
 
 /* A resource card that leads somewhere real. Villagers were reading these as
