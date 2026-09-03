@@ -58,6 +58,8 @@ assets/img/             logo, icon sprite, hero illustration, OG card
 assets/img/photos/      campaign photographs + responsive WebP/JPEG variants
 tools/check.py          QC harness (structure, links, a11y, SEO, images, SVG validity)
 tools/optimize_photos.py generates the responsive photo variants
+js/config.js            the one line to paste the form endpoint into
+google-apps-script/     form receiver: Google Sheet rows + Drive uploads
 ```
 
 ## Run it locally
@@ -92,9 +94,8 @@ The site ships with **marked placeholders** wherever real data is needed. Search
 - [ ] Real success stories (all current story cards are structural examples)
 - [ ] More photographs as the campaign grows — see `docs/PHOTOS.md`
 - [ ] Downloadable PDFs in `sansadhan.html`
-- [ ] A backend for the forms — they currently show a confirmation panel client-side.
-      `js/site.js` handles any `<form data-demo="…">`; point the `action` at a real
-      endpoint and remove `data-demo` to switch over.
+- [ ] Deploy the form receiver and paste its URL into `js/config.js` — see `docs/FORMS.md`.
+      Until then forms confirm on screen and say plainly that nothing was saved.
 - [ ] Interactive Rajasthan district map on `dashboard.html`
 
 ## Deploy

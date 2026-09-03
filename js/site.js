@@ -85,19 +85,153 @@
   var yr = document.getElementById('year');
   if (yr) yr.textContent = new Date().getFullYear();
 
-  /* --- Demo form handling (no backend yet) ------------------------------ */
+  /* --- Form submission -------------------------------------------------
+     Posts to a Google Apps Script Web App, which appends a row to a Sheet and
+     saves photos to Drive. With no endpoint configured the form still shows its
+     confirmation panel, but says plainly that nothing was saved. */
+
+  var ENDPOINT = (window.LOKSANKALP_FORM_ENDPOINT || '').trim();
+
+  // Which data-demo id maps to which sheet in the script.
+  var FORM_NAMES = {
+    'sankalp-done': 'sankalp',
+    'sabha-done': 'sabha',
+    'kahani-done': 'kahani',
+    'shikshak-done': 'shikshak',
+    'yuva-done': 'yuva',
+    'samman-done': 'samman'
+  };
+
+  var MAX_EDGE = 1600;   // px on the long side
+  var MAX_FILES = 6;
+
+  /* A phone camera photo is 3-6 MB. Sending that raw over a village 3G link
+     would take minutes and often fail outright, so shrink it in the browser
+     first — this is what makes photo upload usable at all here. */
+  function shrink(file) {
+    return new Promise(function (resolve) {
+      if (!/^image\//.test(file.type) || typeof createImageBitmap === 'undefined') {
+        return resolve(readRaw(file));
+      }
+      createImageBitmap(file).then(function (bmp) {
+        var scale = Math.min(1, MAX_EDGE / Math.max(bmp.width, bmp.height));
+        var w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(bmp, 0, 0, w, h);
+        bmp.close && bmp.close();
+        canvas.toBlob(function (blob) {
+          if (!blob) return resolve(readRaw(file));
+          resolve(toBase64(blob, file.name.replace(/\.[^.]+$/, '') + '.jpg', 'image/jpeg'));
+        }, 'image/jpeg', 0.8);
+      }).catch(function () { resolve(readRaw(file)); });
+    });
+  }
+
+  function readRaw(file) { return toBase64(file, file.name, file.type); }
+
+  function toBase64(blob, name, type) {
+    return new Promise(function (resolve) {
+      var r = new FileReader();
+      r.onload = function () {
+        resolve({ name: name, type: type, data: String(r.result).split(',')[1] || '' });
+      };
+      r.onerror = function () { resolve(null); };
+      r.readAsDataURL(blob);
+    });
+  }
+
+  function collect(form) {
+    var values = {};
+    var els = form.querySelectorAll('input, select, textarea');
+    Array.prototype.forEach.call(els, function (el) {
+      if (!el.name || el.name === 'website' || el.type === 'file' || el.type === 'submit') return;
+      if (el.type === 'checkbox') {
+        if (!el.checked) return;
+        var v = el.value && el.value !== 'on' ? el.value : 'हाँ';
+        values[el.name] = values[el.name] ? values[el.name] + ', ' + v : v;
+      } else if (el.type === 'radio') {
+        if (el.checked) values[el.name] = el.value;
+      } else {
+        values[el.name] = el.value;
+      }
+    });
+    return values;
+  }
+
+  function setStatus(form, text, kind) {
+    var box = form.querySelector('.form-status');
+    if (!box) {
+      box = document.createElement('p');
+      box.className = 'form-status';
+      box.setAttribute('role', 'status');
+      form.appendChild(box);
+    }
+    box.textContent = text || '';
+    box.dataset.kind = kind || '';
+    box.hidden = !text;
+  }
+
   document.querySelectorAll('form[data-demo]').forEach(function (form) {
+    var outId = form.getAttribute('data-demo');
+    var formName = FORM_NAMES[outId];
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var out = document.getElementById(form.getAttribute('data-demo'));
-      if (!out) return;
-      var name = (form.querySelector('[name="naam"]') || {}).value || '';
-      var nameSlot = out.querySelector('[data-slot="naam"]');
-      if (nameSlot && name.trim()) nameSlot.textContent = name.trim();
-      out.hidden = false;
-      out.setAttribute('tabindex', '-1');
-      out.focus();
-      out.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
+
+      var out = document.getElementById(outId);
+      var button = form.querySelector('[type="submit"]');
+
+      var finish = function (savedMessage) {
+        if (out) {
+          var slot = out.querySelector('[data-slot="naam"]');
+          var naam = form.querySelector('[name="naam"]');
+          if (slot && naam && naam.value.trim()) slot.textContent = naam.value.trim();
+          out.hidden = false;
+          out.setAttribute('tabindex', '-1');
+          out.focus();
+          out.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        setStatus(form, savedMessage, savedMessage ? 'ok' : '');
+      };
+
+      // Not a submission form, or no endpoint set yet: confirmation only.
+      if (!formName || !ENDPOINT) {
+        finish(formName ? 'यह जानकारी अभी सहेजी नहीं गई — फ़ॉर्म सेवा जुड़ते ही सहेजी जाने लगेगी।' : '');
+        return;
+      }
+
+      if (button) { button.disabled = true; button.dataset.label = button.textContent; }
+      setStatus(form, 'भेजा जा रहा है…', 'busy');
+
+      var fileInput = form.querySelector('input[type="file"]');
+      var chosen = fileInput && fileInput.files ? Array.prototype.slice.call(fileInput.files, 0, MAX_FILES) : [];
+
+      Promise.all(chosen.map(shrink)).then(function (files) {
+        return fetch(ENDPOINT, {
+          method: 'POST',
+          // A plain-text body keeps this a "simple" request, so the browser
+          // sends no CORS preflight — Apps Script cannot answer one.
+          body: JSON.stringify({
+            form: formName,
+            website: (form.querySelector('[name="website"]') || {}).value || '',
+            values: collect(form),
+            files: files.filter(Boolean)
+          })
+        });
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        if (res && res.ok) {
+          form.reset();
+          finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।');
+        } else {
+          setStatus(form, 'सहेजने में समस्या हुई। कृपया दोबारा भेजें।', 'error');
+        }
+      }).catch(function () {
+        setStatus(form, 'इंटरनेट धीमा लग रहा है। कृपया दोबारा भेजें।', 'error');
+      }).then(function () {
+        if (button) { button.disabled = false; if (button.dataset.label) button.textContent = button.dataset.label; }
+      });
     });
   });
 })();

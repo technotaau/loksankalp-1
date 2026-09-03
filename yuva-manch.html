@@ -187,6 +187,11 @@
       <p>अपने क्लब या समूह को अभियान से जोड़ें और गतिविधियों की जानकारी सबसे पहले पाएँ।</p>
     </div>
     <form class="form" data-demo="yuva-done">
+      <p hidden aria-hidden="true">
+        <label>यह खाली छोड़ें
+          <input type="text" name="website" tabindex="-1" autocomplete="off">
+        </label>
+      </p>
       <div class="field">
         <label for="y-club">क्लब / समूह का नाम</label>
         <input type="text" id="y-club" name="club" required>
@@ -364,6 +369,7 @@
   <a href="sahayata-kendra.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg>सहायता</a>
 </nav>
 
+<script src="js/config.js" defer></script>
 <script src="js/site.js" defer></script>
 </body>
 </html>

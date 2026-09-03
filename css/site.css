@@ -566,6 +566,16 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 
 .form-note { font-size: .9rem; color: var(--ls-ink-soft); }
 
+/* Submission feedback. Villagers on a slow link need to see that something is
+   happening, and to be told plainly when it did not go through. */
+.form-status {
+  margin: 0; padding: .8rem 1rem; border-radius: 12px;
+  font-weight: 600; border: 1px solid var(--ls-border); background: var(--ls-surface-alt);
+}
+.form-status[data-kind="busy"]  { border-color: #c9d6ff; background: #eef2ff; color: var(--ls-blue-dark); }
+.form-status[data-kind="ok"]    { border-color: #b6e0c2; background: #eaf7ee; color: var(--ls-green-dark); }
+.form-status[data-kind="error"] { border-color: #f3c2c2; background: #fdeaea; color: #9c1f1f; }
+
 /* Certificate preview */
 .certificate {
   border: 6px double var(--ls-blue-dark); border-radius: 10px;
