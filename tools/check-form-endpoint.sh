@@ -20,17 +20,31 @@ if printf '%s' "$body" | grep -q '"ok"'; then
   # A deployment keeps serving the code it was deployed with. Pasting a new
   # Code.gs is not enough: the deployment must be pointed at a NEW version.
   stats=$(curl -sS -L --max-time 45 "${URL}?stats=1" 2>/dev/null)
-  if printf '%s' "$stats" | grep -q '"stats"'; then
-    echo "✅ stats endpoint live"
+  # Require the version marker, not merely a stats object: an older script
+  # returns stats without it, and would otherwise look healthy.
+  if printf '%s' "$stats" | grep -q '"version"'; then
+    ver=$(printf '%s' "$stats" | grep -o '"version":[0-9]*' | head -1)
+    echo "✅ stats endpoint live  (${ver:-version not reported})"
     printf '   %s\n' "$(printf '%s' "$stats" | head -c 260)"
   else
-    echo "⚠️  stats endpoint NOT live — this deployment is running older code."
-    echo "    Apps Script editor:"
-    echo "      Deploy > Manage deployments > pencil (edit)"
-    echo "      Version:  New version      <-- the step that is easy to miss"
-    echo "      Deploy"
-    echo "    Clicking Deploy while Version still reads 'Version 1' redeploys"
-    echo "    the same old code. The URL does not change either way."
+    if printf '%s' "$stats" | grep -q '"stats"'; then
+      echo "⚠️  stats work, but this is an older script (no version marker,"
+      echo "    so no जिलेवार breakdown either)."
+    else
+      echo "⚠️  stats endpoint NOT live."
+    fi
+    echo "    Two things cause this, in order:"
+    echo
+    echo "    1. The editor still holds an older Code.gs."
+    echo "       Open the Sheet > Extensions > Apps Script, select all, delete,"
+    echo "       paste the current google-apps-script/Code.gs, then Save."
+    echo "    2. The deployment still points at an older version."
+    echo "       Deploy > Manage deployments > pencil (edit)"
+    echo "       Version:  New version     <-- easy to miss; Deploy alone re-uses the old one"
+    echo "       Deploy"
+    echo
+    echo "    The URL never changes. Confirm with <url>?stats=1 — a correct"
+    echo "    deployment reports a \"version\" field."
     exit 1
   fi
   exit 0

@@ -82,11 +82,12 @@ function doGet(e) {
     return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
   }
   var cache = CacheService.getScriptCache();
-  var hit = cache.get('stats');
+  var key = 'stats-v' + CODE_VERSION;
+  var hit = cache.get(key);
   if (hit) return json(hit);
   try {
     var out = JSON.stringify({ ok: true, version: CODE_VERSION, stats: computeStats() });
-    cache.put('stats', out, 60);         // a minute is plenty; keeps reads cheap
+    cache.put(key, out, 60);         // a minute is plenty; keeps reads cheap
     return json(out);
   } catch (err) {
     // Return JSON rather than letting Apps Script serve an HTML error page,
