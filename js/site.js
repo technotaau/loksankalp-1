@@ -1,4 +1,4 @@
-/* लोकसंकल्प — progressive enhancement only.
+/* लोकसंकल्प, progressive enhancement only.
    Everything on the site works with JavaScript disabled. */
 (function () {
   'use strict';
@@ -161,7 +161,7 @@
 
   /* A phone camera photo is 3-6 MB. Sending that raw over a village 3G link
      would take minutes and often fail outright, so shrink it in the browser
-     first — this is what makes photo upload usable at all here. */
+     first. That is what makes photo upload usable at all here. */
   function shrink(file) {
     return new Promise(function (resolve) {
       if (!/^image\//.test(file.type) || typeof createImageBitmap === 'undefined') {
@@ -256,7 +256,7 @@
 
       // Not a submission form, or no endpoint set yet: confirmation only.
       if (!formName || !ENDPOINT) {
-        finish(formName ? 'यह जानकारी अभी सहेजी नहीं गई — फ़ॉर्म सेवा जुड़ते ही सहेजी जाने लगेगी।' : '');
+        finish(formName ? 'यह जानकारी अभी सहेजी नहीं गई। फ़ॉर्म सेवा जुड़ते ही सहेजी जाने लगेगी।' : '');
         return;
       }
 
@@ -270,7 +270,7 @@
         return fetch(ENDPOINT, {
           method: 'POST',
           // A plain-text body keeps this a "simple" request, so the browser
-          // sends no CORS preflight — Apps Script cannot answer one.
+          // sends no CORS preflight, which Apps Script cannot answer.
           body: JSON.stringify({
             form: formName,
             website: (form.querySelector('[name="website"]') || {}).value || '',

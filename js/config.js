@@ -1,7 +1,7 @@
-/* लोकसंकल्प — form endpoint.
+/* लोकसंकल्प form endpoint.
  *
  * Google Apps Script Web App bound to the spreadsheet
- * "लोकसंकल्प — फ़ॉर्म डेटा" in send@technotaau.com. It appends a row per
+ * "लोकसंकल्प फ़ॉर्म डेटा" in send@technotaau.com. It appends a row per
  * submission and saves uploaded photos to Drive. Setup and troubleshooting:
  * docs/FORMS.md
  *

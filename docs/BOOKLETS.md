@@ -77,7 +77,7 @@ pages of a 74-page booklet downloads roughly 350 KB, not 5 MB.
 | `meta_description`, `og_description` | search results and link previews |
 | `card_blurb` | the sentence on the संसाधन card |
 | `quotes` | pulled from the booklet's आवरण संदेश, shown in the callout |
-| `toc` | `[["अध्याय 1 : …", 5], …]` — chapter title and its **printed** page |
+| `toc` | `[["अध्याय 1 : …", 5], …]`, chapter title and its **printed** page |
 | `reference_page` | optional; the page to copy header/footer from |
 
 `toc` is the only part that needs reading the booklet. The printed page number

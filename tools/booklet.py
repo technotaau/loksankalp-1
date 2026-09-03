@@ -7,7 +7,7 @@ than being redone by hand each time:
   1. Shrink the PDF losslessly, and refuse to keep the result unless every
      page still renders pixel-for-pixel identical to the original.
   2. Render each page to WebP. The booklets embed fonts with broken Unicode
-     maps — copying the text out yields mojibake ("नशा मुत भारत अभयान") — so
+     maps, so copying the text out yields mojibake ("नशा मुत भारत अभयान") and
      pages are published as images and the PDF stays downloadable.
   3. Write <slug>-pustika.html, add the sitemap entry, and print the card
      markup to drop into संसाधन (and anywhere else the booklet belongs).
@@ -72,10 +72,10 @@ def compress(src, dest):
     shrunk = pymupdf.open(tmp)
     if shrunk.page_count != original.page_count:
         tmp.unlink()
-        raise SystemExit("compression changed the page count — refusing")
+        raise SystemExit("compression changed the page count, refusing")
     if page_hashes(shrunk) != reference:
         tmp.unlink()
-        raise SystemExit("compression changed how a page renders — refusing")
+        raise SystemExit("compression changed how a page renders, refusing")
 
     after = tmp.stat().st_size
     if after < before:
@@ -119,7 +119,7 @@ def shell(reference_page):
 def head_for(head, b, slug):
     url = f"{SITE}/{slug}-pustika.html"
     # Titles like "मुख्य परिचय पुस्तिका" already say it; don't say it twice.
-    named = b["title"] if "पुस्तिका" in b["title"] else f"{b['title']} — पुस्तिका"
+    named = b["title"] if "पुस्तिका" in b["title"] else f"{b['title']} | लोकसंकल्प पुस्तिका"
     swaps = [
         (r"<title>.*?</title>", f"<title>{named}</title>"),
         (r'<meta name="description" content=".*?">',

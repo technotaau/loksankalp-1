@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""लोकसंकल्प — QC harness.
+"""लोकसंकल्प QC harness.
 
 Runs every gate the project lead checks by hand, so CI can fail loudly:
 structure, headings, internal links and anchors, icon ids, alt text,
@@ -193,7 +193,7 @@ def check_svgs():
             err(rel, f"invalid SVG/XML: {e}")
         kb = os.path.getsize(p) / 1024
         if kb > 90:
-            warn(rel, f"{kb:.0f} KB — large for an inline asset")
+            warn(rel, f"{kb:.0f} KB, large for an inline asset")
 
 
 def main():
@@ -210,7 +210,7 @@ def main():
 
     known = icon_ids()
     if known is None:
-        warn('assets/img/icons.svg', 'missing — icon references not verified')
+        warn('assets/img/icons.svg', 'missing, icon references not verified')
 
     for p in pages:
         check_html(p, known, page_ids)
