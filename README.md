@@ -95,6 +95,8 @@ The site ships with **marked placeholders** wherever real data is needed. Search
 - [ ] More photographs as the campaign grows — see `docs/PHOTOS.md`
 - [ ] Downloadable PDFs in `sansadhan.html`
 - [ ] Deploy the form receiver and paste its URL into `js/config.js` — see `docs/FORMS.md`.
+      The destination Sheet already exists in send@technotaau.com; only the Apps Script
+      deploy step remains, and it can only be done from that account's browser.
       Until then forms confirm on screen and say plainly that nothing was saved.
 - [ ] Interactive Rajasthan district map on `dashboard.html`
 
