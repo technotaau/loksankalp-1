@@ -337,6 +337,12 @@ body { padding-bottom: 68px; }
 }
 .card__actions .btn { font-size: .97rem; padding: .58rem 1.05rem; min-height: 44px; }
 
+/* A card carrying both parts of one booklet. Each part keeps its buttons
+   directly under its own line, so the default margin-top:auto — which would
+   drag both rows to the foot of the card — is dropped here. */
+.card--parts .card__actions { margin-top: .45rem; padding-top: 0; }
+.card__part { font-size: .95rem; color: var(--ls-ink-soft); margin-top: 1rem; }
+
 /* Pillars */
 .pillar { position: relative; text-align: center; }
 .pillar .card__ic { margin-inline: auto; width: 72px; height: 72px; }
