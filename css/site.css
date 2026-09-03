@@ -489,6 +489,35 @@ body { padding-bottom: 68px; }
 
 /* Page: dashboard */
 
+/* ---------- Document reader ----------
+   Rendered page images rather than an embedded PDF: Chrome on Android will not
+   reliably show a PDF inline, and a PDF.js bundle would cost more than the
+   whole site. Images render everywhere, load one page at a time, and keep the
+   Devanagari exactly as typeset. */
+.doc-toc { display: grid; gap: .15rem; list-style: none; padding: 0; }
+.doc-toc a {
+  display: grid; grid-template-columns: 1fr auto; gap: .7rem; align-items: baseline;
+  padding: .6rem .8rem; border-radius: 10px; text-decoration: none;
+  color: var(--ls-blue-dark); min-height: var(--ls-tap);
+}
+.doc-toc a:hover, .doc-toc a:focus-visible { background: var(--ls-surface-alt); }
+.doc-toc a span:last-child { color: var(--ls-ink-soft); font-size: .9rem; white-space: nowrap; }
+
+.doc-pages { display: grid; gap: clamp(1rem, 3vw, 1.8rem); }
+.doc-page { scroll-margin-top: 90px; }
+.doc-page img {
+  display: block; width: 100%; height: auto;
+  border: 1px solid var(--ls-border); border-radius: var(--ls-radius);
+  box-shadow: var(--ls-shadow); background: #fff;
+}
+.doc-page figcaption {
+  margin-top: .4rem; text-align: center;
+  font-size: .85rem; color: var(--ls-ink-soft); font-variant-numeric: tabular-nums;
+}
+.doc-actions { position: sticky; bottom: 78px; z-index: 20; display: flex; justify-content: center; pointer-events: none; }
+.doc-actions .btn { pointer-events: auto; box-shadow: 0 6px 20px rgba(23,48,122,.25); }
+@media (min-width: 62rem) { .doc-actions { bottom: 1.4rem; } }
+
 /* Data tables */
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--ls-radius); border: 1px solid var(--ls-border); }
 table.data { width: 100%; border-collapse: collapse; background: var(--ls-surface); font-size: .97rem; }
