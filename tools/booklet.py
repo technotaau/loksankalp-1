@@ -118,14 +118,17 @@ def shell(reference_page):
 
 def head_for(head, b, slug):
     url = f"{SITE}/{slug}-pustika.html"
+    # Titles like "मुख्य परिचय पुस्तिका" already say it; don't say it twice.
+    named = b["title"] if "पुस्तिका" in b["title"] else f"{b['title']} — पुस्तिका"
     swaps = [
-        (r"<title>.*?</title>", f"<title>{b['title']} — पुस्तिका</title>"),
+        (r"<title>.*?</title>", f"<title>{named}</title>"),
         (r'<meta name="description" content=".*?">',
          f'<meta name="description" content="{b["meta_description"]}">'),
         (r'<link rel="canonical" href=".*?">',
          f'<link rel="canonical" href="{url}">'),
         (r'<meta property="og:title" content=".*?">',
-         f'<meta property="og:title" content="{b["title"]} — लोकसंकल्प पुस्तिका">'),
+         # og:site_name already carries the brand; repeating it here reads badly.
+         f'<meta property="og:title" content="{named}">'),
         (r'<meta property="og:description" content=".*?">',
          f'<meta property="og:description" content="{b["og_description"]}">'),
         (r'<meta property="og:url" content=".*?">',
