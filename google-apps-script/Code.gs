@@ -17,7 +17,12 @@ var FOLDER_NAME = 'लोकसंकल्प — फ़ॉर्म फ़ा�
 var MAX_FILES = 6;             // per submission
 var MAX_FILE_BYTES = 8 * 1024 * 1024;
 var MAX_TEXT = 4000;           // characters kept per field
-var CODE_VERSION = 4;          // bump when this file changes; shown in every response
+// Largest participant count one sabha report may contribute. The endpoint is
+// public, so a typo or a prank ("99999999") would otherwise wreck a headline
+// figure the campaign is judged by. Anything above this is treated as a data
+// error and contributes nothing; the sabha itself still counts.
+var MAX_SABHA_SANKHYA = 50000;
+var CODE_VERSION = 5;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -130,11 +135,24 @@ function computeStats() {
     return String(r[samitiIdx + 1] || '').trim() === 'हाँ';
   }).length;
 
+  // People who took the संकल्प together at a सभा count towards the headline
+  // figure alongside those who filled the form themselves: a village that
+  // pledges as one gathering is the campaign's normal path, not the exception.
+  var nIdx = FORMS.sabha.fields.indexOf('sankhya');
+  var sabhaPratibhagi = 0;
+  sabhaRows.forEach(function (r) {
+    sabhaPratibhagi += count(r[nIdx + 1]);
+  });
+
   var stats = {
     gaon:       Object.keys(villages).length,
     sabhaen:    sabhaRows.length,
     samitiyan:  samitiyan,
-    sankalp:    sankalpRows.length,
+    // One consolidated number. The two halves are published too, so the
+    // dashboard can always show where the figure came from.
+    sankalp:         sankalpRows.length + sabhaPratibhagi,
+    sankalpOnline:   sankalpRows.length,
+    sabhaPratibhagi: sabhaPratibhagi,
     shikshak:   shikshakRows.length,
     vidyalaya:  Object.keys(schools).length,
     yuvaClub:   yuvaRows.length,
@@ -164,6 +182,7 @@ function computeStats() {
   sabhaRows.forEach(function (r) {
     var d = touch(r[jSabha + 1]); if (!d) return;
     d.sabhaen++;
+    d.sankalp += count(r[nIdx + 1]);   // same basis as the headline figure
     if (String(r[samitiIdx + 1] || '').trim() === 'हाँ') d.samitiyan++;
     var v = String(r[gSabha + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
   });
@@ -183,6 +202,17 @@ function computeStats() {
     });
   }
   return stats;
+}
+
+/**
+ * A cell read as a count: a whole number at least 0 and no larger than one
+ * sabha could plausibly hold. Blanks, text and implausible values give 0.
+ */
+function count(value) {
+  var n = Number(String(value === null || value === undefined ? '' : value).trim());
+  if (!isFinite(n) || n < 0) return 0;
+  n = Math.floor(n);
+  return n > MAX_SABHA_SANKHYA ? 0 : n;
 }
 
 /** Data rows of a tab, header excluded; [] when the tab does not exist yet. */
