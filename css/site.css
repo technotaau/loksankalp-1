@@ -680,6 +680,23 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
   color: var(--ls-green-dark); border-bottom: 2px dotted var(--ls-border);
   display: inline-block; padding: .3rem 2rem; margin: .8rem 0;
 }
+.cert__mark { width: 64px; height: 64px; margin: 0 auto .4rem; }
+.cert__motto {
+  font-family: var(--ls-font-head); color: var(--ls-saffron-dk);
+  font-size: clamp(1.02rem, 2.6vw, 1.24rem); margin: 1rem auto .2rem; max-width: 34ch;
+}
+.cert__by {
+  font-size: .84rem; line-height: 1.6; color: var(--ls-ink-soft);
+  margin: .9rem auto 0; max-width: 46ch;
+  border-top: 1px solid var(--ls-border); padding-top: .8rem;
+}
+.cert__date { font-size: .84rem; color: var(--ls-ink-soft); margin: .35rem auto 0; }
+/* The line that turns a private moment into an invitation. It sits outside
+   the certificate frame so it is the reader's own words, not the award's. */
+.cert__call {
+  font-family: var(--ls-font-head); font-size: clamp(1.15rem, 3.4vw, 1.5rem);
+  color: var(--ls-blue-dark); text-align: center; margin: 1.2rem auto .2rem;
+}
 
 /* ---------- 9. Footer ---------- */
 .site-footer { background: var(--ls-blue-dark); color: #cfd8f2; padding-block: clamp(2.5rem, 5vw, 3.6rem) 1.4rem; }

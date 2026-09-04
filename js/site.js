@@ -81,6 +81,148 @@
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  /* --- Digital certificate ----------------------------------------------
+     Drawn on a canvas rather than screenshotted, so it needs no library and
+     works offline once the page is open. The download button used to be a
+     dead href="#"; this is what makes it real. */
+
+  var CERT_W = 1400, CERT_H = 990;
+
+  function loadSvg(url, w, h) {
+    // An inline SVG with only a viewBox has no intrinsic size, and Chrome
+    // refuses to draw such an image, so stamp the size on before loading.
+    return fetch(url).then(function (r) { return r.text(); }).then(function (txt) {
+      txt = txt.replace('<svg ', '<svg width="' + w + '" height="' + h + '" ');
+      var blob = new Blob([txt], { type: 'image/svg+xml' });
+      var src = URL.createObjectURL(blob);
+      return new Promise(function (resolve) {
+        var img = new Image();
+        img.onload = function () { URL.revokeObjectURL(src); resolve(img); };
+        img.onerror = function () { URL.revokeObjectURL(src); resolve(null); };
+        img.src = src;
+      });
+    }).catch(function () { return null; });
+  }
+
+  function drawCertificate(naam, tarikh) {
+    var head = '"Tiro Devanagari Hindi", "Noto Sans Devanagari", serif';
+    var body = '"Noto Sans Devanagari", system-ui, sans-serif';
+    var ready = document.fonts && document.fonts.ready
+      ? document.fonts.ready.catch(function () {}) : Promise.resolve();
+
+    return Promise.all([ready, loadSvg('assets/img/logo-mark.svg', 128, 128)])
+      .then(function (out) {
+        var mark = out[1];
+        var c = document.createElement('canvas');
+        c.width = CERT_W; c.height = CERT_H;
+        var x = c.getContext('2d'), mid = CERT_W / 2;
+
+        var line = function (text, y, font, colour, align) {
+          x.font = font; x.fillStyle = colour;
+          x.textAlign = align || 'center'; x.textBaseline = 'alphabetic';
+          x.fillText(text, mid, y);
+        };
+
+        x.fillStyle = '#fffdf5'; x.fillRect(0, 0, CERT_W, CERT_H);
+
+        // tricolour band across the top, the same one the site footer uses
+        var bands = ['#e8730c', '#ffffff', '#1b7a34'];
+        for (var i = 0; i < 3; i++) {
+          x.fillStyle = bands[i];
+          x.fillRect(0, i * 5, CERT_W, 5);
+        }
+
+        x.strokeStyle = '#17307a';
+        x.lineWidth = 6; x.strokeRect(30, 34, CERT_W - 60, CERT_H - 64);
+        x.lineWidth = 2; x.strokeRect(46, 50, CERT_W - 92, CERT_H - 96);
+
+        if (mark) x.drawImage(mark, mid - 58, 92, 116, 116);
+
+        line('डिजिटल प्रमाणपत्र', 262, '600 26px ' + body, '#b4560a');
+        line('लोकसंकल्प प्रमाणपत्र', 330, '700 56px ' + head, '#17307a');
+        line('यह प्रमाणित किया जाता है कि', 412, '400 30px ' + body, '#33405c');
+
+        line(naam, 500, '700 66px ' + head, '#0f5c26');
+        var w = Math.min(x.measureText(naam).width + 120, CERT_W - 200);
+        x.strokeStyle = '#c9d2e6'; x.lineWidth = 2;
+        x.beginPath(); x.moveTo(mid - w / 2, 522); x.lineTo(mid + w / 2, 522); x.stroke();
+
+        line('ने नशामुक्त समाज के निर्माण हेतु लोकसंकल्प लिया।', 586, '400 32px ' + body, '#33405c');
+        line('“नशे को नहीं, संस्कारों को सामाजिक स्वीकृति”', 670, '700 36px ' + head, '#b4560a');
+
+        x.strokeStyle = '#e3e8f2'; x.lineWidth = 1;
+        x.beginPath(); x.moveTo(mid - 380, 728); x.lineTo(mid + 380, 728); x.stroke();
+
+        line('नशा मुक्त भारत अभियान के अंतर्गत', 774, '400 23px ' + body, '#5a6785');
+        line('नई किरण नशा मुक्ति केंद्र, राजकीय डूंगर महाविद्यालय, बीकानेर द्वारा प्रदत्त',
+             810, '600 23px ' + body, '#5a6785');
+        line('दिनांक ' + tarikh, 866, '400 23px ' + body, '#5a6785');
+        line('loksankalp.org', 918, '700 24px ' + body, '#1b7a34');
+
+        return new Promise(function (resolve) {
+          c.toBlob(function (b) { resolve(b); }, 'image/png');
+        });
+      });
+  }
+
+  var certBox = document.getElementById('cert');
+  if (certBox) {
+    var dlBtn = document.querySelector('[data-cert="download"]');
+    var shBtn = document.querySelector('[data-cert="share"]');
+    var certMsg = document.querySelector('[data-cert="status"]');
+    var say = function (t) { if (certMsg) certMsg.textContent = t || ''; };
+
+    var certName = function () {
+      var el = certBox.querySelector('[data-slot="naam"]');
+      var v = el ? el.textContent.trim() : '';
+      return v && v !== 'आपका नाम' ? v : 'लोकसंकल्प साथी';
+    };
+    var certDate = function () {
+      var el = certBox.querySelector('[data-slot="date"]');
+      return el ? el.textContent.trim() : '';
+    };
+    var fileName = function () {
+      return 'loksankalp-pramanpatra-' +
+        certName().replace(/[^ऀ-ॿ\w]+/g, '-').replace(/^-|-$/g, '') + '.png';
+    };
+
+    var build = function () { return drawCertificate(certName(), certDate()); };
+
+    if (dlBtn) dlBtn.addEventListener('click', function () {
+      say('प्रमाणपत्र तैयार हो रहा है…');
+      build().then(function (blob) {
+        if (!blob) { say('प्रमाणपत्र नहीं बन सका। कृपया दोबारा प्रयास करें।'); return; }
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = fileName();
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+        say('प्रमाणपत्र डाउनलोड हो गया।');
+      }).catch(function () { say('प्रमाणपत्र नहीं बन सका। कृपया दोबारा प्रयास करें।'); });
+    });
+
+    // Sharing the image straight to WhatsApp is what actually spreads this,
+    // so the button only appears where the browser can really do it.
+    if (shBtn && navigator.canShare) {
+      try {
+        var probe = new File([new Blob([''], { type: 'image/png' })], 'p.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [probe] })) shBtn.hidden = false;
+      } catch (e) { /* leave hidden */ }
+    }
+    if (shBtn) shBtn.addEventListener('click', function () {
+      say('प्रमाणपत्र तैयार हो रहा है…');
+      build().then(function (blob) {
+        var file = new File([blob], fileName(), { type: 'image/png' });
+        return navigator.share({
+          files: [file],
+          title: 'लोकसंकल्प प्रमाणपत्र',
+          text: 'मैंने नशामुक्त समाज के लिए लोकसंकल्प लिया है। अब आपकी बारी। loksankalp.org'
+        });
+      }).then(function () { say(''); })
+        .catch(function () { say('साझा नहीं हो सका। आप प्रमाणपत्र डाउनलोड करके भेज सकते हैं।'); });
+    });
+  }
+
   /* --- Live figures ----------------------------------------------------
      Counters start at 0 in the HTML and are raised once the real numbers
      arrive from the Sheet. If the request fails they simply stay at 0 rather
@@ -246,6 +388,12 @@
         if (out) {
           var slot = out.querySelector('[data-slot="naam"]');
           if (slot && naamValue) slot.textContent = naamValue;
+          var dateSlot = out.querySelector('[data-slot="date"]');
+          if (dateSlot) {
+            dateSlot.textContent = new Date().toLocaleDateString('hi-IN', {
+              day: 'numeric', month: 'long', year: 'numeric'
+            });
+          }
           out.hidden = false;
           out.setAttribute('tabindex', '-1');
           out.focus();
