@@ -245,7 +245,9 @@ def main():
         smtxt = open(sm, encoding='utf-8').read()
         for p in pages:
             name = os.path.basename(p)
-            if name in ('404.html',):
+            # login.html is deliberately out of the sitemap while login is
+            # hidden; it carries a noindex tag to match.
+            if name in ('404.html', 'login.html'):
                 continue
             token = '/' if name == 'index.html' else '/' + name
             if token + '<' not in smtxt:

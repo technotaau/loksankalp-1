@@ -187,6 +187,13 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .header-login:hover { background: var(--ls-saffron-dk); color: #fff; }
 .header-login svg { width: 20px; height: 20px; }
 
+/* Login is hidden until the committee accounts are ready. The markup and
+   login.html are left in place, so bringing it back is deleting this block.
+   !important is needed because the rule above turns the header button on
+   with !important inside a media query. */
+.header-login,
+.site-nav .nav-login { display: none !important; }
+
 /* Sticky mobile action bar: the three primary journeys */
 .action-bar {
   position: fixed; inset: auto 0 0 0; z-index: 98;
