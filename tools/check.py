@@ -196,6 +196,23 @@ def check_svgs():
             warn(rel, f"{kb:.0f} KB, large for an inline asset")
 
 
+def check_booklet_count():
+    """Any page that states how many booklets there are must state the truth.
+
+    The count went stale once already: a booklet was published and the
+    संसाधन page kept advertising the old number in three places.
+    """
+    actual = len(glob.glob(os.path.join(ROOT, '*-pustika.html')))
+    if not actual:
+        return
+    pattern = re.compile(r'(\d+)\s*(?:निःशुल्क\s+हिंदी\s+)?पुस्तिका(?:एँ|एं|ओं)')
+    for path in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
+        rel = os.path.relpath(path, ROOT)
+        for stated in pattern.findall(open(path, encoding='utf-8').read()):
+            if int(stated) != actual:
+                err(rel, f"says {stated} booklets, {actual} exist")
+
+
 def main():
     quiet = '--quiet' in sys.argv
     pages = sorted(glob.glob(os.path.join(ROOT, '*.html')))
@@ -215,6 +232,7 @@ def main():
     for p in pages:
         check_html(p, known, page_ids)
     check_svgs()
+    check_booklet_count()
 
     for f in ('sitemap.xml', 'robots.txt', 'site.webmanifest', '.nojekyll',
               'css/site.css', 'css/tokens.css', 'js/site.js'):
