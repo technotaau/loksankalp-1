@@ -230,6 +230,22 @@ body { padding-bottom: 68px; }
   opacity: .5;
 }
 .hero__inner { position: relative; display: grid; gap: .85rem; justify-items: center; }
+/* Campaign umbrella above the mark, running institution below it, both kept
+   to one short line on a phone so neither competes with the लोकसंकल्प title. */
+.hero__umbrella {
+  background: rgba(255, 255, 255, .92);
+  border: 1px solid var(--ls-border); border-radius: 999px;
+  padding: .32rem 1.05rem; font-size: .9rem; font-weight: 700;
+  color: var(--ls-blue-dark); letter-spacing: .01em;
+}
+.hero__by {
+  font-size: .88rem; font-weight: 600; line-height: 1.5;
+  color: var(--ls-ink-soft); margin-top: -.2rem;
+  /* Balanced so the credit never breaks with "द्वारा संचालित" alone on
+     its own line; it fits one line once there is room for it. */
+  max-width: 40ch; text-wrap: balance;
+}
+@media (min-width: 48rem) { .hero__by { max-width: none; } }
 .hero__logo { width: clamp(104px, 18vw, 152px); height: auto; filter: drop-shadow(0 6px 18px rgba(23,48,122,.16)); }
 .hero__title {
   font-size: clamp(2.4rem, 8vw, 4.6rem);
