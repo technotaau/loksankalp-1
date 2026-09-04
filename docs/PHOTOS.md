@@ -24,7 +24,7 @@ the 1400px one.
 | `sabha-standing-crowd` | `gram-sabha.html`, before सभा कैसे आयोजित करें; home gallery |
 | `sabha-ground-wide` | `gram-sabha.html`, before the समिति section |
 | `abhiyan-banner` | `sansadhan.html` page header |
-| `video-sabha`, `video-good-parenting`, `video-vivah`, `video-shok-sabha` | `sansadhan.html` वीडियो सामग्री cards. YouTube thumbnails, kept locally so a slow phone loads no third-party image. |
+| `video-parichay`, `video-sabha`, `video-good-parenting`, `video-vivah`, `video-shok-sabha` | `sansadhan.html` वीडियो सामग्री cards. YouTube thumbnails, kept locally so a slow phone loads no third-party image. |
 
 One upload was a byte-identical duplicate and was dropped.
 
