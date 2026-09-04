@@ -17,12 +17,12 @@ var FOLDER_NAME = 'लोकसंकल्प — फ़ॉर्म फ़ा�
 var MAX_FILES = 6;             // per submission
 var MAX_FILE_BYTES = 8 * 1024 * 1024;
 var MAX_TEXT = 4000;           // characters kept per field
-var CODE_VERSION = 3;          // bump when this file changes; shown in every response
+var CODE_VERSION = 4;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
   sankalp:  { tab: 'संकल्प',           fields: ['naam', 'mobile', 'bhumika', 'jila', 'gaon', 'sweecha'] },
-  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'jila', 'tithi', 'sankhya', 'samiti', 'report'] },
+  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'tithi', 'sankhya', 'samiti', 'report'] },
   kahani:   { tab: 'सफलता कहानियाँ',   fields: ['shirshak', 'naam', 'mobile', 'gaon', 'jila', 'shreni', 'kahani', 'sahmati'] },
   shikshak: { tab: 'शिक्षक',           fields: ['naam', 'mobile', 'vidyalaya', 'jila', 'pad', 'yogdan'] },
   yuva:     { tab: 'युवा क्लब',        fields: ['club', 'naam', 'mobile', 'gaon', 'jila', 'sadasya', 'ruchi'] },
@@ -32,7 +32,7 @@ var FORMS = {
 // Human-readable column headings.
 var LABELS = {
   naam: 'नाम', mobile: 'मोबाइल', bhumika: 'मैं हूँ', jila: 'जिला', gaon: 'गाँव',
-  sweecha: 'स्वेच्छा से', tithi: 'तिथि', sankhya: 'प्रतिभागी', samiti: 'समिति गठित',
+  sweecha: 'स्वेच्छा से', block: 'ब्लॉक', tithi: 'तिथि', sankhya: 'प्रतिभागी', samiti: 'समिति गठित',
   report: 'रिपोर्ट', shirshak: 'शीर्षक', shreni: 'श्रेणी', kahani: 'कहानी',
   sahmati: 'सहमति', vidyalaya: 'विद्यालय', pad: 'पद', yogdan: 'योगदान',
   club: 'क्लब', sadasya: 'सदस्य संख्या', ruchi: 'रुचि', namit: 'नामांकित',
@@ -202,18 +202,62 @@ function json(text) {
 function getTab(spec) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(spec.tab);
+  var head = expectedHeader(spec);
   if (!sheet) {
     sheet = ss.insertSheet(spec.tab);
-    var head = ['समय'];
-    for (var i = 0; i < spec.fields.length; i++) {
-      head.push(LABELS[spec.fields[i]] || spec.fields[i]);
-    }
-    head.push('फ़ाइलें');
     sheet.appendRow(head);
     sheet.getRange(1, 1, 1, head.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
+    return sheet;
   }
+  alignHeader(sheet, head);
   return sheet;
+}
+
+function expectedHeader(spec) {
+  var head = ['समय'];
+  for (var i = 0; i < spec.fields.length; i++) {
+    head.push(LABELS[spec.fields[i]] || spec.fields[i]);
+  }
+  head.push('फ़ाइलें');
+  return head;
+}
+
+/**
+ * A row is written by position, so adding a field to FORMS would push every
+ * later column of an existing tab one place to the right and quietly mismatch
+ * the rows already saved. This puts the missing columns back where they belong
+ * before anything is written, so old rows keep their meaning.
+ *
+ * It only acts when the sheet's header is the wanted header with columns
+ * missing. A header it does not recognise (renamed or reordered by hand) is
+ * left exactly as it is: guessing there would be worse than doing nothing.
+ */
+function alignHeader(sheet, want) {
+  var width = sheet.getLastColumn();
+  if (!width) {
+    sheet.getRange(1, 1, 1, want.length).setValues([want]).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+    return;
+  }
+  var have = sheet.getRange(1, 1, 1, width).getValues()[0].map(function (v) {
+    return String(v).trim();
+  });
+  if (have.length === want.length && have.join('\u0000') === want.join('\u0000')) return;
+
+  // Every existing heading must still appear in the wanted header, in order.
+  var at = 0;
+  for (var j = 0; j < have.length; j++) {
+    while (at < want.length && want[at] !== have[j]) at++;
+    if (at === want.length) return;          // not a pure addition: leave it alone
+    at++;
+  }
+
+  for (var k = 0; k < want.length; k++) {
+    if (String(sheet.getRange(1, k + 1).getValue()).trim() === want[k]) continue;
+    if (k + 1 <= sheet.getLastColumn()) sheet.insertColumnBefore(k + 1);
+    sheet.getRange(1, k + 1).setValue(want[k]).setFontWeight('bold');
+  }
 }
 
 function saveFiles(files, formName) {
