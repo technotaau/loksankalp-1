@@ -21,6 +21,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Tiro+Devanagari+Hindi&display=swap">
+<link rel="preconnect" href="https://script.google.com">
+<script src="js/config.js"></script>
+<script>
+/* The figures request takes a second or more to answer. js/site.js is deferred,
+   so waiting for it to start the request adds its download on top. Start it
+   here, while the head is still being parsed. */
+(function () {
+  var u = (window.LOKSANKALP_FORM_ENDPOINT || '').trim();
+  if (!u || !window.fetch) return;
+  window.LOKSANKALP_STATS = fetch(u + '?stats=1').then(function (r) { return r.json(); });
+  window.LOKSANKALP_STATS.catch(function () {});   // handled in site.js
+})();
+</script>
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/site.css">
 </head>
@@ -102,15 +115,16 @@
       <p>ये आठ संकेतक बताते हैं कि अभियान कहाँ तक पहुँचा है।</p>
     </div>
     <div class="counters">
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg><b data-stat="gaon" data-count="0">0</b><span>जुड़े हुए गाँव/शहर</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-calendar"></use></svg><b data-stat="sabhaen" data-count="0">0</b><span>आयोजित सभाएँ</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-committee"></use></svg><b data-stat="samitiyan" data-count="0">0</b><span>गठित समितियाँ</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg><b data-stat="sankalp" data-count="0">0</b><span>संकल्प लेने वाले युवा/नागरिक</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-teacher"></use></svg><b data-stat="shikshak" data-count="0">0</b><span>जुड़े हुए शिक्षक</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-youth"></use></svg><b data-stat="yuvaClub" data-count="0">0</b><span>सक्रिय युवा क्लब</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-story"></use></svg><b data-stat="kahaniyan" data-count="0">0</b><span>सफलता की कहानियाँ</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg><b data-stat="sahayata" data-count="0">0</b><span>सहायता सेवाओं से जुड़े व्यक्ति</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg><b data-stat="gaon" data-count="0" data-loading>0</b><span>जुड़े हुए गाँव/शहर</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-calendar"></use></svg><b data-stat="sabhaen" data-count="0" data-loading>0</b><span>आयोजित सभाएँ</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-committee"></use></svg><b data-stat="samitiyan" data-count="0" data-loading>0</b><span>गठित समितियाँ</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg><b data-stat="sankalp" data-count="0" data-loading>0</b><span>संकल्प लेने वाले युवा/नागरिक</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-teacher"></use></svg><b data-stat="shikshak" data-count="0" data-loading>0</b><span>जुड़े हुए शिक्षक</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-youth"></use></svg><b data-stat="yuvaClub" data-count="0" data-loading>0</b><span>सक्रिय युवा क्लब</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-story"></use></svg><b data-stat="kahaniyan" data-count="0" data-loading>0</b><span>सफलता की कहानियाँ</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg><b data-stat="sahayata" data-count="0" data-loading>0</b><span>सहायता सेवाओं से जुड़े व्यक्ति</span></div>
     </div>
+    <noscript><style>.counters{display:none}</style><p class="center form-note">आँकड़े देखने के लिए जावास्क्रिप्ट चालू करें। बाकी पृष्ठ जावास्क्रिप्ट के बिना भी पूरा काम करता है।</p></noscript>
     <p class="center mt-2" data-stats-note><span class="placeholder-note">आँकड़े जुड़ रहे हैं…</span></p>
     <p class="center form-note">ये संख्याएँ वेबसाइट पर आए फ़ॉर्म से सीधे गिनी जाती हैं और हर नई प्रविष्टि के साथ बढ़ती हैं। संकल्प की संख्या में दोनों जुड़े हैं : स्वयं फ़ॉर्म भरकर संकल्प लेने वाले, और सभाओं में सामूहिक संकल्प लेने वाले प्रतिभागी।</p>
   </div>
@@ -220,7 +234,6 @@
   <a href="sahayata-kendra.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg>सहायता</a>
 </nav>
 
-<script src="js/config.js" defer></script>
 <script src="js/site.js" defer></script>
 </body>
 </html>

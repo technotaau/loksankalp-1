@@ -69,7 +69,9 @@
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         var el = entry.target;
-        if (el.hasAttribute('data-count')) runCounter(el);
+        // A counter still waiting on the Sheet has data-count="0";
+        // animating it here is what painted the 0 people saw.
+        if (el.hasAttribute('data-count')) { if (!el.hasAttribute('data-loading')) runCounter(el); }
         else el.classList.add('is-in');
         io.unobserve(el);
       });
@@ -77,7 +79,7 @@
     counters.forEach(function (el) { io.observe(el); });
     reveals.forEach(function (el) { io.observe(el); });
   } else {
-    counters.forEach(runCounter);
+    counters.forEach(function (el) { if (!el.hasAttribute('data-loading')) runCounter(el); });
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
@@ -229,21 +231,71 @@
      than showing anything invented. */
 
   var statEls = document.querySelectorAll('[data-stat]');
-  if (statEls.length && (window.LOKSANKALP_FORM_ENDPOINT || '').trim()) {
-    fetch((window.LOKSANKALP_FORM_ENDPOINT || '').trim() + '?stats=1')
-      .then(function (r) { return r.json(); })
-      .then(function (res) {
-        if (!res || !res.ok || !res.stats) return;
-        Array.prototype.forEach.call(statEls, function (el) {
-          var v = res.stats[el.getAttribute('data-stat')];
-          if (typeof v !== 'number') return;
-          el.setAttribute('data-count', String(v));
-          runCounter(el);
+  var CACHE_KEY = 'ls-stats-v1';
+  var CACHE_MAX_AGE = 24 * 60 * 60 * 1000;   // a day; figures only ever climb
+
+  function cached() {
+    try {
+      var raw = window.localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      var box = JSON.parse(raw);
+      if (!box || !box.s || (Date.now() - box.t) > CACHE_MAX_AGE) return null;
+      return box.s;
+    } catch (e) { return null; }        // private windows throw on read
+  }
+
+  function remember(stats) {
+    try {
+      window.localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), s: stats }));
+    } catch (e) { /* storage full or blocked; the page works without it */ }
+  }
+
+  // animate === false writes the number straight in, used when a figure is
+  // already on screen and would only jitter if it counted up again.
+  function paint(stats, animate) {
+    var painted = false;
+    Array.prototype.forEach.call(statEls, function (el) {
+      var v = stats[el.getAttribute('data-stat')];
+      if (typeof v !== 'number') return;
+      el.setAttribute('data-count', String(v));
+      el.removeAttribute('data-loading');
+      if (animate) runCounter(el); else el.textContent = nf.format(v);
+      painted = true;
+    });
+    if (painted) {
+      document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
+    }
+    renderDistricts(stats.byDistrict);
+    return painted;
+  }
+
+  if (statEls.length) {
+    // Someone who has been here before sees their last known figures at once,
+    // and the live ones replace them a moment later.
+    var seen = cached();
+    var shown = seen ? paint(seen, false) : false;
+
+    var pending = window.LOKSANKALP_STATS;
+    if (!pending && (window.LOKSANKALP_FORM_ENDPOINT || '').trim() && window.fetch) {
+      pending = fetch((window.LOKSANKALP_FORM_ENDPOINT || '').trim() + '?stats=1')
+        .then(function (r) { return r.json(); });
+    }
+
+    if (pending) {
+      pending.then(function (res) {
+        if (!res || !res.ok || !res.stats) throw new Error('no stats');
+        remember(res.stats);
+        paint(res.stats, !shown);
+      }).catch(function () {
+        // Nothing invented and no zeros: say plainly that the figures did not
+        // arrive, unless cached ones are already on screen.
+        if (shown) return;
+        document.querySelectorAll('[data-stats-note]').forEach(function (n) {
+          n.hidden = false;
+          n.textContent = 'आँकड़े अभी नहीं आ सके। कृपया पृष्ठ फिर से खोलें।';
         });
-        document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
-        renderDistricts(res.stats.byDistrict);
-      })
-      .catch(function () { /* leave the zeros in place */ });
+      });
+    }
   }
 
   /* Districts appear in the table only once a submission names them, so the

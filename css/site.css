@@ -399,6 +399,23 @@ body { padding-bottom: 68px; }
 }
 .counter span { font-size: .95rem; color: var(--ls-ink-soft); font-weight: 600; }
 
+/* Figures come from the Sheet a second or two after the page opens. Until they
+   arrive the counter shows a resting bar, never a 0: a zero reads as a fact and
+   tells a visitor the campaign has achieved nothing. The text stays in place
+   but invisible, so nothing moves when the real number lands. */
+[data-stat][data-loading] { color: transparent; position: relative; }
+[data-stat][data-loading]::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 2.4ch; height: .58em; border-radius: 999px;
+  background: var(--ls-blue-dark); opacity: .13;
+  animation: stat-wait 1.3s ease-in-out infinite;
+}
+@keyframes stat-wait { 0%, 100% { opacity: .09 } 50% { opacity: .2 } }
+@media (prefers-reduced-motion: reduce) {
+  [data-stat][data-loading]::after { animation: none; }
+}
+
 /* Two-column media block */
 .split { display: grid; gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
 @media (min-width: 52rem) { .split { grid-template-columns: 1fr 1fr; } .split--flip > :first-child { order: 2; } }
