@@ -517,6 +517,26 @@ body { padding-bottom: 68px; }
 .photo-grid { display: grid; gap: 1.4rem 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); align-items: start; }
 .photo-grid .photo img { aspect-ratio: 3 / 2; object-fit: cover; }
 
+/* Gallery: a caption's second line, and the district filter. The filter is
+   hidden in the markup and shown by script, so with no JavaScript every photo
+   stays on the page instead of leaving dead buttons behind. */
+.photo__meta { display: block; margin-top: .15rem; font-size: .82rem; opacity: .8; }
+.photo-grid .photo a { display: block; border-radius: var(--ls-radius); }
+.photo-grid .photo a:focus-visible { outline: 3px solid var(--ls-saffron); outline-offset: 3px; }
+.filters {
+  display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+  margin-bottom: 1.2rem;
+}
+.filters__label { font-size: .88rem; font-weight: 700; color: var(--ls-ink-soft); }
+.chip--filter {
+  cursor: pointer; min-height: 38px; font-family: inherit;
+  background: #fff; color: var(--ls-ink-soft);
+}
+.chip--filter:hover { border-color: var(--ls-saffron); }
+.chip--filter.is-on {
+  background: var(--ls-blue-dark); border-color: var(--ls-blue-dark); color: #fff;
+}
+
 /* A hero backed by a photograph rather than the illustration.
    The scrim is what keeps the Devanagari readable over a busy crowd shot,
    without it the title fails contrast against light kurtas and sky. */

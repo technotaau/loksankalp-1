@@ -55,3 +55,29 @@ tools/optimize-photos.sh          # needs ImageMagick or cwebp; skips what is cu
 Produces, for each `NAME.jpg`: `NAME-800.webp`, `NAME-1600.webp`, `NAME-1600.jpg`.
 Markup uses `<picture>` so phones pull the 800px WebP and desktops the 1600px one.
 Target: no single photograph over ~120 KB at 1600px.
+
+## तस्वीरें पृष्ठ (gallery.html)
+
+`gallery.html` हाथ से नहीं लिखा जाता, `gallery/photos.json` से बनता है :
+
+    python3 tools/gallery.py add सभा.jpg \
+        --caption "खारा में ग्राम सभा" \
+        --alt "सभा में बैठे ग्रामवासी" \
+        --jila बीकानेर --gaon खारा --date 2026-09-04 \
+        --bhej "ग्राम समिति, खारा"
+
+    python3 tools/gallery.py build      # केवल पृष्ठ दोबारा बनाना हो तो
+
+`add` तीन काम करता है : फ़ोटो को सीधा करता है (EXIF का orientation पढ़कर),
+फिर **पूरा EXIF हटा देता है**, और 760/1400 वाले रूप बनाता है। EXIF हटाना
+वैकल्पिक नहीं है : मोबाइल हर तस्वीर में उसका GPS स्थान लिखता है, और किसी
+विद्यालय का सटीक स्थान सार्वजनिक करना ठीक नहीं।
+
+फ़ॉर्म से आई तस्वीरें Drive में रहती हैं। Drive से सीधे दिखाना ठीक नहीं :
+उसके लिए फ़ाइल को सार्वजनिक करना पड़ता है (यानी GPS सहित मूल फ़ाइल), वहाँ
+WebP या छोटे आकार नहीं बनते, और कोई भी उस endpoint पर कुछ भी भेज सकता है।
+इसलिए चुनी हुई तस्वीरें ही repo में आती हैं।
+
+जिला फ़िल्टर तभी दिखता है जब दो या अधिक जिलों की तस्वीरें हों, और वह
+जावास्क्रिप्ट से ही दिखाया जाता है, ताकि JS बंद होने पर सारी तस्वीरें
+दिखती रहें।

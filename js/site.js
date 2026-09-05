@@ -83,6 +83,36 @@
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  /* --- Gallery district filter ------------------------------------------
+     The buttons are hidden in the markup and revealed here, so a phone that
+     never runs this file still shows every photograph. */
+
+  var grid = document.querySelector('[data-gallery]');
+  var filters = document.querySelector('[data-gallery-filters]');
+  if (grid && filters) {
+    var empty = document.querySelector('[data-gallery-empty]');
+    filters.hidden = false;
+    filters.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-filter]');
+      if (!btn) return;
+      var want = btn.getAttribute('data-filter');
+      filters.querySelectorAll('[data-filter]').forEach(function (b) {
+        b.classList.toggle('is-on', b === btn);
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+      var shown = 0;
+      grid.querySelectorAll('.photo').forEach(function (fig) {
+        var keep = !want || fig.getAttribute('data-jila') === want;
+        fig.hidden = !keep;
+        if (keep) shown++;
+      });
+      if (empty) empty.hidden = shown > 0;
+    });
+    filters.querySelectorAll('[data-filter]').forEach(function (b) {
+      b.setAttribute('aria-pressed', b.classList.contains('is-on') ? 'true' : 'false');
+    });
+  }
+
   /* --- Digital certificate ----------------------------------------------
      Drawn on a canvas rather than screenshotted, so it needs no library and
      works offline once the page is open. The download button used to be a
