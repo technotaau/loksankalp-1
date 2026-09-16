@@ -255,7 +255,6 @@ body { padding-bottom: 68px; }
   max-width: 40ch; text-wrap: balance;
 }
 @media (min-width: 48rem) { .hero__by { max-width: none; } }
-.hero__logo { width: clamp(96px, 14vw, 116px); height: auto; filter: drop-shadow(0 6px 18px rgba(23,48,122,.16)); }
 .hero__title {
   font-size: clamp(2.4rem, 8vw, 4.6rem);
   letter-spacing: -.01em; line-height: 1.08; margin: 0;
