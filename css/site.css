@@ -225,7 +225,9 @@ body { padding-bottom: 68px; }
   position: relative; isolation: isolate;
   min-height: min(82svh, 700px);
   display: grid; place-items: center;
-  padding-block: clamp(2.5rem, 7vw, 5rem);
+  /* Was 5rem at the top end, which pushed the call to action to y=750 on a
+     1440x800 laptop, right at the fold. */
+  padding-block: clamp(2rem, 4vw, 2.6rem);
   text-align: center;
   background:
     radial-gradient(120% 90% at 50% 0%, #fff8ec 0%, #fdf6ea 42%, #eef3ff 100%);
@@ -236,7 +238,7 @@ body { padding-bottom: 68px; }
   width: 100%; height: 100%; object-fit: cover;
   opacity: .5;
 }
-.hero__inner { position: relative; display: grid; gap: .85rem; justify-items: center; }
+.hero__inner { position: relative; display: grid; gap: .7rem; justify-items: center; }
 /* Campaign umbrella above the mark, running institution below it, both kept
    to one short line on a phone so neither competes with the लोकसंकल्प title. */
 .hero__umbrella {
@@ -253,7 +255,7 @@ body { padding-bottom: 68px; }
   max-width: 40ch; text-wrap: balance;
 }
 @media (min-width: 48rem) { .hero__by { max-width: none; } }
-.hero__logo { width: clamp(104px, 18vw, 152px); height: auto; filter: drop-shadow(0 6px 18px rgba(23,48,122,.16)); }
+.hero__logo { width: clamp(96px, 14vw, 116px); height: auto; filter: drop-shadow(0 6px 18px rgba(23,48,122,.16)); }
 .hero__title {
   font-size: clamp(2.4rem, 8vw, 4.6rem);
   letter-spacing: -.01em; line-height: 1.08; margin: 0;
@@ -266,11 +268,24 @@ body { padding-bottom: 68px; }
 }
 .hero__quote {
   font-family: var(--ls-font-head);
-  font-size: clamp(1.3rem, 4vw, 2.1rem);
-  color: var(--ls-saffron-dk); line-height: 1.38;
+  font-size: clamp(1.25rem, 3.6vw, 1.9rem);
+  color: var(--ls-saffron-dk); line-height: 1.32;
   max-width: 32ch; margin-block: .15rem;
 }
 .hero__chips { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; }
+/* Live figures where the decorative word-chips used to sit. A visitor should
+   see the size of the movement before they scroll, not four adjectives. */
+.hero__stats {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: .35rem 1.4rem; margin: 0;
+  font-size: .95rem; font-weight: 600; color: var(--ls-ink-soft);
+}
+.hero__stats b {
+  font-family: var(--ls-font-head); font-weight: 700;
+  font-size: 1.35rem; color: var(--ls-blue-dark);
+  font-variant-numeric: tabular-nums; margin-inline-end: .25rem;
+}
+.hero--photo .hero__stats { text-shadow: 0 1px 8px rgba(255,253,248,.95); }
 .chip {
   background: #fff; border: 1px solid var(--ls-border);
   border-radius: 999px; padding: .3rem .9rem;
@@ -552,14 +567,23 @@ body { padding-bottom: 68px; }
 .hero--photo .hero__bg { opacity: 1; z-index: -2; object-position: center 42%; }
 /* Over a photograph the scrim alone cannot guarantee contrast on every pixel,
    a crowd shot has both white kurtas and dark doorways behind the same line. */
-.hero--photo .hero__title,
-.hero--photo .hero__sub,
-.hero--photo .hero__quote { text-shadow: 0 1px 10px rgba(255, 253, 248, .95), 0 0 3px rgba(255, 253, 248, .9); }
+/* Measured against the crowd photograph, a scrim alone left the credit line at
+   2.9:1 and the quote at 3.4:1, both short of WCAG. Rather than wash the
+   photograph out further, the words sit on their own panel: the picture stays
+   vivid around it and every line clears 4.5:1. */
+.hero--photo .hero__inner {
+  background: rgba(255, 253, 248, .91);
+  border: 1px solid rgba(255, 255, 255, .8);
+  border-radius: calc(var(--ls-radius) * 1.15);
+  padding: clamp(1.3rem, 3vw, 2rem) clamp(1rem, 3vw, 2.6rem);
+  box-shadow: 0 14px 46px rgba(23, 48, 122, .16);
+  max-width: 44rem;
+}
 .hero--photo::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(180deg, rgba(255,253,248,.90) 0%, rgba(255,253,248,.70) 34%,
-                    rgba(255,253,248,.74) 62%, rgba(255,253,248,.95) 100%);
+    linear-gradient(180deg, rgba(255,253,248,.55) 0%, rgba(255,253,248,.28) 38%,
+                    rgba(255,253,248,.34) 68%, rgba(255,253,248,.78) 100%);
 }
 @media (max-width: 40rem) {
   /* Portrait phones show far less of a wide crowd shot, so lean the scrim

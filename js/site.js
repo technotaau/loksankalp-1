@@ -83,6 +83,25 @@
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  /* --- संकल्प 21 takes the sticky bar for the length of the campaign -----
+     The markup ships with संकल्प लें, the evergreen action, and this swaps it
+     while the fast is live. That way it needs no undoing on 3 October, and if
+     this file never runs the bar still points somewhere correct. */
+
+  var S21_ENDS = Date.UTC(2026, 9, 2, 18, 30);    // 3 Oct 00:00 IST
+  if (Date.now() < S21_ENDS) {
+    document.querySelectorAll('[data-s21-swap]').forEach(function (a) {
+      var href = a.getAttribute('data-s21-href');
+      var label = a.getAttribute('data-s21-label');
+      if (!href || !label) return;
+      a.setAttribute('href', href);
+      // keep the icon, replace only the text node beside it
+      Array.prototype.forEach.call(a.childNodes, function (n) {
+        if (n.nodeType === 3 && n.textContent.trim()) n.textContent = label;
+      });
+    });
+  }
+
   /* --- करुणा 21 opens on the night of 20 September -----------------------
      The upload form ships hidden and is revealed at the hour, so nobody sends
      a photograph before the day and nobody has to remember to switch it on.
@@ -359,6 +378,8 @@
         // Nothing invented and no zeros: say plainly that the figures did not
         // arrive, unless cached ones are already on screen.
         if (shown) return;
+        // In the hero an empty figure reads as a broken page, so it goes.
+        document.querySelectorAll('[data-hero-stats]').forEach(function (n) { n.hidden = true; });
         document.querySelectorAll('[data-stats-note]').forEach(function (n) {
           n.hidden = false;
           n.textContent = 'आँकड़े अभी नहीं आ सके। कृपया पृष्ठ फिर से खोलें।';
