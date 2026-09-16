@@ -83,6 +83,24 @@
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  /* --- करुणा 21 opens on the night of 20 September -----------------------
+     The upload form ships hidden and is revealed at the hour, so nobody sends
+     a photograph before the day and nobody has to remember to switch it on.
+     Hidden is the safe default: if this file never runs, the page still
+     explains what करुणा 21 is and when it opens. */
+
+  var karunaForm = document.querySelector('[data-karuna-form]');
+  if (karunaForm) {
+    // 20 September 2026, 20:00 IST, written as UTC so a phone set to any
+    // timezone opens it at the same moment.
+    var KARUNA_OPENS = Date.UTC(2026, 8, 20, 14, 30);
+    if (Date.now() >= KARUNA_OPENS) {
+      karunaForm.hidden = false;
+      var waiting = document.querySelector('[data-karuna-wait]');
+      if (waiting) waiting.hidden = true;
+    }
+  }
+
   /* --- Gallery district filter ------------------------------------------
      The buttons are hidden in the markup and revealed here, so a phone that
      never runs this file still shows every photograph. */
@@ -377,7 +395,9 @@
     'kahani-done': 'kahani',
     'shikshak-done': 'shikshak',
     'yuva-done': 'yuva',
-    'samman-done': 'samman'
+    'samman-done': 'samman',
+    'sankalp21-done': 'sankalp21',
+    'karuna21-done': 'karuna21'
   };
 
   var MAX_EDGE = 1600;   // px on the long side

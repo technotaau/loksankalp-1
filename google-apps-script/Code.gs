@@ -22,7 +22,7 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 5;          // bump when this file changes; shown in every response
+var CODE_VERSION = 6;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -31,7 +31,10 @@ var FORMS = {
   kahani:   { tab: 'सफलता कहानियाँ',   fields: ['shirshak', 'naam', 'mobile', 'gaon', 'jila', 'shreni', 'kahani', 'sahmati'] },
   shikshak: { tab: 'शिक्षक',           fields: ['naam', 'mobile', 'vidyalaya', 'jila', 'pad', 'yogdan'] },
   yuva:     { tab: 'युवा क्लब',        fields: ['club', 'naam', 'mobile', 'gaon', 'jila', 'sadasya', 'ruchi'] },
-  samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] }
+  samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] },
+  sankalp21:{ tab: 'संकल्प 21',         fields: ['naam', 'mobile', 'jila', 'gaon', 'roop', 'sanstha',
+                                                 'upvaas', 'sankalp', 'sahmati', 'photoSahmati'] },
+  karuna21: { tab: 'करुणा 21',          fields: ['naam', 'jila', 'gaon', 'sandesh', 'sahmati'] }
 };
 
 // Human-readable column headings.
@@ -41,7 +44,9 @@ var LABELS = {
   report: 'रिपोर्ट', shirshak: 'शीर्षक', shreni: 'श्रेणी', kahani: 'कहानी',
   sahmati: 'सहमति', vidyalaya: 'विद्यालय', pad: 'पद', yogdan: 'योगदान',
   club: 'क्लब', sadasya: 'सदस्य संख्या', ruchi: 'रुचि', namit: 'नामांकित',
-  sthan: 'गाँव / विद्यालय', karya: 'कार्य विवरण'
+  sthan: 'गाँव / विद्यालय', karya: 'कार्य विवरण',
+  roop: 'सहभागी के रूप में', sanstha: 'संस्था / विद्यालय', upvaas: 'उपवास',
+  sankalp: 'लोकसंकल्प', photoSahmati: 'फोटो सहमति', sandesh: 'संदेश'
 };
 
 // ---- entry point ---------------------------------------------------------
@@ -110,6 +115,8 @@ function computeStats() {
   var shikshakRows = rows(ss, FORMS.shikshak.tab);
   var yuvaRows     = rows(ss, FORMS.yuva.tab);
   var sammanRows   = rows(ss, FORMS.samman.tab);
+  var s21Rows      = rows(ss, FORMS.sankalp21.tab);
+  var k21Rows      = rows(ss, FORMS.karuna21.tab);
 
   // "जुड़े हुए गाँव" counts each village once, however many forms mention it.
   var villages = {};
@@ -158,6 +165,11 @@ function computeStats() {
     yuvaClub:   yuvaRows.length,
     kahaniyan:  kahaniRows.length,
     samman:     sammanRows.length,
+    // संकल्प 21 is its own count. It is deliberately NOT folded into
+    // `sankalp`: that figure means people who took the लोकसंकल्प, and a fast
+    // registration is a different promise about a single day.
+    sankalp21:  s21Rows.length,
+    karuna21:   k21Rows.length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 

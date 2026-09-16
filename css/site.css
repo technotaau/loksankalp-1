@@ -151,7 +151,7 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .site-nav .nav-login svg { color: #fff; }
 .site-nav .nav-login:hover { background: var(--ls-saffron-dk); }
 
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .nav-toggle { display: none; }
   /* Desktop: brand + login on the top row, the full menu on its own row below.
      Ten destinations do not fit beside the brand without shrinking them to
@@ -214,7 +214,7 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .action-bar svg { width: 22px; height: 22px; }
 .action-bar--pledge { background: var(--ls-saffron); }
 body { padding-bottom: 68px; }
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .action-bar { display: none; }
   body { padding-bottom: 0; }
   .site-nav[data-open="true"] { display: block; }
@@ -621,7 +621,7 @@ body { padding-bottom: 68px; }
 }
 /* It sits over page scans, so the outlined button needs its own ground. */
 .doc-actions .btn--ghost { background: var(--ls-surface); }
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .doc-actions { bottom: 1.4rem; gap: .6rem; }
   .doc-actions .btn { font-size: 1.02rem; padding: .7rem 1.3rem; }
 }
