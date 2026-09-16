@@ -796,11 +796,18 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 
 /* ---------- 9. Footer ---------- */
 .site-footer { background: var(--ls-blue-dark); color: #cfd8f2; padding-block: clamp(2.5rem, 5vw, 3.6rem) 1.4rem; }
+/* The full emblem carries dark blue type inside it, so on the dark footer it
+   needs a light plate to sit on. At this size its tagline ring is actually
+   readable, which is the whole reason it lives here and not in the header. */
+.brand--seal {
+  display: inline-block; background: #fff;
+  border-radius: 18px; padding: .7rem; line-height: 0;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .18);
+}
+.brand--seal img { width: clamp(112px, 24vw, 132px); height: auto; display: block; }
 .site-footer h2, .site-footer h3 { color: #fff; font-size: 1.1rem; margin-bottom: .8rem; }
 .site-footer a { color: #dfe6fb; text-decoration: none; }
 .site-footer a:hover { color: var(--ls-gold); text-decoration: underline; }
-.site-footer .brand__name { color: #fff; }
-.site-footer .brand__name em { color: #86e39c; }
 .site-footer ul { display: grid; gap: .45rem; }
 .footer-grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
 .footer-contact li { display: grid; grid-template-columns: auto 1fr; gap: .6rem; align-items: start; }
