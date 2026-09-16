@@ -142,7 +142,12 @@ def when(value):
 
 def figure(p):
     f, e = p["file"], html.escape
-    where = " · ".join(x for x in (p.get("gaon"), p.get("jila")) if x)
+    # A city photograph has the same value for both; "बीकानेर · बीकानेर" reads
+    # like a bug, so the pair collapses to one.
+    parts = [x for x in (p.get("gaon"), p.get("jila")) if x]
+    if len(parts) == 2 and parts[0] == parts[1]:
+        parts = parts[:1]
+    where = " · ".join(parts)
     meta = " · ".join(x for x in (where, when(p.get("date"))) if x)
     if p.get("bhej"):
         meta = (meta + " · " if meta else "") + "भेजा : " + e(p["bhej"])
