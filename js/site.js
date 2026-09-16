@@ -154,7 +154,18 @@
     }).catch(function () { return null; });
   }
 
-  function drawCertificate(naam, tarikh) {
+  // The wording differs per certificate (लोकसंकल्प, करुणा 21), the layout does
+  // not. Defaults keep the original संकल्प certificate exactly as it was.
+  var CERT_DEFAULT = {
+    title: 'लोकसंकल्प प्रमाणपत्र',
+    line: 'ने नशामुक्त समाज के निर्माण हेतु लोकसंकल्प लिया।',
+    motto: '“नशे को नहीं, संस्कारों को सामाजिक स्वीकृति”',
+    file: 'loksankalp-pramanpatra',
+    share: 'मैंने नशामुक्त समाज के लिए लोकसंकल्प लिया है। अब आपकी बारी। loksankalp.org'
+  };
+
+  function drawCertificate(naam, tarikh, spec) {
+    spec = spec || CERT_DEFAULT;
     var head = '"Tiro Devanagari Hindi", "Noto Sans Devanagari", serif';
     var body = '"Noto Sans Devanagari", system-ui, sans-serif';
     var ready = document.fonts && document.fonts.ready
@@ -189,7 +200,7 @@
         if (mark) x.drawImage(mark, mid - 58, 92, 116, 116);
 
         line('डिजिटल प्रमाणपत्र', 262, '600 26px ' + body, '#b4560a');
-        line('लोकसंकल्प प्रमाणपत्र', 330, '700 56px ' + head, '#17307a');
+        line(spec.title, 330, '700 56px ' + head, '#17307a');
         line('यह प्रमाणित किया जाता है कि', 412, '400 30px ' + body, '#33405c');
 
         line(naam, 500, '700 66px ' + head, '#0f5c26');
@@ -197,8 +208,8 @@
         x.strokeStyle = '#c9d2e6'; x.lineWidth = 2;
         x.beginPath(); x.moveTo(mid - w / 2, 522); x.lineTo(mid + w / 2, 522); x.stroke();
 
-        line('ने नशामुक्त समाज के निर्माण हेतु लोकसंकल्प लिया।', 586, '400 32px ' + body, '#33405c');
-        line('“नशे को नहीं, संस्कारों को सामाजिक स्वीकृति”', 670, '700 36px ' + head, '#b4560a');
+        line(spec.line, 586, '400 32px ' + body, '#33405c');
+        line(spec.motto, 670, '700 36px ' + head, '#b4560a');
 
         x.strokeStyle = '#e3e8f2'; x.lineWidth = 1;
         x.beginPath(); x.moveTo(mid - 380, 728); x.lineTo(mid + 380, 728); x.stroke();
@@ -215,11 +226,25 @@
       });
   }
 
-  var certBox = document.getElementById('cert');
-  if (certBox) {
-    var dlBtn = document.querySelector('[data-cert="download"]');
-    var shBtn = document.querySelector('[data-cert="share"]');
-    var certMsg = document.querySelector('[data-cert="status"]');
+  // A page may carry more than one certificate (संकल्प 21 registers, करुणा 21
+  // certifies). Each lives inside its own [data-cert-scope] with its own
+  // buttons, so nothing is wired to a single hard-coded id any more.
+  document.querySelectorAll('[data-cert-scope]').forEach(function (scope) {
+    var certBox = scope.querySelector('.certificate');
+    if (!certBox) return;
+
+    var d = certBox.dataset;
+    var spec = {
+      title: d.certTitle || CERT_DEFAULT.title,
+      line:  d.certLine  || CERT_DEFAULT.line,
+      motto: d.certMotto || CERT_DEFAULT.motto,
+      file:  d.certFile  || CERT_DEFAULT.file,
+      share: d.certShare || CERT_DEFAULT.share
+    };
+
+    var dlBtn = scope.querySelector('[data-cert="download"]');
+    var shBtn = scope.querySelector('[data-cert="share"]');
+    var certMsg = scope.querySelector('[data-cert="status"]');
     var say = function (t) { if (certMsg) certMsg.textContent = t || ''; };
 
     var certName = function () {
@@ -232,11 +257,11 @@
       return el ? el.textContent.trim() : '';
     };
     var fileName = function () {
-      return 'loksankalp-pramanpatra-' +
+      return spec.file + '-' +
         certName().replace(/[^ऀ-ॿ\w]+/g, '-').replace(/^-|-$/g, '') + '.png';
     };
 
-    var build = function () { return drawCertificate(certName(), certDate()); };
+    var build = function () { return drawCertificate(certName(), certDate(), spec); };
 
     if (dlBtn) dlBtn.addEventListener('click', function () {
       say('प्रमाणपत्र तैयार हो रहा है…');
@@ -263,15 +288,11 @@
       say('प्रमाणपत्र तैयार हो रहा है…');
       build().then(function (blob) {
         var file = new File([blob], fileName(), { type: 'image/png' });
-        return navigator.share({
-          files: [file],
-          title: 'लोकसंकल्प प्रमाणपत्र',
-          text: 'मैंने नशामुक्त समाज के लिए लोकसंकल्प लिया है। अब आपकी बारी। loksankalp.org'
-        });
+        return navigator.share({ files: [file], title: spec.title, text: spec.share });
       }).then(function () { say(''); })
         .catch(function () { say('साझा नहीं हो सका। आप प्रमाणपत्र डाउनलोड करके भेज सकते हैं।'); });
     });
-  }
+  });
 
   /* --- Live figures ----------------------------------------------------
      Counters start at 0 in the HTML and are raised once the real numbers
