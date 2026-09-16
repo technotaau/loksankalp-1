@@ -517,6 +517,15 @@ body { padding-bottom: 68px; }
 .photo-grid { display: grid; gap: 1.4rem 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); align-items: start; }
 .photo-grid .photo img { aspect-ratio: 3 / 2; object-fit: cover; }
 
+/* One photograph large enough to carry a section on its own. Capped below the
+   full wrap width: at 1120px a 3:2 image is 747px tall, which pushes the rest
+   of the page off a laptop screen. Full width on a phone, where it is small
+   anyway and the detail needs every pixel. */
+.photo--feature { max-width: 880px; margin-inline: auto; }
+.photo--feature img { aspect-ratio: 3 / 2; object-fit: cover; }
+.photo--feature a { display: block; border-radius: var(--ls-radius); }
+.photo--feature a:focus-visible { outline: 3px solid var(--ls-saffron); outline-offset: 3px; }
+
 /* Gallery: a caption's second line, and the district filter. The filter is
    hidden in the markup and shown by script, so with no JavaScript every photo
    stays on the page instead of leaving dead buttons behind. */
