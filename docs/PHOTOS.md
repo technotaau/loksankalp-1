@@ -17,7 +17,7 @@ the 1400px one.
 | `sankalp-shapath` | `mera-sankalp.html` page header; home gallery |
 | `manch-shapath` | `mera-sankalp.html`, before संकल्प के बाद क्या |
 | `yuva-flags-courtyard` | `yuva-manch.html` page header; home gallery |
-| `manav-shrinkhala-aerial` | `yuva-manch.html`, before युवा क्या कर सकते हैं; home gallery |
+| `manav-nashamukt-bharat` | `yuva-manch.html`, before युवा क्या कर सकते हैं; home gallery |
 | `vidyalaya-assembly` | `shikshak-network.html` page header; home gallery |
 | `tractor-rally-aerial` | home gallery lead; `safalta-kahaniyan.html` page header |
 | `tractor-rally-portrait` | `samman.html` page header |
