@@ -117,6 +117,7 @@
       karunaForm.hidden = false;
       var waiting = document.querySelector('[data-karuna-wait]');
       if (waiting) waiting.hidden = true;
+      document.querySelectorAll('[data-karuna-count]').forEach(function (n) { n.hidden = false; });
     }
   }
 
@@ -319,7 +320,7 @@
      than showing anything invented. */
 
   var statEls = document.querySelectorAll('[data-stat]');
-  var CACHE_KEY = 'ls-stats-v1';
+  var CACHE_KEY = 'ls-stats-v2';
   var CACHE_MAX_AGE = 24 * 60 * 60 * 1000;   // a day; figures only ever climb
 
   function cached() {
@@ -344,7 +345,16 @@
     var painted = false;
     Array.prototype.forEach.call(statEls, function (el) {
       var v = stats[el.getAttribute('data-stat')];
-      if (typeof v !== 'number') return;
+      if (typeof v !== 'number') {
+        // An older deployed script does not send every figure this page asks
+        // for. Showing the literal 0 from the markup would be a lie, so the
+        // whole counter goes rather than stating a number nobody counted.
+        if (el.hasAttribute('data-loading')) {
+          var box = el.closest ? el.closest('.counter') : null;
+          (box || el).hidden = true;
+        }
+        return;
+      }
       el.setAttribute('data-count', String(v));
       el.removeAttribute('data-loading');
       if (animate) runCounter(el); else el.textContent = nf.format(v);
@@ -356,6 +366,24 @@
     renderDistricts(stats.byDistrict);
     return painted;
   }
+
+  // Called after a submission lands: the Sheet has one more row, and the
+  // script drops its cache on write, so this repaints with the new figure.
+  // Without it someone who has just registered would keep seeing the old
+  // number until they reloaded the page.
+  function refreshStats() {
+    var u = (window.LOKSANKALP_FORM_ENDPOINT || '').trim();
+    if (!statEls.length || !u || !window.fetch) return;
+    fetch(u + '?stats=1&t=' + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok || !res.stats) return;
+        remember(res.stats);
+        paint(res.stats, false);
+      })
+      .catch(function () { /* the figure simply stays as it was */ });
+  }
+  window.LOKSANKALP_REFRESH_STATS = refreshStats;
 
   if (statEls.length) {
     // Someone who has been here before sees their last known figures at once,
@@ -574,6 +602,7 @@
         if (res && res.ok) {
           form.reset();
           finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।');
+          if (window.LOKSANKALP_REFRESH_STATS) window.LOKSANKALP_REFRESH_STATS();
         } else {
           setStatus(form, 'सहेजने में समस्या हुई। कृपया दोबारा भेजें।', 'error');
         }

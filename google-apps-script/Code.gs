@@ -22,7 +22,7 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 6;          // bump when this file changes; shown in every response
+var CODE_VERSION = 7;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -76,6 +76,11 @@ function doPost(e) {
     } finally {
       lock.releaseLock();
     }
+    // A new row changes the published figures, so the cached copy is now
+    // wrong. Dropping it means the very next reader recomputes: someone who
+    // has just registered sees their own entry counted, not a number up to a
+    // minute old. This is what makes a live demonstration work.
+    try { CacheService.getScriptCache().remove(statsCacheKey()); } catch (err2) {}
     return reply(true, 'सहेज लिया गया');
   } catch (err) {
     return reply(false, String(err));
@@ -92,7 +97,7 @@ function doGet(e) {
     return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
   }
   var cache = CacheService.getScriptCache();
-  var key = 'stats-v' + CODE_VERSION;
+  var key = statsCacheKey();
   var hit = cache.get(key);
   if (hit) return json(hit);
   try {
@@ -104,6 +109,22 @@ function doGet(e) {
     // which the site could not parse and could not report usefully.
     return reply(false, 'आँकड़े गिनने में समस्या: ' + err);
   }
+}
+
+function statsCacheKey() { return 'stats-v' + CODE_VERSION; }
+
+/**
+ * One village written by many hands is still one village. Case and stray
+ * spaces are levelled; spelling and script are not. Someone typing the name
+ * in English as well as Hindi therefore counts twice, which is accepted:
+ * guessing that two spellings mean the same place would be worse than the
+ * occasional duplicate.
+ */
+function normPlace(value) {
+  return String(value === null || value === undefined ? '' : value)
+           .replace(/\s+/g, ' ')
+           .trim()
+           .toLowerCase();
 }
 
 function computeStats() {
@@ -119,22 +140,34 @@ function computeStats() {
   var k21Rows      = rows(ss, FORMS.karuna21.tab);
 
   // "जुड़े हुए गाँव" counts each village once, however many forms mention it.
+  // Ten people from one village make that village count once, not ten times,
+  // and a village a सभा already reached adds nothing when its residents
+  // register individually.
   var villages = {};
   [[sankalpRows, FORMS.sankalp], [sabhaRows, FORMS.sabha],
-   [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva]].forEach(function (pair) {
+   [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva],
+   [s21Rows, FORMS.sankalp21]].forEach(function (pair) {
     var idx = pair[1].fields.indexOf('gaon');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
-      var v = String(r[idx + 1] || '').trim();
-      if (v) villages[v.toLowerCase()] = 1;
+      var v = normPlace(r[idx + 1]);
+      if (v) villages[v] = 1;
     });
+  });
+
+  // The same villages, counted over संकल्प 21 alone, for that page's own figure.
+  var s21Villages = {};
+  var g21 = FORMS.sankalp21.fields.indexOf('gaon');
+  s21Rows.forEach(function (r) {
+    var v = normPlace(r[g21 + 1]);
+    if (v) s21Villages[v] = 1;
   });
 
   var schools = {};
   var vIdx = FORMS.shikshak.fields.indexOf('vidyalaya');
   shikshakRows.forEach(function (r) {
-    var v = String(r[vIdx + 1] || '').trim();
-    if (v) schools[v.toLowerCase()] = 1;
+    var v = normPlace(r[vIdx + 1]);
+    if (v) schools[v] = 1;
   });
 
   var samitiIdx = FORMS.sabha.fields.indexOf('samiti');
@@ -157,7 +190,7 @@ function computeStats() {
     samitiyan:  samitiyan,
     // One consolidated number. The two halves are published too, so the
     // dashboard can always show where the figure came from.
-    sankalp:         sankalpRows.length + sabhaPratibhagi,
+    sankalp:         sankalpRows.length + sabhaPratibhagi + s21Rows.length,
     sankalpOnline:   sankalpRows.length,
     sabhaPratibhagi: sabhaPratibhagi,
     shikshak:   shikshakRows.length,
@@ -165,11 +198,12 @@ function computeStats() {
     yuvaClub:   yuvaRows.length,
     kahaniyan:  kahaniRows.length,
     samman:     sammanRows.length,
-    // संकल्प 21 is its own count. It is deliberately NOT folded into
-    // `sankalp`: that figure means people who took the लोकसंकल्प, and a fast
-    // registration is a different promise about a single day.
-    sankalp21:  s21Rows.length,
-    karuna21:   k21Rows.length,
+    // संकल्प 21 is folded into the headline figure above, because one
+    // campaign should publish one number. It is also reported on its own so
+    // the संकल्प 21 page can show just its own participation.
+    sankalp21:      s21Rows.length,
+    sankalp21Gaon:  Object.keys(s21Villages).length,
+    karuna21:       k21Rows.length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
@@ -187,7 +221,7 @@ function computeStats() {
   sankalpRows.forEach(function (r) {
     var d = touch(r[jSankalp + 1]); if (!d) return;
     d.sankalp++;
-    var v = String(r[gSankalp + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
+    var v = normPlace(r[gSankalp + 1]); if (v) d.gaon[v] = 1;
   });
   var jSabha = FORMS.sabha.fields.indexOf('jila');
   var gSabha = FORMS.sabha.fields.indexOf('gaon');
@@ -196,7 +230,13 @@ function computeStats() {
     d.sabhaen++;
     d.sankalp += count(r[nIdx + 1]);   // same basis as the headline figure
     if (String(r[samitiIdx + 1] || '').trim() === 'हाँ') d.samitiyan++;
-    var v = String(r[gSabha + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
+    var v = normPlace(r[gSabha + 1]); if (v) d.gaon[v] = 1;
+  });
+  var j21 = FORMS.sankalp21.fields.indexOf('jila');
+  s21Rows.forEach(function (r) {
+    var d = touch(r[j21 + 1]); if (!d) return;
+    d.sankalp++;
+    var v = normPlace(r[g21 + 1]); if (v) d.gaon[v] = 1;
   });
   stats.byDistrict = Object.keys(byDistrict).map(function (d) {
     return { jila: d, gaon: Object.keys(byDistrict[d].gaon).length,
