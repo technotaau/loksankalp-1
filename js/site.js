@@ -544,6 +544,18 @@
     box.hidden = !text;
   }
 
+  // Rising waits before each retry, in milliseconds. Five attempts after the
+  // first cover about a minute of queue, which is longer than a class of four
+  // hundred takes to drain.
+  var RETRY_WAITS = [1500, 3500, 7000, 14000, 25000];
+
+  function newRequestId() {
+    try {
+      if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+    } catch (e) { /* older phones fall through */ }
+    return 'r' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+  }
+
   document.querySelectorAll('form[data-demo]').forEach(function (form) {
     var outId = form.getAttribute('data-demo');
     var formName = FORM_NAMES[outId];
@@ -590,31 +602,55 @@
       var fileInput = form.querySelector('input[type="file"]');
       var chosen = fileInput && fileInput.files ? Array.prototype.slice.call(fileInput.files, 0, MAX_FILES) : [];
 
+      // One id for this submission, kept across retries. The script records it
+      // and refuses to write the same one twice, so a retry can never turn one
+      // person into two rows.
+      var reqId = newRequestId();
+
       Promise.all(chosen.map(shrink)).then(function (files) {
-        return fetch(ENDPOINT, {
-          method: 'POST',
-          // A plain-text body keeps this a "simple" request, so the browser
-          // sends no CORS preflight, which Apps Script cannot answer.
-          body: JSON.stringify({
-            form: formName,
-            website: (form.querySelector('[name="website"]') || {}).value || '',
-            values: collect(form),
-            files: files.filter(Boolean)
-          })
+        // A plain-text body keeps this a "simple" request, so the browser
+        // sends no CORS preflight, which Apps Script cannot answer.
+        var payload = JSON.stringify({
+          form: formName,
+          reqId: reqId,
+          website: (form.querySelector('[name="website"]') || {}).value || '',
+          values: collect(form),
+          files: files.filter(Boolean)
         });
-      }).then(function (r) { return r.json(); }).then(function (res) {
-        if (res && res.ok) {
-          form.reset();
-          finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।');
-          if (window.LOKSANKALP_REFRESH_STATS) window.LOKSANKALP_REFRESH_STATS();
-        } else {
-          setStatus(form, 'सहेजने में समस्या हुई। कृपया दोबारा भेजें।', 'error');
-        }
-      }).catch(function () {
-        setStatus(form, 'इंटरनेट धीमा लग रहा है। कृपया दोबारा भेजें।', 'error');
+        return send(payload, 0);
+      }).then(function () {
+        form.reset();
+        finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।');
+        if (window.LOKSANKALP_REFRESH_STATS) window.LOKSANKALP_REFRESH_STATS();
+      }).catch(function (err) {
+        setStatus(form, err && err.slow
+          ? 'इंटरनेट धीमा लग रहा है। कृपया दोबारा भेजें।'
+          : 'अभी सहेजा नहीं जा सका। कृपया दोबारा भेजें।', 'error');
       }).then(function () {
         if (button) { button.disabled = false; if (button.dataset.label) button.textContent = button.dataset.label; }
       });
+
+      // When a whole classroom presses "भेजें" at the same moment, the script
+      // writes them one at a time and the ones at the back of the queue are
+      // turned away. Showing them an error would lose the registration at the
+      // exact moment trust is being built, so the page waits and asks again by
+      // itself, backing off each time. The waits are jittered so the retries
+      // do not all return together and rebuild the same queue.
+      function send(payload, attempt) {
+        return fetch(ENDPOINT, { method: 'POST', body: payload })
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (res && res.ok) return res;
+            throw { slow: false };
+          })
+          .catch(function (err) {
+            if (attempt >= RETRY_WAITS.length) throw (err && err.slow === false ? err : { slow: true });
+            var wait = RETRY_WAITS[attempt] + Math.floor(Math.random() * 1200);
+            setStatus(form, 'बहुत लोग एक साथ भेज रहे हैं। आपकी जानकारी क़तार में है, पृष्ठ बंद न करें…', 'busy');
+            return new Promise(function (go) { setTimeout(go, wait); })
+              .then(function () { return send(payload, attempt + 1); });
+          });
+      }
     });
   });
 })();

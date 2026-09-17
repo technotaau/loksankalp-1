@@ -22,7 +22,7 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 7;          // bump when this file changes; shown in every response
+var CODE_VERSION = 8;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -62,10 +62,27 @@ function doPost(e) {
     var spec = FORMS[data.form];
     if (!spec) return reply(false, 'अज्ञात फ़ॉर्म');
 
+    // When a classroom submits together the page retries instead of showing an
+    // error, so the same submission can arrive more than once. It carries an id
+    // that is generated once and kept across those retries; the first write
+    // records it and any repeat is answered as saved without writing again.
+    var reqId = String(data.reqId || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 64);
+    var seen = CacheService.getScriptCache();
+    var seenKey = 'req-' + reqId;
+    if (reqId && seen.get(seenKey)) return reply(true, 'पहले ही सहेज लिया गया');
+
+    // Photographs go to Drive before the lock is taken. Uploading is the slow
+    // part of a submission, and holding the queue open through it is what
+    // would turn a classroom into a jam. The lock guards the append alone.
+    var links = saveFiles(data.files, data.form);
+
     var lock = LockService.getScriptLock();
-    lock.waitLock(20000);                    // keep concurrent writes from colliding
+    // Appending is quick, so a minute is room for a few hundred people.
+    lock.waitLock(60000);
     try {
-      var links = saveFiles(data.files, data.form);
+      // Checked again inside the lock: two retries racing each other would
+      // both have passed the check above.
+      if (reqId && seen.get(seenKey)) return reply(true, 'पहले ही सहेज लिया गया');
       var sheet = getTab(spec);
       var row = [timestamp()];
       for (var i = 0; i < spec.fields.length; i++) {
@@ -73,6 +90,7 @@ function doPost(e) {
       }
       row.push(links.join('\n'));
       sheet.appendRow(row);
+      if (reqId) seen.put(seenKey, '1', 21600);   // six hours
     } finally {
       lock.releaseLock();
     }
