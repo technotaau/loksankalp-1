@@ -34,7 +34,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "gallery" / "photos.json"
 PHOTOS = ROOT / "assets" / "img" / "photos"
 PAGE = ROOT / "gallery.html"
-SITE = "https://technotaau.github.io/loksankalp-1"
+SITE = "https://loksankalp.org"
 REFERENCE = "sansadhan.html"          # header and footer are lifted from here
 
 
