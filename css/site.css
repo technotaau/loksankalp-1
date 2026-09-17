@@ -416,6 +416,10 @@ body { padding-bottom: 68px; }
   display: flex; flex-wrap: wrap; gap: 1px; background: var(--ls-border);
   border: 1px solid var(--ls-border); border-radius: var(--ls-radius); overflow: hidden;
 }
+/* Set by the figures code on a counter whose number is 0 or which the
+   deployed script does not send. A class rather than [hidden] so it is
+   independent of the date gates, and so the counter can come back by itself. */
+.counter--empty { display: none; }
 .counter {
   flex: 1 1 min(calc(50% - 1px), 10.5rem); min-width: 0;
   background: var(--ls-surface); padding: 1.4rem .8rem; text-align: center;

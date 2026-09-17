@@ -345,16 +345,20 @@
     var painted = false;
     Array.prototype.forEach.call(statEls, function (el) {
       var v = stats[el.getAttribute('data-stat')];
+      var box = el.closest ? el.closest('.counter') : null;
       if (typeof v !== 'number') {
         // An older deployed script does not send every figure this page asks
         // for. Showing the literal 0 from the markup would be a lie, so the
         // whole counter goes rather than stating a number nobody counted.
-        if (el.hasAttribute('data-loading')) {
-          var box = el.closest ? el.closest('.counter') : null;
-          (box || el).hidden = true;
-        }
+        if (box && el.hasAttribute('data-loading')) box.classList.add('counter--empty');
         return;
       }
+      // A counter reading 0 makes the movement look smaller than it is, and
+      // it is not news that nothing has happened yet. It stays out of sight
+      // and returns on its own the moment the first entry arrives.
+      // A class, not the hidden attribute, so this never fights the date gate
+      // that holds the करुणा 21 counter back until its form opens.
+      if (box) box.classList.toggle('counter--empty', v === 0);
       el.setAttribute('data-count', String(v));
       el.removeAttribute('data-loading');
       if (animate) runCounter(el); else el.textContent = nf.format(v);
