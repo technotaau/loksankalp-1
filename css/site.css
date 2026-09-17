@@ -763,6 +763,12 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 
 /* Big radio/checkbox tiles: easy to tap, easy to read */
 .choices { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); }
+/* The tracks above are sized for short options (विद्यार्थी, युवा, नागरिक),
+   which sit two or three to a row on a phone. A sentence-length option in a
+   152px track breaks to one word per line, so blocks that carry sentences ask
+   for a single column instead. CSS cannot measure the text, so it is marked
+   in the markup. */
+.choices--wide { grid-template-columns: 1fr; }
 .choice {
   position: relative; display: flex; align-items: center; gap: .65rem;
   min-height: var(--ls-tap); padding: .8rem 1rem;
