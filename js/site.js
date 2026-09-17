@@ -83,6 +83,44 @@
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  /* --- संकल्प 21 takes the sticky bar for the length of the campaign -----
+     The markup ships with संकल्प लें, the evergreen action, and this swaps it
+     while the fast is live. That way it needs no undoing on 3 October, and if
+     this file never runs the bar still points somewhere correct. */
+
+  var S21_ENDS = Date.UTC(2026, 9, 2, 18, 30);    // 3 Oct 00:00 IST
+  if (Date.now() < S21_ENDS) {
+    document.querySelectorAll('[data-s21-swap]').forEach(function (a) {
+      var href = a.getAttribute('data-s21-href');
+      var label = a.getAttribute('data-s21-label');
+      if (!href || !label) return;
+      a.setAttribute('href', href);
+      // keep the icon, replace only the text node beside it
+      Array.prototype.forEach.call(a.childNodes, function (n) {
+        if (n.nodeType === 3 && n.textContent.trim()) n.textContent = label;
+      });
+    });
+  }
+
+  /* --- करुणा 21 opens on the night of 20 September -----------------------
+     The upload form ships hidden and is revealed at the hour, so nobody sends
+     a photograph before the day and nobody has to remember to switch it on.
+     Hidden is the safe default: if this file never runs, the page still
+     explains what करुणा 21 is and when it opens. */
+
+  var karunaForm = document.querySelector('[data-karuna-form]');
+  if (karunaForm) {
+    // 20 September 2026, 20:00 IST, written as UTC so a phone set to any
+    // timezone opens it at the same moment.
+    var KARUNA_OPENS = Date.UTC(2026, 8, 20, 14, 30);
+    if (Date.now() >= KARUNA_OPENS) {
+      karunaForm.hidden = false;
+      var waiting = document.querySelector('[data-karuna-wait]');
+      if (waiting) waiting.hidden = true;
+      document.querySelectorAll('[data-karuna-count]').forEach(function (n) { n.hidden = false; });
+    }
+  }
+
   /* --- Gallery district filter ------------------------------------------
      The buttons are hidden in the markup and revealed here, so a phone that
      never runs this file still shows every photograph. */
@@ -136,7 +174,18 @@
     }).catch(function () { return null; });
   }
 
-  function drawCertificate(naam, tarikh) {
+  // The wording differs per certificate (लोकसंकल्प, करुणा 21), the layout does
+  // not. Defaults keep the original संकल्प certificate exactly as it was.
+  var CERT_DEFAULT = {
+    title: 'लोकसंकल्प प्रमाणपत्र',
+    line: 'ने नशामुक्त समाज के निर्माण हेतु लोकसंकल्प लिया।',
+    motto: '“नशे को नहीं, संस्कारों को सामाजिक स्वीकृति”',
+    file: 'loksankalp-pramanpatra',
+    share: 'मैंने नशामुक्त समाज के लिए लोकसंकल्प लिया है। अब आपकी बारी। loksankalp.org'
+  };
+
+  function drawCertificate(naam, tarikh, spec) {
+    spec = spec || CERT_DEFAULT;
     var head = '"Tiro Devanagari Hindi", "Noto Sans Devanagari", serif';
     var body = '"Noto Sans Devanagari", system-ui, sans-serif';
     var ready = document.fonts && document.fonts.ready
@@ -171,7 +220,7 @@
         if (mark) x.drawImage(mark, mid - 58, 92, 116, 116);
 
         line('डिजिटल प्रमाणपत्र', 262, '600 26px ' + body, '#b4560a');
-        line('लोकसंकल्प प्रमाणपत्र', 330, '700 56px ' + head, '#17307a');
+        line(spec.title, 330, '700 56px ' + head, '#17307a');
         line('यह प्रमाणित किया जाता है कि', 412, '400 30px ' + body, '#33405c');
 
         line(naam, 500, '700 66px ' + head, '#0f5c26');
@@ -179,8 +228,8 @@
         x.strokeStyle = '#c9d2e6'; x.lineWidth = 2;
         x.beginPath(); x.moveTo(mid - w / 2, 522); x.lineTo(mid + w / 2, 522); x.stroke();
 
-        line('ने नशामुक्त समाज के निर्माण हेतु लोकसंकल्प लिया।', 586, '400 32px ' + body, '#33405c');
-        line('“नशे को नहीं, संस्कारों को सामाजिक स्वीकृति”', 670, '700 36px ' + head, '#b4560a');
+        line(spec.line, 586, '400 32px ' + body, '#33405c');
+        line(spec.motto, 670, '700 36px ' + head, '#b4560a');
 
         x.strokeStyle = '#e3e8f2'; x.lineWidth = 1;
         x.beginPath(); x.moveTo(mid - 380, 728); x.lineTo(mid + 380, 728); x.stroke();
@@ -197,11 +246,25 @@
       });
   }
 
-  var certBox = document.getElementById('cert');
-  if (certBox) {
-    var dlBtn = document.querySelector('[data-cert="download"]');
-    var shBtn = document.querySelector('[data-cert="share"]');
-    var certMsg = document.querySelector('[data-cert="status"]');
+  // A page may carry more than one certificate (संकल्प 21 registers, करुणा 21
+  // certifies). Each lives inside its own [data-cert-scope] with its own
+  // buttons, so nothing is wired to a single hard-coded id any more.
+  document.querySelectorAll('[data-cert-scope]').forEach(function (scope) {
+    var certBox = scope.querySelector('.certificate');
+    if (!certBox) return;
+
+    var d = certBox.dataset;
+    var spec = {
+      title: d.certTitle || CERT_DEFAULT.title,
+      line:  d.certLine  || CERT_DEFAULT.line,
+      motto: d.certMotto || CERT_DEFAULT.motto,
+      file:  d.certFile  || CERT_DEFAULT.file,
+      share: d.certShare || CERT_DEFAULT.share
+    };
+
+    var dlBtn = scope.querySelector('[data-cert="download"]');
+    var shBtn = scope.querySelector('[data-cert="share"]');
+    var certMsg = scope.querySelector('[data-cert="status"]');
     var say = function (t) { if (certMsg) certMsg.textContent = t || ''; };
 
     var certName = function () {
@@ -214,11 +277,11 @@
       return el ? el.textContent.trim() : '';
     };
     var fileName = function () {
-      return 'loksankalp-pramanpatra-' +
+      return spec.file + '-' +
         certName().replace(/[^ऀ-ॿ\w]+/g, '-').replace(/^-|-$/g, '') + '.png';
     };
 
-    var build = function () { return drawCertificate(certName(), certDate()); };
+    var build = function () { return drawCertificate(certName(), certDate(), spec); };
 
     if (dlBtn) dlBtn.addEventListener('click', function () {
       say('प्रमाणपत्र तैयार हो रहा है…');
@@ -245,15 +308,11 @@
       say('प्रमाणपत्र तैयार हो रहा है…');
       build().then(function (blob) {
         var file = new File([blob], fileName(), { type: 'image/png' });
-        return navigator.share({
-          files: [file],
-          title: 'लोकसंकल्प प्रमाणपत्र',
-          text: 'मैंने नशामुक्त समाज के लिए लोकसंकल्प लिया है। अब आपकी बारी। loksankalp.org'
-        });
+        return navigator.share({ files: [file], title: spec.title, text: spec.share });
       }).then(function () { say(''); })
         .catch(function () { say('साझा नहीं हो सका। आप प्रमाणपत्र डाउनलोड करके भेज सकते हैं।'); });
     });
-  }
+  });
 
   /* --- Live figures ----------------------------------------------------
      Counters start at 0 in the HTML and are raised once the real numbers
@@ -261,7 +320,7 @@
      than showing anything invented. */
 
   var statEls = document.querySelectorAll('[data-stat]');
-  var CACHE_KEY = 'ls-stats-v1';
+  var CACHE_KEY = 'ls-stats-v2';
   var CACHE_MAX_AGE = 24 * 60 * 60 * 1000;   // a day; figures only ever climb
 
   function cached() {
@@ -286,7 +345,20 @@
     var painted = false;
     Array.prototype.forEach.call(statEls, function (el) {
       var v = stats[el.getAttribute('data-stat')];
-      if (typeof v !== 'number') return;
+      var box = el.closest ? el.closest('.counter') : null;
+      if (typeof v !== 'number') {
+        // An older deployed script does not send every figure this page asks
+        // for. Showing the literal 0 from the markup would be a lie, so the
+        // whole counter goes rather than stating a number nobody counted.
+        if (box && el.hasAttribute('data-loading')) box.classList.add('counter--empty');
+        return;
+      }
+      // A counter reading 0 makes the movement look smaller than it is, and
+      // it is not news that nothing has happened yet. It stays out of sight
+      // and returns on its own the moment the first entry arrives.
+      // A class, not the hidden attribute, so this never fights the date gate
+      // that holds the करुणा 21 counter back until its form opens.
+      if (box) box.classList.toggle('counter--empty', v === 0);
       el.setAttribute('data-count', String(v));
       el.removeAttribute('data-loading');
       if (animate) runCounter(el); else el.textContent = nf.format(v);
@@ -298,6 +370,24 @@
     renderDistricts(stats.byDistrict);
     return painted;
   }
+
+  // Called after a submission lands: the Sheet has one more row, and the
+  // script drops its cache on write, so this repaints with the new figure.
+  // Without it someone who has just registered would keep seeing the old
+  // number until they reloaded the page.
+  function refreshStats() {
+    var u = (window.LOKSANKALP_FORM_ENDPOINT || '').trim();
+    if (!statEls.length || !u || !window.fetch) return;
+    fetch(u + '?stats=1&t=' + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok || !res.stats) return;
+        remember(res.stats);
+        paint(res.stats, false);
+      })
+      .catch(function () { /* the figure simply stays as it was */ });
+  }
+  window.LOKSANKALP_REFRESH_STATS = refreshStats;
 
   if (statEls.length) {
     // Someone who has been here before sees their last known figures at once,
@@ -320,6 +410,8 @@
         // Nothing invented and no zeros: say plainly that the figures did not
         // arrive, unless cached ones are already on screen.
         if (shown) return;
+        // In the hero an empty figure reads as a broken page, so it goes.
+        document.querySelectorAll('[data-hero-stats]').forEach(function (n) { n.hidden = true; });
         document.querySelectorAll('[data-stats-note]').forEach(function (n) {
           n.hidden = false;
           n.textContent = 'आँकड़े अभी नहीं आ सके। कृपया पृष्ठ फिर से खोलें।';
@@ -377,7 +469,9 @@
     'kahani-done': 'kahani',
     'shikshak-done': 'shikshak',
     'yuva-done': 'yuva',
-    'samman-done': 'samman'
+    'samman-done': 'samman',
+    'sankalp21-done': 'sankalp21',
+    'karuna21-done': 'karuna21'
   };
 
   var MAX_EDGE = 1600;   // px on the long side
@@ -450,6 +544,18 @@
     box.hidden = !text;
   }
 
+  // Rising waits before each retry, in milliseconds. Five attempts after the
+  // first cover about a minute of queue, which is longer than a class of four
+  // hundred takes to drain.
+  var RETRY_WAITS = [1500, 3500, 7000, 14000, 25000];
+
+  function newRequestId() {
+    try {
+      if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+    } catch (e) { /* older phones fall through */ }
+    return 'r' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+  }
+
   document.querySelectorAll('form[data-demo]').forEach(function (form) {
     var outId = form.getAttribute('data-demo');
     var formName = FORM_NAMES[outId];
@@ -496,30 +602,55 @@
       var fileInput = form.querySelector('input[type="file"]');
       var chosen = fileInput && fileInput.files ? Array.prototype.slice.call(fileInput.files, 0, MAX_FILES) : [];
 
+      // One id for this submission, kept across retries. The script records it
+      // and refuses to write the same one twice, so a retry can never turn one
+      // person into two rows.
+      var reqId = newRequestId();
+
       Promise.all(chosen.map(shrink)).then(function (files) {
-        return fetch(ENDPOINT, {
-          method: 'POST',
-          // A plain-text body keeps this a "simple" request, so the browser
-          // sends no CORS preflight, which Apps Script cannot answer.
-          body: JSON.stringify({
-            form: formName,
-            website: (form.querySelector('[name="website"]') || {}).value || '',
-            values: collect(form),
-            files: files.filter(Boolean)
-          })
+        // A plain-text body keeps this a "simple" request, so the browser
+        // sends no CORS preflight, which Apps Script cannot answer.
+        var payload = JSON.stringify({
+          form: formName,
+          reqId: reqId,
+          website: (form.querySelector('[name="website"]') || {}).value || '',
+          values: collect(form),
+          files: files.filter(Boolean)
         });
-      }).then(function (r) { return r.json(); }).then(function (res) {
-        if (res && res.ok) {
-          form.reset();
-          finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।');
-        } else {
-          setStatus(form, 'सहेजने में समस्या हुई। कृपया दोबारा भेजें।', 'error');
-        }
-      }).catch(function () {
-        setStatus(form, 'इंटरनेट धीमा लग रहा है। कृपया दोबारा भेजें।', 'error');
+        return send(payload, 0);
+      }).then(function () {
+        form.reset();
+        finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।');
+        if (window.LOKSANKALP_REFRESH_STATS) window.LOKSANKALP_REFRESH_STATS();
+      }).catch(function (err) {
+        setStatus(form, err && err.slow
+          ? 'इंटरनेट धीमा लग रहा है। कृपया दोबारा भेजें।'
+          : 'अभी सहेजा नहीं जा सका। कृपया दोबारा भेजें।', 'error');
       }).then(function () {
         if (button) { button.disabled = false; if (button.dataset.label) button.textContent = button.dataset.label; }
       });
+
+      // When a whole classroom presses "भेजें" at the same moment, the script
+      // writes them one at a time and the ones at the back of the queue are
+      // turned away. Showing them an error would lose the registration at the
+      // exact moment trust is being built, so the page waits and asks again by
+      // itself, backing off each time. The waits are jittered so the retries
+      // do not all return together and rebuild the same queue.
+      function send(payload, attempt) {
+        return fetch(ENDPOINT, { method: 'POST', body: payload })
+          .then(function (r) { return r.json(); })
+          .then(function (res) {
+            if (res && res.ok) return res;
+            throw { slow: false };
+          })
+          .catch(function (err) {
+            if (attempt >= RETRY_WAITS.length) throw (err && err.slow === false ? err : { slow: true });
+            var wait = RETRY_WAITS[attempt] + Math.floor(Math.random() * 1200);
+            setStatus(form, 'बहुत लोग एक साथ भेज रहे हैं। आपकी जानकारी क़तार में है, पृष्ठ बंद न करें…', 'busy');
+            return new Promise(function (go) { setTimeout(go, wait); })
+              .then(function () { return send(payload, attempt + 1); });
+          });
+      }
     });
   });
 })();

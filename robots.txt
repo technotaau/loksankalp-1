@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://technotaau.github.io/loksankalp-1/sitemap.xml
+Sitemap: https://loksankalp.org/sitemap.xml

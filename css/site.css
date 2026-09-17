@@ -151,7 +151,7 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .site-nav .nav-login svg { color: #fff; }
 .site-nav .nav-login:hover { background: var(--ls-saffron-dk); }
 
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .nav-toggle { display: none; }
   /* Desktop: brand + login on the top row, the full menu on its own row below.
      Ten destinations do not fit beside the brand without shrinking them to
@@ -214,7 +214,7 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .action-bar svg { width: 22px; height: 22px; }
 .action-bar--pledge { background: var(--ls-saffron); }
 body { padding-bottom: 68px; }
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .action-bar { display: none; }
   body { padding-bottom: 0; }
   .site-nav[data-open="true"] { display: block; }
@@ -225,7 +225,9 @@ body { padding-bottom: 68px; }
   position: relative; isolation: isolate;
   min-height: min(82svh, 700px);
   display: grid; place-items: center;
-  padding-block: clamp(2.5rem, 7vw, 5rem);
+  /* Was 5rem at the top end, which pushed the call to action to y=750 on a
+     1440x800 laptop, right at the fold. */
+  padding-block: clamp(2rem, 4vw, 2.6rem);
   text-align: center;
   background:
     radial-gradient(120% 90% at 50% 0%, #fff8ec 0%, #fdf6ea 42%, #eef3ff 100%);
@@ -236,7 +238,7 @@ body { padding-bottom: 68px; }
   width: 100%; height: 100%; object-fit: cover;
   opacity: .5;
 }
-.hero__inner { position: relative; display: grid; gap: .85rem; justify-items: center; }
+.hero__inner { position: relative; display: grid; gap: .7rem; justify-items: center; }
 /* Campaign umbrella above the mark, running institution below it, both kept
    to one short line on a phone so neither competes with the लोकसंकल्प title. */
 .hero__umbrella {
@@ -253,7 +255,6 @@ body { padding-bottom: 68px; }
   max-width: 40ch; text-wrap: balance;
 }
 @media (min-width: 48rem) { .hero__by { max-width: none; } }
-.hero__logo { width: clamp(104px, 18vw, 152px); height: auto; filter: drop-shadow(0 6px 18px rgba(23,48,122,.16)); }
 .hero__title {
   font-size: clamp(2.4rem, 8vw, 4.6rem);
   letter-spacing: -.01em; line-height: 1.08; margin: 0;
@@ -266,11 +267,32 @@ body { padding-bottom: 68px; }
 }
 .hero__quote {
   font-family: var(--ls-font-head);
-  font-size: clamp(1.3rem, 4vw, 2.1rem);
-  color: var(--ls-saffron-dk); line-height: 1.38;
+  font-size: clamp(1.25rem, 3.6vw, 1.9rem);
+  color: var(--ls-saffron-dk); line-height: 1.32;
   max-width: 32ch; margin-block: .15rem;
 }
 .hero__chips { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; }
+/* Live figures where the decorative word-chips used to sit. A visitor should
+   see the size of the movement before they scroll, not four adjectives. */
+.hero__stats {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: .35rem 1.4rem; margin: 0;
+  font-size: .95rem; font-weight: 600; color: var(--ls-ink-soft);
+}
+.hero__stats b {
+  font-family: var(--ls-font-head); font-weight: 700;
+  font-size: 1.35rem; color: var(--ls-blue-dark);
+  font-variant-numeric: tabular-nums; margin-inline-end: .25rem;
+}
+/* On a phone the three figures do not fit on one line, and left to itself the
+   row breaks 2 + 1, which reads as a mistake. Three even columns instead, the
+   number over its label, so the row is balanced at any text size. */
+@media (max-width: 47.99rem) {
+  .hero__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem .4rem; }
+  .hero__stats > span { display: grid; justify-items: center; align-content: start; line-height: 1.3; }
+  .hero__stats b { margin-inline-end: 0; }
+}
+/* no scrim under the words any more, so no shadow to lift them off it */
 .chip {
   background: #fff; border: 1px solid var(--ls-border);
   border-radius: 999px; padding: .3rem .9rem;
@@ -385,12 +407,23 @@ body { padding-bottom: 68px; }
 }
 
 /* Impact counters */
+/* Wrapping flex, not grid. The separators are drawn by the 1px gap showing the
+   background through, so any cell a grid would leave empty appears as a grey
+   block: with eight counters on a six-wide row, two of them. Flex items on the
+   last row stretch to fill it instead, so the figures divide the width evenly
+   whatever their number and however many fit. */
 .counters {
-  display: grid; gap: 1px; background: var(--ls-border);
+  display: flex; flex-wrap: wrap; gap: 1px; background: var(--ls-border);
   border: 1px solid var(--ls-border); border-radius: var(--ls-radius); overflow: hidden;
-  grid-template-columns: repeat(auto-fit, minmax(min(50%, 10.5rem), 1fr));
 }
-.counter { background: var(--ls-surface); padding: 1.4rem .8rem; text-align: center; }
+/* Set by the figures code on a counter whose number is 0 or which the
+   deployed script does not send. A class rather than [hidden] so it is
+   independent of the date gates, and so the counter can come back by itself. */
+.counter--empty { display: none; }
+.counter {
+  flex: 1 1 min(calc(50% - 1px), 10.5rem); min-width: 0;
+  background: var(--ls-surface); padding: 1.4rem .8rem; text-align: center;
+}
 .counter svg { width: 28px; height: 28px; margin-inline: auto; color: var(--ls-saffron-dk); }
 .counter b {
   display: block; font-family: var(--ls-font-head);
@@ -517,6 +550,15 @@ body { padding-bottom: 68px; }
 .photo-grid { display: grid; gap: 1.4rem 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); align-items: start; }
 .photo-grid .photo img { aspect-ratio: 3 / 2; object-fit: cover; }
 
+/* One photograph large enough to carry a section on its own. Capped below the
+   full wrap width: at 1120px a 3:2 image is 747px tall, which pushes the rest
+   of the page off a laptop screen. Full width on a phone, where it is small
+   anyway and the detail needs every pixel. */
+.photo--feature { max-width: 880px; margin-inline: auto; }
+.photo--feature img { aspect-ratio: 3 / 2; object-fit: cover; }
+.photo--feature a { display: block; border-radius: var(--ls-radius); }
+.photo--feature a:focus-visible { outline: 3px solid var(--ls-saffron); outline-offset: 3px; }
+
 /* Gallery: a caption's second line, and the district filter. The filter is
    hidden in the markup and shown by script, so with no JavaScript every photo
    stays on the page instead of leaving dead buttons behind. */
@@ -537,25 +579,63 @@ body { padding-bottom: 68px; }
   background: var(--ls-blue-dark); border-color: var(--ls-blue-dark); color: #fff;
 }
 
-/* A hero backed by a photograph rather than the illustration.
-   The scrim is what keeps the Devanagari readable over a busy crowd shot,
-   without it the title fails contrast against light kurtas and sky. */
-.hero--photo .hero__bg { opacity: 1; z-index: -2; object-position: center 42%; }
-/* Over a photograph the scrim alone cannot guarantee contrast on every pixel,
-   a crowd shot has both white kurtas and dark doorways behind the same line. */
-.hero--photo .hero__title,
-.hero--photo .hero__sub,
-.hero--photo .hero__quote { text-shadow: 0 1px 10px rgba(255, 253, 248, .95), 0 0 3px rgba(255, 253, 248, .9); }
-.hero--photo::before {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(255,253,248,.90) 0%, rgba(255,253,248,.70) 34%,
-                    rgba(255,253,248,.74) 62%, rgba(255,253,248,.95) 100%);
+/* The photograph in the hero is a photograph, not a backdrop.
+   It used to sit behind the words under a heavy cream scrim, which washed the
+   picture out and still left the credit line at 2.9:1. Worse, the shot's
+   subject is mid-frame, exactly where centred text lands. Showing it as its
+   own figure fixes both: the picture is fully visible and the words sit on
+   plain cream, needing no scrim at all. */
+.hero--photo {
+  background: none;
+  /* The figure is a grid row under the text on phones. Without this the
+     ghost button's outline sat flush against the top edge of the photo. */
+  row-gap: clamp(1.4rem, 5vw, 2rem);
 }
-@media (max-width: 40rem) {
-  /* Portrait phones show far less of a wide crowd shot, so lean the scrim
-     heavier, because legibility beats the photograph here. */
-  .hero--photo::before { background: rgba(255,253,248,.9); }
+.hero--photo .hero__media {
+  margin: 0; display: grid; gap: .6rem; justify-items: center;
+  /* the figure comes first in the markup so it loads early, but the mark and
+     the name should be what a visitor meets first */
+  order: 2;
+}
+.hero--photo .hero__inner { order: 1; }
+.hero--photo .hero__bg {
+  position: static; inset: auto; z-index: auto; opacity: 1;
+  width: 100%; height: auto;
+  aspect-ratio: 3 / 2; object-fit: contain; object-position: center;
+  border-radius: calc(var(--ls-radius) * 1.15);
+  box-shadow: 0 16px 48px rgba(23, 48, 122, .18);
+}
+.hero--photo .hero__media figcaption {
+  font-size: .95rem; line-height: 1.5; color: var(--ls-ink-soft);
+  max-width: 44ch; text-align: center; text-wrap: balance;
+}
+.hero--photo .hero__media figcaption b { color: var(--ls-blue-dark); }
+
+/* Side by side once there is room, stacked before that. */
+@media (min-width: 64rem) {
+  .hero--photo {
+    display: grid; align-items: center; justify-items: stretch;
+    /* The photograph is 3:2 and is never cropped, so its height follows its
+       width. At this split the picture column lands within ~10px of the text
+       column's height, which is what stops the picture floating in a pool of
+       cream with the text ending well above it. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+    gap: clamp(1.75rem, 3vw, 2.75rem);
+    width: min(100% - 2.2rem, var(--ls-maxw)); margin-inline: auto;
+    min-height: 0; text-align: start;
+  }
+  .hero--photo .hero__media { order: 2; justify-items: stretch; }
+  .hero--photo .hero__media figcaption { text-align: start; max-width: none; }
+
+  .hero--photo .hero__inner {
+    order: 1; width: auto; max-width: none; margin-inline: 0;
+    justify-items: start; text-align: start;
+  }
+  .hero--photo .hero__by { max-width: 46ch; }
+  .hero--photo .hero__sub,
+  .hero--photo .hero__quote { max-width: 30ch; }
+  .hero--photo .hero__stats { justify-content: flex-start; }
+  .hero--photo .hero__inner .cluster--center { justify-content: flex-start; }
 }
 
 /* Story cards carrying a real thumbnail instead of the gradient block */
@@ -621,7 +701,7 @@ body { padding-bottom: 68px; }
 }
 /* It sits over page scans, so the outlined button needs its own ground. */
 .doc-actions .btn--ghost { background: var(--ls-surface); }
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .doc-actions { bottom: 1.4rem; gap: .6rem; }
   .doc-actions .btn { font-size: 1.02rem; padding: .7rem 1.3rem; }
 }
@@ -683,6 +763,12 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 
 /* Big radio/checkbox tiles: easy to tap, easy to read */
 .choices { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); }
+/* The tracks above are sized for short options (विद्यार्थी, युवा, नागरिक),
+   which sit two or three to a row on a phone. A sentence-length option in a
+   152px track breaks to one word per line, so blocks that carry sentences ask
+   for a single column instead. CSS cannot measure the text, so it is marked
+   in the markup. */
+.choices--wide { grid-template-columns: 1fr; }
 .choice {
   position: relative; display: flex; align-items: center; gap: .65rem;
   min-height: var(--ls-tap); padding: .8rem 1rem;
@@ -744,11 +830,18 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 
 /* ---------- 9. Footer ---------- */
 .site-footer { background: var(--ls-blue-dark); color: #cfd8f2; padding-block: clamp(2.5rem, 5vw, 3.6rem) 1.4rem; }
+/* The full emblem carries dark blue type inside it, so on the dark footer it
+   needs a light plate to sit on. At this size its tagline ring is actually
+   readable, which is the whole reason it lives here and not in the header. */
+.brand--seal {
+  display: inline-block; background: #fff;
+  border-radius: 18px; padding: .7rem; line-height: 0;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .18);
+}
+.brand--seal img { width: clamp(112px, 24vw, 132px); height: auto; display: block; }
 .site-footer h2, .site-footer h3 { color: #fff; font-size: 1.1rem; margin-bottom: .8rem; }
 .site-footer a { color: #dfe6fb; text-decoration: none; }
 .site-footer a:hover { color: var(--ls-gold); text-decoration: underline; }
-.site-footer .brand__name { color: #fff; }
-.site-footer .brand__name em { color: #86e39c; }
 .site-footer ul { display: grid; gap: .45rem; }
 .footer-grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
 .footer-contact li { display: grid; grid-template-columns: auto 1fr; gap: .6rem; align-items: start; }

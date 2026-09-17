@@ -22,16 +22,19 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 5;          // bump when this file changes; shown in every response
+var CODE_VERSION = 10;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
   sankalp:  { tab: 'संकल्प',           fields: ['naam', 'mobile', 'bhumika', 'jila', 'gaon', 'sweecha'] },
-  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'tithi', 'sankhya', 'samiti', 'report'] },
+  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'vidyalaya', 'tithi', 'sankhya', 'samiti', 'report'] },
   kahani:   { tab: 'सफलता कहानियाँ',   fields: ['shirshak', 'naam', 'mobile', 'gaon', 'jila', 'shreni', 'kahani', 'sahmati'] },
   shikshak: { tab: 'शिक्षक',           fields: ['naam', 'mobile', 'vidyalaya', 'jila', 'pad', 'yogdan'] },
   yuva:     { tab: 'युवा क्लब',        fields: ['club', 'naam', 'mobile', 'gaon', 'jila', 'sadasya', 'ruchi'] },
-  samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] }
+  samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] },
+  sankalp21:{ tab: 'संकल्प 21',         fields: ['naam', 'mobile', 'jila', 'gaon', 'roop', 'sanstha',
+                                                 'upvaas', 'sankalp', 'sahmati', 'photoSahmati'] },
+  karuna21: { tab: 'करुणा 21',          fields: ['naam', 'jila', 'gaon', 'sandesh', 'sahmati'] }
 };
 
 // Human-readable column headings.
@@ -41,7 +44,9 @@ var LABELS = {
   report: 'रिपोर्ट', shirshak: 'शीर्षक', shreni: 'श्रेणी', kahani: 'कहानी',
   sahmati: 'सहमति', vidyalaya: 'विद्यालय', pad: 'पद', yogdan: 'योगदान',
   club: 'क्लब', sadasya: 'सदस्य संख्या', ruchi: 'रुचि', namit: 'नामांकित',
-  sthan: 'गाँव / विद्यालय', karya: 'कार्य विवरण'
+  sthan: 'गाँव / विद्यालय', karya: 'कार्य विवरण',
+  roop: 'सहभागी के रूप में', sanstha: 'संस्था / विद्यालय', upvaas: 'उपवास',
+  sankalp: 'लोकसंकल्प', photoSahmati: 'फोटो सहमति', sandesh: 'संदेश'
 };
 
 // ---- entry point ---------------------------------------------------------
@@ -57,10 +62,27 @@ function doPost(e) {
     var spec = FORMS[data.form];
     if (!spec) return reply(false, 'अज्ञात फ़ॉर्म');
 
+    // When a classroom submits together the page retries instead of showing an
+    // error, so the same submission can arrive more than once. It carries an id
+    // that is generated once and kept across those retries; the first write
+    // records it and any repeat is answered as saved without writing again.
+    var reqId = String(data.reqId || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 64);
+    var seen = CacheService.getScriptCache();
+    var seenKey = 'req-' + reqId;
+    if (reqId && seen.get(seenKey)) return reply(true, 'पहले ही सहेज लिया गया');
+
+    // Photographs go to Drive before the lock is taken. Uploading is the slow
+    // part of a submission, and holding the queue open through it is what
+    // would turn a classroom into a jam. The lock guards the append alone.
+    var links = saveFiles(data.files, data.form);
+
     var lock = LockService.getScriptLock();
-    lock.waitLock(20000);                    // keep concurrent writes from colliding
+    // Appending is quick, so a minute is room for a few hundred people.
+    lock.waitLock(60000);
     try {
-      var links = saveFiles(data.files, data.form);
+      // Checked again inside the lock: two retries racing each other would
+      // both have passed the check above.
+      if (reqId && seen.get(seenKey)) return reply(true, 'पहले ही सहेज लिया गया');
       var sheet = getTab(spec);
       var row = [timestamp()];
       for (var i = 0; i < spec.fields.length; i++) {
@@ -68,9 +90,15 @@ function doPost(e) {
       }
       row.push(links.join('\n'));
       sheet.appendRow(row);
+      if (reqId) seen.put(seenKey, '1', 21600);   // six hours
     } finally {
       lock.releaseLock();
     }
+    // A new row changes the published figures, so the cached copy is now
+    // wrong. Dropping it means the very next reader recomputes: someone who
+    // has just registered sees their own entry counted, not a number up to a
+    // minute old. This is what makes a live demonstration work.
+    try { CacheService.getScriptCache().remove(statsCacheKey()); } catch (err2) {}
     return reply(true, 'सहेज लिया गया');
   } catch (err) {
     return reply(false, String(err));
@@ -87,7 +115,7 @@ function doGet(e) {
     return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
   }
   var cache = CacheService.getScriptCache();
-  var key = 'stats-v' + CODE_VERSION;
+  var key = statsCacheKey();
   var hit = cache.get(key);
   if (hit) return json(hit);
   try {
@@ -101,6 +129,61 @@ function doGet(e) {
   }
 }
 
+function statsCacheKey() { return 'stats-v' + CODE_VERSION; }
+
+/**
+ * Where a field's column actually is, read from the sheet's own heading row.
+ *
+ * A sheet only gains a newly added column when the NEXT submission is written,
+ * because that is when alignHeader runs. Until then the spec has the new field
+ * and the sheet does not, and a position taken from the spec lands one column
+ * short. That is exactly how विद्यालय came to count the तिथि column's dates as
+ * school names the moment the field was added. Reading by heading cannot drift.
+ *
+ * Returns an absolute index into a data row, or -1 when the sheet or the
+ * column is not there yet, which callers treat as "nothing to count".
+ */
+function colOf(ss, spec, field) {
+  var sh = ss.getSheetByName(spec.tab);
+  if (!sh || sh.getLastColumn() < 1) return -1;
+  var want = LABELS[field] || field;
+  var head = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  for (var i = 0; i < head.length; i++) {
+    if (String(head[i]).trim() === want) return i;
+  }
+  return -1;
+}
+
+/**
+ * One village written by many hands is still one village. Case and stray
+ * spaces are levelled; spelling and script are not. Someone typing the name
+ * in English as well as Hindi therefore counts twice, which is accepted:
+ * guessing that two spellings mean the same place would be worse than the
+ * occasional duplicate.
+ */
+/* The विद्यालय field on the सभा report is required, so someone whose सभा had
+   no school attached still has to write something. These are the answers they
+   write. Counting them would invent schools called "नहीं" and "लागू नहीं". */
+var NOT_A_PLACE = {
+  'लागू नहीं': 1, 'लागूनहीं': 1, 'लागु नहीं': 1, 'नहीं': 1, 'नही': 1, 'ना': 1, 'न': 1,
+  'कोई नहीं': 1, 'कोई नही': 1, 'कुछ नहीं': 1, 'शून्य': 1, 'निरंक': 1,
+  'na': 1, 'n/a': 1, 'nil': 1, 'none': 1, 'no': 1, 'not applicable': 1, 'nai': 1,
+  '-': 1, '--': 1, '---': 1, '.': 1, '0': 1, 'x': 1, '*': 1
+};
+
+/* A place name worth counting: present, more than one character, and not one
+   of the refusals above. */
+function isPlace(normalised) {
+  return !!normalised && normalised.length > 1 && !NOT_A_PLACE[normalised];
+}
+
+function normPlace(value) {
+  return String(value === null || value === undefined ? '' : value)
+           .replace(/\s+/g, ' ')
+           .trim()
+           .toLowerCase();
+}
+
 function computeStats() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -110,38 +193,57 @@ function computeStats() {
   var shikshakRows = rows(ss, FORMS.shikshak.tab);
   var yuvaRows     = rows(ss, FORMS.yuva.tab);
   var sammanRows   = rows(ss, FORMS.samman.tab);
+  var s21Rows      = rows(ss, FORMS.sankalp21.tab);
+  var k21Rows      = rows(ss, FORMS.karuna21.tab);
 
   // "जुड़े हुए गाँव" counts each village once, however many forms mention it.
+  // Ten people from one village make that village count once, not ten times,
+  // and a village a सभा already reached adds nothing when its residents
+  // register individually.
   var villages = {};
   [[sankalpRows, FORMS.sankalp], [sabhaRows, FORMS.sabha],
-   [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva]].forEach(function (pair) {
-    var idx = pair[1].fields.indexOf('gaon');
+   [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva],
+   [s21Rows, FORMS.sankalp21]].forEach(function (pair) {
+    var idx = colOf(ss, pair[1], 'gaon');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
-      var v = String(r[idx + 1] || '').trim();
-      if (v) villages[v.toLowerCase()] = 1;
+      var v = normPlace(r[idx]);
+      if (isPlace(v)) villages[v] = 1;
     });
   });
 
-  var schools = {};
-  var vIdx = FORMS.shikshak.fields.indexOf('vidyalaya');
-  shikshakRows.forEach(function (r) {
-    var v = String(r[vIdx + 1] || '').trim();
-    if (v) schools[v.toLowerCase()] = 1;
+  // The same villages, counted over संकल्प 21 alone, for that page's own figure.
+  var s21Villages = {};
+  var g21 = colOf(ss, FORMS.sankalp21, 'gaon');
+  if (g21 >= 0) s21Rows.forEach(function (r) {
+    var v = normPlace(r[g21]);
+    if (isPlace(v)) s21Villages[v] = 1;
   });
 
-  var samitiIdx = FORMS.sabha.fields.indexOf('samiti');
-  var samitiyan = sabhaRows.filter(function (r) {
-    return String(r[samitiIdx + 1] || '').trim() === 'हाँ';
+  // Schools are collected from the शिक्षक form and from सभा reports, into one
+  // set. A school a teacher registered and a सभा later named counts once.
+  var schools = {};
+  [[shikshakRows, FORMS.shikshak], [sabhaRows, FORMS.sabha]].forEach(function (pair) {
+    var idx = colOf(ss, pair[1], 'vidyalaya');
+    if (idx < 0) return;
+    pair[0].forEach(function (r) {
+      var v = normPlace(r[idx]);
+      if (isPlace(v)) schools[v] = 1;
+    });
+  });
+
+  var samitiIdx = colOf(ss, FORMS.sabha, 'samiti');
+  var samitiyan = samitiIdx < 0 ? 0 : sabhaRows.filter(function (r) {
+    return String(r[samitiIdx] || '').trim() === 'हाँ';
   }).length;
 
   // People who took the संकल्प together at a सभा count towards the headline
   // figure alongside those who filled the form themselves: a village that
   // pledges as one gathering is the campaign's normal path, not the exception.
-  var nIdx = FORMS.sabha.fields.indexOf('sankhya');
+  var nIdx = colOf(ss, FORMS.sabha, 'sankhya');
   var sabhaPratibhagi = 0;
-  sabhaRows.forEach(function (r) {
-    sabhaPratibhagi += count(r[nIdx + 1]);
+  if (nIdx >= 0) sabhaRows.forEach(function (r) {
+    sabhaPratibhagi += count(r[nIdx]);
   });
 
   var stats = {
@@ -150,7 +252,7 @@ function computeStats() {
     samitiyan:  samitiyan,
     // One consolidated number. The two halves are published too, so the
     // dashboard can always show where the figure came from.
-    sankalp:         sankalpRows.length + sabhaPratibhagi,
+    sankalp:         sankalpRows.length + sabhaPratibhagi + s21Rows.length,
     sankalpOnline:   sankalpRows.length,
     sabhaPratibhagi: sabhaPratibhagi,
     shikshak:   shikshakRows.length,
@@ -158,6 +260,12 @@ function computeStats() {
     yuvaClub:   yuvaRows.length,
     kahaniyan:  kahaniRows.length,
     samman:     sammanRows.length,
+    // संकल्प 21 is folded into the headline figure above, because one
+    // campaign should publish one number. It is also reported on its own so
+    // the संकल्प 21 page can show just its own participation.
+    sankalp21:      s21Rows.length,
+    sankalp21Gaon:  Object.keys(s21Villages).length,
+    karuna21:       k21Rows.length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
@@ -170,21 +278,27 @@ function computeStats() {
     if (!byDistrict[d]) byDistrict[d] = { gaon: {}, sabhaen: 0, samitiyan: 0, sankalp: 0 };
     return byDistrict[d];
   };
-  var jSankalp = FORMS.sankalp.fields.indexOf('jila');
-  var gSankalp = FORMS.sankalp.fields.indexOf('gaon');
-  sankalpRows.forEach(function (r) {
-    var d = touch(r[jSankalp + 1]); if (!d) return;
+  var jSankalp = colOf(ss, FORMS.sankalp, 'jila');
+  var gSankalp = colOf(ss, FORMS.sankalp, 'gaon');
+  if (jSankalp >= 0) sankalpRows.forEach(function (r) {
+    var d = touch(r[jSankalp]); if (!d) return;
     d.sankalp++;
-    var v = String(r[gSankalp + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
+    var v = gSankalp < 0 ? '' : normPlace(r[gSankalp]); if (isPlace(v)) d.gaon[v] = 1;
   });
-  var jSabha = FORMS.sabha.fields.indexOf('jila');
-  var gSabha = FORMS.sabha.fields.indexOf('gaon');
-  sabhaRows.forEach(function (r) {
-    var d = touch(r[jSabha + 1]); if (!d) return;
+  var jSabha = colOf(ss, FORMS.sabha, 'jila');
+  var gSabha = colOf(ss, FORMS.sabha, 'gaon');
+  if (jSabha >= 0) sabhaRows.forEach(function (r) {
+    var d = touch(r[jSabha]); if (!d) return;
     d.sabhaen++;
-    d.sankalp += count(r[nIdx + 1]);   // same basis as the headline figure
-    if (String(r[samitiIdx + 1] || '').trim() === 'हाँ') d.samitiyan++;
-    var v = String(r[gSabha + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
+    if (nIdx >= 0) d.sankalp += count(r[nIdx]);   // same basis as the headline figure
+    if (samitiIdx >= 0 && String(r[samitiIdx] || '').trim() === 'हाँ') d.samitiyan++;
+    var v = gSabha < 0 ? '' : normPlace(r[gSabha]); if (isPlace(v)) d.gaon[v] = 1;
+  });
+  var j21 = colOf(ss, FORMS.sankalp21, 'jila');
+  if (j21 >= 0) s21Rows.forEach(function (r) {
+    var d = touch(r[j21]); if (!d) return;
+    d.sankalp++;
+    var v = g21 < 0 ? '' : normPlace(r[g21]); if (isPlace(v)) d.gaon[v] = 1;
   });
   stats.byDistrict = Object.keys(byDistrict).map(function (d) {
     return { jila: d, gaon: Object.keys(byDistrict[d].gaon).length,
@@ -192,13 +306,25 @@ function computeStats() {
              sankalp: byDistrict[d].sankalp };
   }).sort(function (a, b) { return (b.sabhaen + b.sankalp) - (a.sabhaen + a.sankalp); });
 
-  // Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
-  // Lets staff publish figures no form can produce.
+  /* Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
+     Two forms:
+       vidyalaya    460    replaces the counted figure and freezes it there
+       vidyalaya+   452    ADDS to the counted figure
+     The second is what work done before the forms existed should use: the
+     figure starts from that base and still climbs with every new report, which
+     a plain replacement does not. */
   var manual = ss.getSheetByName('मैनुअल आँकड़े');
   if (manual && manual.getLastRow() > 1) {
     manual.getRange(2, 1, manual.getLastRow() - 1, 2).getValues().forEach(function (r) {
       var k = String(r[0] || '').trim();
-      if (k && r[1] !== '' && !isNaN(Number(r[1]))) stats[k] = Number(r[1]);
+      if (!k || r[1] === '' || isNaN(Number(r[1]))) return;
+      var n = Number(r[1]);
+      if (k.charAt(k.length - 1) === '+') {
+        var base = k.slice(0, -1).trim();
+        if (base && typeof stats[base] === 'number') stats[base] += n;
+      } else {
+        stats[k] = n;
+      }
     });
   }
   return stats;

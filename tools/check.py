@@ -196,6 +196,9 @@ def check_svgs():
             warn(rel, f"{kb:.0f} KB, large for an inline asset")
 
 
+SITE_HOST = "loksankalp.org"
+
+
 def check_booklet_count():
     """Any page that states how many booklets there are must state the truth.
 
@@ -211,6 +214,32 @@ def check_booklet_count():
         for stated in pattern.findall(open(path, encoding='utf-8').read()):
             if int(stated) != actual:
                 err(rel, f"says {stated} booklets, {actual} exist")
+
+
+def check_canonical_host():
+    """Every absolute self-reference must name the campaign's own domain.
+
+    The site moved from a github.io project path to loksankalp.org. A page
+    left pointing at the old host tells search engines the real address is
+    somewhere else, and a share card would carry a link nobody should be
+    given. The CNAME file is what keeps the domain attached through a
+    deploy, so it is checked here too.
+    """
+    cname = os.path.join(ROOT, 'CNAME')
+    if not os.path.exists(cname):
+        err('CNAME', 'missing: the custom domain is dropped on deploy without it')
+    else:
+        host = open(cname, encoding='utf-8').read().strip()
+        if host != SITE_HOST:
+            err('CNAME', f'says {host!r}, expected {SITE_HOST!r}')
+
+    patterns = ('*.html', '*.xml', '*.txt', '*.webmanifest')
+    for pat in patterns:
+        for path in sorted(glob.glob(os.path.join(ROOT, pat))):
+            rel = os.path.relpath(path, ROOT)
+            txt = open(path, encoding='utf-8').read()
+            for bad in re.findall(r'https?://[A-Za-z0-9.-]*github\.io[^\s"\'<>)]*', txt):
+                err(rel, f'points at the old host: {bad}')
 
 
 def main():
@@ -233,6 +262,7 @@ def main():
         check_html(p, known, page_ids)
     check_svgs()
     check_booklet_count()
+    check_canonical_host()
 
     for f in ('sitemap.xml', 'robots.txt', 'site.webmanifest', '.nojekyll',
               'css/site.css', 'css/tokens.css', 'js/site.js'):

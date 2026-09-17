@@ -102,7 +102,7 @@ The site ships with **marked placeholders** wherever real data is needed. Search
 
 ## Deploy
 
-**Live: https://technotaau.github.io/loksankalp-1/**
+**Live: https://loksankalp.org/**
 
 Pages is served from the `gh-pages` branch. Pushing to `main` runs
 `.github/workflows/deploy.yml`, which validates the site with `tools/check.py`,
