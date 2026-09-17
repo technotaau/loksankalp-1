@@ -22,12 +22,12 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 8;          // bump when this file changes; shown in every response
+var CODE_VERSION = 9;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
   sankalp:  { tab: 'संकल्प',           fields: ['naam', 'mobile', 'bhumika', 'jila', 'gaon', 'sweecha'] },
-  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'tithi', 'sankhya', 'samiti', 'report'] },
+  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'vidyalaya', 'tithi', 'sankhya', 'samiti', 'report'] },
   kahani:   { tab: 'सफलता कहानियाँ',   fields: ['shirshak', 'naam', 'mobile', 'gaon', 'jila', 'shreni', 'kahani', 'sahmati'] },
   shikshak: { tab: 'शिक्षक',           fields: ['naam', 'mobile', 'vidyalaya', 'jila', 'pad', 'yogdan'] },
   yuva:     { tab: 'युवा क्लब',        fields: ['club', 'naam', 'mobile', 'gaon', 'jila', 'sadasya', 'ruchi'] },
@@ -138,6 +138,22 @@ function statsCacheKey() { return 'stats-v' + CODE_VERSION; }
  * guessing that two spellings mean the same place would be worse than the
  * occasional duplicate.
  */
+/* The विद्यालय field on the सभा report is required, so someone whose सभा had
+   no school attached still has to write something. These are the answers they
+   write. Counting them would invent schools called "नहीं" and "लागू नहीं". */
+var NOT_A_PLACE = {
+  'लागू नहीं': 1, 'लागूनहीं': 1, 'लागु नहीं': 1, 'नहीं': 1, 'नही': 1, 'ना': 1, 'न': 1,
+  'कोई नहीं': 1, 'कोई नही': 1, 'कुछ नहीं': 1, 'शून्य': 1, 'निरंक': 1,
+  'na': 1, 'n/a': 1, 'nil': 1, 'none': 1, 'no': 1, 'not applicable': 1, 'nai': 1,
+  '-': 1, '--': 1, '---': 1, '.': 1, '0': 1, 'x': 1, '*': 1
+};
+
+/* A place name worth counting: present, more than one character, and not one
+   of the refusals above. */
+function isPlace(normalised) {
+  return !!normalised && normalised.length > 1 && !NOT_A_PLACE[normalised];
+}
+
 function normPlace(value) {
   return String(value === null || value === undefined ? '' : value)
            .replace(/\s+/g, ' ')
@@ -169,7 +185,7 @@ function computeStats() {
     if (idx < 0) return;
     pair[0].forEach(function (r) {
       var v = normPlace(r[idx + 1]);
-      if (v) villages[v] = 1;
+      if (isPlace(v)) villages[v] = 1;
     });
   });
 
@@ -181,11 +197,16 @@ function computeStats() {
     if (v) s21Villages[v] = 1;
   });
 
+  // Schools are collected from the शिक्षक form and from सभा reports, into one
+  // set. A school a teacher registered and a सभा later named counts once.
   var schools = {};
-  var vIdx = FORMS.shikshak.fields.indexOf('vidyalaya');
-  shikshakRows.forEach(function (r) {
-    var v = normPlace(r[vIdx + 1]);
-    if (v) schools[v] = 1;
+  [[shikshakRows, FORMS.shikshak], [sabhaRows, FORMS.sabha]].forEach(function (pair) {
+    var idx = pair[1].fields.indexOf('vidyalaya');
+    if (idx < 0) return;
+    pair[0].forEach(function (r) {
+      var v = normPlace(r[idx + 1]);
+      if (isPlace(v)) schools[v] = 1;
+    });
   });
 
   var samitiIdx = FORMS.sabha.fields.indexOf('samiti');
@@ -262,13 +283,25 @@ function computeStats() {
              sankalp: byDistrict[d].sankalp };
   }).sort(function (a, b) { return (b.sabhaen + b.sankalp) - (a.sabhaen + a.sankalp); });
 
-  // Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
-  // Lets staff publish figures no form can produce.
+  /* Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
+     Two forms:
+       vidyalaya    460    replaces the counted figure and freezes it there
+       vidyalaya+   452    ADDS to the counted figure
+     The second is what work done before the forms existed should use: the
+     figure starts from that base and still climbs with every new report, which
+     a plain replacement does not. */
   var manual = ss.getSheetByName('मैनुअल आँकड़े');
   if (manual && manual.getLastRow() > 1) {
     manual.getRange(2, 1, manual.getLastRow() - 1, 2).getValues().forEach(function (r) {
       var k = String(r[0] || '').trim();
-      if (k && r[1] !== '' && !isNaN(Number(r[1]))) stats[k] = Number(r[1]);
+      if (!k || r[1] === '' || isNaN(Number(r[1]))) return;
+      var n = Number(r[1]);
+      if (k.charAt(k.length - 1) === '+') {
+        var base = k.slice(0, -1).trim();
+        if (base && typeof stats[base] === 'number') stats[base] += n;
+      } else {
+        stats[k] = n;
+      }
     });
   }
   return stats;
