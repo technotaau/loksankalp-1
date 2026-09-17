@@ -22,7 +22,7 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 9;          // bump when this file changes; shown in every response
+var CODE_VERSION = 10;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -132,6 +132,29 @@ function doGet(e) {
 function statsCacheKey() { return 'stats-v' + CODE_VERSION; }
 
 /**
+ * Where a field's column actually is, read from the sheet's own heading row.
+ *
+ * A sheet only gains a newly added column when the NEXT submission is written,
+ * because that is when alignHeader runs. Until then the spec has the new field
+ * and the sheet does not, and a position taken from the spec lands one column
+ * short. That is exactly how विद्यालय came to count the तिथि column's dates as
+ * school names the moment the field was added. Reading by heading cannot drift.
+ *
+ * Returns an absolute index into a data row, or -1 when the sheet or the
+ * column is not there yet, which callers treat as "nothing to count".
+ */
+function colOf(ss, spec, field) {
+  var sh = ss.getSheetByName(spec.tab);
+  if (!sh || sh.getLastColumn() < 1) return -1;
+  var want = LABELS[field] || field;
+  var head = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  for (var i = 0; i < head.length; i++) {
+    if (String(head[i]).trim() === want) return i;
+  }
+  return -1;
+}
+
+/**
  * One village written by many hands is still one village. Case and stray
  * spaces are levelled; spelling and script are not. Someone typing the name
  * in English as well as Hindi therefore counts twice, which is accepted:
@@ -181,46 +204,46 @@ function computeStats() {
   [[sankalpRows, FORMS.sankalp], [sabhaRows, FORMS.sabha],
    [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva],
    [s21Rows, FORMS.sankalp21]].forEach(function (pair) {
-    var idx = pair[1].fields.indexOf('gaon');
+    var idx = colOf(ss, pair[1], 'gaon');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
-      var v = normPlace(r[idx + 1]);
+      var v = normPlace(r[idx]);
       if (isPlace(v)) villages[v] = 1;
     });
   });
 
   // The same villages, counted over संकल्प 21 alone, for that page's own figure.
   var s21Villages = {};
-  var g21 = FORMS.sankalp21.fields.indexOf('gaon');
-  s21Rows.forEach(function (r) {
-    var v = normPlace(r[g21 + 1]);
-    if (v) s21Villages[v] = 1;
+  var g21 = colOf(ss, FORMS.sankalp21, 'gaon');
+  if (g21 >= 0) s21Rows.forEach(function (r) {
+    var v = normPlace(r[g21]);
+    if (isPlace(v)) s21Villages[v] = 1;
   });
 
   // Schools are collected from the शिक्षक form and from सभा reports, into one
   // set. A school a teacher registered and a सभा later named counts once.
   var schools = {};
   [[shikshakRows, FORMS.shikshak], [sabhaRows, FORMS.sabha]].forEach(function (pair) {
-    var idx = pair[1].fields.indexOf('vidyalaya');
+    var idx = colOf(ss, pair[1], 'vidyalaya');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
-      var v = normPlace(r[idx + 1]);
+      var v = normPlace(r[idx]);
       if (isPlace(v)) schools[v] = 1;
     });
   });
 
-  var samitiIdx = FORMS.sabha.fields.indexOf('samiti');
-  var samitiyan = sabhaRows.filter(function (r) {
-    return String(r[samitiIdx + 1] || '').trim() === 'हाँ';
+  var samitiIdx = colOf(ss, FORMS.sabha, 'samiti');
+  var samitiyan = samitiIdx < 0 ? 0 : sabhaRows.filter(function (r) {
+    return String(r[samitiIdx] || '').trim() === 'हाँ';
   }).length;
 
   // People who took the संकल्प together at a सभा count towards the headline
   // figure alongside those who filled the form themselves: a village that
   // pledges as one gathering is the campaign's normal path, not the exception.
-  var nIdx = FORMS.sabha.fields.indexOf('sankhya');
+  var nIdx = colOf(ss, FORMS.sabha, 'sankhya');
   var sabhaPratibhagi = 0;
-  sabhaRows.forEach(function (r) {
-    sabhaPratibhagi += count(r[nIdx + 1]);
+  if (nIdx >= 0) sabhaRows.forEach(function (r) {
+    sabhaPratibhagi += count(r[nIdx]);
   });
 
   var stats = {
@@ -255,27 +278,27 @@ function computeStats() {
     if (!byDistrict[d]) byDistrict[d] = { gaon: {}, sabhaen: 0, samitiyan: 0, sankalp: 0 };
     return byDistrict[d];
   };
-  var jSankalp = FORMS.sankalp.fields.indexOf('jila');
-  var gSankalp = FORMS.sankalp.fields.indexOf('gaon');
-  sankalpRows.forEach(function (r) {
-    var d = touch(r[jSankalp + 1]); if (!d) return;
+  var jSankalp = colOf(ss, FORMS.sankalp, 'jila');
+  var gSankalp = colOf(ss, FORMS.sankalp, 'gaon');
+  if (jSankalp >= 0) sankalpRows.forEach(function (r) {
+    var d = touch(r[jSankalp]); if (!d) return;
     d.sankalp++;
-    var v = normPlace(r[gSankalp + 1]); if (v) d.gaon[v] = 1;
+    var v = gSankalp < 0 ? '' : normPlace(r[gSankalp]); if (isPlace(v)) d.gaon[v] = 1;
   });
-  var jSabha = FORMS.sabha.fields.indexOf('jila');
-  var gSabha = FORMS.sabha.fields.indexOf('gaon');
-  sabhaRows.forEach(function (r) {
-    var d = touch(r[jSabha + 1]); if (!d) return;
+  var jSabha = colOf(ss, FORMS.sabha, 'jila');
+  var gSabha = colOf(ss, FORMS.sabha, 'gaon');
+  if (jSabha >= 0) sabhaRows.forEach(function (r) {
+    var d = touch(r[jSabha]); if (!d) return;
     d.sabhaen++;
-    d.sankalp += count(r[nIdx + 1]);   // same basis as the headline figure
-    if (String(r[samitiIdx + 1] || '').trim() === 'हाँ') d.samitiyan++;
-    var v = normPlace(r[gSabha + 1]); if (v) d.gaon[v] = 1;
+    if (nIdx >= 0) d.sankalp += count(r[nIdx]);   // same basis as the headline figure
+    if (samitiIdx >= 0 && String(r[samitiIdx] || '').trim() === 'हाँ') d.samitiyan++;
+    var v = gSabha < 0 ? '' : normPlace(r[gSabha]); if (isPlace(v)) d.gaon[v] = 1;
   });
-  var j21 = FORMS.sankalp21.fields.indexOf('jila');
-  s21Rows.forEach(function (r) {
-    var d = touch(r[j21 + 1]); if (!d) return;
+  var j21 = colOf(ss, FORMS.sankalp21, 'jila');
+  if (j21 >= 0) s21Rows.forEach(function (r) {
+    var d = touch(r[j21]); if (!d) return;
     d.sankalp++;
-    var v = normPlace(r[g21 + 1]); if (v) d.gaon[v] = 1;
+    var v = g21 < 0 ? '' : normPlace(r[g21]); if (isPlace(v)) d.gaon[v] = 1;
   });
   stats.byDistrict = Object.keys(byDistrict).map(function (d) {
     return { jila: d, gaon: Object.keys(byDistrict[d].gaon).length,
