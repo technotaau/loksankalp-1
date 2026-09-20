@@ -121,6 +121,84 @@
     }
   }
 
+  /* --- आज का काम : one question, one button ------------------------------
+     People arriving from WhatsApp met three invitations at once, संकल्प लें,
+     संकल्प 21 and करुणा 21, and could not tell which was meant for today.
+     This asks nothing and offers one action.
+
+     It is deliberately narrow: only while करुणा 21 is actually open, never on
+     the page that already carries the form, and never twice for the same
+     person. A popup that outstays the day it was written for is worse than no
+     popup, so the window is a date, not a flag someone has to remember to
+     turn off. */
+
+  (function () {
+    var OPENS = Date.UTC(2026, 8, 20, 14, 30);   // 20 Sept, 20:00 IST
+    var CLOSES = Date.UTC(2026, 8, 22, 18, 30);  // 23 Sept, 00:00 IST
+    var SEEN = 'ls-today-karuna21';
+    var now = Date.now();
+    if (now < OPENS || now >= CLOSES) return;
+
+    // already on the page that holds the form: nothing to point at
+    if (/sankalp-21\.html/.test(location.pathname)) return;
+
+    try { if (window.localStorage.getItem(SEEN)) return; } catch (e) { /* private window */ }
+
+    var HREF = 'sankalp-21.html#karuna';
+    var veil = document.createElement('div');
+    veil.className = 'today-veil';
+    veil.setAttribute('role', 'dialog');
+    veil.setAttribute('aria-modal', 'true');
+    veil.setAttribute('aria-labelledby', 'today-h');
+
+    var card = document.createElement('div');
+    card.className = 'today-card';
+    card.innerHTML =
+      '<img class="today-card__mark" src="assets/img/logo-mark.svg" alt="" width="62" height="62">' +
+      '<p class="eyebrow">21 सितम्बर · तेजा दशमी</p>' +
+      '<h2 id="today-h">आज क्या करना है</h2>' +
+      '<p class="mt-2">उपवास के साथ एक सेवा कीजिए : गाय को गुड़, रोटी या चारा खिलाइए, ' +
+      'अथवा पौधा लगाइए या पेड़ को पानी दीजिए। फिर उसकी फोटो यहाँ भेज दीजिए।</p>' +
+      '<p class="mt-2"><a class="btn btn--primary btn--lg" href="' + HREF + '" data-today="go">' +
+      'करुणा 21 में फोटो भेजें</a></p>' +
+      '<button class="today-card__later" type="button" data-today="later">बाद में देखूँगा</button>';
+    veil.appendChild(card);
+
+    var before = document.activeElement;
+    var remember = function () {
+      try { window.localStorage.setItem(SEEN, '1'); } catch (e) { /* nothing to do */ }
+    };
+    var close = function () {
+      remember();
+      veil.remove();
+      document.documentElement.style.overflow = '';
+      document.removeEventListener('keydown', onKey, true);
+      if (before && before.focus) before.focus();
+    };
+    var onKey = function (e) {
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key !== 'Tab') return;
+      // keep the keyboard inside the card while it is open
+      var can = card.querySelectorAll('a[href], button');
+      if (!can.length) return;
+      var first = can[0], last = can[can.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+
+    veil.addEventListener('click', function (e) {
+      if (e.target === veil) close();                       // tap outside
+      if (e.target.closest('[data-today="later"]')) close();
+      if (e.target.closest('[data-today="go"]')) remember(); // let the link work
+    });
+    document.addEventListener('keydown', onKey, true);
+
+    document.body.appendChild(veil);
+    document.documentElement.style.overflow = 'hidden';
+    var go = card.querySelector('[data-today="go"]');
+    if (go && go.focus) go.focus();
+  })();
+
   /* --- Gallery district filter ------------------------------------------
      The buttons are hidden in the markup and revealed here, so a phone that
      never runs this file still shows every photograph. */

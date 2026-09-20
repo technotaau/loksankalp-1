@@ -828,6 +828,39 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
   color: var(--ls-blue-dark); text-align: center; margin: 1.2rem auto .2rem;
 }
 
+/* ---------- 8b. आज का काम : one-question popup ----------
+   Three names on one site (संकल्प लें, संकल्प 21, करुणा 21) left people
+   guessing which one was meant for today. This names the single action and
+   gets out of the way. It is built by js/site.js, so a phone that never runs
+   that file simply never sees it and nothing is blocked. */
+.today-veil {
+  position: fixed; inset: 0; z-index: 300;
+  display: grid; place-items: center; padding: 1.1rem;
+  background: rgba(10, 20, 50, .58);
+  overscroll-behavior: contain;
+}
+.today-card {
+  width: min(100%, 27rem); max-height: 90vh; overflow-y: auto;
+  background: var(--ls-surface); border-radius: var(--ls-radius);
+  padding: clamp(1.3rem, 5vw, 1.9rem);
+  box-shadow: 0 24px 70px rgba(6, 14, 40, .38);
+  text-align: center;
+}
+.today-card h2 { font-size: clamp(1.35rem, 4.6vw, 1.7rem); margin-bottom: .5rem; }
+.today-card p { margin-inline: auto; color: var(--ls-ink-soft); }
+.today-card .btn { width: 100%; justify-content: center; }
+.today-card__later {
+  display: inline-block; margin-top: .9rem; padding: .5rem .6rem;
+  background: none; border: 0; cursor: pointer;
+  color: var(--ls-ink-soft); font-weight: 600; text-decoration: underline;
+  text-underline-offset: .22em;
+}
+.today-card__mark { width: 62px; height: 62px; margin: 0 auto .6rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .today-card { animation: today-rise .22s ease-out; }
+  @keyframes today-rise { from { transform: translateY(14px); opacity: 0; } }
+}
+
 /* ---------- 9. Footer ---------- */
 .site-footer { background: var(--ls-blue-dark); color: #cfd8f2; padding-block: clamp(2.5rem, 5vw, 3.6rem) 1.4rem; }
 /* The full emblem carries dark blue type inside it, so on the dark footer it
