@@ -279,10 +279,17 @@
           return at(size);
         };
 
-        var line = function (text, y, font, colour, align) {
+        /* Centred by measurement, not by textAlign.
+           WebKit on iOS does not honour textAlign 'center' for Devanagari: it
+           lays the text out FROM the anchor instead of centring it on it, so
+           every Hindi line began at the middle and ran off the right edge,
+           while the Latin name and the site address on the same certificate
+           looked perfectly centred. Measuring the line and starting it half a
+           width to the left asks the canvas for nothing it can get wrong. */
+        var line = function (text, y, font, colour) {
           x.font = fit(text, font); x.fillStyle = colour;
-          x.textAlign = align || 'center'; x.textBaseline = 'alphabetic';
-          x.fillText(text, mid, y);
+          x.textAlign = 'left'; x.textBaseline = 'alphabetic';
+          x.fillText(text, mid - x.measureText(text).width / 2, y);
         };
 
         x.fillStyle = '#fffdf5'; x.fillRect(0, 0, CERT_W, CERT_H);
