@@ -22,7 +22,7 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 10;          // bump when this file changes; shown in every response
+var CODE_VERSION = 11;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -34,7 +34,7 @@ var FORMS = {
   samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] },
   sankalp21:{ tab: 'संकल्प 21',         fields: ['naam', 'mobile', 'jila', 'gaon', 'roop', 'sanstha',
                                                  'upvaas', 'sankalp', 'sahmati', 'photoSahmati'] },
-  karuna21: { tab: 'करुणा 21',          fields: ['naam', 'jila', 'gaon', 'sandesh', 'sahmati'] }
+  karuna21: { tab: 'करुणा 21',          fields: ['naam', 'mobile', 'jila', 'gaon', 'sandesh', 'sahmati'] }
 };
 
 // Human-readable column headings.
