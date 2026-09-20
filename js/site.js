@@ -108,17 +108,30 @@
      Hidden is the safe default: if this file never runs, the page still
      explains what करुणा 21 is and when it opens. */
 
+  /* Written as UTC so a phone set to any timezone turns at the same moment.
+     One pair of dates for the whole site: the upload form, the home page card
+     and the popup all read these. Three copies of a date is three chances for
+     them to disagree, and the one that disagrees is always found by a
+     villager on the day rather than by me. */
+  var KARUNA_OPENS  = Date.UTC(2026, 8, 20, 14, 30);   // 20 Sept, 20:00 IST
+  var KARUNA_CLOSES = Date.UTC(2026, 8, 22, 18, 30);   // 23 Sept, 00:00 IST
+  var karunaLive = Date.now() >= KARUNA_OPENS && Date.now() < KARUNA_CLOSES;
+
   var karunaForm = document.querySelector('[data-karuna-form]');
-  if (karunaForm) {
-    // 20 September 2026, 20:00 IST, written as UTC so a phone set to any
-    // timezone opens it at the same moment.
-    var KARUNA_OPENS = Date.UTC(2026, 8, 20, 14, 30);
-    if (Date.now() >= KARUNA_OPENS) {
-      karunaForm.hidden = false;
-      var waiting = document.querySelector('[data-karuna-wait]');
-      if (waiting) waiting.hidden = true;
-      document.querySelectorAll('[data-karuna-count]').forEach(function (n) { n.hidden = false; });
-    }
+  if (karunaForm && Date.now() >= KARUNA_OPENS) {
+    karunaForm.hidden = false;
+    var waiting = document.querySelector('[data-karuna-wait]');
+    if (waiting) waiting.hidden = true;
+    document.querySelectorAll('[data-karuna-count]').forEach(function (n) { n.hidden = false; });
+  }
+
+  /* While करुणा 21 is the live action the home page leads with it, and the
+     संकल्प 21 registration card steps aside: registration closed on the 20th,
+     so leaving it first would send people to yesterday's task. Both revert on
+     their own when the window shuts. */
+  if (karunaLive) {
+    document.querySelectorAll('[data-karuna-card]').forEach(function (n) { n.hidden = false; });
+    document.querySelectorAll('[data-s21-card]').forEach(function (n) { n.hidden = true; });
   }
 
   /* --- आज का काम : one question, one button ------------------------------
@@ -133,11 +146,8 @@
      turn off. */
 
   (function () {
-    var OPENS = Date.UTC(2026, 8, 20, 14, 30);   // 20 Sept, 20:00 IST
-    var CLOSES = Date.UTC(2026, 8, 22, 18, 30);  // 23 Sept, 00:00 IST
     var SEEN = 'ls-today-karuna21';
-    var now = Date.now();
-    if (now < OPENS || now >= CLOSES) return;
+    if (!karunaLive) return;
 
     // already on the page that holds the form: nothing to point at
     if (/sankalp-21\.html/.test(location.pathname)) return;
