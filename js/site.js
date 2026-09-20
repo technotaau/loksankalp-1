@@ -180,9 +180,69 @@
     title: 'लोकसंकल्प प्रमाणपत्र',
     line: 'ने नशामुक्त समाज के निर्माण हेतु लोकसंकल्प लिया।',
     motto: '“नशे को नहीं, संस्कारों को सामाजिक स्वीकृति”',
+    by: 'नई किरण नशा मुक्ति केंद्र, राजकीय डूंगर महाविद्यालय, बीकानेर द्वारा प्रदत्त',
     file: 'loksankalp-pramanpatra',
     share: 'मैंने नशामुक्त समाज के लिए लोकसंकल्प लिया है। अब आपकी बारी। loksankalp.org'
   };
+
+  /* Break a sentence into lines that fit. The body of a certificate used to
+     be one short clause; it can now be a paragraph, and a paragraph drawn as
+     a single line runs off both edges of the page. */
+  function wrapLines(ctx, text, maxWidth) {
+    var words = String(text).split(/\s+/).filter(Boolean);
+    var lines = [], cur = '';
+    words.forEach(function (w) {
+      var next = cur ? cur + ' ' + w : w;
+      if (cur && ctx.measureText(next).width > maxWidth) { lines.push(cur); cur = w; }
+      else cur = next;
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+
+  /* A one-page PDF wrapped around the certificate's own JPEG.
+     No library: a PDF holding a single DCTDecode image is a few objects and
+     an offset table, and pulling in a PDF library would cost this audience
+     several hundred kilobytes on a 2G connection for the same one page.
+     The page is A4 landscape, which the 1400x990 canvas matches to within a
+     thousandth, so it prints without letterboxing. */
+  function pdfFromJpeg(bytes, w, h) {
+    var PW = 841.89, PH = 595.28;                 // A4 landscape, points
+    var enc = function (str) {
+      var out = new Uint8Array(str.length);
+      for (var i = 0; i < str.length; i++) out[i] = str.charCodeAt(i) & 0xff;
+      return out;
+    };
+    var chunks = [], len = 0, offsets = [];
+    var put = function (u8) { chunks.push(u8); len += u8.length; };
+    var obj = function (n, str) { offsets[n] = len; put(enc(n + ' 0 obj\n' + str + '\nendobj\n')); };
+
+    put(enc('%PDF-1.4\n%\xe2\xe3\xcf\xd3\n'));
+    obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+    obj(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+    obj(3, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + PW + ' ' + PH + ']' +
+           ' /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>');
+
+    offsets[4] = len;
+    put(enc('4 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + w + ' /Height ' + h +
+            ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' +
+            bytes.length + ' >>\nstream\n'));
+    put(bytes);
+    put(enc('\nendstream\nendobj\n'));
+
+    var content = 'q ' + PW + ' 0 0 ' + PH + ' 0 0 cm /Im0 Do Q';
+    offsets[5] = len;
+    put(enc('5 0 obj\n<< /Length ' + content.length + ' >>\nstream\n' + content +
+            '\nendstream\nendobj\n'));
+
+    var xref = len;
+    var pad = function (n) { var t = '0000000000' + n; return t.slice(-10); };
+    var table = 'xref\n0 6\n0000000000 65535 f \n';
+    for (var i = 1; i <= 5; i++) table += pad(offsets[i]) + ' 00000 n \n';
+    put(enc(table + 'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n' + xref + '\n%%EOF\n'));
+
+    return new Blob(chunks, { type: 'application/pdf' });
+  }
 
   function drawCertificate(naam, tarikh, spec) {
     spec = spec || CERT_DEFAULT;
@@ -219,29 +279,48 @@
 
         if (mark) x.drawImage(mark, mid - 58, 92, 116, 116);
 
-        line('डिजिटल प्रमाणपत्र', 262, '600 26px ' + body, '#b4560a');
-        line(spec.title, 330, '700 56px ' + head, '#17307a');
-        line('यह प्रमाणित किया जाता है कि', 412, '400 30px ' + body, '#33405c');
+        line('डिजिटल प्रमाणपत्र', 258, '600 26px ' + body, '#b4560a');
+        line(spec.title, 324, '700 56px ' + head, '#17307a');
+        line('यह प्रमाणित किया जाता है कि', 400, '400 30px ' + body, '#33405c');
 
-        line(naam, 500, '700 66px ' + head, '#0f5c26');
+        line(naam, 484, '700 66px ' + head, '#0f5c26');
         var w = Math.min(x.measureText(naam).width + 120, CERT_W - 200);
         x.strokeStyle = '#c9d2e6'; x.lineWidth = 2;
-        x.beginPath(); x.moveTo(mid - w / 2, 522); x.lineTo(mid + w / 2, 522); x.stroke();
+        x.beginPath(); x.moveTo(mid - w / 2, 506); x.lineTo(mid + w / 2, 506); x.stroke();
 
-        line(spec.line, 586, '400 32px ' + body, '#33405c');
-        line(spec.motto, 670, '700 36px ' + head, '#b4560a');
+        // The body may be a clause or a paragraph. It is wrapped, and the type
+        // steps down a little once it needs more than two lines, so a long
+        // citation still finishes above the seal instead of running into it.
+        var bodyFont = '400 32px ' + body;
+        x.font = bodyFont;
+        var lines = wrapLines(x, spec.line, CERT_W - 260);
+        if (lines.length > 2) {
+          bodyFont = '400 27px ' + body;
+          x.font = bodyFont;
+          lines = wrapLines(x, spec.line, CERT_W - 220);
+        }
+        var step = lines.length > 2 ? 42 : 48;
+        var y = 566;
+        lines.forEach(function (t) { line(t, y, bodyFont, '#33405c'); y += step; });
+
+        y += lines.length > 2 ? 18 : 26;
+        line(spec.motto, y, '700 36px ' + head, '#b4560a');
+        y += 58;
 
         x.strokeStyle = '#e3e8f2'; x.lineWidth = 1;
-        x.beginPath(); x.moveTo(mid - 380, 728); x.lineTo(mid + 380, 728); x.stroke();
+        x.beginPath(); x.moveTo(mid - 380, y); x.lineTo(mid + 380, y); x.stroke();
+        y += 46;
 
-        line('नशा मुक्त भारत अभियान के अंतर्गत', 774, '400 23px ' + body, '#5a6785');
-        line('नई किरण नशा मुक्ति केंद्र, राजकीय डूंगर महाविद्यालय, बीकानेर द्वारा प्रदत्त',
-             810, '600 23px ' + body, '#5a6785');
-        line('दिनांक ' + tarikh, 866, '400 23px ' + body, '#5a6785');
-        line('loksankalp.org', 918, '700 24px ' + body, '#1b7a34');
+        line('नशा मुक्त भारत अभियान के अंतर्गत', y, '400 23px ' + body, '#5a6785');
+        y += 36;
+        if (spec.by) { line(spec.by, y, '600 23px ' + body, '#5a6785'); y += 36; }
+        line('दिनांक ' + tarikh, y, '400 23px ' + body, '#5a6785');
+        line('loksankalp.org', CERT_H - 72, '700 24px ' + body, '#1b7a34');
 
         return new Promise(function (resolve) {
-          c.toBlob(function (b) { resolve(b); }, 'image/png');
+          // JPEG, because the PDF embeds these bytes as they are and a PNG
+          // would have to be re-encoded. Also a tenth of the size to send.
+          c.toBlob(function (b) { resolve(b); }, 'image/jpeg', 0.92);
         });
       });
   }
@@ -258,12 +337,16 @@
       title: d.certTitle || CERT_DEFAULT.title,
       line:  d.certLine  || CERT_DEFAULT.line,
       motto: d.certMotto || CERT_DEFAULT.motto,
+      // an empty data-cert-by means the body already names the institution
+      by:    d.certBy === undefined ? CERT_DEFAULT.by : d.certBy,
       file:  d.certFile  || CERT_DEFAULT.file,
       share: d.certShare || CERT_DEFAULT.share
     };
 
     var dlBtn = scope.querySelector('[data-cert="download"]');
     var shBtn = scope.querySelector('[data-cert="share"]');
+    var fbBtn = scope.querySelector('[data-cert="facebook"]');
+    var xBtn  = scope.querySelector('[data-cert="x"]');
     var certMsg = scope.querySelector('[data-cert="status"]');
     var say = function (t) { if (certMsg) certMsg.textContent = t || ''; };
 
@@ -276,38 +359,69 @@
       var el = certBox.querySelector('[data-slot="date"]');
       return el ? el.textContent.trim() : '';
     };
-    var fileName = function () {
+    var stem = function () {
       return spec.file + '-' +
-        certName().replace(/[^ऀ-ॿ\w]+/g, '-').replace(/^-|-$/g, '') + '.png';
+        certName().replace(/[^ऀ-ॿ\w]+/g, '-').replace(/^-|-$/g, '');
     };
 
     var build = function () { return drawCertificate(certName(), certDate(), spec); };
 
+    var save = function (blob, name) {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    };
+
+    // The PDF is what people asked for, to keep and to print. The image is
+    // what actually travels on WhatsApp, and it is the share button below
+    // that sends it, so nothing here needs a second download button.
     if (dlBtn) dlBtn.addEventListener('click', function () {
       say('प्रमाणपत्र तैयार हो रहा है…');
       build().then(function (blob) {
-        if (!blob) { say('प्रमाणपत्र नहीं बन सका। कृपया दोबारा प्रयास करें।'); return; }
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.href = url; a.download = fileName();
-        document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-        say('प्रमाणपत्र डाउनलोड हो गया।');
+        if (!blob) throw new Error('no blob');
+        return blob.arrayBuffer().then(function (buf) {
+          save(pdfFromJpeg(new Uint8Array(buf), CERT_W, CERT_H), stem() + '.pdf');
+          say('प्रमाणपत्र डाउनलोड हो गया।');
+        });
       }).catch(function () { say('प्रमाणपत्र नहीं बन सका। कृपया दोबारा प्रयास करें।'); });
+    });
+
+    /* Facebook and X take a link, never a picture: whatever is posted through
+       them carries the campaign page's own preview image, not this person's
+       certificate. So these open a ready-made post and say plainly that the
+       certificate itself has to be attached by hand. On a phone the share
+       button above does send the real picture, which is why it comes first. */
+    var PAGE = 'https://loksankalp.org/sankalp-21.html';
+    var social = function (btn, url) {
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        window.open(url(), '_blank', 'noopener,width=640,height=640');
+        say('पोस्ट खुल गई है। डाउनलोड किया प्रमाणपत्र उसमें जोड़ लें।');
+      });
+    };
+    social(fbBtn, function () {
+      return 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(PAGE) +
+             '&quote=' + encodeURIComponent(spec.share);
+    });
+    social(xBtn, function () {
+      return 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(spec.share) +
+             '&url=' + encodeURIComponent(PAGE);
     });
 
     // Sharing the image straight to WhatsApp is what actually spreads this,
     // so the button only appears where the browser can really do it.
     if (shBtn && navigator.canShare) {
       try {
-        var probe = new File([new Blob([''], { type: 'image/png' })], 'p.png', { type: 'image/png' });
+        var probe = new File([new Blob([''], { type: 'image/jpeg' })], 'p.jpg', { type: 'image/jpeg' });
         if (navigator.canShare({ files: [probe] })) shBtn.hidden = false;
       } catch (e) { /* leave hidden */ }
     }
     if (shBtn) shBtn.addEventListener('click', function () {
       say('प्रमाणपत्र तैयार हो रहा है…');
       build().then(function (blob) {
-        var file = new File([blob], fileName(), { type: 'image/png' });
+        var file = new File([blob], stem() + '.jpg', { type: 'image/jpeg' });
         return navigator.share({ files: [file], title: spec.title, text: spec.share });
       }).then(function () { say(''); })
         .catch(function () { say('साझा नहीं हो सका। आप प्रमाणपत्र डाउनलोड करके भेज सकते हैं।'); });
