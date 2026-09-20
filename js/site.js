@@ -137,6 +137,23 @@
     // to a ghost: two filled buttons side by side would put the visitor back
     // to choosing, which is the confusion this is meant to end.
     document.querySelectorAll('[data-karuna-hero]').forEach(function (n) { n.hidden = false; });
+
+    /* The menu item and the phone's sticky bar point at करुणा 21 for these
+       days and go back to संकल्प 21 afterwards. They carry the evergreen
+       label in the markup so that a closed form is never advertised: this is
+       the pair that had been hard-coded to करुणा 21 and would have kept
+       pointing at it long after the form shut. */
+    document.querySelectorAll('[data-karuna-swap]').forEach(function (a) {
+      var href = a.getAttribute('data-karuna-href');
+      var label = a.getAttribute('data-karuna-label');
+      var icon = a.getAttribute('data-karuna-icon');
+      if (href) a.setAttribute('href', href);
+      if (label) Array.prototype.forEach.call(a.childNodes, function (n) {
+        if (n.nodeType === 3 && n.textContent.trim()) n.textContent = label;
+      });
+      var use = icon && a.querySelector('use');
+      if (use) use.setAttribute('href', 'assets/img/icons.svg#' + icon);
+    });
     document.querySelectorAll('[data-hero-demote]').forEach(function (n) {
       n.classList.remove('btn--primary');
       n.classList.add('btn--ghost');
