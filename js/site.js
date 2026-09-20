@@ -258,8 +258,29 @@
         c.width = CERT_W; c.height = CERT_H;
         var x = c.getContext('2d'), mid = CERT_W / 2;
 
+        // The widest a line may be and still sit inside the inner border.
+        var INNER = CERT_W - 200;
+
+        /* Shrink a line until it fits. Nothing on a certificate may run past
+           the border: a long name did exactly that, and so would any line if
+           the web font failed to arrive and a wider fallback was used in its
+           place. Measuring is the only way to be sure, because the same text
+           in a different font is a different width. */
+        var fit = function (text, font, maxW, floor) {
+          var m = /(\d+(?:\.\d+)?)px/.exec(font);
+          if (!m) return font;
+          var size = parseFloat(m[1]);
+          var at = function (n) { return font.replace(/(\d+(?:\.\d+)?)px/, n + 'px'); };
+          while (size > (floor || 16)) {
+            x.font = at(size);
+            if (x.measureText(text).width <= (maxW || INNER)) break;
+            size -= size > 40 ? 2 : 1;
+          }
+          return at(size);
+        };
+
         var line = function (text, y, font, colour, align) {
-          x.font = font; x.fillStyle = colour;
+          x.font = fit(text, font); x.fillStyle = colour;
           x.textAlign = align || 'center'; x.textBaseline = 'alphabetic';
           x.fillText(text, mid, y);
         };
@@ -283,8 +304,10 @@
         line(spec.title, 324, '700 56px ' + head, '#17307a');
         line('यह प्रमाणित किया जाता है कि', 400, '400 30px ' + body, '#33405c');
 
-        line(naam, 484, '700 66px ' + head, '#0f5c26');
-        var w = Math.min(x.measureText(naam).width + 120, CERT_W - 200);
+        // fit() leaves the chosen size on the context, so the rule under the
+        // name is measured from the size actually drawn, not the one asked for
+        line(naam, 484, fit(naam, '700 66px ' + head, INNER - 60, 30), '#0f5c26');
+        var w = Math.min(x.measureText(naam).width + 120, INNER);
         x.strokeStyle = '#c9d2e6'; x.lineWidth = 2;
         x.beginPath(); x.moveTo(mid - w / 2, 506); x.lineTo(mid + w / 2, 506); x.stroke();
 
