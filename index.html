@@ -134,7 +134,12 @@
       <span><b data-stat="sabhaen" data-count="0" data-loading>0</b> सभाएँ</span>
     </p>
     <div class="cluster cluster--center" style="margin-top:.55rem">
-      <a class="btn btn--primary btn--lg" href="gram-sabha.html">
+      <!-- Today's action leads the hero while करुणा 21 is open. Hidden here and
+           revealed by js/site.js, so the hero never offers a closed form. -->
+      <a class="btn btn--primary btn--lg" href="sankalp-21.html#karuna" data-karuna-hero hidden>
+        <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-upload"></use></svg>करुणा 21 में फोटो भेजें
+      </a>
+      <a class="btn btn--primary btn--lg" href="gram-sabha.html" data-hero-demote>
         <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>लोकसंकल्प सभा
       </a>
       <a class="btn btn--ghost btn--lg" href="mera-sankalp.html">

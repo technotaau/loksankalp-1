@@ -132,6 +132,15 @@
   if (karunaLive) {
     document.querySelectorAll('[data-karuna-card]').forEach(function (n) { n.hidden = false; });
     document.querySelectorAll('[data-s21-card]').forEach(function (n) { n.hidden = true; });
+
+    // The hero leads with it too. Whatever was the primary button steps down
+    // to a ghost: two filled buttons side by side would put the visitor back
+    // to choosing, which is the confusion this is meant to end.
+    document.querySelectorAll('[data-karuna-hero]').forEach(function (n) { n.hidden = false; });
+    document.querySelectorAll('[data-hero-demote]').forEach(function (n) {
+      n.classList.remove('btn--primary');
+      n.classList.add('btn--ghost');
+    });
   }
 
   /* --- आज का काम : one question, one button ------------------------------
