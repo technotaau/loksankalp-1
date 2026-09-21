@@ -47,13 +47,28 @@
   /* --- Impact counters: count up once, when scrolled into view ---------- */
   var nf = new Intl.NumberFormat('en-IN');
   var counters = document.querySelectorAll('[data-count]');
+  /* The count-up writes to the element for 1400ms after it starts, so a
+     figure that arrives mid-flight used to be overwritten by the old one the
+     animation was still counting towards. That is not hypothetical: the
+     figures below the करुणा 21 form scroll into view at the very moment a
+     submission refreshes them, and the block was left showing the number
+     from before the person's own entry.
+
+     Two guards. The target is re-read every frame, so a figure that moves
+     mid-animation is counted towards its new value. And each run takes a
+     ticket; a later run, or a direct write from paint(), invalidates the
+     earlier one instead of racing it. */
   var runCounter = function (el) {
     var target = parseInt(el.getAttribute('data-count'), 10);
     if (isNaN(target)) return;
+    var mine = (el._lsRun = (el._lsRun || 0) + 1);
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) { el.textContent = nf.format(target); return; }
     var start = performance.now(), dur = 1400;
     var tick = function (now) {
+      if (el._lsRun !== mine) return;              // a newer write took over
+      var moved = parseInt(el.getAttribute('data-count'), 10);
+      if (!isNaN(moved)) target = moved;           // the figure changed mid-flight
       var p = Math.min((now - start) / dur, 1);
       var eased = 1 - Math.pow(1 - p, 3);
       el.textContent = nf.format(Math.round(target * eased));
@@ -619,7 +634,9 @@
       if (box) box.classList.toggle('counter--empty', v === 0);
       el.setAttribute('data-count', String(v));
       el.removeAttribute('data-loading');
-      if (animate) runCounter(el); else el.textContent = nf.format(v);
+      // a direct write must also stop any animation still counting elsewhere
+      if (animate) runCounter(el);
+      else { el._lsRun = (el._lsRun || 0) + 1; el.textContent = nf.format(v); }
       painted = true;
     });
     if (painted) {
