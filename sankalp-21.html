@@ -507,7 +507,12 @@ data-cert-line="आपने नशा मुक्त समाज हेतु
      straight at #karuna, sends a photograph and takes their certificate is a
      long way below that block by then, and the size of what they have just
      joined is exactly what they should see at that moment. -->
-<section class="section section--tint" id="ginti-karuna" aria-labelledby="ginti-karuna-h">
+<!-- Only करुणा 21's own two figures. The block sits under its form, so it
+     should answer "how many have done this", not repeat the संकल्प 21
+     figures that are already near the top of the page. Hidden until करुणा 21
+     opens, like every other part of it. -->
+<section class="section section--tint" id="ginti-karuna" aria-labelledby="ginti-karuna-h"
+         data-karuna-count hidden>
   <div class="wrap stack">
     <div class="section-head">
       <p class="eyebrow">सजीव आँकड़े</p>
@@ -516,19 +521,14 @@ data-cert-line="आपने नशा मुक्त समाज हेतु
     </div>
     <div class="counters">
       <div class="counter">
-        <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>
-        <b data-stat="sankalp21" data-count="0" data-loading>0</b>
-        <span>संकल्प 21 से जुड़े व्यक्ति</span>
-      </div>
-      <div class="counter">
-        <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>
-        <b data-stat="sankalp21Gaon" data-count="0" data-loading>0</b>
-        <span>जुड़े गाँव/शहर</span>
-      </div>
-      <div class="counter" data-karuna-count hidden>
         <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-heart"></use></svg>
         <b data-stat="karuna21" data-count="0" data-loading>0</b>
         <span>करुणा 21 से जुड़े व्यक्ति</span>
+      </div>
+      <div class="counter">
+        <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>
+        <b data-stat="karuna21Gaon" data-count="0" data-loading>0</b>
+        <span>करुणा 21 के गाँव/शहर</span>
       </div>
     </div>
     <p class="form-note center" style="margin-inline:auto" data-stats-note hidden></p>

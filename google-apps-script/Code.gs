@@ -22,7 +22,7 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 11;          // bump when this file changes; shown in every response
+var CODE_VERSION = 12;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -212,6 +212,15 @@ function computeStats() {
     });
   });
 
+  // The same over करुणा 21 alone: the figures printed beneath its own form
+  // should be about करुणा 21 and nothing else.
+  var k21Villages = {};
+  var gK21 = colOf(ss, FORMS.karuna21, 'gaon');
+  if (gK21 >= 0) k21Rows.forEach(function (r) {
+    var v = normPlace(r[gK21]);
+    if (isPlace(v)) k21Villages[v] = 1;
+  });
+
   // The same villages, counted over संकल्प 21 alone, for that page's own figure.
   var s21Villages = {};
   var g21 = colOf(ss, FORMS.sankalp21, 'gaon');
@@ -266,6 +275,7 @@ function computeStats() {
     sankalp21:      s21Rows.length,
     sankalp21Gaon:  Object.keys(s21Villages).length,
     karuna21:       k21Rows.length,
+    karuna21Gaon:   Object.keys(k21Villages).length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
