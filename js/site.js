@@ -216,6 +216,43 @@
     document.querySelectorAll('[data-camp-count]' + only).forEach(function (n) { n.hidden = false; });
   });
 
+  /* --- खाने जो ज़रूरत पड़ने पर ही खुलते हैं -------------------------------
+     इंकलाब 28 अब राजस्थान से बाहर और भारत से बाहर के लोग भी भरते हैं, पर
+     अधिकांश प्रविष्टियाँ राजस्थान से ही आती हैं। इसलिए राज्य और देश के खाने
+     markup में छिपे रहते हैं और तभी खुलते हैं जब जिले की सूची में उनका कारण
+     चुना जाए। राजस्थान वाले के लिए फ़ॉर्म बिल्कुल पहले जैसा रहता है।
+
+     छिपे खाने का required होना ब्राउज़र को फ़ॉर्म भेजने से रोक देता है, और
+     रुकावट दिखती भी नहीं क्योंकि खाना परदे पर है ही नहीं। इसलिए required
+     दिखने के साथ लगता है और छिपने के साथ हटता है; छिपते समय उसका भरा हुआ मान
+     भी मिट जाता है, वरना कोई जिला बदल दे तो पुराना देश चुपचाप साथ चला जाए। */
+  (function () {
+    var boxes = document.querySelectorAll('[data-show-when]');
+    if (!boxes.length) return;
+
+    var apply = function () {
+      boxes.forEach(function (box) {
+        var pair = box.getAttribute('data-show-when').split('=');
+        var src = document.getElementById(pair[0]);
+        // A box whose own trigger is hidden must stay hidden too, however its
+        // value reads: देश का नाम hangs off देश, which hangs off जिला.
+        var live = src && !src.closest('[data-show-when][hidden]') &&
+                   src.value === pair.slice(1).join('=');
+        if (box.hidden === !live) return;          // already right
+        box.hidden = !live;
+        box.querySelectorAll('[data-req]').forEach(function (f) {
+          if (live) { f.required = true; }
+          else { f.required = false; f.value = ''; }
+        });
+      });
+    };
+
+    document.querySelectorAll('[data-reveals]').forEach(function (src) {
+      src.addEventListener('change', function () { apply(); apply(); });
+    });
+    apply();
+  })();
+
   /* --- आज का काम : one question, one button ------------------------------
      People arriving from WhatsApp met three invitations at once, संकल्प लें,
      संकल्प 21 and करुणा 21, and could not tell which was meant for today.

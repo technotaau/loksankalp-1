@@ -187,8 +187,9 @@
         </div>
         <div class="field">
           <label for="i-jila">जिला <span aria-hidden="true">*</span></label>
-          <select id="i-jila" name="jila" required>
+          <select id="i-jila" name="jila" required data-reveals>
             <option value="">जिला चुनें</option>
+            <optgroup label="राजस्थान के जिले">
           <option>अजमेर</option>
           <option>अलवर</option>
           <option>उदयपुर</option>
@@ -231,7 +232,87 @@
           <option>सीकर</option>
           <option>हनुमानगढ़</option>
           <option>अन्य</option>
+            </optgroup>
+            <optgroup label="अन्य">
+              <option>भारत के अन्य राज्य से</option>
+              <option>भारत से बाहर से</option>
+            </optgroup>
           </select>
+        </div>
+
+        <div class="field" data-show-when="i-jila=भारत के अन्य राज्य से" hidden>
+          <label for="i-rajya">राज्य <span aria-hidden="true">*</span></label>
+          <select id="i-rajya" name="rajya" data-req>
+            <option value="">राज्य चुनें</option>
+              <option>आंध्र प्रदेश</option>
+              <option>अरुणाचल प्रदेश</option>
+              <option>असम</option>
+              <option>बिहार</option>
+              <option>छत्तीसगढ़</option>
+              <option>गोवा</option>
+              <option>गुजरात</option>
+              <option>हरियाणा</option>
+              <option>हिमाचल प्रदेश</option>
+              <option>झारखंड</option>
+              <option>कर्नाटक</option>
+              <option>केरल</option>
+              <option>मध्य प्रदेश</option>
+              <option>महाराष्ट्र</option>
+              <option>मणिपुर</option>
+              <option>मेघालय</option>
+              <option>मिज़ोरम</option>
+              <option>नागालैंड</option>
+              <option>ओडिशा</option>
+              <option>पंजाब</option>
+              <option>सिक्किम</option>
+              <option>तमिलनाडु</option>
+              <option>तेलंगाना</option>
+              <option>त्रिपुरा</option>
+              <option>उत्तर प्रदेश</option>
+              <option>उत्तराखंड</option>
+              <option>पश्चिम बंगाल</option>
+              <option>अंडमान और निकोबार</option>
+              <option>चंडीगढ़</option>
+              <option>दादरा और नगर हवेली तथा दमन और दीव</option>
+              <option>दिल्ली</option>
+              <option>जम्मू और कश्मीर</option>
+              <option>लद्दाख</option>
+              <option>लक्षद्वीप</option>
+              <option>पुडुचेरी</option>
+          </select>
+        </div>
+        <div class="field" data-show-when="i-jila=भारत से बाहर से" hidden>
+          <label for="i-desh">देश <span aria-hidden="true">*</span></label>
+          <select id="i-desh" name="desh" data-req data-reveals>
+            <option value="">देश चुनें</option>
+              <option>संयुक्त अरब अमीरात</option>
+              <option>अमेरिका</option>
+              <option>सऊदी अरब</option>
+              <option>मलेशिया</option>
+              <option>कुवैत</option>
+              <option>ओमान</option>
+              <option>क़तर</option>
+              <option>ब्रिटेन</option>
+              <option>कनाडा</option>
+              <option>ऑस्ट्रेलिया</option>
+              <option>नेपाल</option>
+              <option>सिंगापुर</option>
+              <option>दक्षिण अफ़्रीका</option>
+              <option>श्रीलंका</option>
+              <option>बहरीन</option>
+              <option>न्यूज़ीलैंड</option>
+              <option>जर्मनी</option>
+              <option>इटली</option>
+              <option>मॉरीशस</option>
+              <option>फ़िजी</option>
+              <option>थाईलैंड</option>
+              <option>म्यांमार</option>
+            <option>अन्य देश</option>
+          </select>
+        </div>
+        <div class="field" data-show-when="i-desh=अन्य देश" hidden>
+          <label for="i-desh-anya">देश का नाम <span aria-hidden="true">*</span></label>
+          <input type="text" id="i-desh-anya" name="deshAnya" data-req>
         </div>
         <div class="choices">
           <label class="choice"><input type="checkbox" name="sahmati" value="हाँ" required>मैं अपनी यह जानकारी लोकसंकल्प अभियान के पास दर्ज किए जाने की सहमति देता / देती हूँ।</label>
@@ -326,7 +407,18 @@
       <div class="counter">
         <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pin"></use></svg>
         <b data-stat="inqlabJile" data-count="0" data-loading>0</b>
-        <span>जिले</span>
+        <span>राजस्थान के जिले</span>
+      </div>
+      <!-- ये दोनों पहली बाहरी प्रविष्टि आने तक अपने आप छिपे रहते हैं -->
+      <div class="counter">
+        <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>
+        <b data-stat="inqlabRajya" data-count="0" data-loading>0</b>
+        <span>अन्य राज्य</span>
+      </div>
+      <div class="counter">
+        <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pin"></use></svg>
+        <b data-stat="inqlabDesh" data-count="0" data-loading>0</b>
+        <span>अन्य देश</span>
       </div>
     </div>
     <p class="form-note center" style="margin-inline:auto" data-stats-note hidden></p>

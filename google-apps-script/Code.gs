@@ -38,7 +38,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // If this changes, change max= on the form field too — the page reads that
 // attribute for its running total, so those two never drift apart.
 var MAX_UPVAAS_SADASYA = 150;
-var CODE_VERSION = 15;          // bump when this file changes; shown in every response
+var CODE_VERSION = 16;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -54,7 +54,8 @@ var FORMS = {
   // regNo is not a form field: the script fills it in under the lock so every
   // certificate carries a number that can be looked up in this sheet.
   inqlab28: { tab: 'इंकलाब 28',         regPrefix: 'IN28',
-              fields: ['regNo', 'naam', 'mobile', 'upvaasSadasya', 'gaon', 'jila', 'sahmati'] }
+              fields: ['regNo', 'naam', 'mobile', 'upvaasSadasya', 'gaon', 'jila',
+                       'rajya', 'desh', 'deshAnya', 'sahmati'] }
 };
 
 // Human-readable column headings.
@@ -67,7 +68,8 @@ var LABELS = {
   sthan: 'गाँव / विद्यालय', karya: 'कार्य विवरण',
   roop: 'सहभागी के रूप में', sanstha: 'संस्था / विद्यालय', upvaas: 'उपवास',
   sankalp: 'लोकसंकल्प', photoSahmati: 'फोटो सहमति', sandesh: 'संदेश',
-  regNo: 'पंजीकरण क्रमांक', upvaasSadasya: 'उपवास सदस्य'
+  regNo: 'पंजीकरण क्रमांक', upvaasSadasya: 'उपवास सदस्य',
+  rajya: 'राज्य', desh: 'देश', deshAnya: 'देश (लिखा हुआ)'
 };
 
 // ---- entry point ---------------------------------------------------------
@@ -268,13 +270,35 @@ function computeStats() {
      gone. Rows written under the old wording are one short of what their
      senders meant; they are few, and correcting them in the sheet is the
      honest fix rather than carrying two rules here forever. */
-  var i28Villages = {}, i28Districts = {}, i28Vyakti = 0;
+  var i28Villages = {}, i28Districts = {}, i28States = {}, i28Countries = {}, i28Vyakti = 0;
   var gI28 = colOf(ss, FORMS.inqlab28, 'gaon');
   var jI28 = colOf(ss, FORMS.inqlab28, 'jila');
+  var rI28 = colOf(ss, FORMS.inqlab28, 'rajya');
+  var dI28 = colOf(ss, FORMS.inqlab28, 'desh');
+  var daI28 = colOf(ss, FORMS.inqlab28, 'deshAnya');
   var sI28 = colOf(ss, FORMS.inqlab28, 'upvaasSadasya');
   i28Rows.forEach(function (r) {
     if (gI28 >= 0) { var v = normPlace(r[gI28]); if (isPlace(v)) i28Villages[v] = 1; }
-    if (jI28 >= 0) { var d = normPlace(r[jI28]); if (isPlace(d)) i28Districts[d] = 1; }
+
+    /* Where this entry is from, decided by which of the three columns is
+       filled rather than by matching the words in जिला. The जिला column holds
+       a marker for anyone outside Rajasthan ("भारत के अन्य राज्य से"), and
+       counting that as a district would put a phrase among the district
+       names. Reading the columns instead of the marker means the wording can
+       be reworded any day without the counts quietly breaking. */
+    var raj = rI28 < 0 ? '' : normPlace(r[rI28]);
+    var des = dI28 < 0 ? '' : normPlace(r[dI28]);
+    var desA = daI28 < 0 ? '' : normPlace(r[daI28]);
+    if (isPlace(desA) || isPlace(des)) {
+      // "अन्य देश" is the escape hatch, so the written name wins when present
+      var ku = isPlace(desA) ? desA : des;
+      if (ku !== 'अन्य देश') i28Countries[ku] = 1;
+    } else if (isPlace(raj)) {
+      i28States[raj] = 1;
+    } else if (jI28 >= 0) {
+      var d = normPlace(r[jI28]); if (isPlace(d)) i28Districts[d] = 1;
+    }
+
     var kul = sI28 < 0 ? 0 : count(r[sI28]);
     // Blank, zero or a typo: fall back to the one person who did register.
     if (kul < 1 || kul > MAX_UPVAAS_SADASYA) kul = 1;
@@ -343,6 +367,8 @@ function computeStats() {
     inqlabParivar:  i28Rows.length,
     inqlabGaon:     Object.keys(i28Villages).length,
     inqlabJile:     Object.keys(i28Districts).length,
+    inqlabRajya:    Object.keys(i28States).length,
+    inqlabDesh:     Object.keys(i28Countries).length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
