@@ -169,14 +169,28 @@
             <input type="text" name="website" tabindex="-1" autocomplete="off">
           </label>
         </p>
-        <fieldset class="field">
-          <legend>आप कहाँ से भर रहे हैं?</legend>
-          <div class="choices">
+        <!-- यहाँ fieldset और legend जानबूझकर नहीं हैं।
+
+             iPhone के Safari में legend एक साधारण खाना नहीं है, उसे फ़ील्डसेट
+             की ऊपरी पट्टी में अलग तरीके से रखा जाता है। उस पर display:block
+             लगाने से वह सिकुड़कर अपनी सबसे छोटी चौड़ाई ले लेता था, और सवाल
+             एक-एक शब्द करके छह पंक्तियों में टूट जाता था, ऊपर बड़ी खाली जगह
+             छोड़कर। Chrome में यह नहीं दिखता, इसलिए पकड़ में देर से आया।
+
+             role="group" के साथ सादा <p> वही काम करता है जो fieldset+legend
+             करते थे : स्क्रीन रीडर तीनों विकल्पों को एक ही सवाल के नीचे
+             पढ़ता है। पर यह हर ब्राउज़र में एक जैसा दिखता है, क्योंकि इसमें
+             कोई विशेष खाना है ही नहीं। -->
+        <div class="field" role="group" aria-labelledby="kshetra-h">
+          <p class="field__head" id="kshetra-h">आप कहाँ से भर रहे हैं?</p>
+          <!-- तीनों पूरी चौड़ाई में, एक के नीचे एक। दो खानों में "भारत का अन्य
+               राज्य" दो पंक्तियों में टूटता था और पंक्तियाँ असमान दिखती थीं। -->
+          <div class="choices choices--wide">
             <label class="choice"><input type="radio" name="kshetra" value="राजस्थान" checked>राजस्थान</label>
             <label class="choice"><input type="radio" name="kshetra" value="भारत का अन्य राज्य">भारत का अन्य राज्य</label>
             <label class="choice"><input type="radio" name="kshetra" value="भारत से बाहर">भारत से बाहर</label>
           </div>
-        </fieldset>
+        </div>
         <div class="field">
           <label for="i-naam">नाम <span aria-hidden="true">*</span></label>
           <input type="text" id="i-naam" name="naam" autocomplete="name" required>

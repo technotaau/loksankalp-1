@@ -801,7 +801,9 @@ details.acc > :not(summary) { padding-bottom: 1.1rem; }
 /* ---------- 8. Forms ---------- */
 .form { display: grid; gap: 1.15rem; }
 .field { display: grid; gap: .4rem; }
-.field > label { font-weight: 700; color: var(--ls-blue-dark); }
+/* सवाल का शीर्षक, चाहे वह <label> हो या रेडियो-समूह के ऊपर रखा <p>।
+   दोनों एक जैसे दिखने चाहिए, वरना एक सवाल बाकी सवालों से अलग लगता है। */
+.field > label, .field > .field__head { font-weight: 700; color: var(--ls-blue-dark); }
 .field .hint { font-size: .88rem; color: var(--ls-ink-soft); }
 input[type="text"], input[type="tel"], input[type="email"], input[type="number"],
 input[type="date"], input[type="file"], select, textarea {
@@ -815,14 +817,10 @@ fieldset { border: 0; padding: 0; }
 legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; padding: 0; }
 
 /* Big radio/checkbox tiles: easy to tap, easy to read */
-/* A fieldset used as a field: the legend has to look like every other label
-   above it, and a fieldset's default border and padding would otherwise draw
-   a box around one question that no other question has. */
-.field legend {
-  display: block; padding: 0; font-weight: 700;
-  color: var(--ls-ink); margin-bottom: .45rem;
-}
-fieldset.field { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
+/* legend पर display:block मत लगाइए। iPhone के Safari में legend एक साधारण
+   खाना नहीं है और तब वह सिकुड़कर एक-एक शब्द प्रति पंक्ति हो जाता है। जहाँ
+   सवाल को बाकी labels जैसा दिखाना हो, वहाँ fieldset के बजाय
+   role="group" + <p class="field__head"> लगाइए; इंकलाब 28 का फ़ॉर्म देखिए। */
 
 .choices { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); }
 /* The tracks above are sized for short options (विद्यार्थी, युवा, नागरिक),
