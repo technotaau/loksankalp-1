@@ -161,7 +161,6 @@
       });
     };
     mine('[data-camp-card]').forEach(function (n) { n.hidden = false; });
-    document.querySelectorAll('[data-s21-card]').forEach(function (n) { n.hidden = true; });
 
     // The hero leads with it too. Whatever was the primary button steps down
     // to a ghost: two filled buttons side by side would put the visitor back
@@ -189,6 +188,17 @@
       n.classList.add('btn--ghost');
     });
   }
+
+  /* The campaign's own menu item ships VISIBLE, the other way round from the
+     cards below. A phone with JavaScript off should still find today's
+     action from the menu, and the form stays reachable after the window
+     anyway, so showing it a little too long costs nothing. What it must not
+     do is sit there for a campaign whose day has passed while a newer one is
+     running, so the item is taken out once its window shuts. */
+  document.querySelectorAll('[data-camp-nav]').forEach(function (a) {
+    var k = a.getAttribute('data-camp');
+    if (k && k !== today) (a.closest('li') || a).hidden = true;
+  });
 
   /* A campaign's own form ships hidden and is revealed at its hour, so
      nobody sends anything before the day and nobody has to remember to switch
