@@ -138,7 +138,8 @@
     // इंकलाब 28 : भगत सिंह जयंती। पंजीकरण दिन से पहले ही खुल जाता है, क्योंकि
     // यह उस दिन उपवास रखने का संकल्प है, उस दिन की रिपोर्ट नहीं।
     inqlab28: { opens: Date.UTC(2026, 8, 22, 18, 30),   // 23 सित॰ 00:00 IST
-                closes: Date.UTC(2026, 8, 28, 18, 30) }   // 29 सित॰ 00:00 IST
+                closes: Date.UTC(2026, 8, 28, 18, 30),    // 29 सित॰ 00:00 IST
+                day: Date.UTC(2026, 8, 27, 18, 30) }      // 28 सित॰ 00:00 IST
   };
 
   var NOW = Date.now();
@@ -188,6 +189,36 @@
       n.classList.add('btn--ghost');
     });
   }
+
+  /* बचे हुए दिन।
+
+     "28 सितम्बर को उपवास रखना है" पढ़कर आदमी सोचता है कि बाद में देख लेंगे।
+     "अब केवल तीन दिन बाकी" पढ़कर वही आदमी अभी भर देता है। इसीलिए यह गोली
+     लगाई गई है।
+
+     दिन की गिनती भारतीय समय की आधी रात से होती है, घंटों से नहीं : गाँव में
+     कोई नहीं कहता "साढ़े इकसठ घंटे बाकी हैं"। तारीख़ उसी CAMPAIGNS तालिका से
+     आती है, इसलिए 29 सितम्बर को यह अपने आप गायब हो जाती है और किसी को हाथ
+     से हटाना नहीं पड़ता। JavaScript बंद हो तो गोली छिपी ही रहती है, यानी
+     कभी कोई पुरानी गिनती नहीं दिखती। */
+  var DIN = 24 * 60 * 60 * 1000;
+  var daysLeft = function (key) {
+    var c = CAMPAIGNS[key];
+    if (!c || !c.day) return null;
+    // दोनों सिरों को IST की आधी रात पर ले आइए, फिर घटाइए.
+    var ist = function (t) { return Math.floor((t + 5.5 * 60 * 60 * 1000) / DIN); };
+    return ist(c.day) - ist(NOW);
+  };
+  document.querySelectorAll('[data-camp-days]').forEach(function (n) {
+    var k = n.getAttribute('data-camp');
+    var d = daysLeft(k);
+    if (d === null || d < 0 || !isLive(k)) { n.hidden = true; return; }
+    n.textContent = d === 0 ? 'आज ही है'
+                  : d === 1 ? 'कल ही है'
+                  : 'अब केवल ' + d + ' दिन बाकी';
+    n.classList.toggle('days-pill--today', d <= 1);
+    n.hidden = false;
+  });
 
   /* The campaign's own menu item ships VISIBLE, the other way round from the
      cards below. A phone with JavaScript off should still find today's
@@ -322,6 +353,7 @@
       '<img class="today-card__mark" src="assets/img/logo-mark.svg" alt="" width="62" height="62">' +
       '<p class="eyebrow"></p>' +
       '<h2 id="today-h"></h2>' +
+      '<p class="mt-2"><span class="days-pill" data-today="days" hidden></span></p>' +
       '<p class="mt-2" data-today="text"></p>' +
       '<p class="mt-2"><a class="btn btn--primary btn--lg" href="' + HREF + '" data-today="go"></a></p>' +
       '<button class="today-card__later" type="button" data-today="later">बाद में देखूँगा</button>';
@@ -331,6 +363,18 @@
     card.querySelector('#today-h').textContent = pop.title;
     card.querySelector('[data-today="text"]').textContent = pop.text;
     card.querySelector('[data-today="go"]').textContent = pop.cta;
+    /* वही गिनती जो पृष्ठ पर है, यहाँ भी। पॉपअप एक बार ही दिखता है, और उसी
+       एक बार में "अब केवल तीन दिन बाकी" पढ़ लेना पूरे संदेश से ज़्यादा काम
+       करता है। */
+    var popDin = daysLeft(today);
+    var popPill = card.querySelector('[data-today="days"]');
+    if (popPill && popDin !== null && popDin >= 0) {
+      popPill.textContent = popDin === 0 ? 'आज ही है'
+                          : popDin === 1 ? 'कल ही है'
+                          : 'अब केवल ' + popDin + ' दिन बाकी';
+      popPill.classList.toggle('days-pill--today', popDin <= 1);
+      popPill.hidden = false;
+    }
     veil.appendChild(card);
 
     var before = document.activeElement;
@@ -914,6 +958,7 @@
       document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
     }
     renderDistricts(stats.byDistrict);
+    renderJilaList(stats.inqlabByJila, stats.inqlabBahar);
     return painted;
   }
 
@@ -963,6 +1008,135 @@
           n.textContent = 'आँकड़े अभी नहीं आ सके। कृपया पृष्ठ फिर से खोलें।';
         });
       });
+    }
+  }
+
+  /* "यह संदेश आगे भेजिए"।
+
+     यह अभियान WhatsApp से फैलता है, दूसरे किसी रास्ते से नहीं। भेजने का
+     बटन खुद एक सादा <a href="https://wa.me/?text=…"> है, इसलिए JavaScript
+     बंद हो तब भी काम करता है और फ़ोन पर सीधे WhatsApp खोल देता है।
+
+     यहाँ केवल कॉपी वाला बटन है, उनके लिए जो संदेश किसी समूह में, फेसबुक पर
+     या SMS में चिपकाना चाहते हैं। clipboard हर जगह नहीं मिलता, इसलिए वहाँ
+     बटन दिखता ही नहीं, टूटा हुआ नहीं दिखता। */
+  document.querySelectorAll('[data-wa-copy]').forEach(function (btn) {
+    var box = btn.closest('[data-share-box]');
+    var src = box && box.querySelector('[data-share-msg]');
+    if (!src || !navigator.clipboard || !navigator.clipboard.writeText) { btn.hidden = true; return; }
+    btn.hidden = false;
+    var pehla = btn.textContent;
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(src.textContent.trim()).then(function () {
+        btn.textContent = 'कॉपी हो गया';
+        setTimeout(function () { btn.textContent = pehla; }, 2500);
+      }).catch(function () {
+        btn.textContent = 'कॉपी नहीं हो सका';
+        setTimeout(function () { btn.textContent = pehla; }, 2500);
+      });
+    });
+  });
+
+  /* इंकलाब 28 की जिलेवार सूची।
+
+     गाँव का आदमी अपने जिले का नाम ढूँढ़ता है। दिख जाए तो जुड़ जाता है, न
+     दिखे तो उसे लाने के लिए जुड़ता है। दोनों तरफ़ से यही सूची काम करती है।
+
+     फ़ोन पर तालिका नहीं बनाई गई : पाँच खानों वाली तालिका 360px पर टूट जाती
+     है। हर जिला एक पंक्ति है, नाम बाएँ और संख्या दाएँ, और पीछे एक हल्की
+     पट्टी जो बिना संख्या पढ़े बता देती है कि कौन आगे है।
+
+     पहले आठ जिले दिखते हैं। पूरी सूची एक बटन पर खुलती है, ताकि छोटे परदे पर
+     आगे का पृष्ठ चालीस जिलों के नीचे दब न जाए। */
+  var MERA_JILA_KEY = 'ls-mera-jila';
+  function meraJila() {
+    try { return window.localStorage.getItem(MERA_JILA_KEY) || ''; }
+    catch (e) { return ''; }            // निजी विंडो में पढ़ना भी विफल हो सकता है
+  }
+  function yaadRakho(jila) {
+    try { if (jila) window.localStorage.setItem(MERA_JILA_KEY, jila); } catch (e) { /* चलने दीजिए */ }
+  }
+
+  function renderJilaList(list, bahar) {
+    var box = document.querySelector('[data-jila-list]');
+    if (!box) return;
+    var sec = box.closest('[data-jila-section]') || box;
+    /* न आना और खाली आना, दोनों अलग बातें हैं। पुराना deploy यह सूची भेजता
+       ही नहीं; तब "किसी जिले से कोई नहीं" लिखना झूठ होता। दोनों हालत में
+       खंड चुपचाप छिपा रहता है। */
+    if (!list || !list.length || today !== 'inqlab28') { sec.hidden = true; return; }
+
+    var PEHLE = 8;
+    var sabse = list[0].vyakti || 1;
+    var mera = meraJila();
+    var nf2 = new Intl.NumberFormat('hi-IN');
+    box.innerHTML = '';
+    list.forEach(function (row, i) {
+      var li = document.createElement('li');
+      li.className = 'jila' + (row.naam === mera ? ' jila--mera' : '');
+      if (i >= PEHLE) li.hidden = true;
+      var bar = document.createElement('span');
+      bar.className = 'jila__bar';
+      bar.style.width = Math.max(6, Math.round((row.vyakti / sabse) * 100)) + '%';
+      var naam = document.createElement('span');
+      naam.className = 'jila__naam';
+      naam.textContent = row.naam;
+      var n = document.createElement('span');
+      n.className = 'jila__n';
+      n.textContent = nf2.format(row.vyakti);
+      var small = document.createElement('small');
+      small.textContent = 'व्यक्ति';
+      n.appendChild(small);
+      li.appendChild(bar); li.appendChild(naam); li.appendChild(n);
+      box.appendChild(li);
+    });
+    sec.hidden = false;
+
+    // अपना जिला सूची में नीचे हो तो पहली बार में ही दिख जाए
+    var meraIndex = mera ? list.map(function (r) { return r.naam; }).indexOf(mera) : -1;
+
+    var more = sec.querySelector('[data-jila-more]');
+    if (more) {
+      var chhupe = list.length - PEHLE;
+      if (chhupe <= 0) { more.hidden = true; }
+      else {
+        more.hidden = false;
+        var khula = false;
+        var likho = function () {
+          more.textContent = khula ? 'कम दिखाइए'
+                                   : 'बाकी ' + nf2.format(chhupe) + ' जिले भी देखिए';
+          more.setAttribute('aria-expanded', khula ? 'true' : 'false');
+        };
+        more.onclick = function () {
+          khula = !khula;
+          Array.prototype.forEach.call(box.children, function (li, i) {
+            if (i >= PEHLE) li.hidden = !khula;
+          });
+          likho();
+        };
+        likho();
+        if (meraIndex >= PEHLE) more.click();   // अपना जिला छिपा न रह जाए
+      }
+    }
+
+    /* राजस्थान से बाहर वाले। नाम गिनाना ज़रूरी है : टोरंटो से भरने वाले को
+       अपने देश का नाम पृष्ठ पर दिखेगा तो वह आगे भी भेजेगा। */
+    var bh = sec.querySelector('[data-jila-bahar]');
+    if (bh) {
+      if (!bahar || !bahar.length) { bh.hidden = true; }
+      else {
+        var naamList = bahar.map(function (r) { return r.naam; });
+        var jodo = naamList.length === 1 ? naamList[0]
+                 : naamList.slice(0, -1).join(', ') + ' और ' + naamList[naamList.length - 1];
+        var vy = bahar.reduce(function (a, r) { return a + (r.vyakti || 0); }, 0);
+        bh.innerHTML = '';
+        bh.appendChild(document.createTextNode('राजस्थान से बाहर '));
+        var st = document.createElement('strong');
+        st.textContent = jodo;
+        bh.appendChild(st);
+        bh.appendChild(document.createTextNode(' से भी ' + nf2.format(vy) + ' लोग जुड़े हैं।'));
+        bh.hidden = false;
+      }
     }
   }
 
@@ -1129,6 +1303,11 @@
       var sthanValue = [pick('gaon'),
                         pick('jila') || pick('rajya') || pick('deshAnya') || pick('desh')]
                        .filter(Boolean).join(', ');
+
+      /* अपना जिला याद रख लीजिए, ताकि जिलेवार सूची में वह पंक्ति अलग दिखे और
+         नीचे हो तो अपने आप खुल जाए। यह इसी फ़ोन में रहता है, कहीं भेजा नहीं
+         जाता। */
+      if (typeof yaadRakho === 'function') yaadRakho(pick('jila'));
 
       var finish = function (savedMessage, regNo) {
         if (out) {

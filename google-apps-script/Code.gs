@@ -42,7 +42,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // If this changes, change max= on the form field too, because the page reads that
 // attribute for its running total, so those two never drift apart.
 var MAX_UPVAAS_SADASYA = 150;
-var CODE_VERSION = 16;          // bump when this file changes; shown in every response
+var CODE_VERSION = 17;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -275,6 +275,16 @@ function computeStats() {
      senders meant; they are few, and correcting them in the sheet is the
      honest fix rather than carrying two rules here forever. */
   var i28Villages = {}, i28Districts = {}, i28States = {}, i28Countries = {}, i28Vyakti = 0;
+  /* जिलेवार, केवल इंकलाब 28 के अपने पृष्ठ के लिए। यह डैशबोर्ड वाली
+     byDistrict तालिका से अलग रखा गया है : वह तालिका "जहाँ सभा और संकल्प
+     हुए" के अर्थ में प्रचारित है, और उसमें एक घरेलू उपवास जोड़ देने से उस
+     संख्या का अर्थ चुपचाप बदल जाता। bahar में राजस्थान से बाहर के राज्य
+     और देश आते हैं, ताकि बाहर से जुड़ने वाले को भी अपना नाम दिखे। */
+  var i28ByJila = {}, i28Bahar = {};
+  var bucket = function (box, naam, kya) {
+    if (!box[naam]) box[naam] = { parivar: 0, vyakti: 0, kya: kya || '' };
+    return box[naam];
+  };
   var gI28 = colOf(ss, FORMS.inqlab28, 'gaon');
   var jI28 = colOf(ss, FORMS.inqlab28, 'jila');
   var rI28 = colOf(ss, FORMS.inqlab28, 'rajya');
@@ -290,23 +300,27 @@ function computeStats() {
        counting that as a district would put a phrase among the district
        names. Reading the columns instead of the marker means the wording can
        be reworded any day without the counts quietly breaking. */
-    var raj = rI28 < 0 ? '' : normPlace(r[rI28]);
-    var des = dI28 < 0 ? '' : normPlace(r[dI28]);
-    var desA = daI28 < 0 ? '' : normPlace(r[daI28]);
-    if (isPlace(desA) || isPlace(des)) {
-      // "अन्य देश" is the escape hatch, so the written name wins when present
-      var ku = isPlace(desA) ? desA : des;
-      if (ku !== 'अन्य देश') i28Countries[ku] = 1;
-    } else if (isPlace(raj)) {
-      i28States[raj] = 1;
-    } else if (jI28 >= 0) {
-      var d = normPlace(r[jI28]); if (isPlace(d)) i28Districts[d] = 1;
-    }
-
     var kul = sI28 < 0 ? 0 : count(r[sI28]);
     // Blank, zero or a typo: fall back to the one person who did register.
     if (kul < 1 || kul > MAX_UPVAAS_SADASYA) kul = 1;
     i28Vyakti += kul;
+
+    var raj = rI28 < 0 ? '' : normPlace(r[rI28]);
+    var des = dI28 < 0 ? '' : normPlace(r[dI28]);
+    var desA = daI28 < 0 ? '' : normPlace(r[daI28]);
+    var b = null;
+    if (isPlace(desA) || isPlace(des)) {
+      // "अन्य देश" is the escape hatch, so the written name wins when present
+      var ku = isPlace(desA) ? desA : des;
+      if (ku !== 'अन्य देश') { i28Countries[ku] = 1; b = bucket(i28Bahar, ku, 'देश'); }
+    } else if (isPlace(raj)) {
+      i28States[raj] = 1;
+      b = bucket(i28Bahar, raj, 'राज्य');
+    } else if (jI28 >= 0) {
+      var d = normPlace(r[jI28]);
+      if (isPlace(d)) { i28Districts[d] = 1; b = bucket(i28ByJila, d, 'जिला'); }
+    }
+    if (b) { b.parivar++; b.vyakti += kul; }
   });
 
   // The same villages, counted over संकल्प 21 alone, for that page's own figure.
@@ -407,6 +421,16 @@ function computeStats() {
     d.sankalp++;
     var v = g21 < 0 ? '' : normPlace(r[g21]); if (isPlace(v)) d.gaon[v] = 1;
   });
+  /* इंकलाब 28 की जिलेवार सूची। सबसे बड़ा जिला पहले, ताकि पृष्ठ पर पहली
+     नज़र में ही पता चले कि कहाँ सबसे ज़्यादा लोग जुड़े हैं। */
+  var listOf = function (box) {
+    return Object.keys(box).map(function (n) {
+      return { naam: n, parivar: box[n].parivar, vyakti: box[n].vyakti, kya: box[n].kya };
+    }).sort(function (a, b) { return b.vyakti - a.vyakti || b.parivar - a.parivar; });
+  };
+  stats.inqlabByJila = listOf(i28ByJila);
+  stats.inqlabBahar  = listOf(i28Bahar);
+
   stats.byDistrict = Object.keys(byDistrict).map(function (d) {
     return { jila: d, gaon: Object.keys(byDistrict[d].gaon).length,
              sabhaen: byDistrict[d].sabhaen, samitiyan: byDistrict[d].samitiyan,
