@@ -206,6 +206,24 @@
     document.querySelectorAll('[data-camp-count]' + only).forEach(function (n) { n.hidden = false; });
   });
 
+  /* --- "आपको मिलाकर कुल …" --------------------------------------------
+     इंकलाब 28 में व्यक्तियों की गिनती लिखी हुई संख्या + 1 है, वह 1 स्वयं
+     भरने वाला। सवाल कितना भी साफ़ लिखा हो, "आपके परिवार के कितने सदस्य" पढ़कर
+     कई लोग अपने आपको भी गिन लेंगे और एक ज़्यादा लिख देंगे। इसलिए जोड़ छिपाकर
+     रखने के बजाय लिखते ही दिखा दिया जाता है : जिसने अपने आपको गिन लिया हो,
+     उसे वहीं दिख जाएगा कि संख्या एक ज़्यादा है, और वह सुधार लेगा। */
+  document.querySelectorAll('[data-plus-one]').forEach(function (input) {
+    var out = document.getElementById(input.getAttribute('data-plus-one'));
+    if (!out) return;
+    var show = function () {
+      var n = parseInt(input.value, 10);
+      out.textContent = (isNaN(n) || n < 0 || n > 50) ? ''
+        : 'आपको मिलाकर कुल ' + (n + 1) + ' व्यक्ति उपवास रखेंगे।';
+    };
+    input.addEventListener('input', show);
+    show();
+  });
+
   /* --- आज का काम : one question, one button ------------------------------
      People arriving from WhatsApp met three invitations at once, संकल्प लें,
      संकल्प 21 and करुणा 21, and could not tell which was meant for today.

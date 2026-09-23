@@ -455,6 +455,12 @@ body { padding-bottom: 68px; }
 .split figure { margin: 0; }
 .split > figure img, .split > figure > svg, .split > img { border-radius: var(--ls-radius); width: 100%; }
 
+/* A count the page works out while you type, so a miscount shows itself. */
+.hint--live:not(:empty) {
+  display: block; margin-top: .3rem; font-weight: 600;
+  color: var(--ls-green-dark);
+}
+
 /* Checklists */
 .ticks { display: grid; gap: .7rem; }
 .ticks li { display: grid; grid-template-columns: auto 1fr; gap: .7rem; align-items: start; }
