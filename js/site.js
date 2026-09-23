@@ -98,24 +98,16 @@
     reveals.forEach(function (el) { el.classList.add('is-in'); });
   }
 
-  /* --- संकल्प 21 takes the sticky bar for the length of the campaign -----
-     The markup ships with संकल्प लें, the evergreen action, and this swaps it
-     while the fast is live. That way it needs no undoing on 3 October, and if
-     this file never runs the bar still points somewhere correct. */
+  /* संकल्प 21 वाला पुराना swap यहाँ से हटा दिया गया है।
 
-  var S21_ENDS = Date.UTC(2026, 9, 2, 18, 30);    // 3 Oct 00:00 IST
-  if (Date.now() < S21_ENDS) {
-    document.querySelectorAll('[data-s21-swap]').forEach(function (a) {
-      var href = a.getAttribute('data-s21-href');
-      var label = a.getAttribute('data-s21-label');
-      if (!href || !label) return;
-      a.setAttribute('href', href);
-      // keep the icon, replace only the text node beside it
-      Array.prototype.forEach.call(a.childNodes, function (n) {
-        if (n.nodeType === 3 && n.textContent.trim()) n.textContent = label;
-      });
-    });
-  }
+     वह नीचे की पट्टी का पहला बटन 3 अक्टूबर तक "संकल्प 21" कर देता था। जब
+     वह लिखा गया था तब उस पृष्ठ पर फ़ॉर्म था। अब वह पृष्ठ "जो हुआ" का रिकॉर्ड
+     है, उस पर करने को कुछ नहीं। नतीजा यह होता कि 29 सितम्बर को इंकलाब 28 का
+     फाटक बंद होते ही फ़ोन का सबसे बड़ा बटन चार दिन तक एक बीत चुके आयोजन पर
+     भेजता रहता, और कोई देख भी नहीं रहा होता।
+
+     अब वह पट्टी अपने आप "संकल्प लें" पर लौट आती है, जो हर दिन काम का है।
+     अभियान के दिनों में data-camp-swap उसे वैसे ही बदल देता है जैसे पहले। */
 
   /* --- आज का अभियान ------------------------------------------------------
      One campaign day at a time is the live action: करुणा 21 on 21 September,
@@ -187,6 +179,21 @@
     document.querySelectorAll('[data-hero-demote]').forEach(function (n) {
       n.classList.remove('btn--primary');
       n.classList.add('btn--ghost');
+    });
+
+    /* जिस दिन कोई अभियान चल रहा है, उस दिन बाकी बटन हट जाते हैं।
+
+       मुखपृष्ठ पर तीन बटन एक साथ थे और तीनों मेन्यू में तथा नीचे की पट्टी
+       में भी हैं। पढ़ने वाले को यह चुनना पड़ता था कि किस पर दबाए, जबकि इन
+       दिनों करने को एक ही काम है। एक ही बटन रहने पर सवाल ही नहीं बचता।
+
+       मिटाया इसलिए नहीं गया कि 29 सितम्बर को इंकलाब वाला बटन अपने आप हट
+       जाएगा; अगर बाकी दोनों मिटा दिए होते तो उस दिन मुखपृष्ठ पर एक भी बटन
+       न बचता और किसी को याद करके वापस लगाना पड़ता। अब वे उसी दिन अपने आप
+       लौट आएँगे। JavaScript बंद हो तो वे दिखते ही रहते हैं, यानी बिना
+       JavaScript वाले फ़ोन पर पृष्ठ कभी बटन-विहीन नहीं होता। */
+    document.querySelectorAll('[data-camp-hide]').forEach(function (n) {
+      n.hidden = true;
     });
   }
 
