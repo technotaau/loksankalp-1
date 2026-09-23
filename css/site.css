@@ -811,6 +811,15 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
   display: inline-block; padding: .3rem 2rem; margin: .8rem 0;
 }
 .cert__mark { width: 64px; height: 64px; margin: 0 auto .4rem; }
+/* The preview of a portrait certificate. The PDF is A4 upright, so a narrow
+   column on screen tells the reader what they are about to download; without
+   it the preview reads as landscape and the download looks like a different
+   document. */
+.certificate--tall { max-width: 34rem; margin-inline: auto; }
+.cert__sub {
+  font-family: var(--ls-font-head); color: var(--ls-saffron-dk);
+  font-size: clamp(.98rem, 2.4vw, 1.12rem); margin: .1rem auto .6rem;
+}
 .cert__motto {
   font-family: var(--ls-font-head); color: var(--ls-saffron-dk);
   font-size: clamp(1.02rem, 2.6vw, 1.24rem); margin: 1rem auto .2rem; max-width: 34ch;

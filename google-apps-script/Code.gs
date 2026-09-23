@@ -22,7 +22,12 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 12;          // bump when this file changes; shown in every response
+// Largest household one इंकलाब 28 entry may contribute. "व्यक्ति" is a headline
+// figure and the endpoint is public, so one typo or prank ("9999") would wreck
+// it. Above this the number is treated as a data error and adds nothing to
+// व्यक्ति; the entry itself, and its village and district, still count.
+var MAX_UPVAAS_SADASYA = 50;
+var CODE_VERSION = 13;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -34,7 +39,11 @@ var FORMS = {
   samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] },
   sankalp21:{ tab: 'संकल्प 21',         fields: ['naam', 'mobile', 'jila', 'gaon', 'roop', 'sanstha',
                                                  'upvaas', 'sankalp', 'sahmati', 'photoSahmati'] },
-  karuna21: { tab: 'करुणा 21',          fields: ['naam', 'mobile', 'jila', 'gaon', 'sandesh', 'sahmati'] }
+  karuna21: { tab: 'करुणा 21',          fields: ['naam', 'mobile', 'jila', 'gaon', 'sandesh', 'sahmati'] },
+  // regNo is not a form field: the script fills it in under the lock so every
+  // certificate carries a number that can be looked up in this sheet.
+  inqlab28: { tab: 'इंकलाब 28',         regPrefix: 'IN28',
+              fields: ['regNo', 'naam', 'mobile', 'upvaasSadasya', 'gaon', 'jila', 'sahmati'] }
 };
 
 // Human-readable column headings.
@@ -46,7 +55,8 @@ var LABELS = {
   club: 'क्लब', sadasya: 'सदस्य संख्या', ruchi: 'रुचि', namit: 'नामांकित',
   sthan: 'गाँव / विद्यालय', karya: 'कार्य विवरण',
   roop: 'सहभागी के रूप में', sanstha: 'संस्था / विद्यालय', upvaas: 'उपवास',
-  sankalp: 'लोकसंकल्प', photoSahmati: 'फोटो सहमति', sandesh: 'संदेश'
+  sankalp: 'लोकसंकल्प', photoSahmati: 'फोटो सहमति', sandesh: 'संदेश',
+  regNo: 'पंजीकरण क्रमांक', upvaasSadasya: 'उपवास सदस्य'
 };
 
 // ---- entry point ---------------------------------------------------------
@@ -69,12 +79,18 @@ function doPost(e) {
     var reqId = String(data.reqId || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 64);
     var seen = CacheService.getScriptCache();
     var seenKey = 'req-' + reqId;
-    if (reqId && seen.get(seenKey)) return reply(true, 'पहले ही सहेज लिया गया');
+    // What is remembered is the registration number, not merely "seen". A
+    // retry must hand back the SAME number: the certificate is printed from
+    // it, and two numbers for one person would be two certificates for one
+    // registration. Forms without a number remember a plain '1'.
+    var already = reqId ? seen.get(seenKey) : null;
+    if (already) return reply(true, 'पहले ही सहेज लिया गया', already === '1' ? '' : already);
 
     // Photographs go to Drive before the lock is taken. Uploading is the slow
     // part of a submission, and holding the queue open through it is what
     // would turn a classroom into a jam. The lock guards the append alone.
     var links = saveFiles(data.files, data.form);
+    var regNo = '';
 
     var lock = LockService.getScriptLock();
     // Appending is quick, so a minute is room for a few hundred people.
@@ -82,15 +98,20 @@ function doPost(e) {
     try {
       // Checked again inside the lock: two retries racing each other would
       // both have passed the check above.
-      if (reqId && seen.get(seenKey)) return reply(true, 'पहले ही सहेज लिया गया');
+      var twice = reqId ? seen.get(seenKey) : null;
+      if (twice) return reply(true, 'पहले ही सहेज लिया गया', twice === '1' ? '' : twice);
       var sheet = getTab(spec);
       var row = [timestamp()];
       for (var i = 0; i < spec.fields.length; i++) {
         row.push(clean(data.values ? data.values[spec.fields[i]] : ''));
       }
+      // A declared regNo field is filled here, never by the sender: a number
+      // the browser could choose would not be unique and could be forged.
+      var at = spec.fields.indexOf('regNo');
+      if (at >= 0) { regNo = nextRegNo(spec, sheet); row[1 + at] = regNo; }
       row.push(links.join('\n'));
       sheet.appendRow(row);
-      if (reqId) seen.put(seenKey, '1', 21600);   // six hours
+      if (reqId) seen.put(seenKey, regNo || '1', 21600);   // six hours
     } finally {
       lock.releaseLock();
     }
@@ -99,7 +120,7 @@ function doPost(e) {
     // has just registered sees their own entry counted, not a number up to a
     // minute old. This is what makes a live demonstration work.
     try { CacheService.getScriptCache().remove(statsCacheKey()); } catch (err2) {}
-    return reply(true, 'सहेज लिया गया');
+    return reply(true, 'सहेज लिया गया', regNo);
   } catch (err) {
     return reply(false, String(err));
   }
@@ -195,6 +216,7 @@ function computeStats() {
   var sammanRows   = rows(ss, FORMS.samman.tab);
   var s21Rows      = rows(ss, FORMS.sankalp21.tab);
   var k21Rows      = rows(ss, FORMS.karuna21.tab);
+  var i28Rows      = rows(ss, FORMS.inqlab28.tab);
 
   // "जुड़े हुए गाँव" counts each village once, however many forms mention it.
   // Ten people from one village make that village count once, not ten times,
@@ -219,6 +241,26 @@ function computeStats() {
   if (gK21 >= 0) k21Rows.forEach(function (r) {
     var v = normPlace(r[gK21]);
     if (isPlace(v)) k21Villages[v] = 1;
+  });
+
+  /* इंकलाब 28 counts four things, and two of them are counted differently
+     from anything else on this sheet.
+
+     A person registers on behalf of a household: the form asks how many
+     members of the family, BESIDES them, will keep the fast. So one entry is
+     one परिवार, and it brings (that number + 1) व्यक्ति — the +1 being the
+     person who filled the form. A blank or unreadable answer still brings
+     that one person; it never brings zero, because somebody did register. */
+  var i28Villages = {}, i28Districts = {}, i28Vyakti = 0;
+  var gI28 = colOf(ss, FORMS.inqlab28, 'gaon');
+  var jI28 = colOf(ss, FORMS.inqlab28, 'jila');
+  var sI28 = colOf(ss, FORMS.inqlab28, 'upvaasSadasya');
+  i28Rows.forEach(function (r) {
+    if (gI28 >= 0) { var v = normPlace(r[gI28]); if (isPlace(v)) i28Villages[v] = 1; }
+    if (jI28 >= 0) { var d = normPlace(r[jI28]); if (isPlace(d)) i28Districts[d] = 1; }
+    var extra = sI28 < 0 ? 0 : count(r[sI28]);
+    if (extra > MAX_UPVAAS_SADASYA) extra = 0;    // a typo, not a household
+    i28Vyakti += extra + 1;
   });
 
   // The same villages, counted over संकल्प 21 alone, for that page's own figure.
@@ -276,6 +318,13 @@ function computeStats() {
     sankalp21Gaon:  Object.keys(s21Villages).length,
     karuna21:       k21Rows.length,
     karuna21Gaon:   Object.keys(k21Villages).length,
+    // इंकलाब 28. Deliberately outside the headline संकल्प figure for now:
+    // folding a household pledge into a number published as individual
+    // संकल्प would change what that number means without saying so.
+    inqlabVyakti:   i28Vyakti,
+    inqlabParivar:  i28Rows.length,
+    inqlabGaon:     Object.keys(i28Villages).length,
+    inqlabJile:     Object.keys(i28Districts).length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
@@ -471,8 +520,40 @@ function timestamp() {
   return Utilities.formatDate(new Date(), 'Asia/Kolkata', 'yyyy-MM-dd HH:mm:ss');
 }
 
-function reply(ok, message) {
+function reply(ok, message, regNo) {
+  var out = { ok: ok, version: CODE_VERSION, message: message };
+  if (regNo) out.regNo = regNo;
   return ContentService
-    .createTextOutput(JSON.stringify({ ok: ok, version: CODE_VERSION, message: message }))
+    .createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * The next registration number for a form, e.g. IN28-0001.
+ *
+ * Called only from inside the script lock, so the read-increment-write below
+ * cannot interleave with another submission. The counter lives in script
+ * properties rather than being derived from the row count, because deleting a
+ * spam row must never hand the next person a number somebody already holds a
+ * certificate for. On the very first call it starts above whatever rows the
+ * sheet already has, so an existing tab does not restart at 1.
+ */
+function nextRegNo(spec, sheet) {
+  var props = PropertiesService.getScriptProperties();
+  var key = 'regno-' + spec.tab;
+  var seenSoFar = props.getProperty(key);
+  var n;
+  if (seenSoFar === null) {
+    var dataRows = Math.max(0, sheet.getLastRow() - 1);   // minus the heading
+    n = dataRows + 1;
+  } else {
+    n = parseInt(seenSoFar, 10) + 1;
+  }
+  props.setProperty(key, String(n));
+  // Padded to four digits for looks, but never truncated to four: slicing the
+  // last four characters would turn 12345 into 2345 and hand out a number
+  // somebody already holds a certificate for.
+  var num = String(n);
+  while (num.length < 4) num = '0' + num;
+  return (spec.regPrefix || 'LS') + '-' + num;
 }

@@ -117,51 +117,66 @@
     });
   }
 
-  /* --- करुणा 21 opens on the night of 20 September -----------------------
-     The upload form ships hidden and is revealed at the hour, so nobody sends
-     a photograph before the day and nobody has to remember to switch it on.
-     Hidden is the safe default: if this file never runs, the page still
-     explains what करुणा 21 is and when it opens. */
+  /* --- आज का अभियान ------------------------------------------------------
+     One campaign day at a time is the live action: करुणा 21 on 21 September,
+     इंकलाब 28 on the 28th, and संयम स्वराज on 2 October after it. Rather than
+     a third copy of the same switching code, the markup names which campaign
+     a card, a button or a menu item belongs to, and the table below says when
+     that campaign is open. Adding the next one is a line here and an
+     attribute there, not another block like this.
 
-  /* Written as UTC so a phone set to any timezone turns at the same moment.
-     One pair of dates for the whole site: the upload form, the home page card
-     and the popup all read these. Three copies of a date is three chances for
-     them to disagree, and the one that disagrees is always found by a
-     villager on the day rather than by me. */
-  var KARUNA_OPENS  = Date.UTC(2026, 8, 20, 14, 30);   // 20 Sept, 20:00 IST
-  var KARUNA_CLOSES = Date.UTC(2026, 8, 22, 18, 30);   // 23 Sept, 00:00 IST
-  var karunaLive = Date.now() >= KARUNA_OPENS && Date.now() < KARUNA_CLOSES;
+     Written as UTC so a phone set to any timezone turns at the same moment,
+     and each campaign's dates live in exactly one place: the page, the home
+     card, the menu and the popup all read these. Three copies of a date is
+     three chances for them to disagree, and the copy that disagrees is always
+     found by a villager on the day rather than by me. */
 
-  var karunaForm = document.querySelector('[data-karuna-form]');
-  if (karunaForm && Date.now() >= KARUNA_OPENS) {
-    karunaForm.hidden = false;
-    var waiting = document.querySelector('[data-karuna-wait]');
-    if (waiting) waiting.hidden = true;
-    document.querySelectorAll('[data-karuna-count]').forEach(function (n) { n.hidden = false; });
-  }
+  var CAMPAIGNS = {
+    // करुणा 21 — बीत चुका। तिथियाँ रिकॉर्ड के लिए रखी हैं।
+    karuna21: { opens: Date.UTC(2026, 8, 20, 14, 30),   // 20 सित॰ 20:00 IST
+                closes: Date.UTC(2026, 8, 22, 18, 30) },  // 23 सित॰ 00:00 IST
+    // इंकलाब 28 — भगत सिंह जयंती। पंजीकरण दिन से पहले ही खुल जाता है, क्योंकि
+    // यह उस दिन उपवास रखने का संकल्प है, उस दिन की रिपोर्ट नहीं।
+    inqlab28: { opens: Date.UTC(2026, 8, 22, 18, 30),   // 23 सित॰ 00:00 IST
+                closes: Date.UTC(2026, 8, 28, 18, 30) }   // 29 सित॰ 00:00 IST
+  };
 
-  /* While करुणा 21 is the live action the home page leads with it, and the
-     संकल्प 21 registration card steps aside: registration closed on the 20th,
-     so leaving it first would send people to yesterday's task. Both revert on
-     their own when the window shuts. */
-  if (karunaLive) {
-    document.querySelectorAll('[data-karuna-card]').forEach(function (n) { n.hidden = false; });
+  var NOW = Date.now();
+  var isLive = function (key) {
+    var c = CAMPAIGNS[key];
+    return !!c && NOW >= c.opens && NOW < c.closes;
+  };
+  // Which campaign, if any, the site should be leading with right now. The
+  // first one whose window is open wins; normally only one ever is.
+  var today = Object.keys(CAMPAIGNS).filter(isLive)[0] || '';
+
+  /* While a campaign is the live action the home page leads with it and the
+     standing card steps aside, so nobody is sent to yesterday's task. Every
+     one of these reverts on its own when the window shuts. */
+  if (today) {
+    var mine = function (sel) {
+      return Array.prototype.filter.call(document.querySelectorAll(sel), function (n) {
+        var k = n.getAttribute('data-camp');
+        return !k || k === today;
+      });
+    };
+    mine('[data-camp-card]').forEach(function (n) { n.hidden = false; });
     document.querySelectorAll('[data-s21-card]').forEach(function (n) { n.hidden = true; });
 
     // The hero leads with it too. Whatever was the primary button steps down
     // to a ghost: two filled buttons side by side would put the visitor back
     // to choosing, which is the confusion this is meant to end.
-    document.querySelectorAll('[data-karuna-hero]').forEach(function (n) { n.hidden = false; });
+    mine('[data-camp-hero]').forEach(function (n) { n.hidden = false; });
 
-    /* The menu item and the phone's sticky bar point at करुणा 21 for these
-       days and go back to संकल्प 21 afterwards. They carry the evergreen
-       label in the markup so that a closed form is never advertised: this is
-       the pair that had been hard-coded to करुणा 21 and would have kept
-       pointing at it long after the form shut. */
-    document.querySelectorAll('[data-karuna-swap]').forEach(function (a) {
-      var href = a.getAttribute('data-karuna-href');
-      var label = a.getAttribute('data-karuna-label');
-      var icon = a.getAttribute('data-karuna-icon');
+    /* The menu item and the phone's sticky bar point at the campaign for
+       these days and go back afterwards. They carry the evergreen label in
+       the markup so that a closed form is never advertised: this is the pair
+       that had once been hard-coded and would have kept pointing at a finished
+       campaign long after its form shut. */
+    mine('[data-camp-swap]').forEach(function (a) {
+      var href = a.getAttribute('data-camp-href');
+      var label = a.getAttribute('data-camp-label');
+      var icon = a.getAttribute('data-camp-icon');
       if (href) a.setAttribute('href', href);
       if (label) Array.prototype.forEach.call(a.childNodes, function (n) {
         if (n.nodeType === 3 && n.textContent.trim()) n.textContent = label;
@@ -175,27 +190,65 @@
     });
   }
 
+  /* A campaign's own form ships hidden and is revealed at its hour, so
+     nobody sends anything before the day and nobody has to remember to switch
+     it on. Hidden is the safe default: if this file never runs the page still
+     explains what the campaign is and when it opens.
+
+     It opens at the hour and then stays open, deliberately. Somebody who
+     hears about it a day late should be able to join rather than meet a shut
+     door; what closes on time is the advertising above, not the form. */
+  Object.keys(CAMPAIGNS).forEach(function (key) {
+    if (NOW < CAMPAIGNS[key].opens) return;
+    var only = '[data-camp="' + key + '"]';
+    document.querySelectorAll('[data-camp-form]' + only).forEach(function (n) { n.hidden = false; });
+    document.querySelectorAll('[data-camp-wait]' + only).forEach(function (n) { n.hidden = true; });
+    document.querySelectorAll('[data-camp-count]' + only).forEach(function (n) { n.hidden = false; });
+  });
+
   /* --- आज का काम : one question, one button ------------------------------
      People arriving from WhatsApp met three invitations at once, संकल्प लें,
      संकल्प 21 and करुणा 21, and could not tell which was meant for today.
      This asks nothing and offers one action.
 
-     It is deliberately narrow: only while करुणा 21 is actually open, never on
-     the page that already carries the form, and never twice for the same
+     It is deliberately narrow: only while a campaign is actually open, never
+     on the page that already carries its form, and never twice for the same
      person. A popup that outstays the day it was written for is worse than no
      popup, so the window is a date, not a flag someone has to remember to
      turn off. */
 
+  var POPUPS = {
+    karuna21: {
+      href: 'sankalp-21.html#karuna',
+      page: /sankalp-21\.html/,
+      eyebrow: '21 सितम्बर · तेजा दशमी',
+      title: 'आज क्या करना है',
+      text: 'उपवास के साथ एक सेवा कीजिए : गाय को गुड़, रोटी या चारा खिलाइए, ' +
+            'अथवा पौधा लगाइए या पेड़ को पानी दीजिए। फिर उसकी फोटो यहाँ भेज दीजिए।',
+      cta: 'करुणा 21 में फोटो भेजें'
+    },
+    inqlab28: {
+      href: 'inqlab-28.html',
+      page: /inqlab-28\.html/,
+      eyebrow: '28 सितम्बर · भगत सिंह जयंती',
+      title: 'इंकलाब 28 में जुड़िए',
+      text: 'भगत सिंह जयंती पर सपरिवार उपवास रखिए और नशे की सामाजिक स्वीकृति ' +
+            'के विरुद्ध अपना संकल्प दर्ज कीजिए।',
+      cta: 'संकल्प दर्ज करें'
+    }
+  };
+
   (function () {
-    var SEEN = 'ls-today-karuna21';
-    if (!karunaLive) return;
+    var pop = POPUPS[today];
+    if (!pop) return;
+    var SEEN = 'ls-today-' + today;
 
     // already on the page that holds the form: nothing to point at
-    if (/sankalp-21\.html/.test(location.pathname)) return;
+    if (pop.page.test(location.pathname)) return;
 
     try { if (window.localStorage.getItem(SEEN)) return; } catch (e) { /* private window */ }
 
-    var HREF = 'sankalp-21.html#karuna';
+    var HREF = pop.href;
     var veil = document.createElement('div');
     veil.className = 'today-veil';
     veil.setAttribute('role', 'dialog');
@@ -206,13 +259,17 @@
     card.className = 'today-card';
     card.innerHTML =
       '<img class="today-card__mark" src="assets/img/logo-mark.svg" alt="" width="62" height="62">' +
-      '<p class="eyebrow">21 सितम्बर · तेजा दशमी</p>' +
-      '<h2 id="today-h">आज क्या करना है</h2>' +
-      '<p class="mt-2">उपवास के साथ एक सेवा कीजिए : गाय को गुड़, रोटी या चारा खिलाइए, ' +
-      'अथवा पौधा लगाइए या पेड़ को पानी दीजिए। फिर उसकी फोटो यहाँ भेज दीजिए।</p>' +
-      '<p class="mt-2"><a class="btn btn--primary btn--lg" href="' + HREF + '" data-today="go">' +
-      'करुणा 21 में फोटो भेजें</a></p>' +
+      '<p class="eyebrow"></p>' +
+      '<h2 id="today-h"></h2>' +
+      '<p class="mt-2" data-today="text"></p>' +
+      '<p class="mt-2"><a class="btn btn--primary btn--lg" href="' + HREF + '" data-today="go"></a></p>' +
       '<button class="today-card__later" type="button" data-today="later">बाद में देखूँगा</button>';
+    // Set as text, not built into the HTML string: campaign copy is written
+    // by people and will one day contain an & or a quotation mark.
+    card.querySelector('.eyebrow').textContent = pop.eyebrow;
+    card.querySelector('#today-h').textContent = pop.title;
+    card.querySelector('[data-today="text"]').textContent = pop.text;
+    card.querySelector('[data-today="go"]').textContent = pop.cta;
     veil.appendChild(card);
 
     var before = document.activeElement;
@@ -336,7 +393,11 @@
      The page is A4 landscape, which the 1400x990 canvas matches to within a
      thousandth, so it prints without letterboxing. */
   function pdfFromJpeg(bytes, w, h) {
+    // A4, turned to match the picture. The landscape certificates are 1400x990
+    // and the portrait one 990x1400, both within a thousandth of A4's ratio,
+    // so either prints edge to edge without letterboxing.
     var PW = 841.89, PH = 595.28;                 // A4 landscape, points
+    if (h > w) { PW = 595.28; PH = 841.89; }      // A4 portrait
     var enc = function (str) {
       var out = new Uint8Array(str.length);
       for (var i = 0; i < str.length; i++) out[i] = str.charCodeAt(i) & 0xff;
@@ -373,22 +434,40 @@
     return new Blob(chunks, { type: 'application/pdf' });
   }
 
+  function loadPic(url) {
+    // A photograph, not an SVG: no size to stamp on, and a missing file must
+    // never stop a certificate being issued, so failure resolves to null and
+    // the layout falls back to the one without it.
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { resolve(null); };
+      img.src = url;
+    });
+  }
+
   function drawCertificate(naam, tarikh, spec) {
     spec = spec || CERT_DEFAULT;
+    var W = spec.w || CERT_W, H = spec.h || CERT_H;
     var head = '"Tiro Devanagari Hindi", "Noto Sans Devanagari", serif';
     var body = '"Noto Sans Devanagari", system-ui, sans-serif';
     var ready = document.fonts && document.fonts.ready
       ? document.fonts.ready.catch(function () {}) : Promise.resolve();
 
-    return Promise.all([ready, loadSvg('assets/img/logo-mark.svg', 128, 128)])
-      .then(function (out) {
-        var mark = out[1];
+    return Promise.all([
+      ready,
+      loadSvg('assets/img/logo-mark.svg', 128, 128),
+      spec.photo ? loadPic(spec.photo) : Promise.resolve(null)
+    ]).then(function (out) {
+        var mark = out[1], pic = out[2];
         var c = document.createElement('canvas');
-        c.width = CERT_W; c.height = CERT_H;
-        var x = c.getContext('2d'), mid = CERT_W / 2;
+        c.width = W; c.height = H;
+        var x = c.getContext('2d'), mid = W / 2;
 
-        // The widest a line may be and still sit inside the inner border.
-        var INNER = CERT_W - 200;
+        // Everything is measured against the inner border, whatever the size.
+        var PAD = Math.round(W * 0.0715);
+        var INNER = W - PAD * 2;
+        var U = W / 1400;                 // one "unit": the original width
 
         /* Shrink a line until it fits. Nothing on a certificate may run past
            the border: a long name did exactly that, and so would any line if
@@ -421,60 +500,152 @@
           x.fillText(text, mid - x.measureText(text).width / 2, y);
         };
 
-        x.fillStyle = '#fffdf5'; x.fillRect(0, 0, CERT_W, CERT_H);
+        x.fillStyle = '#fffdf5'; x.fillRect(0, 0, W, H);
 
         // tricolour band across the top, the same one the site footer uses
         var bands = ['#e8730c', '#ffffff', '#1b7a34'];
         for (var i = 0; i < 3; i++) {
           x.fillStyle = bands[i];
-          x.fillRect(0, i * 5, CERT_W, 5);
+          x.fillRect(0, i * 5, W, 5);
         }
 
         x.strokeStyle = '#17307a';
-        x.lineWidth = 6; x.strokeRect(30, 34, CERT_W - 60, CERT_H - 64);
-        x.lineWidth = 2; x.strokeRect(46, 50, CERT_W - 92, CERT_H - 96);
+        x.lineWidth = 6; x.strokeRect(30, 34, W - 60, H - 64);
+        x.lineWidth = 2; x.strokeRect(46, 50, W - 92, H - 96);
 
-        if (mark) x.drawImage(mark, mid - 58, 92, 116, 116);
+        /* The emblem sits in the middle on its own. When the certificate also
+           carries a portrait, the two take a corner each instead, because an
+           emblem in the centre with a face beside it reads as lopsided. */
+        var SEAL = Math.round(116 * U);
+        var top = Math.round(92 * U);
+        if (pic) {
+          var D = Math.round(150 * U);
+          var px = PAD + Math.round(10 * U), py = top - Math.round(6 * U);
+          x.save();
+          x.beginPath(); x.arc(px + D / 2, py + D / 2, D / 2, 0, Math.PI * 2); x.clip();
+          // cover-fit, so a portrait of any shape fills the circle uncropped
+          var r = Math.max(D / pic.width, D / pic.height);
+          var pw = pic.width * r, ph = pic.height * r;
+          x.drawImage(pic, px + (D - pw) / 2, py + (D - ph) / 2, pw, ph);
+          x.restore();
+          x.strokeStyle = '#17307a'; x.lineWidth = 3 * U;
+          x.beginPath(); x.arc(px + D / 2, py + D / 2, D / 2, 0, Math.PI * 2); x.stroke();
+          if (mark) x.drawImage(mark, W - PAD - SEAL - Math.round(10 * U), top, SEAL, SEAL);
+        } else if (mark) {
+          x.drawImage(mark, mid - SEAL / 2, top, SEAL, SEAL);
+        }
 
-        line('डिजिटल प्रमाणपत्र', 258, '600 26px ' + body, '#b4560a');
-        line(spec.title, 324, '700 56px ' + head, '#17307a');
-        line('यह प्रमाणित किया जाता है कि', 400, '400 30px ' + body, '#33405c');
+        var y = top + SEAL + Math.round(pic ? 62 * U : 50 * U);
+        line('डिजिटल प्रमाणपत्र', y, '600 ' + (26 * U) + 'px ' + body, '#b4560a');
+        y += Math.round(66 * U);
+        line(spec.title, y, '700 ' + (56 * U) + 'px ' + head, '#17307a');
+        y += Math.round(48 * U);
+        if (spec.sub) {
+          line(spec.sub, y, '600 ' + (28 * U) + 'px ' + body, '#b4560a');
+          y += Math.round(44 * U);
+        }
+        line('यह प्रमाणित किया जाता है कि', y, '400 ' + (30 * U) + 'px ' + body, '#33405c');
+        y += Math.round(84 * U);
 
         // fit() leaves the chosen size on the context, so the rule under the
         // name is measured from the size actually drawn, not the one asked for
-        line(naam, 484, fit(naam, '700 66px ' + head, INNER - 60, 30), '#0f5c26');
-        var w = Math.min(x.measureText(naam).width + 120, INNER);
+        line(naam, y, fit(naam, '700 ' + (66 * U) + 'px ' + head, INNER - 60 * U, 30), '#0f5c26');
+        var nw = Math.min(x.measureText(naam).width + 120 * U, INNER);
         x.strokeStyle = '#c9d2e6'; x.lineWidth = 2;
-        x.beginPath(); x.moveTo(mid - w / 2, 506); x.lineTo(mid + w / 2, 506); x.stroke();
+        x.beginPath(); x.moveTo(mid - nw / 2, y + 22 * U); x.lineTo(mid + nw / 2, y + 22 * U); x.stroke();
+        y += Math.round(82 * U);
 
-        // The body may be a clause or a paragraph. It is wrapped, and the type
-        // steps down a little once it needs more than two lines, so a long
-        // citation still finishes above the seal instead of running into it.
-        var bodyFont = '400 32px ' + body;
-        x.font = bodyFont;
-        var lines = wrapLines(x, spec.line, CERT_W - 260);
-        if (lines.length > 2) {
-          bodyFont = '400 27px ' + body;
-          x.font = bodyFont;
-          lines = wrapLines(x, spec.line, CERT_W - 220);
+        /* Everything below has to end above the site address at the foot, and
+           the citation is now a paragraph or two rather than a clause. Rather
+           than hope it fits, measure: try the body at each size from large to
+           small and take the first whose whole block — paragraphs, motto,
+           rule and the lines under it — finishes inside the space left.
+           A certificate that runs off its own page is what this prevents, and
+           it is exactly what the first long citation did. */
+        var paras = (spec.paras && spec.paras.length ? spec.paras : [spec.line])
+                      .filter(Boolean);
+        var foot = [];
+        if (spec.underline !== false) foot.push(['नशा मुक्त भारत अभियान के अंतर्गत', 23, '400', '#5a6785']);
+        (spec.by ? String(spec.by).split('\n') : []).forEach(function (t) {
+          if (t.trim()) foot.push([t.trim(), 23, '600', '#5a6785']);
+        });
+        foot.push(['दिनांक ' + tarikh, 23, '400', '#5a6785']);
+        if (spec.regNo) foot.push(['पंजीकरण क्रमांक : ' + spec.regNo, 24, '700', '#17307a']);
+
+        var bottom = H - Math.round(96 * U);      // above the site address
+        var plan = null;
+        /* Landscape keeps exactly the ladder it always had, so the संकल्प and
+           करुणा certificates are untouched. Portrait may start larger: the
+           same body set at the landscape size on a taller sheet left the
+           lower half of the page empty. */
+        var ladder = H > W ? [46, 42, 38, 34, 31, 29, 27, 25, 23, 21, 19, 17]
+                           : [34, 31, 29, 27, 25, 23, 21, 19, 17];
+        ladder.some(function (size) {
+          var s = size * U;
+          x.font = '400 ' + s + 'px ' + body;
+          var wrapped = paras.map(function (t) { return wrapLines(x, t, INNER - 20 * U); });
+          var n = wrapped.reduce(function (a, l) { return a + l.length; }, 0);
+          var step = Math.round(s * 1.46);
+          var gapPara = Math.round(s * 0.55);
+          var h = n * step + (wrapped.length - 1) * gapPara;
+          h += Math.round(30 * U) + Math.round(46 * U);                 // motto
+          h += Math.round(34 * U);                                      // rule
+          h += foot.length * Math.round(36 * U);
+          if (y + h <= bottom) {
+            plan = { s: s, wrapped: wrapped, step: step, gap: gapPara, h: h };
+            return true;
+          }
+          return false;
+        });
+        // Nothing fitted even at the smallest size: draw at the smallest
+        // anyway rather than returning no certificate at all.
+        if (!plan) {
+          var s0 = 17 * U;
+          x.font = '400 ' + s0 + 'px ' + body;
+          plan = {
+            s: s0, step: Math.round(s0 * 1.4), gap: Math.round(s0 * 0.5),
+            wrapped: paras.map(function (t) { return wrapLines(x, t, INNER - 20 * U); })
+          };
         }
-        var step = lines.length > 2 ? 42 : 48;
-        var y = 566;
-        lines.forEach(function (t) { line(t, y, bodyFont, '#33405c'); y += step; });
 
-        y += lines.length > 2 ? 18 : 26;
-        line(spec.motto, y, '700 36px ' + head, '#b4560a');
-        y += 58;
+        /* Share out whatever room is left rather than letting it all pool at
+           the foot. Some of it goes under the name so the citation is not
+           crowded against it; the rest stays at the bottom, where the issuing
+           block is pinned a few lines below. */
+        if (plan.h) {
+          var slack = bottom - y - plan.h;
+          if (slack > 0) y += Math.min(slack * 0.42, 150 * U);
+        }
+
+        var bodyFont = '400 ' + plan.s + 'px ' + body;
+        plan.wrapped.forEach(function (lines, k) {
+          if (k) y += plan.gap;
+          lines.forEach(function (t) { line(t, y, bodyFont, '#33405c'); y += plan.step; });
+        });
+
+        y += Math.round(30 * U);
+        line(spec.motto, y, '700 ' + (36 * U) + 'px ' + head, '#b4560a');
+        y += Math.round(46 * U);
+
+        /* The issuing block belongs at the foot of a certificate, not wherever
+           the citation happened to end. Pinned there unless the text has
+           already run that far down, in which case it simply follows on. */
+        var footStep = Math.round(36 * U);
+        // The rule sits far enough up that the LAST footer baseline lands on
+        // `bottom`: one gap for the rule, then one step per line after the first.
+        var pinned = bottom - Math.round(34 * U) - (foot.length - 1) * footStep;
+        if (pinned > y) y = pinned;
 
         x.strokeStyle = '#e3e8f2'; x.lineWidth = 1;
-        x.beginPath(); x.moveTo(mid - 380, y); x.lineTo(mid + 380, y); x.stroke();
-        y += 46;
+        x.beginPath(); x.moveTo(mid - INNER / 2 + 20 * U, y); x.lineTo(mid + INNER / 2 - 20 * U, y); x.stroke();
+        y += Math.round(34 * U);
 
-        line('नशा मुक्त भारत अभियान के अंतर्गत', y, '400 23px ' + body, '#5a6785');
-        y += 36;
-        if (spec.by) { line(spec.by, y, '600 23px ' + body, '#5a6785'); y += 36; }
-        line('दिनांक ' + tarikh, y, '400 23px ' + body, '#5a6785');
-        line('loksankalp.org', CERT_H - 72, '700 24px ' + body, '#1b7a34');
+        foot.forEach(function (f) {
+          line(f[0], y, f[2] + ' ' + (f[1] * U) + 'px ' + body, f[3]);
+          y += footStep;
+        });
+
+        line('loksankalp.org', H - Math.round(52 * U), '700 ' + (24 * U) + 'px ' + body, '#1b7a34');
 
         return new Promise(function (resolve) {
           // JPEG, because the PDF embeds these bytes as they are and a PNG
@@ -494,10 +665,21 @@
     var d = certBox.dataset;
     var spec = {
       title: d.certTitle || CERT_DEFAULT.title,
+      sub:   d.certSub   || '',
       line:  d.certLine  || CERT_DEFAULT.line,
+      // A citation can run to more than one paragraph. Two attributes rather
+      // than one with a separator: an attribute that has to be parsed is an
+      // attribute that will one day be mis-typed.
+      paras: [d.certLine || CERT_DEFAULT.line, d.certLine2].filter(Boolean),
       motto: d.certMotto || CERT_DEFAULT.motto,
       // an empty data-cert-by means the body already names the institution
       by:    d.certBy === undefined ? CERT_DEFAULT.by : d.certBy,
+      // some certificates carry their issuer in full at the foot and do not
+      // want the campaign line above it as well
+      underline: d.certUnderline !== 'no',
+      photo: d.certPhoto || '',
+      w:     parseInt(d.certW, 10) || CERT_W,
+      h:     parseInt(d.certH, 10) || CERT_H,
       file:  d.certFile  || CERT_DEFAULT.file,
       share: d.certShare || CERT_DEFAULT.share
     };
@@ -518,12 +700,24 @@
       var el = certBox.querySelector('[data-slot="date"]');
       return el ? el.textContent.trim() : '';
     };
+    /* The registration number comes back from the script after the row is
+       written, so it is read at build time, not when the page loaded. If the
+       save did not reach the server there is no number, and the certificate
+       is drawn without that line rather than with an invented one. */
+    var certRegNo = function () {
+      var el = certBox.querySelector('[data-slot="regno"]');
+      var v = el ? el.textContent.trim() : '';
+      return /^[A-Z0-9-]{4,}$/.test(v) ? v : '';
+    };
     var stem = function () {
       return spec.file + '-' +
         certName().replace(/[^ऀ-ॿ\w]+/g, '-').replace(/^-|-$/g, '');
     };
 
-    var build = function () { return drawCertificate(certName(), certDate(), spec); };
+    var build = function () {
+      spec.regNo = certRegNo();
+      return drawCertificate(certName(), certDate(), spec);
+    };
 
     var save = function (blob, name) {
       var url = URL.createObjectURL(blob);
@@ -541,7 +735,7 @@
       build().then(function (blob) {
         if (!blob) throw new Error('no blob');
         return blob.arrayBuffer().then(function (buf) {
-          save(pdfFromJpeg(new Uint8Array(buf), CERT_W, CERT_H), stem() + '.pdf');
+          save(pdfFromJpeg(new Uint8Array(buf), spec.w, spec.h), stem() + '.pdf');
           say('प्रमाणपत्र डाउनलोड हो गया।');
         });
       }).catch(function () { say('प्रमाणपत्र नहीं बन सका। कृपया दोबारा प्रयास करें।'); });
@@ -552,7 +746,12 @@
        certificate. So these open a ready-made post and say plainly that the
        certificate itself has to be attached by hand. On a phone the share
        button above does send the real picture, which is why it comes first. */
-    var PAGE = 'https://loksankalp.org/sankalp-21.html';
+    /* Whatever page this certificate is on. It used to be one hard-coded
+       address, which meant a certificate issued anywhere else would have sent
+       people to संकल्प 21. The canonical tag is the page's own published
+       address, which is exactly what a shared link should be. */
+    var canon = document.querySelector('link[rel="canonical"]');
+    var PAGE = (canon && canon.href) || location.href.split('#')[0];
     var social = function (btn, url) {
       if (!btn) return;
       btn.addEventListener('click', function () {
@@ -746,7 +945,8 @@
     'yuva-done': 'yuva',
     'samman-done': 'samman',
     'sankalp21-done': 'sankalp21',
-    'karuna21-done': 'karuna21'
+    'karuna21-done': 'karuna21',
+    'inqlab28-done': 'inqlab28'
   };
 
   var MAX_EDGE = 1600;   // px on the long side
@@ -847,10 +1047,22 @@
       var naamField = form.querySelector('[name="naam"]');
       var naamValue = naamField ? naamField.value.trim() : '';
 
-      var finish = function (savedMessage) {
+      var finish = function (savedMessage, regNo) {
         if (out) {
           var slot = out.querySelector('[data-slot="naam"]');
           if (slot && naamValue) slot.textContent = naamValue;
+          /* The registration number is the script's to give, not the page's.
+             It arrives only when the row was really written, so the line that
+             shows it stays hidden otherwise: a certificate carrying a number
+             nothing was saved against could not be verified by anyone. */
+          // Every copy of it, not the first: the number appears both in the
+          // confirmation line and on the certificate itself, and filling only
+          // the first left the certificate with its placeholder.
+          var regs = out.querySelectorAll('[data-slot="regno"]');
+          if (regs.length) {
+            if (regNo) regs.forEach(function (n) { n.textContent = regNo; });
+            out.querySelectorAll('[data-regno-row]').forEach(function (n) { n.hidden = !regNo; });
+          }
           var dateSlot = out.querySelector('[data-slot="date"]');
           if (dateSlot) {
             dateSlot.textContent = new Date().toLocaleDateString('hi-IN', {
@@ -893,14 +1105,16 @@
           files: files.filter(Boolean)
         });
         return send(payload, 0);
-      }).then(function () {
+      }).then(function (res) {
         form.reset();
-        finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।');
+        finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।', res && res.regNo);
         if (window.LOKSANKALP_REFRESH_STATS) window.LOKSANKALP_REFRESH_STATS();
       }).catch(function (err) {
-        setStatus(form, err && err.slow
-          ? 'इंटरनेट धीमा लग रहा है। कृपया दोबारा भेजें।'
-          : 'अभी सहेजा नहीं जा सका। कृपया दोबारा भेजें।', 'error');
+        setStatus(form, err && err.fatal
+          ? 'यह फ़ॉर्म अभी सेवा से जुड़ा नहीं है। कृपया थोड़ी देर बाद प्रयास करें, अथवा info@loksankalp.org पर भेज दें।'
+          : err && err.slow
+            ? 'इंटरनेट धीमा लग रहा है। कृपया दोबारा भेजें।'
+            : 'अभी सहेजा नहीं जा सका। कृपया दोबारा भेजें।', 'error');
       }).then(function () {
         if (button) { button.disabled = false; if (button.dataset.label) button.textContent = button.dataset.label; }
       });
@@ -916,9 +1130,16 @@
           .then(function (r) { return r.json(); })
           .then(function (res) {
             if (res && res.ok) return res;
+            /* The script answering "अज्ञात फ़ॉर्म" means it is running a
+               version that predates this form. That is a settled answer, not
+               a queue: retrying it five times makes the person wait most of a
+               minute to be told the same thing. Fail at once and say what is
+               actually wrong. */
+            if (res && res.message === 'अज्ञात फ़ॉर्म') throw { fatal: true };
             throw { slow: false };
           })
           .catch(function (err) {
+            if (err && err.fatal) throw err;
             if (attempt >= RETRY_WAITS.length) throw (err && err.slow === false ? err : { slow: true });
             var wait = RETRY_WAITS[attempt] + Math.floor(Math.random() * 1200);
             setStatus(form, 'बहुत लोग एक साथ भेज रहे हैं। आपकी जानकारी क़तार में है, पृष्ठ बंद न करें…', 'busy');
