@@ -26,6 +26,7 @@ the 1400px one.
 | `abhiyan-banner` | `sansadhan.html` page header |
 | `bhagat-singh-1929` | `inqlab-28.html` आह्वान के साथ खड़ा चित्र |
 | `jyani` | `abhiyan-parivar.html` प्रणेता वाले हिस्से में खड़ा चित्र |
+| `sankalp-21-manch` | `sankalp-21.html` “जो हुआ” के साथ |
 | `video-parichay`, `video-sabha`, `video-good-parenting`, `video-vivah`, `video-shok-sabha` | `sansadhan.html` वीडियो सामग्री cards. YouTube thumbnails, kept locally so a slow phone loads no third-party image. |
 
 One upload was a byte-identical duplicate and was dropped.
@@ -99,3 +100,17 @@ WebP या छोटे आकार नहीं बनते, और को�
 
 **नियम :** बाहर से कोई भी चित्र लगाने से पहले यह देख लें कि वह सार्वजनिक
 डोमेन का है या अभियान का अपना खींचा हुआ। संदेह हो तो न लगाएँ।
+
+
+## अख़बारों की कतरनें
+
+`assets/img/media/` में। ये अभियान के अपने चित्र नहीं हैं, इसलिए `photos/`
+से अलग रखी हैं और responsive variants वाली व्यवस्था से बाहर हैं।
+
+हर कतरन के साथ अख़बार का नाम, शहर, तारीख़ और शीर्षक figcaption में लिखा जाता
+है। अख़बार की अपनी वेबसाइट पर वही ख़बर हो तो कतरन के बजाय उसका लिंक बेहतर
+रहता है — पढ़ने में आसान, वज़न में हल्का, और अधिकार का सवाल भी नहीं उठता।
+
+| फ़ाइल | कहाँ |
+|---|---|
+| `patrika-2026-09-22` | `sankalp-21.html` मीडिया कवरेज — राजस्थान पत्रिका, बीकानेर, 22 सित॰ 2026 |
