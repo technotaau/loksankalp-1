@@ -873,6 +873,20 @@ fieldset.field { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
   display: inline-block; padding: .3rem 2rem; margin: .8rem 0;
 }
 .cert__mark { width: 64px; height: 64px; margin: 0 auto .4rem; }
+/* Two crests, a corner each, matching what the drawn certificate does: an
+   emblem in the middle with a face beside it reads as lopsided. */
+.cert__crest {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 0 0 .2rem;
+}
+.cert__crest .cert__mark { margin: 0; }
+.cert__face {
+  width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
+  object-position: top center; border: 3px solid var(--ls-gold);
+}
+.cert__place {
+  margin: -.4rem auto .2rem; font-size: .95rem; color: var(--ls-ink-soft);
+}
 /* The preview of a portrait certificate. The PDF is A4 upright, so a narrow
    column on screen tells the reader what they are about to download; without
    it the preview reads as landscape and the download looks like a different

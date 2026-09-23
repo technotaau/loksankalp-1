@@ -616,6 +616,12 @@
         x.beginPath(); x.moveTo(mid - nw / 2, y + 22 * U); x.lineTo(mid + nw / 2, y + 22 * U); x.stroke();
         y += Math.round(82 * U);
 
+        // गाँव/शहर, और उसके साथ जिला या राज्य या देश
+        if (spec.sthan) {
+          line(spec.sthan, y - Math.round(28 * U), '400 ' + (27 * U) + 'px ' + body, '#5a6785');
+          y += Math.round(18 * U);
+        }
+
         /* Everything below has to end above the site address at the foot, and
            the citation is now a paragraph or two rather than a clause. Rather
            than hope it fits, measure: try the body at each size from large to
@@ -761,6 +767,10 @@
       var el = certBox.querySelector('[data-slot="date"]');
       return el ? el.textContent.trim() : '';
     };
+    var certSthan = function () {
+      var el = certBox.querySelector('[data-slot="sthan"]');
+      return el ? el.textContent.trim() : '';
+    };
     /* The registration number comes back from the script after the row is
        written, so it is read at build time, not when the page loaded. If the
        save did not reach the server there is no number, and the certificate
@@ -777,6 +787,7 @@
 
     var build = function () {
       spec.regNo = certRegNo();
+      spec.sthan = certSthan();
       return drawCertificate(certName(), certDate(), spec);
     };
 
@@ -1108,10 +1119,25 @@
       var naamField = form.querySelector('[name="naam"]');
       var naamValue = naamField ? naamField.value.trim() : '';
 
+      /* गाँव/शहर और उसके साथ जिला, राज्य या देश — जो भी भरा हो। अकेला गाँव
+         का नाम अधूरा रहता है : लोडेरा कई हो सकते हैं, और टोरंटो लिखने वाले का
+         देश भी दिखना चाहिए। खाली रहे तो पंक्ति छपती ही नहीं। */
+      var pick = function (n) {
+        var f = form.querySelector('[name="' + n + '"]');
+        return f && !f.disabled ? f.value.trim() : '';
+      };
+      var sthanValue = [pick('gaon'),
+                        pick('jila') || pick('rajya') || pick('deshAnya') || pick('desh')]
+                       .filter(Boolean).join(', ');
+
       var finish = function (savedMessage, regNo) {
         if (out) {
           var slot = out.querySelector('[data-slot="naam"]');
           if (slot && naamValue) slot.textContent = naamValue;
+          out.querySelectorAll('[data-slot="sthan"]').forEach(function (n) {
+            n.textContent = sthanValue;
+            n.hidden = !sthanValue;
+          });
           /* The registration number is the script's to give, not the page's.
              It arrives only when the row was really written, so the line that
              shows it stays hidden otherwise: a certificate carrying a number
