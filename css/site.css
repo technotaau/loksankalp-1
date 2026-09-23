@@ -815,6 +815,15 @@ fieldset { border: 0; padding: 0; }
 legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; padding: 0; }
 
 /* Big radio/checkbox tiles: easy to tap, easy to read */
+/* A fieldset used as a field: the legend has to look like every other label
+   above it, and a fieldset's default border and padding would otherwise draw
+   a box around one question that no other question has. */
+.field legend {
+  display: block; padding: 0; font-weight: 700;
+  color: var(--ls-ink); margin-bottom: .45rem;
+}
+fieldset.field { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
+
 .choices { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); }
 /* The tracks above are sized for short options (विद्यार्थी, युवा, नागरिक),
    which sit two or three to a row on a phone. A sentence-length option in a

@@ -217,39 +217,53 @@
   });
 
   /* --- खाने जो ज़रूरत पड़ने पर ही खुलते हैं -------------------------------
-     इंकलाब 28 अब राजस्थान से बाहर और भारत से बाहर के लोग भी भरते हैं, पर
-     अधिकांश प्रविष्टियाँ राजस्थान से ही आती हैं। इसलिए राज्य और देश के खाने
-     markup में छिपे रहते हैं और तभी खुलते हैं जब जिले की सूची में उनका कारण
-     चुना जाए। राजस्थान वाले के लिए फ़ॉर्म बिल्कुल पहले जैसा रहता है।
+     इंकलाब 28 अब राजस्थान से बाहर और भारत से बाहर के लोग भी भरते हैं। सवाल
+     फ़ॉर्म के सबसे ऊपर, दिखता हुआ, और राजस्थान पहले से चुना हुआ — इसलिए
+     राजस्थान वाले को छूना ही नहीं पड़ता, और बाहर वाले को पहली नज़र में पता चल
+     जाता है कि यह फ़ॉर्म उसके लिए भी है। पहले यह विकल्प जिले की सूची के भीतर
+     छिपा था, जहाँ वही पहुँचता जो सूची खोलकर अंत तक जाता।
 
-     छिपे खाने का required होना ब्राउज़र को फ़ॉर्म भेजने से रोक देता है, और
-     रुकावट दिखती भी नहीं क्योंकि खाना परदे पर है ही नहीं। इसलिए required
-     दिखने के साथ लगता है और छिपने के साथ हटता है; छिपते समय उसका भरा हुआ मान
-     भी मिट जाता है, वरना कोई जिला बदल दे तो पुराना देश चुपचाप साथ चला जाए। */
+     छिपे खाने का required होना ब्राउज़र को फ़ॉर्म भेजने से चुपचाप रोक देता है,
+     और रुकावट दिखती भी नहीं क्योंकि खाना परदे पर है ही नहीं। इसलिए required
+     दिखने के साथ लगता है और छिपने के साथ हटता है; छिपते समय उसका भरा मान भी
+     मिटता है, वरना कोई क्षेत्र बदल दे तो पुराना जिला चुपचाप साथ चला जाए। */
   (function () {
+    var form = document.querySelector('form[data-demo]');
     var boxes = document.querySelectorAll('[data-show-when]');
-    if (!boxes.length) return;
+    if (!form || !boxes.length) return;
 
-    var apply = function () {
-      boxes.forEach(function (box) {
-        var pair = box.getAttribute('data-show-when').split('=');
-        var src = document.getElementById(pair[0]);
-        // A box whose own trigger is hidden must stay hidden too, however its
-        // value reads: देश का नाम hangs off देश, which hangs off जिला.
-        var live = src && !src.closest('[data-show-when][hidden]') &&
-                   src.value === pair.slice(1).join('=');
-        if (box.hidden === !live) return;          // already right
-        box.hidden = !live;
-        box.querySelectorAll('[data-req]').forEach(function (f) {
-          if (live) { f.required = true; }
-          else { f.required = false; f.value = ''; }
-        });
-      });
+    // The trigger may be one control with an id, or a group of radios sharing
+    // a name. Reading both here keeps the markup free of a second attribute.
+    var valueOf = function (key) {
+      var one = document.getElementById(key);
+      if (one) return one.closest('[data-show-when][hidden]') ? null : one.value;
+      var picked = form.querySelector('[name="' + key + '"]:checked');
+      return picked ? picked.value : '';
     };
 
-    document.querySelectorAll('[data-reveals]').forEach(function (src) {
-      src.addEventListener('change', function () { apply(); apply(); });
-    });
+    var apply = function () {
+      // Twice: a box can hang off a control inside another box, and the inner
+      // one only reads correctly once the outer one has settled.
+      for (var pass = 0; pass < 2; pass++) {
+        boxes.forEach(function (box) {
+          var at = box.getAttribute('data-show-when').indexOf('=');
+          var key = box.getAttribute('data-show-when').slice(0, at);
+          var want = box.getAttribute('data-show-when').slice(at + 1);
+          var live = valueOf(key) === want;
+          // No early return when the state already matches. A box that ships
+          // visible in the markup starts out already correct, and skipping it
+          // meant its required never went on: on first load जिला was on the
+          // screen but the form would have sent without one.
+          box.hidden = !live;
+          box.querySelectorAll('[data-req]').forEach(function (f) {
+            if (live) { f.required = true; }
+            else { f.required = false; f.value = ''; }
+          });
+        });
+      }
+    };
+
+    form.addEventListener('change', apply);
     apply();
   })();
 

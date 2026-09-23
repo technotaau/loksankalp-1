@@ -119,6 +119,7 @@
     <div class="stack">
       <p>शहीद-ए-आज़म भगत सिंह ने अन्याय और सामाजिक बुराइयों के विरुद्ध विचार और साहस की मशाल जलाई। आइए, उनकी जयंती पर उसी चेतना को आगे बढ़ाते हुए नशे और उसकी सामाजिक स्वीकृति के विरुद्ध इंकलाब का हिस्सा बनें।</p>
       <p>28 सितम्बर को <strong>सपरिवार उपवास रखें</strong>, अपने गाँव / शहर / संस्था में <strong>‘लोकसंकल्प सभा’</strong> आयोजित करें, लोगों को जोड़ें और नशा मुक्त समाज का संकल्प लें।</p>
+      <p class="center" style="margin-inline:auto"><strong>देश और दुनिया में कहीं से भी, कोई भी इसमें जुड़ सकता है।</strong></p>
       <div class="callout">
         <p>इंकलाब नशे के विरुद्ध।<br>
            इंकलाब नशे की सामाजिक स्वीकृति के विरुद्ध।<br>
@@ -167,6 +168,14 @@
             <input type="text" name="website" tabindex="-1" autocomplete="off">
           </label>
         </p>
+        <fieldset class="field">
+          <legend>आप कहाँ से भर रहे हैं?</legend>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="kshetra" value="राजस्थान" checked>राजस्थान</label>
+            <label class="choice"><input type="radio" name="kshetra" value="भारत का अन्य राज्य">भारत का अन्य राज्य</label>
+            <label class="choice"><input type="radio" name="kshetra" value="भारत से बाहर">भारत से बाहर</label>
+          </div>
+        </fieldset>
         <div class="field">
           <label for="i-naam">नाम <span aria-hidden="true">*</span></label>
           <input type="text" id="i-naam" name="naam" autocomplete="name" required>
@@ -185,11 +194,10 @@
           <label for="i-gaon">गाँव / शहर <span aria-hidden="true">*</span></label>
           <input type="text" id="i-gaon" name="gaon" required>
         </div>
-        <div class="field">
+        <div class="field" data-show-when="kshetra=राजस्थान">
           <label for="i-jila">जिला <span aria-hidden="true">*</span></label>
-          <select id="i-jila" name="jila" required data-reveals>
+          <select id="i-jila" name="jila" data-req>
             <option value="">जिला चुनें</option>
-            <optgroup label="राजस्थान के जिले">
           <option>अजमेर</option>
           <option>अलवर</option>
           <option>उदयपुर</option>
@@ -232,15 +240,10 @@
           <option>सीकर</option>
           <option>हनुमानगढ़</option>
           <option>अन्य</option>
-            </optgroup>
-            <optgroup label="अन्य">
-              <option>भारत के अन्य राज्य से</option>
-              <option>भारत से बाहर से</option>
-            </optgroup>
           </select>
         </div>
 
-        <div class="field" data-show-when="i-jila=भारत के अन्य राज्य से" hidden>
+        <div class="field" data-show-when="kshetra=भारत का अन्य राज्य" hidden>
           <label for="i-rajya">राज्य <span aria-hidden="true">*</span></label>
           <select id="i-rajya" name="rajya" data-req>
             <option value="">राज्य चुनें</option>
@@ -281,7 +284,7 @@
               <option>पुडुचेरी</option>
           </select>
         </div>
-        <div class="field" data-show-when="i-jila=भारत से बाहर से" hidden>
+        <div class="field" data-show-when="kshetra=भारत से बाहर" hidden>
           <label for="i-desh">देश <span aria-hidden="true">*</span></label>
           <select id="i-desh" name="desh" data-req data-reveals>
             <option value="">देश चुनें</option>
