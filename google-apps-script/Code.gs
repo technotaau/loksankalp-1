@@ -42,7 +42,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // If this changes, change max= on the form field too, because the page reads that
 // attribute for its running total, so those two never drift apart.
 var MAX_UPVAAS_SADASYA = 150;
-var CODE_VERSION = 17;          // bump when this file changes; shown in every response
+var CODE_VERSION = 18;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -317,8 +317,13 @@ function computeStats() {
       i28States[raj] = 1;
       b = bucket(i28Bahar, raj, 'राज्य');
     } else if (jI28 >= 0) {
+      /* ड्रॉपडाउन का आख़िरी विकल्प "अन्य" है, यानी "मेरा जिला सूची में नहीं
+         है"। राजस्थान का कोई जिला इस नाम का नहीं, इसलिए उसे एक जिला गिनना
+         "राजस्थान के जिले" वाली संख्या को एक बढ़ा देता था और पृष्ठ पर दिखने
+         वाली सूची से मेल नहीं खाता था। अब वह पंक्ति किसी जिले में नहीं गिनी
+         जाती; पृष्ठ उसे "जिनका जिला दर्ज नहीं हुआ" में जोड़ लेता है। */
       var d = normPlace(r[jI28]);
-      if (isPlace(d)) { i28Districts[d] = 1; b = bucket(i28ByJila, d, 'जिला'); }
+      if (isPlace(d) && d !== 'अन्य') { i28Districts[d] = 1; b = bucket(i28ByJila, d, 'जिला'); }
     }
     if (b) { b.parivar++; b.vyakti += kul; }
   });

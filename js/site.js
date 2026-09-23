@@ -930,6 +930,17 @@
   // animate === false writes the number straight in, used when a figure is
   // already on screen and would only jitter if it counted up again.
   function paint(stats, animate) {
+    /* "राजस्थान के जिले" वाला आँकड़ा और नीचे की सूची, दोनों एक ही संख्या पर
+       रहें। ड्रॉपडाउन का "अन्य" कोई जिला नहीं है, पर सर्वर v17 तक उसे भी एक
+       जिला गिन लेता था; नतीजा यह कि काउंटर 14 कहता और सूची में 13 नाम दिखते।
+       कोई भी गिनकर पकड़ सकता था। यहाँ संख्या उसी सूची से निकाली जाती है जो
+       पृष्ठ पर दिखाई दे रही है, यानी पृष्ठ वही कहता है जो वह दिखा सकता है।
+       v18 में सर्वर भी यही गिनेगा, तब यह पंक्ति अपने आप बेअसर हो जाएगी। */
+    if (stats && stats.inqlabByJila) {
+      stats.inqlabJile = stats.inqlabByJila.filter(function (r) {
+        return r.naam !== JILA_ANYA;
+      }).length;
+    }
     var painted = false;
     Array.prototype.forEach.call(statEls, function (el) {
       var v = stats[el.getAttribute('data-stat')];
@@ -958,7 +969,7 @@
       document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
     }
     renderDistricts(stats.byDistrict);
-    renderJilaList(stats.inqlabByJila, stats.inqlabBahar);
+    renderJilaList(stats.inqlabByJila, stats.inqlabBahar, stats.inqlabVyakti);
     return painted;
   }
 
@@ -1057,7 +1068,14 @@
     try { if (jila) window.localStorage.setItem(MERA_JILA_KEY, jila); } catch (e) { /* चलने दीजिए */ }
   }
 
-  function renderJilaList(list, bahar) {
+  /* ड्रॉपडाउन का आख़िरी विकल्प "अन्य" है, यानी "मेरा जिला सूची में नहीं है"।
+     राजस्थान का कोई जिला इस नाम का नहीं है, इसलिए वह जिलों की सूची में
+     पंक्ति बनकर नहीं बैठता : पढ़ने वाला ढूँढ़ता रह जाता कि अन्य कौन-सा जिला
+     है। उसकी गिनती नीचे उसी पंक्ति में जुड़ जाती है जो बाकी बिना-जिला वाली
+     पंक्तियों की बात करती है, क्योंकि पाठक के लिए दोनों एक ही बात हैं। */
+  var JILA_ANYA = 'अन्य';
+
+  function renderJilaList(list, bahar, kulVyakti) {
     var box = document.querySelector('[data-jila-list]');
     if (!box) return;
     var sec = box.closest('[data-jila-section]') || box;
@@ -1065,6 +1083,9 @@
        ही नहीं; तब "किसी जिले से कोई नहीं" लिखना झूठ होता। दोनों हालत में
        खंड चुपचाप छिपा रहता है। */
     if (!list || !list.length || today !== 'inqlab28') { sec.hidden = true; return; }
+
+    list = list.filter(function (r) { return r.naam !== JILA_ANYA; });
+    if (!list.length) { sec.hidden = true; return; }
 
     var PEHLE = 8;
     var sabse = list[0].vyakti || 1;
@@ -1117,6 +1138,27 @@
         likho();
         if (meraIndex >= PEHLE) more.click();   // अपना जिला छिपा न रह जाए
       }
+    }
+
+    /* जो पंक्तियाँ किसी जिले, राज्य या देश में नहीं गिनी जा सकीं।
+
+       कुछ पुरानी पंक्तियों में जिले की जगह खाली है या "-" लिखा है। उन्हें
+       किसी जिले में डाल देना गलत होता, इसलिए वे किसी सूची में नहीं आतीं।
+       नतीजा यह कि ऊपर का काउंटर और नीचे की सूची का जोड़ अलग रह जाता है, और
+       कोई भी जोड़कर देख सकता है। इसलिए अंतर को छिपाने के बजाय एक पंक्ति में
+       कह दिया जाता है। संख्या यहीं निकाली जाती है, सर्वर से माँगी नहीं जाती,
+       इसलिए इसके लिए नया deploy नहीं चाहिए। */
+    var bache = sec.querySelector('[data-jila-bache]');
+    if (bache) {
+      var jodJila = list.reduce(function (a, r) { return a + (r.vyakti || 0); }, 0);
+      // "अन्य" चुनने वाले भी इसी शेष में आते हैं, ऊपर की सूची में नहीं
+      var jodBahar = (bahar || []).reduce(function (a, r) { return a + (r.vyakti || 0); }, 0);
+      var shesh = (typeof kulVyakti === 'number') ? kulVyakti - jodJila - jodBahar : 0;
+      if (shesh > 0) {
+        bache.textContent = 'इनके अलावा ' + nf2.format(shesh) +
+          ' व्यक्ति और हैं, जिनका जिला दर्ज नहीं हुआ।';
+        bache.hidden = false;
+      } else { bache.hidden = true; }
     }
 
     /* राजस्थान से बाहर वाले। नाम गिनाना ज़रूरी है : टोरंटो से भरने वाले को
