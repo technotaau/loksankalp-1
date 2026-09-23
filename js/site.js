@@ -614,7 +614,7 @@
            block is pinned a few lines below. */
         if (plan.h) {
           var slack = bottom - y - plan.h;
-          if (slack > 0) y += Math.min(slack * 0.42, 150 * U);
+          if (slack > 0) y += Math.min(slack * 0.5, 220 * U);
         }
 
         var bodyFont = '400 ' + plan.s + 'px ' + body;

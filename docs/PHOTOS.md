@@ -24,6 +24,7 @@ the 1400px one.
 | `sabha-standing-crowd` | `gram-sabha.html`, before सभा कैसे आयोजित करें; home gallery |
 | `sabha-ground-wide` | `gram-sabha.html`, before the समिति section |
 | `abhiyan-banner` | `sansadhan.html` page header |
+| `bhagat-singh-1929` | `inqlab-28.html` आह्वान के साथ खड़ा चित्र |
 | `video-parichay`, `video-sabha`, `video-good-parenting`, `video-vivah`, `video-shok-sabha` | `sansadhan.html` वीडियो सामग्री cards. YouTube thumbnails, kept locally so a slow phone loads no third-party image. |
 
 One upload was a byte-identical duplicate and was dropped.
@@ -81,3 +82,19 @@ WebP या छोटे आकार नहीं बनते, और को�
 जिला फ़िल्टर तभी दिखता है जब दो या अधिक जिलों की तस्वीरें हों, और वह
 जावास्क्रिप्ट से ही दिखाया जाता है, ताकि JS बंद होने पर सारी तस्वीरें
 दिखती रहें।
+
+
+## अभियान के बाहर से आया एक चित्र
+
+`assets/img/photos/bhagat-singh-1929.jpg` और उसी की वर्गाकार कटाई
+`assets/img/bhagat-singh-seal.jpg` (प्रमाण-पत्र की गोल मुद्रा के लिए) —
+
+- **स्रोत :** Wikimedia Commons, *File:Bhagat Singh 1929.jpg*
+- **स्थिति :** सार्वजनिक डोमेन (**PD-India**) — छायाचित्रों पर कॉपीराइट
+  प्रकाशन से 60 वर्ष तक रहता है, 1929 का चित्र बहुत पहले मुक्त हो चुका है।
+- इसीलिए यही चित्र चुना गया। स्टॉक एजेंसियों (Alamy आदि) के चित्र और
+  ई-कॉमर्स पर बिकने वाले पोस्टरों की तस्वीरें लाइसेंस वाली होती हैं और उन पर
+  watermark भी होता है; उन्हें सार्वजनिक वेबसाइट पर नहीं लगाया जा सकता।
+
+**नियम :** बाहर से कोई भी चित्र लगाने से पहले यह देख लें कि वह सार्वजनिक
+डोमेन का है या अभियान का अपना खींचा हुआ। संदेह हो तो न लगाएँ।

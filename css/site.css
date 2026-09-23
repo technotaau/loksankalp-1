@@ -541,6 +541,9 @@ body { padding-bottom: 68px; }
 .photo--wide img   { aspect-ratio: 3 / 2;  object-fit: cover; }
 .photo--banner img { aspect-ratio: 16 / 7; object-fit: cover; }
 .photo--square img { aspect-ratio: 1 / 1;  object-fit: cover; }
+/* A standing portrait inside a two-column band. Left to fill its column a tall
+   photograph towers over the text beside it, so it is capped and centred. */
+.photo--portrait { max-width: 22rem; justify-self: center; }
 .photo figcaption {
   margin-top: .55rem; font-size: .9rem; color: var(--ls-ink-soft); line-height: 1.6;
 }
