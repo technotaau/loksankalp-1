@@ -3,7 +3,8 @@
 
 Runs every gate the project lead checks by hand, so CI can fail loudly:
 structure, headings, internal links and anchors, icon ids, alt text,
-form labels, SEO tags and SVG well-formedness.
+form labels, SEO tags, SVG well-formedness, and that no long dash
+(em/en dash) reaches a published file.
 
 Usage:  python3 tools/check.py [--quiet]
 Exit code 1 if any ERROR is found. WARNs do not fail the build.
@@ -242,6 +243,42 @@ def check_canonical_host():
                 err(rel, f'points at the old host: {bad}')
 
 
+# लंबी डैश जो कहीं नहीं चलेंगी। em dash, en dash, horizontal bar, figure dash
+# और दो-em वाली डैश। पाठक इन्हीं से सबसे पहले भाँप लेते हैं कि लेख मशीन का
+# लिखा है, और अभियान की टीम ने साफ़ कहा है कि वेबसाइट पर ये नहीं चाहिए।
+# जगह पर हिंदी का सामान्य विराम लगाइए : अल्पविराम, कोलन, या पूरा विराम।
+LONG_DASHES = {'\u2014': 'em dash', '\u2013': 'en dash', '\u2015': 'horizontal bar',
+               '\u2012': 'figure dash', '\u2e3a': 'two-em dash', '\u2e3b': 'three-em dash'}
+
+# जो फ़ाइलें ब्राउज़र तक जाती ही नहीं, उन पर यह नियम नहीं लगता।
+DASH_SKIP = ('docs/', 'google-apps-script/', 'tools/')
+
+def check_long_dashes():
+    """कोई भी लंबी डैश वेबसाइट पर न पहुँचे।
+
+    सिर्फ़ पृष्ठों का दिखने वाला पाठ नहीं : CSS का content, SVG का title,
+    manifest का नाम और JS की टिप्पणी भी। टिप्पणी इसलिए कि site.js जैसा
+    तैसा ब्राउज़र में खुल जाता है और कोई भी उसे पढ़ सकता है।
+    """
+    pats = ('*.html', '*.xml', '*.txt', '*.webmanifest',
+            'css/*.css', 'js/*.js', 'booklets/*.json', 'parivar/*.json',
+            'assets/img/*.svg')
+    for pat in pats:
+        for path in sorted(glob.glob(os.path.join(ROOT, pat))):
+            rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
+            if rel.startswith(DASH_SKIP):
+                continue
+            try:
+                txt = open(path, encoding='utf-8').read()
+            except UnicodeDecodeError:
+                continue
+            for n, line in enumerate(txt.split('\n'), 1):
+                for ch, name in LONG_DASHES.items():
+                    if ch in line:
+                        err(rel, f'line {n}: {name} ({ch!r}) मिली, '
+                                 f'हिंदी विराम लगाइए: {line.strip()[:70]!r}')
+
+
 def main():
     quiet = '--quiet' in sys.argv
     pages = sorted(glob.glob(os.path.join(ROOT, '*.html')))
@@ -263,6 +300,7 @@ def main():
     check_svgs()
     check_booklet_count()
     check_canonical_host()
+    check_long_dashes()
 
     for f in ('sitemap.xml', 'robots.txt', 'site.webmanifest', '.nojekyll',
               'css/site.css', 'css/tokens.css', 'js/site.js'):

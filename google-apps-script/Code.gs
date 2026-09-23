@@ -1,5 +1,5 @@
 /**
- * लोकसंकल्प — form receiver.
+ * लोकसंकल्प form receiver.
  *
  * Saves every form submission as a row in this spreadsheet (one tab per form)
  * and every uploaded photo as a file in a Drive folder, writing the file's link
@@ -13,6 +13,10 @@
 
 // ---- settings ------------------------------------------------------------
 
+// यह Drive में पहले से बने असली फ़ोल्डर का नाम है। इसमें em dash है, पर
+// इसे मत बदलिए : नाम बदलते ही script एक नया खाली फ़ोल्डर बना लेगा और
+// पुरानी सारी तस्वीरें पुराने फ़ोल्डर में छूट जाएँगी। यह नाम कभी किसी
+// वेबसाइट पृष्ठ पर नहीं दिखता।
 var FOLDER_NAME = 'लोकसंकल्प — फ़ॉर्म फ़ाइलें';
 var MAX_FILES = 6;             // per submission
 var MAX_FILE_BYTES = 8 * 1024 * 1024;
@@ -35,7 +39,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // the sheet catches, while too low silently drops a real joint family down to
 // one person, which nobody ever notices. The sheet always keeps what was
 // typed, so an entry refused here can still be read and counted by hand.
-// If this changes, change max= on the form field too — the page reads that
+// If this changes, change max= on the form field too, because the page reads that
 // attribute for its running total, so those two never drift apart.
 var MAX_UPVAAS_SADASYA = 150;
 var CODE_VERSION = 16;          // bump when this file changes; shown in every response

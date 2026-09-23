@@ -132,10 +132,10 @@
      found by a villager on the day rather than by me. */
 
   var CAMPAIGNS = {
-    // करुणा 21 — बीत चुका। तिथियाँ रिकॉर्ड के लिए रखी हैं।
+    // करुणा 21 : बीत चुका। तिथियाँ रिकॉर्ड के लिए रखी हैं।
     karuna21: { opens: Date.UTC(2026, 8, 20, 14, 30),   // 20 सित॰ 20:00 IST
                 closes: Date.UTC(2026, 8, 22, 18, 30) },  // 23 सित॰ 00:00 IST
-    // इंकलाब 28 — भगत सिंह जयंती। पंजीकरण दिन से पहले ही खुल जाता है, क्योंकि
+    // इंकलाब 28 : भगत सिंह जयंती। पंजीकरण दिन से पहले ही खुल जाता है, क्योंकि
     // यह उस दिन उपवास रखने का संकल्प है, उस दिन की रिपोर्ट नहीं।
     inqlab28: { opens: Date.UTC(2026, 8, 22, 18, 30),   // 23 सित॰ 00:00 IST
                 closes: Date.UTC(2026, 8, 28, 18, 30) }   // 29 सित॰ 00:00 IST
@@ -218,7 +218,7 @@
 
   /* --- खाने जो ज़रूरत पड़ने पर ही खुलते हैं -------------------------------
      इंकलाब 28 अब राजस्थान से बाहर और भारत से बाहर के लोग भी भरते हैं। सवाल
-     फ़ॉर्म के सबसे ऊपर, दिखता हुआ, और राजस्थान पहले से चुना हुआ — इसलिए
+     फ़ॉर्म के सबसे ऊपर, दिखता हुआ, और राजस्थान पहले से चुना हुआ, इसलिए
      राजस्थान वाले को छूना ही नहीं पड़ता, और बाहर वाले को पहली नज़र में पता चल
      जाता है कि यह फ़ॉर्म उसके लिए भी है। पहले यह विकल्प जिले की सूची के भीतर
      छिपा था, जहाँ वही पहुँचता जो सूची खोलकर अंत तक जाता।
@@ -625,8 +625,8 @@
         /* Everything below has to end above the site address at the foot, and
            the citation is now a paragraph or two rather than a clause. Rather
            than hope it fits, measure: try the body at each size from large to
-           small and take the first whose whole block — paragraphs, motto,
-           rule and the lines under it — finishes inside the space left.
+           small and take the first whose whole block (paragraphs, motto,
+           rule and the lines under it) finishes inside the space left.
            A certificate that runs off its own page is what this prevents, and
            it is exactly what the first long citation did. */
         var paras = (spec.paras && spec.paras.length ? spec.paras : [spec.line])
@@ -1119,7 +1119,7 @@
       var naamField = form.querySelector('[name="naam"]');
       var naamValue = naamField ? naamField.value.trim() : '';
 
-      /* गाँव/शहर और उसके साथ जिला, राज्य या देश — जो भी भरा हो। अकेला गाँव
+      /* गाँव/शहर और उसके साथ जिला, राज्य या देश, जो भी भरा हो। अकेला गाँव
          का नाम अधूरा रहता है : लोडेरा कई हो सकते हैं, और टोरंटो लिखने वाले का
          देश भी दिखना चाहिए। खाली रहे तो पंक्ति छपती ही नहीं। */
       var pick = function (n) {

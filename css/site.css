@@ -795,7 +795,7 @@ details.acc > summary {
 }
 details.acc > summary::-webkit-details-marker { display: none; }
 details.acc > summary::after { content: "+"; font-size: 1.6rem; color: var(--ls-saffron); line-height: 1; }
-details.acc[open] > summary::after { content: "–"; }
+details.acc[open] > summary::after { content: "-"; }
 details.acc > :not(summary) { padding-bottom: 1.1rem; }
 
 /* ---------- 8. Forms ---------- */
