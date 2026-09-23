@@ -25,6 +25,7 @@ the 1400px one.
 | `sabha-ground-wide` | `gram-sabha.html`, before the समिति section |
 | `abhiyan-banner` | `sansadhan.html` page header |
 | `bhagat-singh-1929` | `inqlab-28.html` आह्वान के साथ खड़ा चित्र |
+| `jyani` | `abhiyan-parivar.html` प्रणेता वाले हिस्से में खड़ा चित्र |
 | `video-parichay`, `video-sabha`, `video-good-parenting`, `video-vivah`, `video-shok-sabha` | `sansadhan.html` वीडियो सामग्री cards. YouTube thumbnails, kept locally so a slow phone loads no third-party image. |
 
 One upload was a byte-identical duplicate and was dropped.
