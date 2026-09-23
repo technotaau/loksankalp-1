@@ -26,8 +26,17 @@ var MAX_SABHA_SANKHYA = 50000;
 // figure and the endpoint is public, so one typo or prank ("9999") would wreck
 // it. Above this the number is treated as a data error and adds nothing to
 // व्यक्ति; the entry itself, and its village and district, still count.
-var MAX_UPVAAS_SADASYA = 50;
-var CODE_VERSION = 13;          // bump when this file changes; shown in every response
+//
+// Set at 150 rather than a tighter number because a संयुक्त परिवार in these
+// villages really can run to several dozen, and the cost of the two mistakes
+// is not the same: too high lets a prank inflate the figure, which a look at
+// the sheet catches, while too low silently drops a real joint family down to
+// one person, which nobody ever notices. The sheet always keeps what was
+// typed, so an entry refused here can still be read and counted by hand.
+// If this changes, change max= on the form field too — the page reads that
+// attribute for its running total, so those two never drift apart.
+var MAX_UPVAAS_SADASYA = 150;
+var CODE_VERSION = 14;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {

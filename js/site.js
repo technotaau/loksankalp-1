@@ -215,10 +215,17 @@
   document.querySelectorAll('[data-plus-one]').forEach(function (input) {
     var out = document.getElementById(input.getAttribute('data-plus-one'));
     if (!out) return;
+    // The bounds come from the field itself, never copied. A limit written
+    // here as well as in the markup is a limit that will one day disagree
+    // with it, and the disagreement would show a total for a number the form
+    // then refuses to send.
+    var lo = parseFloat(input.getAttribute('min'));
+    var hi = parseFloat(input.getAttribute('max'));
     var show = function () {
       var n = parseInt(input.value, 10);
-      out.textContent = (isNaN(n) || n < 0 || n > 50) ? ''
-        : 'आपको मिलाकर कुल ' + (n + 1) + ' व्यक्ति उपवास रखेंगे।';
+      var bad = isNaN(n) || (!isNaN(lo) && n < lo) || (!isNaN(hi) && n > hi);
+      out.textContent = bad ? ''
+        : 'आपको मिलाकर कुल ' + nf.format(n + 1) + ' व्यक्ति उपवास रखेंगे।';
     };
     input.addEventListener('input', show);
     show();
