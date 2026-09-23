@@ -461,6 +461,50 @@ body { padding-bottom: 68px; }
   color: var(--ls-green-dark);
 }
 
+/* --- अभियान परिवार : named people ---------------------------------------
+   A face and a name, nothing competing with them. Photographs arrive one at a
+   time, so a member without one shows their initials in the same circle
+   instead of a broken image or an empty hole, and the row stays even. */
+/* Rows, not tiles. Each member carries a short introduction, and paragraphs of
+   different lengths in a tile grid leave every row ragged. A face at the start
+   of a line and the words beside it reads the same whether the introduction is
+   one line or five, and stacks sensibly on a phone. */
+.people {
+  display: grid; gap: 1rem; list-style: none; padding: 0;
+  max-width: var(--ls-maxw); margin-inline: auto;
+}
+.person {
+  display: grid; grid-template-columns: auto 1fr; gap: .9rem 1.15rem;
+  align-items: start;
+  background: var(--ls-surface); border: 1px solid var(--ls-border);
+  border-radius: var(--ls-radius); padding: 1.15rem 1.25rem;
+}
+.person__photo, .person__mono {
+  width: 88px; height: 88px; border-radius: 50%;
+  border: 3px solid var(--ls-gold);
+}
+.person__photo { object-fit: cover; object-position: top center; background: var(--ls-surface-alt); display: block; }
+/* Until a photograph arrives, the same circle with initials: never a broken
+   image, never an empty hole, and the row keeps its shape either way. */
+.person__mono {
+  display: grid; place-items: center; color: #fff;
+  background: var(--ls-blue-dark);
+  font-family: var(--ls-font-head); font-size: 1.7rem; line-height: 1;
+}
+.person__about { display: grid; gap: .15rem; }
+.person__name { font-weight: 700; line-height: 1.5; font-size: 1.05rem; }
+.person__role {
+  font-size: .86rem; color: var(--ls-ink-soft); letter-spacing: .02em;
+}
+.person__about p { margin: .45rem 0 0; font-size: .96rem; max-width: 60ch; }
+/* The अध्यक्ष is marked by colour, not by a larger box. */
+.person--lead .person__mono { background: var(--ls-green-dark); }
+.person--lead .person__role { color: var(--ls-green-dark); font-weight: 700; }
+@media (max-width: 30rem) {
+  .person { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .person__about p { text-align: start; }
+}
+
 /* Checklists */
 .ticks { display: grid; gap: .7rem; }
 .ticks li { display: grid; grid-template-columns: auto 1fr; gap: .7rem; align-items: start; }
