@@ -175,11 +175,10 @@
           <input type="tel" id="i-mobile" name="mobile" autocomplete="tel" inputmode="numeric" required>
         </div>
         <div class="field">
-          <label for="i-sadasya">भगत सिंह जयंती पर आपके परिवार के कितने सदस्य उपवास रखेंगे? <em>(आपको छोड़कर)</em> <span aria-hidden="true">*</span></label>
-          <input type="number" id="i-sadasya" name="upvaasSadasya" inputmode="numeric" min="0" max="150" step="1" required
-                 aria-describedby="i-sadasya-hint" data-plus-one="i-sadasya-total">
-          <span class="hint" id="i-sadasya-hint">कृपया संख्या अंकों में लिखें। आपकी अपनी गिनती अपने आप जुड़ जाएगी।</span>
-          <span class="hint hint--live" id="i-sadasya-total" role="status"></span>
+          <label for="i-sadasya">भगत सिंह जयंती पर आपके साथ आपके परिवार के कितने सदस्य उपवास रखेंगे? <em>(आपके सहित सदस्यों की कुल संख्या अंकित करें)</em> <span aria-hidden="true">*</span></label>
+          <input type="number" id="i-sadasya" name="upvaasSadasya" inputmode="numeric" min="1" max="150" step="1" required
+                 aria-describedby="i-sadasya-hint">
+          <span class="hint" id="i-sadasya-hint">कृपया संख्या अंकों में लिखें।</span>
         </div>
         <div class="field">
           <label for="i-gaon">गाँव / शहर <span aria-hidden="true">*</span></label>

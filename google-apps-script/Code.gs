@@ -27,6 +27,8 @@ var MAX_SABHA_SANKHYA = 50000;
 // it. Above this the number is treated as a data error and adds nothing to
 // व्यक्ति; the entry itself, and its village and district, still count.
 //
+// The number counts the whole household, the registrant included.
+//
 // Set at 150 rather than a tighter number because a संयुक्त परिवार in these
 // villages really can run to several dozen, and the cost of the two mistakes
 // is not the same: too high lets a prank inflate the figure, which a look at
@@ -36,7 +38,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // If this changes, change max= on the form field too — the page reads that
 // attribute for its running total, so those two never drift apart.
 var MAX_UPVAAS_SADASYA = 150;
-var CODE_VERSION = 14;          // bump when this file changes; shown in every response
+var CODE_VERSION = 15;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -256,10 +258,16 @@ function computeStats() {
      from anything else on this sheet.
 
      A person registers on behalf of a household: the form asks how many
-     members of the family, BESIDES them, will keep the fast. So one entry is
-     one परिवार, and it brings (that number + 1) व्यक्ति — the +1 being the
-     person who filled the form. A blank or unreadable answer still brings
-     that one person; it never brings zero, because somebody did register. */
+     members of the family, INCLUDING them, will keep the fast. So one entry
+     is one परिवार, and it brings exactly that number of व्यक्ति. A blank,
+     zero or unreadable answer still brings one person; it never brings zero,
+     because somebody did register.
+
+     The question used to ask for the number BESIDES the registrant and this
+     added one. The team changed the wording on 23 September, so the +1 is
+     gone. Rows written under the old wording are one short of what their
+     senders meant; they are few, and correcting them in the sheet is the
+     honest fix rather than carrying two rules here forever. */
   var i28Villages = {}, i28Districts = {}, i28Vyakti = 0;
   var gI28 = colOf(ss, FORMS.inqlab28, 'gaon');
   var jI28 = colOf(ss, FORMS.inqlab28, 'jila');
@@ -267,9 +275,10 @@ function computeStats() {
   i28Rows.forEach(function (r) {
     if (gI28 >= 0) { var v = normPlace(r[gI28]); if (isPlace(v)) i28Villages[v] = 1; }
     if (jI28 >= 0) { var d = normPlace(r[jI28]); if (isPlace(d)) i28Districts[d] = 1; }
-    var extra = sI28 < 0 ? 0 : count(r[sI28]);
-    if (extra > MAX_UPVAAS_SADASYA) extra = 0;    // a typo, not a household
-    i28Vyakti += extra + 1;
+    var kul = sI28 < 0 ? 0 : count(r[sI28]);
+    // Blank, zero or a typo: fall back to the one person who did register.
+    if (kul < 1 || kul > MAX_UPVAAS_SADASYA) kul = 1;
+    i28Vyakti += kul;
   });
 
   // The same villages, counted over संकल्प 21 alone, for that page's own figure.
