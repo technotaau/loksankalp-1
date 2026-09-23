@@ -978,6 +978,32 @@ fieldset.field { border: 0; padding: 0; margin: 0; min-inline-size: 0; }
   display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; justify-content: space-between;
   font-size: .9rem;
 }
+/* बनाने वालों का उल्लेख।
+
+   यह विज्ञापन नहीं है, इसलिए विज्ञापन जैसा दिखना भी नहीं चाहिए। जो बात
+   सबसे भारी पड़ती है वह यह है कि काम सेवाभाव से हुआ, इसलिए वाक्य वही कहता
+   है और कुछ नहीं। आँख नाम पर टिके, इसके लिए केवल इतना : शीर्षक वाला फ़ॉन्ट,
+   सुनहरा रंग, और नीचे एक हल्की बिंदीदार रेखा जो छूने पर ठोस हो जाती है।
+   कोई डिब्बा नहीं, कोई बटन नहीं, कोई लोगो नहीं। */
+.footer-credit {
+  margin-top: 2.2rem; padding-top: 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  text-align: center;
+}
+.footer-credit .eyebrow { color: var(--ls-gold); margin-bottom: .3rem; font-size: .8rem; }
+.footer-credit p { margin-inline: auto; color: #c3cdec; font-size: .95rem; }
+.footer-credit a {
+  font-family: var(--ls-font-head); font-size: 1.12rem; font-weight: 700;
+  color: var(--ls-gold); text-decoration: none;
+  border-bottom: 1px dotted rgba(245, 179, 1, .6);
+  padding-bottom: .05em;
+}
+.footer-credit a:hover, .footer-credit a:focus-visible {
+  color: #ffd66b; border-bottom-style: solid; border-bottom-color: #ffd66b;
+}
+/* उल्लेख के ठीक नीचे कॉपीराइट है, इसलिए वहाँ दूसरी लकीर नहीं चाहिए */
+.footer-credit + .footer-bottom { margin-top: 1.1rem; padding-top: 0; border-top: 0; }
+
 .tricolor-bar { height: 5px; background: linear-gradient(90deg, var(--ls-saffron) 0 33.3%, #fff 33.3% 66.6%, var(--ls-green) 66.6% 100%); }
 
 /* ---------- 10. Utilities ---------- */
