@@ -144,18 +144,12 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .site-nav a[aria-current="page"] {
   background: #eaf0ff; border-color: #c9d6ff; color: var(--ls-blue-dark);
 }
-.site-nav .nav-login {
-  margin-top: .8rem; justify-content: center;
-  background: var(--ls-saffron); color: #fff;
-}
-.site-nav .nav-login svg { color: #fff; }
-.site-nav .nav-login:hover { background: var(--ls-saffron-dk); }
 
 @media (min-width: 70rem) {
   .nav-toggle { display: none; }
-  /* Desktop: brand + login on the top row, the full menu on its own row below.
-     Ten destinations do not fit beside the brand without shrinking them to
-     an unreadable size, and this audience needs readable links. */
+  /* Desktop: the brand on the top row, the full menu on its own row below.
+     Eleven destinations do not fit beside the brand without shrinking them
+     to an unreadable size, and this audience needs readable links. */
   .site-header { backdrop-filter: saturate(1.4) blur(8px); }
   .site-header__bar { flex-wrap: wrap; min-height: 0; padding-block: .7rem 0; }
   .site-nav { display: block !important; flex: 1 0 100%; margin: 0; }
@@ -175,24 +169,13 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
     background: none; border-color: transparent;
     box-shadow: inset 0 -3px 0 var(--ls-saffron); color: var(--ls-blue-dark);
   }
-  .site-nav .nav-login { display: none; }
-  .header-login { display: inline-flex !important; }
 }
-.header-login {
-  display: none; margin-left: auto; align-items: center; gap: .45rem;
-  min-height: 44px; padding: .5rem 1.15rem;
-  background: var(--ls-saffron); color: #fff; border-radius: 11px;
-  font-weight: 700; text-decoration: none;
-}
-.header-login:hover { background: var(--ls-saffron-dk); color: #fff; }
-.header-login svg { width: 20px; height: 20px; }
-
-/* Login is hidden until the committee accounts are ready. The markup and
-   login.html are left in place, so bringing it back is deleting this block.
-   !important is needed because the rule above turns the header button on
-   with !important inside a media query. */
-.header-login,
-.site-nav .nav-login { display: none !important; }
+/* लॉगिन यहाँ हुआ करता था। 25 सितम्बर 2026 को पूरा हटा दिया गया, क्योंकि
+   Google ने उस पृष्ठ पर "Possible Phishing Detected on User Login" लगा दिया
+   था। वह ठीक ही था : पृष्ठ मोबाइल नंबर माँगता, OTP भेजने का वादा करता, और
+   नंबर किसी दूसरे डोमेन पर भेज देता था, जबकि पीछे कोई व्यवस्था थी ही नहीं।
+   जब सचमुच समिति के खाते बनें, तब नया पृष्ठ बनाइए जो अपने ही डोमेन पर भेजे।
+   पुराना रूप git में है, पर उसे वापस मत लाइए। */
 
 /* Sticky mobile action bar: the three primary journeys */
 .action-bar {

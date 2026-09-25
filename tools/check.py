@@ -279,6 +279,33 @@ def check_long_dashes():
                                  f'हिंदी विराम लगाइए: {line.strip()[:70]!r}')
 
 
+# 25 सितम्बर 2026 : Google ने साइट पर "Possible Phishing Detected on User
+# Login" लगा दिया था। वजह एक लॉगिन पृष्ठ था जो चलता ही नहीं था : वह मोबाइल
+# नंबर माँगता, OTP भेजने का वादा करता, और वह नंबर किसी दूसरे डोमेन
+# (script.google.com) पर भेज देता। असली फ़िशिंग की पहचान यही होती है।
+#
+# पृष्ठ हटा दिया गया। यह जाँच इसलिए है कि वैसा पृष्ठ दोबारा चुपचाप न बन जाए।
+# जब सचमुच लॉगिन बने तो उसे अपने ही डोमेन पर भेजना होगा, और तभी यह जाँच
+# ढीली करनी होगी, पहले नहीं।
+CRED_WORDS = ('password', 'passwd', 'otp', 'ओटीपी', 'लॉगिन', 'login')
+
+def check_no_fake_login():
+    """कोई पृष्ठ साख माँगता हुआ न दिखे, जब तक उसके पीछे असली व्यवस्था न हो।"""
+    for path in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
+        rel = os.path.relpath(path, ROOT)
+        txt = open(path, encoding='utf-8').read()
+        if re.search(r'<input[^>]+type=["\']password["\']', txt):
+            err(rel, 'password वाला खाना है। साख माँगने वाला पृष्ठ अपने ही '
+                     'डोमेन पर भेजना चाहिए, और उसके पीछे असली व्यवस्था होनी चाहिए')
+        # फ़ॉर्म के भीतर OTP या लॉगिन का वादा
+        for m in re.finditer(r'<form\b.*?</form>', txt, re.S):
+            block = m.group(0)
+            low = block.lower()
+            if ('otp' in low or 'ओटीपी' in block) and 'type="tel"' in low:
+                err(rel, 'फ़ॉर्म मोबाइल नंबर लेकर OTP का वादा करता है। '
+                         'Google इसे फ़िशिंग मानता है जब तक वह सचमुच काम न करे')
+
+
 def main():
     quiet = '--quiet' in sys.argv
     pages = sorted(glob.glob(os.path.join(ROOT, '*.html')))
@@ -301,6 +328,7 @@ def main():
     check_booklet_count()
     check_canonical_host()
     check_long_dashes()
+    check_no_fake_login()
 
     for f in ('sitemap.xml', 'robots.txt', 'site.webmanifest', '.nojekyll',
               'css/site.css', 'css/tokens.css', 'js/site.js'):
@@ -313,9 +341,7 @@ def main():
         smtxt = open(sm, encoding='utf-8').read()
         for p in pages:
             name = os.path.basename(p)
-            # login.html is deliberately out of the sitemap while login is
-            # hidden; it carries a noindex tag to match.
-            if name in ('404.html', 'login.html'):
+            if name == '404.html':
                 continue
             token = '/' if name == 'index.html' else '/' + name
             if token + '<' not in smtxt:
