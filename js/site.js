@@ -3,6 +3,55 @@
 (function () {
   'use strict';
 
+  /* --- GA4 ---------------------------------------------------------------
+
+     आईडी js/config.js में है। यहाँ तीन फ़ैसले लिए गए हैं, और तीनों की वजह है।
+
+     १. Do Not Track पहले देखा जाता है, बाकी सब उसके बाद। जिस पाठक ने अपने
+        ब्राउज़र में यह चालू कर रखा है, उसके लिए यह पूरा हिस्सा चलता ही नहीं
+        और गूगल की एक भी पंक्ति नहीं उतरती।
+
+     २. गूगल की फ़ाइल लगभग 100 KB की है, और यह वेबसाइट 2G वाले फ़ोनों के लिए
+        बनी है। इसलिए वह पेज खुलने के बाद, फ़ुर्सत मिलने पर उतरती है, पहले
+        नहीं। तब तक जो घटनाएँ होती हैं वे dataLayer में जमा रहती हैं और फ़ाइल
+        आते ही एक साथ चली जाती हैं, इसलिए गिनती में कुछ छूटता नहीं। ढाई
+        सेकंड की सीमा इसलिए है कि फ़ुर्सत कभी न मिले तो भी वह उतर जाए।
+
+     ३. विज्ञापन वाले दोनों संकेत बंद हैं। यह वेबसाइट बच्चों और गाँव के लोगों
+        की जानकारी लेती है; उसे किसी विज्ञापन तंत्र से जोड़ने का कोई कारण नहीं।
+
+     फ़ॉर्म में लिखा कोई शब्द यहाँ नहीं जाता। नीचे जो घटनाएँ भेजी जाती हैं
+     उनमें केवल यह होता है कि कौन-सा काम हुआ और किस फ़ॉर्म पर, बस। */
+  var track = function () {};
+  (function () {
+    var ID = (window.LOKSANKALP_GA4 || '').trim();
+    if (!ID) return;
+    var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+    if (dnt === '1' || dnt === 'yes') return;
+
+    window.dataLayer = window.dataLayer || [];
+    var gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', ID, {
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false
+    });
+    track = function (naam, kya) {
+      try { gtag('event', naam, kya || {}); } catch (e) { /* गिनती के लिए पेज रोकना नहीं है */ }
+    };
+
+    var utaaro = function () {
+      if (document.getElementById('ls-ga')) return;
+      var s = document.createElement('script');
+      s.id = 'ls-ga'; s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ID);
+      document.head.appendChild(s);
+    };
+    if (window.requestIdleCallback) window.requestIdleCallback(utaaro, { timeout: 2500 });
+    else window.setTimeout(utaaro, 2000);
+  }());
+
   /* --- Mobile navigation ------------------------------------------------ */
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.getElementById('site-nav');
@@ -860,6 +909,7 @@
         return blob.arrayBuffer().then(function (buf) {
           save(pdfFromJpeg(new Uint8Array(buf), spec.w, spec.h), stem() + '.pdf');
           say('प्रमाणपत्र डाउनलोड हो गया।');
+          track('pramanpatra', { form: spec.file || '' });
         });
       }).catch(function () { say('प्रमाणपत्र नहीं बन सका। कृपया दोबारा प्रयास करें।'); });
     });
@@ -1038,6 +1088,14 @@
      यहाँ केवल कॉपी वाला बटन है, उनके लिए जो संदेश किसी समूह में, फेसबुक पर
      या SMS में चिपकाना चाहते हैं। clipboard हर जगह नहीं मिलता, इसलिए वहाँ
      बटन दिखता ही नहीं, टूटा हुआ नहीं दिखता। */
+  /* WhatsApp वाला बटन सादा <a> है, इसलिए उस पर क्लिक ही एकमात्र निशानी है
+     कि संदेश आगे गया। यही जानना ज़रूरी है : वह बटन काम कर रहा है या नहीं। */
+  document.querySelectorAll('a.btn--wa').forEach(function (a) {
+    a.addEventListener('click', function () {
+      track('whatsapp_bheja', { jagah: a.closest('#inqlab28-done') ? 'panjikaran-ke-baad' : 'pej-par' });
+    });
+  });
+
   document.querySelectorAll('[data-wa-copy]').forEach(function (btn) {
     var box = btn.closest('[data-share-box]');
     var src = box && box.querySelector('[data-share-msg]');
@@ -1047,6 +1105,7 @@
     btn.addEventListener('click', function () {
       navigator.clipboard.writeText(src.textContent.trim()).then(function () {
         btn.textContent = 'कॉपी हो गया';
+        track('sandesh_copy', {});
         setTimeout(function () { btn.textContent = pehla; }, 2500);
       }).catch(function () {
         btn.textContent = 'कॉपी नहीं हो सका';
@@ -1137,6 +1196,7 @@
         };
         more.onclick = function () {
           khula = !khula;
+          if (khula) track('jile_dekhe', {});
           Array.prototype.forEach.call(box.children, function (li, i) {
             if (i >= PEHLE) li.hidden = !khula;
           });
@@ -1330,6 +1390,18 @@
     var outId = form.getAttribute('data-demo');
     var formName = FORM_NAMES[outId];
 
+    /* सबसे काम की संख्या यह नहीं है कि कितने लोग पृष्ठ तक आए, बल्कि यह कि
+       कितनों ने भरना शुरू किया और उनमें से कितनों ने पूरा किया। बीच का अंतर
+       बताता है कि फ़ॉर्म में कहीं अटकाव है। इसलिए पहली बार छूने पर एक बार
+       गिना जाता है, और सफल होने पर दूसरी बार। कोई शब्द नहीं भेजा जाता, केवल
+       यह कि कौन-सा फ़ॉर्म था। */
+    var chhua = false;
+    form.addEventListener('input', function () {
+      if (chhua) return;
+      chhua = true;
+      track('form_shuru', { form: outId });
+    }, { once: false });
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (form.checkValidity && !form.checkValidity()) { form.reportValidity(); return; }
@@ -1423,6 +1495,7 @@
       }).then(function (res) {
         form.reset();
         finish('आपकी जानकारी सुरक्षित रूप से सहेज ली गई है।', res && res.regNo);
+        track('form_bhara', { form: outId });
         if (window.LOKSANKALP_REFRESH_STATS) window.LOKSANKALP_REFRESH_STATS();
       }).catch(function (err) {
         setStatus(form, err && err.fatal

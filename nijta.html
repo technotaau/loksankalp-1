@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>लोकसंकल्प डैशबोर्ड | लोकसंकल्प</title>
-<meta name="description" content="लोकसंकल्प डैशबोर्ड : राज्य, जिला, ब्लॉक और ग्राम/वार्ड स्तर पर जुड़े गाँव, आयोजित सभाएँ, गठित समितियाँ और संकल्पों की पारदर्शी प्रगति।">
+<title>निजता | लोकसंकल्प</title>
+<meta name="description" content="लोकसंकल्प फ़ॉर्म में क्या माँगता है, वह कहाँ रहता है, वेबसाइट क्या नापती है, और अपनी जानकारी कैसे हटवाएँ।">
 <meta name="theme-color" content="#17307a">
-<link rel="canonical" href="https://loksankalp.org/dashboard.html">
+<link rel="canonical" href="https://loksankalp.org/nijta.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="लोकसंकल्प">
 <meta property="og:locale" content="hi_IN">
-<meta property="og:title" content="लोकसंकल्प डैशबोर्ड | लोकसंकल्प">
-<meta property="og:description" content="परिवर्तन की पारदर्शी तस्वीर : राज्य से गाँव तक अभियान की प्रगति एक जगह।">
-<meta property="og:url" content="https://loksankalp.org/dashboard.html">
+<meta property="og:title" content="निजता | लोकसंकल्प">
+<meta property="og:description" content="आपकी जानकारी कहाँ रहती है, किसके पास जाती है, और कैसे हटवाई जा सकती है।">
+<meta property="og:url" content="https://loksankalp.org/nijta.html">
 <meta property="og:image" content="https://loksankalp.org/assets/img/og-image.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
@@ -25,19 +25,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Tiro+Devanagari+Hindi&display=swap">
-<link rel="preconnect" href="https://script.google.com">
-<script src="js/config.js"></script>
-<script>
-/* The figures request takes a second or more to answer. js/site.js is deferred,
-   so waiting for it to start the request adds its download on top. Start it
-   here, while the head is still being parsed. */
-(function () {
-  var u = (window.LOKSANKALP_FORM_ENDPOINT || '').trim();
-  if (!u || !window.fetch) return;
-  window.LOKSANKALP_STATS = fetch(u + '?stats=1').then(function (r) { return r.json(); });
-  window.LOKSANKALP_STATS.catch(function () {});   // handled in site.js
-})();
-</script>
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/site.css">
 </head>
@@ -77,7 +64,7 @@
         <li><a href="gallery.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-camera"></use></svg>तस्वीरें</a></li>
         <li><a href="sahayata-kendra.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg>सहायता केंद्र</a></li>
         <li><a href="sansadhan.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-resource"></use></svg>सामग्री</a></li>
-        <li><a href="dashboard.html" aria-current="page"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-dashboard"></use></svg>डैशबोर्ड</a></li>
+        <li><a href="dashboard.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-dashboard"></use></svg>डैशबोर्ड</a></li>
         <li><a class="nav-login" href="login.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-users"></use></svg>लॉगिन</a></li>
       </ul>
     </nav>
@@ -89,92 +76,63 @@
 <!-- ================= PAGE HEAD ================= -->
 <section class="page-head">
   <div class="wrap">
-    <nav class="crumbs" aria-label="ब्रेडक्रम्ब">
+    <nav class="crumbs" aria-label="पथ">
       <ol>
         <li><a href="index.html">होम</a></li>
-        <li>लोकसंकल्प डैशबोर्ड</li>
+        <li aria-current="page">निजता</li>
       </ol>
     </nav>
-    <p class="eyebrow">प्रगति एवं पारदर्शिता</p>
-    <h1>लोकसंकल्प डैशबोर्ड</h1>
-    <p class="lead">गाँव से राज्य तक, अभियान कहाँ पहुँचा</p>
+    <p class="eyebrow">आपकी जानकारी</p>
+    <h1>निजता</h1>
+    <p class="lead">आप जो भरते हैं वह कहाँ रहता है, किसके पास जाता है, और कैसे हटवाया जा सकता है</p>
   </div>
 </section>
 
-<!-- ================= परिचय ================= -->
 <section class="section">
   <div class="wrap stack">
-    <p>यहाँ राज्य, जिला, ब्लॉक और गाँव/वार्ड, चारों स्तर की प्रगति दिखेगी।</p>
-    <p>आँकड़े ग्राम/वार्ड समितियों, शिक्षकों और समन्वयकों द्वारा भेजी गई रिपोर्ट से बनते हैं। जो गाँव रिपोर्ट भेजता है, उसकी मेहनत यहाँ दिखाई देती है। इसलिए हर सभा की रिपोर्ट भेजना ज़रूरी है।</p>
-    <p><span class="placeholder-note">प्रमुख संकेतक सजीव हैं। जिलेवार तालिका अभी नहीं</span></p>
+
+    <h2 id="kya">हम क्या माँगते हैं</h2>
+    <p>फ़ॉर्म में नाम, मोबाइल नंबर, गाँव या शहर और जिला माँगा जाता है। सभा की रिपोर्ट में तस्वीरें भी। इससे ज़्यादा कुछ नहीं।</p>
+    <ul class="ticks mt-2">
+      <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-check"></use></svg><span><strong>नाम</strong> प्रमाण-पत्र पर छापने के लिए।</span></li>
+      <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-check"></use></svg><span><strong>मोबाइल नंबर</strong> इसलिए कि एक ही व्यक्ति की दो प्रविष्टियाँ अलग की जा सकें, और ज़रूरत पड़ने पर टीम बात कर सके।</span></li>
+      <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-check"></use></svg><span><strong>गाँव और जिला</strong> इसलिए कि गिनती गाँववार और जिलेवार हो सके।</span></li>
+      <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-check"></use></svg><span><strong>तस्वीरें</strong> केवल वहाँ जहाँ आप स्वयं भेजते हैं।</span></li>
+    </ul>
+
+    <h2 id="kahan">यह कहाँ रहता है</h2>
+    <p>अभियान के अपने Google खाते में, एक Sheet और एक Drive फ़ोल्डर में। उस खाते तक अभियान की टीम के अलावा किसी की पहुँच नहीं है।</p>
+    <p>जो तस्वीर वेबसाइट पर लगती है, उसमें से पहले कैमरे की छिपी हुई जानकारी हटा दी जाती है। कैमरा हर तस्वीर के भीतर जगह और समय लिख देता है, और उसके साथ तस्वीर लगाना उस व्यक्ति का पता बता देने जैसा है।</p>
+
+    <h2 id="nahin">हम क्या नहीं करते</h2>
+    <ul class="ticks mt-2">
+      <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-check"></use></svg><span>आपका नंबर किसी को बेचते या देते नहीं।</span></li>
+      <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-check"></use></svg><span>वेबसाइट पर किसी का नाम या नंबर सार्वजनिक नहीं करते। पृष्ठों पर केवल गिनती दिखती है।</span></li>
+      <li><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-check"></use></svg><span>विज्ञापन नहीं दिखाते, और किसी विज्ञापन कंपनी को आपकी जानकारी नहीं भेजते।</span></li>
+    </ul>
+
+    <h2 id="bachche">बच्चों की जानकारी</h2>
+    <p>विद्यालय के कार्यक्रमों की रिपोर्ट में बच्चों के नाम और तस्वीरें आ जाती हैं। वे शिक्षक या अभिभावक के माध्यम से ही आती हैं, और उनके साथ भी वही नियम लगते हैं जो ऊपर लिखे हैं।</p>
+    <div class="callout">
+      <p>किसी बच्चे का नाम या तस्वीर हटवानी हो तो <a href="mailto:info@loksankalp.org">info@loksankalp.org</a> पर लिख दीजिए। कारण पूछे बिना हटा दी जाएगी।</p>
+    </div>
+
+    <h2 id="naapna">वेबसाइट क्या नापती है</h2>
+    <p>सितम्बर 2026 से यह देखा जाता है कि कितने लोग किस पृष्ठ तक पहुँचे और कहाँ से लौट गए, ताकि पढ़ने में जो कठिनाई हो वह ठीक की जा सके। इसके लिए Google Analytics और Google Search Console का उपयोग होता है।</p>
+    <p>वहाँ यह जाता है : कौन-सा पृष्ठ खुला, कितनी देर खुला रहा, फ़ोन है या कंप्यूटर, और मोटे तौर पर कौन-सा शहर या राज्य।</p>
+    <p><strong>वहाँ यह नहीं जाता : आपका नाम, आपका मोबाइल नंबर, और फ़ॉर्म में लिखा हुआ कोई भी शब्द।</strong> फ़ॉर्म का डेटा केवल ऊपर बताए गए Sheet में जाता है, कहीं और नहीं।</p>
+    <p>आपके ब्राउज़र में <span lang="en">Do Not Track</span> चालू हो तो कुछ भी नहीं नापा जाता। यह जाँच पृष्ठ खुलते ही सबसे पहले होती है।</p>
+
+    <h2 id="hatana">अपनी जानकारी हटवानी हो</h2>
+    <p><a href="mailto:info@loksankalp.org">info@loksankalp.org</a> पर लिख दीजिए। वही मोबाइल नंबर लिख दीजिएगा जो फ़ॉर्म में भरा था, ताकि पंक्ति पहचानी जा सके। कारण बताने की ज़रूरत नहीं है।</p>
+
+    <h2 id="badlav">इस पृष्ठ में बदलाव</h2>
+    <p>यह पृष्ठ बदलेगा तो नीचे की तारीख़ बदल जाएगी।</p>
+    <p class="form-note">अंतिम बदलाव : 25 सितम्बर 2026</p>
+
   </div>
 </section>
 
-
-<!-- ================= प्रमुख संकेतक ================= -->
-<section class="section" aria-labelledby="sanketak">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">एक नज़र में</p>
-      <h2 id="sanketak">प्रमुख संकेतक</h2>
-      <p>हर संख्या गाँवों से भेजी गई रिपोर्ट से बनती है।</p>
-    </div>
-    <div class="counters">
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg><b data-stat="gaon" data-count="0" data-loading>0</b><span>जुड़े हुए गाँव/शहर</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-calendar"></use></svg><b data-stat="sabhaen" data-count="0" data-loading>0</b><span>आयोजित सभाएँ</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-committee"></use></svg><b data-stat="samitiyan" data-count="0" data-loading>0</b><span>गठित समितियाँ</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg><b data-stat="sankalp" data-count="0" data-loading>0</b><span>संकल्प लेने वाले युवा/नागरिक</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-teacher"></use></svg><b data-stat="shikshak" data-count="0" data-loading>0</b><span>जुड़े हुए शिक्षक</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-youth"></use></svg><b data-stat="yuvaClub" data-count="0" data-loading>0</b><span>सक्रिय युवा क्लब</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-story"></use></svg><b data-stat="kahaniyan" data-count="0" data-loading>0</b><span>सफलता की कहानियाँ</span></div>
-      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg><b data-stat="sahayata" data-count="0" data-loading>0</b><span>सहायता सेवाओं से जुड़े व्यक्ति</span></div>
-    </div>
-    <noscript><style>.counters{display:none}</style><p class="center form-note">आँकड़े देखने के लिए जावास्क्रिप्ट चालू करें। बाकी पृष्ठ जावास्क्रिप्ट के बिना भी पूरा काम करता है।</p></noscript>
-    <p class="center mt-2" data-stats-note><span class="placeholder-note">आँकड़े जुड़ रहे हैं…</span></p>
-    <p class="center form-note">ये संख्याएँ वेबसाइट पर आए फ़ॉर्म से सीधे गिनी जाती हैं और हर नई प्रविष्टि के साथ बढ़ती हैं। संकल्प की संख्या में दोनों जुड़े हैं : स्वयं फ़ॉर्म भरकर संकल्प लेने वाले, और सभाओं में सामूहिक संकल्प लेने वाले प्रतिभागी।</p>
-  </div>
-</section>
-
-<!-- ================= जिलेवार प्रगति ================= -->
-<section class="section section--tint" aria-labelledby="jilewar">
-  <div class="wrap stack">
-    <div class="section-head">
-      <p class="eyebrow">तालिका</p>
-      <h2 id="jilewar">जिलेवार प्रगति</h2>
-      <p>जिस जिले से प्रविष्टि आई है, वह यहाँ अपने आप जुड़ जाता है।</p>
-    </div>
-    <div class="table-scroll">
-      <table class="data">
-        <caption>राजस्थान : जिलेवार लोकसंकल्प प्रगति</caption>
-        <thead>
-          <tr>
-            <th scope="col">जिला</th>
-            <th scope="col">जुड़े गाँव</th>
-            <th scope="col">सभाएँ</th>
-            <th scope="col">समितियाँ</th>
-            <th scope="col">संकल्प</th>
-          </tr>
-        </thead>
-        <tbody data-district-rows>
-          <tr><td colspan="5" class="center">आँकड़े जुड़ रहे हैं…</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-
-<!-- ================= CTA ================= -->
-<section class="section section--ink">
-  <div class="wrap center stack">
-    <h2>अपने गाँव या वार्ड का अंक भी इसी तालिका में जोड़ें</h2>
-    <p style="margin-inline:auto">रिपोर्ट नहीं भेजी तो गाँव का नाम तालिका में नहीं आएगा।</p>
-    <p class="cluster cluster--center mt-2">
-      <a class="btn btn--primary btn--lg" href="mera-sankalp.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>मेरा संकल्प</a>
-      <a class="btn btn--ghost btn--lg" href="gram-sabha.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>सभा की रिपोर्ट भेजें</a>
-    </p>
-  </div>
-</section>
 </main>
 
 <!-- ================= FOOTER ================= -->
@@ -205,7 +163,7 @@
         <ul>
           <li><a href="sahayata-kendra.html">नशा मुक्ति सहायता केंद्र</a></li>
           <li><a href="safalta-kahaniyan.html">सफलता की कहानियाँ</a></li>
-          <li><a href="sansadhan.html">सामग्री केंद्र</a></li>
+        <li><a href="sansadhan.html">सामग्री केंद्र</a></li>
           <li><a href="dashboard.html">लोकसंकल्प डैशबोर्ड</a></li>
           <li><a href="gallery.html">तस्वीरें</a></li>
           <li><a href="samman.html">सम्मान एवं प्रेरणा</a></li>
@@ -247,6 +205,7 @@
   <a href="sahayata-kendra.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg>सहायता</a>
 </nav>
 
+<script src="js/config.js" defer></script>
 <script src="js/site.js" defer></script>
 </body>
 </html>

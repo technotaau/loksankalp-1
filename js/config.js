@@ -10,3 +10,11 @@
  *   tools/check-form-endpoint.sh <url>
  */
 window.LOKSANKALP_FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbw5DbR-p0ech2BN7RwQ3LDVu9iFLYuawX7Pa7ph5-MVJFz0NAgi-aT-6UsC6T1fFlCwbw/exec';
+
+/* Google Analytics 4.
+ *
+ * यह आईडी गुप्त नहीं है, हर पृष्ठ के स्रोत में दिखती है। खाली कर देने पर
+ * कुछ नहीं नापा जाता और वेबसाइट वैसे ही चलती रहती है। लादने का तरीका और
+ * कौन-सी घटनाएँ भेजी जाती हैं, यह js/site.js में लिखा है; वहाँ "GA4" खोजिए।
+ */
+window.LOKSANKALP_GA4 = 'G-SHMJZP3C5F';
