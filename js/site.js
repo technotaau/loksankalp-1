@@ -1230,23 +1230,31 @@
 
     /* राजस्थान से बाहर वाले। नाम गिनाना ज़रूरी है : टोरंटो से भरने वाले को
        अपने देश का नाम पृष्ठ पर दिखेगा तो वह आगे भी भेजेगा। */
-    var bh = sec.querySelector('[data-jila-bahar]');
-    if (bh) {
-      if (!bahar || !bahar.length) { bh.hidden = true; }
-      else {
-        var naamList = bahar.map(function (r) { return r.naam; });
-        var jodo = naamList.length === 1 ? naamList[0]
-                 : naamList.slice(0, -1).join(', ') + ' और ' + naamList[naamList.length - 1];
-        var vy = bahar.reduce(function (a, r) { return a + (r.vyakti || 0); }, 0);
-        bh.innerHTML = '';
-        bh.appendChild(document.createTextNode('राजस्थान से बाहर '));
-        var st = document.createElement('strong');
-        st.textContent = jodo;
-        bh.appendChild(st);
-        bh.appendChild(document.createTextNode(' से भी ' + nf2.format(vy) + ' लोग जुड़े हैं।'));
-        bh.hidden = false;
-      }
-    }
+    /* राज्य और देश अलग-अलग पंक्तियों में।
+
+       पहले दोनों एक ही सूची में जुड़ जाते थे, और "दुबई" मध्य प्रदेश तथा
+       हरियाणा के बीच खड़ा दिखता था। सर्वर हर प्रविष्टि के साथ यह भेजता ही है
+       कि वह राज्य है या देश (`kya`), बस पृष्ठ उसे काम में नहीं ले रहा था। */
+    var likho = function (el, shuru, rows) {
+      if (!el) return;
+      if (!rows.length) { el.hidden = true; return; }
+      var naam = rows.map(function (r) { return r.naam; });
+      var jodo = naam.length === 1 ? naam[0]
+               : naam.slice(0, -1).join(', ') + ' और ' + naam[naam.length - 1];
+      var vy = rows.reduce(function (a, r) { return a + (r.vyakti || 0); }, 0);
+      el.innerHTML = '';
+      el.appendChild(document.createTextNode(shuru));
+      var st = document.createElement('strong');
+      st.textContent = jodo;
+      el.appendChild(st);
+      el.appendChild(document.createTextNode(' से ' + nf2.format(vy) + ' लोग जुड़े हैं।'));
+      el.hidden = false;
+    };
+    var sab = bahar || [];
+    likho(sec.querySelector('[data-jila-rajya]'), 'भारत के दूसरे राज्यों में ',
+          sab.filter(function (r) { return r.kya === 'राज्य'; }));
+    likho(sec.querySelector('[data-jila-desh]'), 'भारत से बाहर ',
+          sab.filter(function (r) { return r.kya !== 'राज्य'; }));
   }
 
   /* Districts appear in the table only once a submission names them, so the

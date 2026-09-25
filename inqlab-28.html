@@ -330,10 +330,15 @@
               <option>म्यांमार</option>
             <option>अन्य देश</option>
           </select>
+          <!-- "dubai" लिखकर एक प्रविष्टि अन्य देश में चली गई थी, जबकि
+               संयुक्त अरब अमीरात सूची का पहला ही विकल्प है। लोग देश का नहीं,
+               शहर का नाम सोचते हैं। इसीलिए यह पंक्ति। -->
+          <span class="hint">दुबई, शारजाह या अबू धाबी में हैं तो <strong>संयुक्त अरब अमीरात</strong> चुनिए।</span>
         </div>
         <div class="field" data-show-when="i-desh=अन्य देश" hidden>
           <label for="i-desh-anya">देश का नाम <span aria-hidden="true">*</span></label>
-          <input type="text" id="i-desh-anya" name="deshAnya" data-req>
+          <input type="text" id="i-desh-anya" name="deshAnya" data-req aria-describedby="i-desh-anya-hint">
+          <span class="hint" id="i-desh-anya-hint">देश का नाम लिखिए, शहर का नहीं।</span>
         </div>
         <div class="choices">
           <label class="choice"><input type="checkbox" name="sahmati" value="हाँ" required>मैं अपनी यह जानकारी लोकसंकल्प अभियान के पास दर्ज किए जाने की सहमति देता / देती हूँ।</label>
@@ -484,7 +489,8 @@ https://loksankalp.org/inqlab-28.html</p>
     <ul class="jila-list" data-jila-list></ul>
     <button class="jila-more" type="button" data-jila-more aria-expanded="false" hidden></button>
     <p class="jila-bahar center" style="margin-inline:auto" data-jila-bache hidden></p>
-    <p class="jila-bahar center" style="margin-inline:auto" data-jila-bahar hidden></p>
+    <p class="jila-bahar center" style="margin-inline:auto" data-jila-rajya hidden></p>
+    <p class="jila-bahar center" style="margin-inline:auto" data-jila-desh hidden></p>
   </div>
 </section>
 
