@@ -456,7 +456,10 @@ https://loksankalp.org/inqlab-28.html</p>
       <div class="counter">
         <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pin"></use></svg>
         <b data-stat="inqlabJile" data-count="0" data-loading>0</b>
-        <span>राजस्थान के जिले</span>
+        <!-- लेबल js/site.js में बनता है : "41 जिलों में से"।
+             41 जिले के ड्रॉपडाउन से गिने जाते हैं, इसलिए जिस दिन राजस्थान
+             में जिले बदलेंगे, यह संख्या अपने आप बदल जाएगी। -->
+        <span data-jile-label>जुड़े हुए जिले</span>
       </div>
       <!-- ये दोनों पहली बाहरी प्रविष्टि आने तक अपने आप छिपे रहते हैं -->
       <div class="counter">
