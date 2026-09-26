@@ -1,5 +1,5 @@
 /**
- * लोकसंकल्प — form receiver.
+ * लोकसंकल्प form receiver.
  *
  * Saves every form submission as a row in this spreadsheet (one tab per form)
  * and every uploaded photo as a file in a Drive folder, writing the file's link
@@ -13,6 +13,10 @@
 
 // ---- settings ------------------------------------------------------------
 
+// यह Drive में पहले से बने असली फ़ोल्डर का नाम है। इसमें em dash है, पर
+// इसे मत बदलिए : नाम बदलते ही script एक नया खाली फ़ोल्डर बना लेगा और
+// पुरानी सारी तस्वीरें पुराने फ़ोल्डर में छूट जाएँगी। यह नाम कभी किसी
+// वेबसाइट पृष्ठ पर नहीं दिखता।
 var FOLDER_NAME = 'लोकसंकल्प — फ़ॉर्म फ़ाइलें';
 var MAX_FILES = 6;             // per submission
 var MAX_FILE_BYTES = 8 * 1024 * 1024;
@@ -22,16 +26,40 @@ var MAX_TEXT = 4000;           // characters kept per field
 // figure the campaign is judged by. Anything above this is treated as a data
 // error and contributes nothing; the sabha itself still counts.
 var MAX_SABHA_SANKHYA = 50000;
-var CODE_VERSION = 5;          // bump when this file changes; shown in every response
+// Largest household one इंकलाब 28 entry may contribute. "व्यक्ति" is a headline
+// figure and the endpoint is public, so one typo or prank ("9999") would wreck
+// it. Above this the number is treated as a data error and adds nothing to
+// व्यक्ति; the entry itself, and its village and district, still count.
+//
+// The number counts the whole household, the registrant included.
+//
+// Set at 150 rather than a tighter number because a संयुक्त परिवार in these
+// villages really can run to several dozen, and the cost of the two mistakes
+// is not the same: too high lets a prank inflate the figure, which a look at
+// the sheet catches, while too low silently drops a real joint family down to
+// one person, which nobody ever notices. The sheet always keeps what was
+// typed, so an entry refused here can still be read and counted by hand.
+// If this changes, change max= on the form field too, because the page reads that
+// attribute for its running total, so those two never drift apart.
+var MAX_UPVAAS_SADASYA = 150;
+var CODE_VERSION = 19;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
   sankalp:  { tab: 'संकल्प',           fields: ['naam', 'mobile', 'bhumika', 'jila', 'gaon', 'sweecha'] },
-  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'tithi', 'sankhya', 'samiti', 'report'] },
+  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'vidyalaya', 'tithi', 'sankhya', 'samiti', 'report'] },
   kahani:   { tab: 'सफलता कहानियाँ',   fields: ['shirshak', 'naam', 'mobile', 'gaon', 'jila', 'shreni', 'kahani', 'sahmati'] },
   shikshak: { tab: 'शिक्षक',           fields: ['naam', 'mobile', 'vidyalaya', 'jila', 'pad', 'yogdan'] },
   yuva:     { tab: 'युवा क्लब',        fields: ['club', 'naam', 'mobile', 'gaon', 'jila', 'sadasya', 'ruchi'] },
-  samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] }
+  samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] },
+  sankalp21:{ tab: 'संकल्प 21',         fields: ['naam', 'mobile', 'jila', 'gaon', 'roop', 'sanstha',
+                                                 'upvaas', 'sankalp', 'sahmati', 'photoSahmati'] },
+  karuna21: { tab: 'करुणा 21',          fields: ['naam', 'mobile', 'jila', 'gaon', 'sandesh', 'sahmati'] },
+  // regNo is not a form field: the script fills it in under the lock so every
+  // certificate carries a number that can be looked up in this sheet.
+  inqlab28: { tab: 'इंकलाब 28',         regPrefix: 'IN28',
+              fields: ['regNo', 'naam', 'mobile', 'upvaasSadasya', 'gaon', 'jila',
+                       'rajya', 'desh', 'deshAnya', 'sahmati'] }
 };
 
 // Human-readable column headings.
@@ -41,7 +69,11 @@ var LABELS = {
   report: 'रिपोर्ट', shirshak: 'शीर्षक', shreni: 'श्रेणी', kahani: 'कहानी',
   sahmati: 'सहमति', vidyalaya: 'विद्यालय', pad: 'पद', yogdan: 'योगदान',
   club: 'क्लब', sadasya: 'सदस्य संख्या', ruchi: 'रुचि', namit: 'नामांकित',
-  sthan: 'गाँव / विद्यालय', karya: 'कार्य विवरण'
+  sthan: 'गाँव / विद्यालय', karya: 'कार्य विवरण',
+  roop: 'सहभागी के रूप में', sanstha: 'संस्था / विद्यालय', upvaas: 'उपवास',
+  sankalp: 'लोकसंकल्प', photoSahmati: 'फोटो सहमति', sandesh: 'संदेश',
+  regNo: 'पंजीकरण क्रमांक', upvaasSadasya: 'उपवास सदस्य',
+  rajya: 'राज्य', desh: 'देश', deshAnya: 'देश (लिखा हुआ)'
 };
 
 // ---- entry point ---------------------------------------------------------
@@ -57,21 +89,55 @@ function doPost(e) {
     var spec = FORMS[data.form];
     if (!spec) return reply(false, 'अज्ञात फ़ॉर्म');
 
+    // When a classroom submits together the page retries instead of showing an
+    // error, so the same submission can arrive more than once. It carries an id
+    // that is generated once and kept across those retries; the first write
+    // records it and any repeat is answered as saved without writing again.
+    var reqId = String(data.reqId || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 64);
+    var seen = CacheService.getScriptCache();
+    var seenKey = 'req-' + reqId;
+    // What is remembered is the registration number, not merely "seen". A
+    // retry must hand back the SAME number: the certificate is printed from
+    // it, and two numbers for one person would be two certificates for one
+    // registration. Forms without a number remember a plain '1'.
+    var already = reqId ? seen.get(seenKey) : null;
+    if (already) return reply(true, 'पहले ही सहेज लिया गया', already === '1' ? '' : already);
+
+    // Photographs go to Drive before the lock is taken. Uploading is the slow
+    // part of a submission, and holding the queue open through it is what
+    // would turn a classroom into a jam. The lock guards the append alone.
+    var links = saveFiles(data.files, data.form);
+    var regNo = '';
+
     var lock = LockService.getScriptLock();
-    lock.waitLock(20000);                    // keep concurrent writes from colliding
+    // Appending is quick, so a minute is room for a few hundred people.
+    lock.waitLock(60000);
     try {
-      var links = saveFiles(data.files, data.form);
+      // Checked again inside the lock: two retries racing each other would
+      // both have passed the check above.
+      var twice = reqId ? seen.get(seenKey) : null;
+      if (twice) return reply(true, 'पहले ही सहेज लिया गया', twice === '1' ? '' : twice);
       var sheet = getTab(spec);
       var row = [timestamp()];
       for (var i = 0; i < spec.fields.length; i++) {
         row.push(clean(data.values ? data.values[spec.fields[i]] : ''));
       }
+      // A declared regNo field is filled here, never by the sender: a number
+      // the browser could choose would not be unique and could be forged.
+      var at = spec.fields.indexOf('regNo');
+      if (at >= 0) { regNo = nextRegNo(spec, sheet); row[1 + at] = regNo; }
       row.push(links.join('\n'));
       sheet.appendRow(row);
+      if (reqId) seen.put(seenKey, regNo || '1', 21600);   // six hours
     } finally {
       lock.releaseLock();
     }
-    return reply(true, 'सहेज लिया गया');
+    // A new row changes the published figures, so the cached copy is now
+    // wrong. Dropping it means the very next reader recomputes: someone who
+    // has just registered sees their own entry counted, not a number up to a
+    // minute old. This is what makes a live demonstration work.
+    try { CacheService.getScriptCache().remove(statsCacheKey()); } catch (err2) {}
+    return reply(true, 'सहेज लिया गया', regNo);
   } catch (err) {
     return reply(false, String(err));
   }
@@ -87,7 +153,7 @@ function doGet(e) {
     return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
   }
   var cache = CacheService.getScriptCache();
-  var key = 'stats-v' + CODE_VERSION;
+  var key = statsCacheKey();
   var hit = cache.get(key);
   if (hit) return json(hit);
   try {
@@ -101,6 +167,225 @@ function doGet(e) {
   }
 }
 
+function statsCacheKey() { return 'stats-v' + CODE_VERSION; }
+
+/**
+ * Where a field's column actually is, read from the sheet's own heading row.
+ *
+ * A sheet only gains a newly added column when the NEXT submission is written,
+ * because that is when alignHeader runs. Until then the spec has the new field
+ * and the sheet does not, and a position taken from the spec lands one column
+ * short. That is exactly how विद्यालय came to count the तिथि column's dates as
+ * school names the moment the field was added. Reading by heading cannot drift.
+ *
+ * Returns an absolute index into a data row, or -1 when the sheet or the
+ * column is not there yet, which callers treat as "nothing to count".
+ */
+function colOf(ss, spec, field) {
+  var sh = ss.getSheetByName(spec.tab);
+  if (!sh || sh.getLastColumn() < 1) return -1;
+  var want = LABELS[field] || field;
+  var head = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  for (var i = 0; i < head.length; i++) {
+    if (String(head[i]).trim() === want) return i;
+  }
+  return -1;
+}
+
+/**
+ * One village written by many hands is still one village. Case and stray
+ * spaces are levelled; spelling and script are not. Someone typing the name
+ * in English as well as Hindi therefore counts twice, which is accepted:
+ * guessing that two spellings mean the same place would be worse than the
+ * occasional duplicate.
+ */
+/* The विद्यालय field on the सभा report is required, so someone whose सभा had
+   no school attached still has to write something. These are the answers they
+   write. Counting them would invent schools called "नहीं" and "लागू नहीं". */
+var NOT_A_PLACE = {
+  'लागू नहीं': 1, 'लागूनहीं': 1, 'लागु नहीं': 1, 'नहीं': 1, 'नही': 1, 'ना': 1, 'न': 1,
+  'कोई नहीं': 1, 'कोई नही': 1, 'कुछ नहीं': 1, 'शून्य': 1, 'निरंक': 1,
+  'na': 1, 'n/a': 1, 'nil': 1, 'none': 1, 'no': 1, 'not applicable': 1, 'nai': 1,
+  '-': 1, '--': 1, '---': 1, '.': 1, '0': 1, 'x': 1, '*': 1
+};
+
+/* A place name worth counting: present, more than one character, and not one
+   of the refusals above. */
+function isPlace(normalised) {
+  return !!normalised && normalised.length > 1 && !NOT_A_PLACE[normalised];
+}
+
+/* जगह का नाम एक ही रूप में लाना।
+
+   जिला, राज्य और देश, तीनों फ़ॉर्म में ड्रॉपडाउन हैं, इसलिए वहाँ से हमेशा
+   देवनागरी नाम ही आता है। पर Sheet में पंक्तियाँ हाथ से भी भरी जाती हैं,
+   और तब कोई "churu" या "ajmer" लिख देता है। नतीजा यह कि पृष्ठ पर चूरू और
+   churu दो अलग जिले बनकर बैठ जाते हैं, और जिलों की गिनती भी बढ़ी हुई
+   दिखती है। 26 सितम्बर को ऐसी चार पंक्तियाँ मिलीं।
+
+   नीचे की तालिका अंग्रेज़ी में लिखे रूपों को देवनागरी नाम पर ले आती है।
+   मिलान करते समय छोटे-बड़े अक्षर और बीच की जगह नहीं देखी जाती, इसलिए
+   "Sri Ganganagar", "sriganganagar" और "SRIGANGANAGAR", तीनों एक ही जगह
+   पहुँचते हैं। जो नाम तालिका में नहीं है वह जैसा आया वैसा ही रहता है,
+   इसलिए गाँवों के नाम इससे नहीं बिगड़ते। */
+var PLACE_ALIAS = {
+  // जिले
+  'ajmer': 'अजमेर',
+  'alwar': 'अलवर',
+  'udaipur': 'उदयपुर',
+  'karauli': 'करौली',
+  'kotputlibehror': 'कोटपूतली-बहरोड़',
+  'kotputlibahror': 'कोटपूतली-बहरोड़',
+  'kotputli': 'कोटपूतली-बहरोड़',
+  'kota': 'कोटा',
+  'khairthaltijara': 'खैरथल-तिजारा',
+  'khairthal': 'खैरथल-तिजारा',
+  'chittorgarh': 'चित्तौड़गढ़',
+  'chittaurgarh': 'चित्तौड़गढ़',
+  'chittor': 'चित्तौड़गढ़',
+  'churu': 'चूरू',
+  'chooru': 'चूरू',
+  'jaipur': 'जयपुर',
+  'jalore': 'जालौर',
+  'jalor': 'जालौर',
+  'jaisalmer': 'जैसलमेर',
+  'jodhpur': 'जोधपुर',
+  'jhalawar': 'झालावाड़',
+  'jhunjhunu': 'झुंझुनू',
+  'jhunjhunun': 'झुंझुनू',
+  'jhujhunu': 'झुंझुनू',
+  'tonk': 'टोंक',
+  'deeg': 'डीग',
+  'dig': 'डीग',
+  'didwanakuchaman': 'डीडवाना-कुचामन',
+  'didwana': 'डीडवाना-कुचामन',
+  'dungarpur': 'डूंगरपुर',
+  'doongarpur': 'डूंगरपुर',
+  'dausa': 'दौसा',
+  'dholpur': 'धौलपुर',
+  'dhaulpur': 'धौलपुर',
+  'nagaur': 'नागौर',
+  'nagor': 'नागौर',
+  'pali': 'पाली',
+  'pratapgarh': 'प्रतापगढ़',
+  'phalodi': 'फलौदी',
+  'falodi': 'फलौदी',
+  'banswara': 'बांसवाड़ा',
+  'barmer': 'बाड़मेर',
+  'badmer': 'बाड़मेर',
+  'baran': 'बारां',
+  'balotra': 'बालोतरा',
+  'bikaner': 'बीकानेर',
+  'bundi': 'बूंदी',
+  'boondi': 'बूंदी',
+  'beawar': 'ब्यावर',
+  'bharatpur': 'भरतपुर',
+  'bhilwara': 'भीलवाड़ा',
+  'rajsamand': 'राजसमंद',
+  'sriganganagar': 'श्रीगंगानगर',
+  'sriganganagar': 'श्रीगंगानगर',
+  'ganganagar': 'श्रीगंगानगर',
+  'shriganganagar': 'श्रीगंगानगर',
+  'salumbar': 'सलूम्बर',
+  'sawaimadhopur': 'सवाई माधोपुर',
+  'sawaimadhopur': 'सवाई माधोपुर',
+  'sirohi': 'सिरोही',
+  'sikar': 'सीकर',
+  'hanumangarh': 'हनुमानगढ़',
+  'hanumagarh': 'हनुमानगढ़',
+  // राज्य
+  'andhrapradesh': 'आंध्र प्रदेश',
+  'arunachalpradesh': 'अरुणाचल प्रदेश',
+  'assam': 'असम',
+  'bihar': 'बिहार',
+  'chhattisgarh': 'छत्तीसगढ़',
+  'goa': 'गोवा',
+  'gujarat': 'गुजरात',
+  'haryana': 'हरियाणा',
+  'himachalpradesh': 'हिमाचल प्रदेश',
+  'jharkhand': 'झारखंड',
+  'karnataka': 'कर्नाटक',
+  'kerala': 'केरल',
+  'madhyapradesh': 'मध्य प्रदेश',
+  'maharashtra': 'महाराष्ट्र',
+  'manipur': 'मणिपुर',
+  'meghalaya': 'मेघालय',
+  'mizoram': 'मिज़ोरम',
+  'nagaland': 'नागालैंड',
+  'odisha': 'ओडिशा',
+  'orissa': 'ओडिशा',
+  'punjab': 'पंजाब',
+  'sikkim': 'सिक्किम',
+  'tamilnadu': 'तमिलनाडु',
+  'tamilnadu': 'तमिलनाडु',
+  'telangana': 'तेलंगाना',
+  'tripura': 'त्रिपुरा',
+  'uttarpradesh': 'उत्तर प्रदेश',
+  'uttarakhand': 'उत्तराखंड',
+  'westbengal': 'पश्चिम बंगाल',
+  'andamanandnicobar': 'अंडमान और निकोबार',
+  'andaman': 'अंडमान और निकोबार',
+  'chandigarh': 'चंडीगढ़',
+  'delhi': 'दिल्ली',
+  'newdelhi': 'दिल्ली',
+  'jammuandkashmir': 'जम्मू और कश्मीर',
+  'jammukashmir': 'जम्मू और कश्मीर',
+  'jk': 'जम्मू और कश्मीर',
+  'ladakh': 'लद्दाख',
+  'lakshadweep': 'लक्षद्वीप',
+  'puducherry': 'पुडुचेरी',
+  'pondicherry': 'पुडुचेरी',
+  'rajasthan': 'राजस्थान',
+  // देश
+  'uae': 'संयुक्त अरब अमीरात',
+  'uae': 'संयुक्त अरब अमीरात',
+  'unitedarabemirates': 'संयुक्त अरब अमीरात',
+  'dubai': 'संयुक्त अरब अमीरात',
+  'sharjah': 'संयुक्त अरब अमीरात',
+  'abudhabi': 'संयुक्त अरब अमीरात',
+  'usa': 'अमेरिका',
+  'usa': 'अमेरिका',
+  'unitedstates': 'अमेरिका',
+  'america': 'अमेरिका',
+  'saudiarabia': 'सऊदी अरब',
+  'saudi': 'सऊदी अरब',
+  'malaysia': 'मलेशिया',
+  'kuwait': 'कुवैत',
+  'oman': 'ओमान',
+  'qatar': 'क़तर',
+  'uk': 'ब्रिटेन',
+  'uk': 'ब्रिटेन',
+  'unitedkingdom': 'ब्रिटेन',
+  'britain': 'ब्रिटेन',
+  'england': 'ब्रिटेन',
+  'canada': 'कनाडा',
+  'australia': 'ऑस्ट्रेलिया',
+  'nepal': 'नेपाल',
+  'singapore': 'सिंगापुर',
+  'southafrica': 'दक्षिण अफ़्रीका',
+  'srilanka': 'श्रीलंका',
+  'srilanka': 'श्रीलंका',
+  'bahrain': 'बहरीन',
+  'newzealand': 'न्यूज़ीलैंड',
+  'germany': 'जर्मनी',
+  'italy': 'इटली',
+  'mauritius': 'मॉरीशस',
+  'fiji': 'फ़िजी',
+  'thailand': 'थाईलैंड',
+  'myanmar': 'म्यांमार',
+  'burma': 'म्यांमार'
+};
+
+function normPlace(value) {
+  var v = String(value === null || value === undefined ? '' : value)
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+  if (!v) return v;
+  var key = v.replace(/[\s.\-_]/g, '');
+  return PLACE_ALIAS[key] || v;
+}
+
 function computeStats() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -110,38 +395,135 @@ function computeStats() {
   var shikshakRows = rows(ss, FORMS.shikshak.tab);
   var yuvaRows     = rows(ss, FORMS.yuva.tab);
   var sammanRows   = rows(ss, FORMS.samman.tab);
+  var s21Rows      = rows(ss, FORMS.sankalp21.tab);
+  var k21Rows      = rows(ss, FORMS.karuna21.tab);
+  var i28Rows      = rows(ss, FORMS.inqlab28.tab);
 
   // "जुड़े हुए गाँव" counts each village once, however many forms mention it.
+  // Ten people from one village make that village count once, not ten times,
+  // and a village a सभा already reached adds nothing when its residents
+  // register individually.
   var villages = {};
   [[sankalpRows, FORMS.sankalp], [sabhaRows, FORMS.sabha],
-   [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva]].forEach(function (pair) {
-    var idx = pair[1].fields.indexOf('gaon');
+   [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva],
+   [s21Rows, FORMS.sankalp21]].forEach(function (pair) {
+    var idx = colOf(ss, pair[1], 'gaon');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
-      var v = String(r[idx + 1] || '').trim();
-      if (v) villages[v.toLowerCase()] = 1;
+      var v = normPlace(r[idx]);
+      if (isPlace(v)) villages[v] = 1;
     });
   });
 
-  var schools = {};
-  var vIdx = FORMS.shikshak.fields.indexOf('vidyalaya');
-  shikshakRows.forEach(function (r) {
-    var v = String(r[vIdx + 1] || '').trim();
-    if (v) schools[v.toLowerCase()] = 1;
+  // The same over करुणा 21 alone: the figures printed beneath its own form
+  // should be about करुणा 21 and nothing else.
+  var k21Villages = {};
+  var gK21 = colOf(ss, FORMS.karuna21, 'gaon');
+  if (gK21 >= 0) k21Rows.forEach(function (r) {
+    var v = normPlace(r[gK21]);
+    if (isPlace(v)) k21Villages[v] = 1;
   });
 
-  var samitiIdx = FORMS.sabha.fields.indexOf('samiti');
-  var samitiyan = sabhaRows.filter(function (r) {
-    return String(r[samitiIdx + 1] || '').trim() === 'हाँ';
+  /* इंकलाब 28 counts four things, and two of them are counted differently
+     from anything else on this sheet.
+
+     A person registers on behalf of a household: the form asks how many
+     members of the family, INCLUDING them, will keep the fast. So one entry
+     is one परिवार, and it brings exactly that number of व्यक्ति. A blank,
+     zero or unreadable answer still brings one person; it never brings zero,
+     because somebody did register.
+
+     The question used to ask for the number BESIDES the registrant and this
+     added one. The team changed the wording on 23 September, so the +1 is
+     gone. Rows written under the old wording are one short of what their
+     senders meant; they are few, and correcting them in the sheet is the
+     honest fix rather than carrying two rules here forever. */
+  var i28Villages = {}, i28Districts = {}, i28States = {}, i28Countries = {}, i28Vyakti = 0;
+  /* जिलेवार, केवल इंकलाब 28 के अपने पृष्ठ के लिए। यह डैशबोर्ड वाली
+     byDistrict तालिका से अलग रखा गया है : वह तालिका "जहाँ सभा और संकल्प
+     हुए" के अर्थ में प्रचारित है, और उसमें एक घरेलू उपवास जोड़ देने से उस
+     संख्या का अर्थ चुपचाप बदल जाता। bahar में राजस्थान से बाहर के राज्य
+     और देश आते हैं, ताकि बाहर से जुड़ने वाले को भी अपना नाम दिखे। */
+  var i28ByJila = {}, i28Bahar = {};
+  var bucket = function (box, naam, kya) {
+    if (!box[naam]) box[naam] = { parivar: 0, vyakti: 0, kya: kya || '' };
+    return box[naam];
+  };
+  var gI28 = colOf(ss, FORMS.inqlab28, 'gaon');
+  var jI28 = colOf(ss, FORMS.inqlab28, 'jila');
+  var rI28 = colOf(ss, FORMS.inqlab28, 'rajya');
+  var dI28 = colOf(ss, FORMS.inqlab28, 'desh');
+  var daI28 = colOf(ss, FORMS.inqlab28, 'deshAnya');
+  var sI28 = colOf(ss, FORMS.inqlab28, 'upvaasSadasya');
+  i28Rows.forEach(function (r) {
+    if (gI28 >= 0) { var v = normPlace(r[gI28]); if (isPlace(v)) i28Villages[v] = 1; }
+
+    /* Where this entry is from, decided by which of the three columns is
+       filled rather than by matching the words in जिला. The जिला column holds
+       a marker for anyone outside Rajasthan ("भारत के अन्य राज्य से"), and
+       counting that as a district would put a phrase among the district
+       names. Reading the columns instead of the marker means the wording can
+       be reworded any day without the counts quietly breaking. */
+    var kul = sI28 < 0 ? 0 : count(r[sI28]);
+    // Blank, zero or a typo: fall back to the one person who did register.
+    if (kul < 1 || kul > MAX_UPVAAS_SADASYA) kul = 1;
+    i28Vyakti += kul;
+
+    var raj = rI28 < 0 ? '' : normPlace(r[rI28]);
+    var des = dI28 < 0 ? '' : normPlace(r[dI28]);
+    var desA = daI28 < 0 ? '' : normPlace(r[daI28]);
+    var b = null;
+    if (isPlace(desA) || isPlace(des)) {
+      // "अन्य देश" is the escape hatch, so the written name wins when present
+      var ku = isPlace(desA) ? desA : des;
+      if (ku !== 'अन्य देश') { i28Countries[ku] = 1; b = bucket(i28Bahar, ku, 'देश'); }
+    } else if (isPlace(raj)) {
+      i28States[raj] = 1;
+      b = bucket(i28Bahar, raj, 'राज्य');
+    } else if (jI28 >= 0) {
+      /* ड्रॉपडाउन का आख़िरी विकल्प "अन्य" है, यानी "मेरा जिला सूची में नहीं
+         है"। राजस्थान का कोई जिला इस नाम का नहीं, इसलिए उसे एक जिला गिनना
+         "राजस्थान के जिले" वाली संख्या को एक बढ़ा देता था और पृष्ठ पर दिखने
+         वाली सूची से मेल नहीं खाता था। अब वह पंक्ति किसी जिले में नहीं गिनी
+         जाती; पृष्ठ उसे "जिनका जिला दर्ज नहीं हुआ" में जोड़ लेता है। */
+      var d = normPlace(r[jI28]);
+      if (isPlace(d) && d !== 'अन्य') { i28Districts[d] = 1; b = bucket(i28ByJila, d, 'जिला'); }
+    }
+    if (b) { b.parivar++; b.vyakti += kul; }
+  });
+
+  // The same villages, counted over संकल्प 21 alone, for that page's own figure.
+  var s21Villages = {};
+  var g21 = colOf(ss, FORMS.sankalp21, 'gaon');
+  if (g21 >= 0) s21Rows.forEach(function (r) {
+    var v = normPlace(r[g21]);
+    if (isPlace(v)) s21Villages[v] = 1;
+  });
+
+  // Schools are collected from the शिक्षक form and from सभा reports, into one
+  // set. A school a teacher registered and a सभा later named counts once.
+  var schools = {};
+  [[shikshakRows, FORMS.shikshak], [sabhaRows, FORMS.sabha]].forEach(function (pair) {
+    var idx = colOf(ss, pair[1], 'vidyalaya');
+    if (idx < 0) return;
+    pair[0].forEach(function (r) {
+      var v = normPlace(r[idx]);
+      if (isPlace(v)) schools[v] = 1;
+    });
+  });
+
+  var samitiIdx = colOf(ss, FORMS.sabha, 'samiti');
+  var samitiyan = samitiIdx < 0 ? 0 : sabhaRows.filter(function (r) {
+    return String(r[samitiIdx] || '').trim() === 'हाँ';
   }).length;
 
   // People who took the संकल्प together at a सभा count towards the headline
   // figure alongside those who filled the form themselves: a village that
   // pledges as one gathering is the campaign's normal path, not the exception.
-  var nIdx = FORMS.sabha.fields.indexOf('sankhya');
+  var nIdx = colOf(ss, FORMS.sabha, 'sankhya');
   var sabhaPratibhagi = 0;
-  sabhaRows.forEach(function (r) {
-    sabhaPratibhagi += count(r[nIdx + 1]);
+  if (nIdx >= 0) sabhaRows.forEach(function (r) {
+    sabhaPratibhagi += count(r[nIdx]);
   });
 
   var stats = {
@@ -150,7 +532,7 @@ function computeStats() {
     samitiyan:  samitiyan,
     // One consolidated number. The two halves are published too, so the
     // dashboard can always show where the figure came from.
-    sankalp:         sankalpRows.length + sabhaPratibhagi,
+    sankalp:         sankalpRows.length + sabhaPratibhagi + s21Rows.length,
     sankalpOnline:   sankalpRows.length,
     sabhaPratibhagi: sabhaPratibhagi,
     shikshak:   shikshakRows.length,
@@ -158,6 +540,22 @@ function computeStats() {
     yuvaClub:   yuvaRows.length,
     kahaniyan:  kahaniRows.length,
     samman:     sammanRows.length,
+    // संकल्प 21 is folded into the headline figure above, because one
+    // campaign should publish one number. It is also reported on its own so
+    // the संकल्प 21 page can show just its own participation.
+    sankalp21:      s21Rows.length,
+    sankalp21Gaon:  Object.keys(s21Villages).length,
+    karuna21:       k21Rows.length,
+    karuna21Gaon:   Object.keys(k21Villages).length,
+    // इंकलाब 28. Deliberately outside the headline संकल्प figure for now:
+    // folding a household pledge into a number published as individual
+    // संकल्प would change what that number means without saying so.
+    inqlabVyakti:   i28Vyakti,
+    inqlabParivar:  i28Rows.length,
+    inqlabGaon:     Object.keys(i28Villages).length,
+    inqlabJile:     Object.keys(i28Districts).length,
+    inqlabRajya:    Object.keys(i28States).length,
+    inqlabDesh:     Object.keys(i28Countries).length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
@@ -170,35 +568,63 @@ function computeStats() {
     if (!byDistrict[d]) byDistrict[d] = { gaon: {}, sabhaen: 0, samitiyan: 0, sankalp: 0 };
     return byDistrict[d];
   };
-  var jSankalp = FORMS.sankalp.fields.indexOf('jila');
-  var gSankalp = FORMS.sankalp.fields.indexOf('gaon');
-  sankalpRows.forEach(function (r) {
-    var d = touch(r[jSankalp + 1]); if (!d) return;
+  var jSankalp = colOf(ss, FORMS.sankalp, 'jila');
+  var gSankalp = colOf(ss, FORMS.sankalp, 'gaon');
+  if (jSankalp >= 0) sankalpRows.forEach(function (r) {
+    var d = touch(r[jSankalp]); if (!d) return;
     d.sankalp++;
-    var v = String(r[gSankalp + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
+    var v = gSankalp < 0 ? '' : normPlace(r[gSankalp]); if (isPlace(v)) d.gaon[v] = 1;
   });
-  var jSabha = FORMS.sabha.fields.indexOf('jila');
-  var gSabha = FORMS.sabha.fields.indexOf('gaon');
-  sabhaRows.forEach(function (r) {
-    var d = touch(r[jSabha + 1]); if (!d) return;
+  var jSabha = colOf(ss, FORMS.sabha, 'jila');
+  var gSabha = colOf(ss, FORMS.sabha, 'gaon');
+  if (jSabha >= 0) sabhaRows.forEach(function (r) {
+    var d = touch(r[jSabha]); if (!d) return;
     d.sabhaen++;
-    d.sankalp += count(r[nIdx + 1]);   // same basis as the headline figure
-    if (String(r[samitiIdx + 1] || '').trim() === 'हाँ') d.samitiyan++;
-    var v = String(r[gSabha + 1] || '').trim(); if (v) d.gaon[v.toLowerCase()] = 1;
+    if (nIdx >= 0) d.sankalp += count(r[nIdx]);   // same basis as the headline figure
+    if (samitiIdx >= 0 && String(r[samitiIdx] || '').trim() === 'हाँ') d.samitiyan++;
+    var v = gSabha < 0 ? '' : normPlace(r[gSabha]); if (isPlace(v)) d.gaon[v] = 1;
   });
+  var j21 = colOf(ss, FORMS.sankalp21, 'jila');
+  if (j21 >= 0) s21Rows.forEach(function (r) {
+    var d = touch(r[j21]); if (!d) return;
+    d.sankalp++;
+    var v = g21 < 0 ? '' : normPlace(r[g21]); if (isPlace(v)) d.gaon[v] = 1;
+  });
+  /* इंकलाब 28 की जिलेवार सूची। सबसे बड़ा जिला पहले, ताकि पृष्ठ पर पहली
+     नज़र में ही पता चले कि कहाँ सबसे ज़्यादा लोग जुड़े हैं। */
+  var listOf = function (box) {
+    return Object.keys(box).map(function (n) {
+      return { naam: n, parivar: box[n].parivar, vyakti: box[n].vyakti, kya: box[n].kya };
+    }).sort(function (a, b) { return b.vyakti - a.vyakti || b.parivar - a.parivar; });
+  };
+  stats.inqlabByJila = listOf(i28ByJila);
+  stats.inqlabBahar  = listOf(i28Bahar);
+
   stats.byDistrict = Object.keys(byDistrict).map(function (d) {
     return { jila: d, gaon: Object.keys(byDistrict[d].gaon).length,
              sabhaen: byDistrict[d].sabhaen, samitiyan: byDistrict[d].samitiyan,
              sankalp: byDistrict[d].sankalp };
   }).sort(function (a, b) { return (b.sabhaen + b.sankalp) - (a.sabhaen + a.sankalp); });
 
-  // Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
-  // Lets staff publish figures no form can produce.
+  /* Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
+     Two forms:
+       vidyalaya    460    replaces the counted figure and freezes it there
+       vidyalaya+   452    ADDS to the counted figure
+     The second is what work done before the forms existed should use: the
+     figure starts from that base and still climbs with every new report, which
+     a plain replacement does not. */
   var manual = ss.getSheetByName('मैनुअल आँकड़े');
   if (manual && manual.getLastRow() > 1) {
     manual.getRange(2, 1, manual.getLastRow() - 1, 2).getValues().forEach(function (r) {
       var k = String(r[0] || '').trim();
-      if (k && r[1] !== '' && !isNaN(Number(r[1]))) stats[k] = Number(r[1]);
+      if (!k || r[1] === '' || isNaN(Number(r[1]))) return;
+      var n = Number(r[1]);
+      if (k.charAt(k.length - 1) === '+') {
+        var base = k.slice(0, -1).trim();
+        if (base && typeof stats[base] === 'number') stats[base] += n;
+      } else {
+        stats[k] = n;
+      }
     });
   }
   return stats;
@@ -335,8 +761,40 @@ function timestamp() {
   return Utilities.formatDate(new Date(), 'Asia/Kolkata', 'yyyy-MM-dd HH:mm:ss');
 }
 
-function reply(ok, message) {
+function reply(ok, message, regNo) {
+  var out = { ok: ok, version: CODE_VERSION, message: message };
+  if (regNo) out.regNo = regNo;
   return ContentService
-    .createTextOutput(JSON.stringify({ ok: ok, version: CODE_VERSION, message: message }))
+    .createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * The next registration number for a form, e.g. IN28-0001.
+ *
+ * Called only from inside the script lock, so the read-increment-write below
+ * cannot interleave with another submission. The counter lives in script
+ * properties rather than being derived from the row count, because deleting a
+ * spam row must never hand the next person a number somebody already holds a
+ * certificate for. On the very first call it starts above whatever rows the
+ * sheet already has, so an existing tab does not restart at 1.
+ */
+function nextRegNo(spec, sheet) {
+  var props = PropertiesService.getScriptProperties();
+  var key = 'regno-' + spec.tab;
+  var seenSoFar = props.getProperty(key);
+  var n;
+  if (seenSoFar === null) {
+    var dataRows = Math.max(0, sheet.getLastRow() - 1);   // minus the heading
+    n = dataRows + 1;
+  } else {
+    n = parseInt(seenSoFar, 10) + 1;
+  }
+  props.setProperty(key, String(n));
+  // Padded to four digits for looks, but never truncated to four: slicing the
+  // last four characters would turn 12345 into 2345 and hand out a number
+  // somebody already holds a certificate for.
+  var num = String(n);
+  while (num.length < 4) num = '0' + num;
+  return (spec.regPrefix || 'LS') + '-' + num;
 }

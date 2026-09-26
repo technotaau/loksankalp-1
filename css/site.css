@@ -144,18 +144,12 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .site-nav a[aria-current="page"] {
   background: #eaf0ff; border-color: #c9d6ff; color: var(--ls-blue-dark);
 }
-.site-nav .nav-login {
-  margin-top: .8rem; justify-content: center;
-  background: var(--ls-saffron); color: #fff;
-}
-.site-nav .nav-login svg { color: #fff; }
-.site-nav .nav-login:hover { background: var(--ls-saffron-dk); }
 
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .nav-toggle { display: none; }
-  /* Desktop: brand + login on the top row, the full menu on its own row below.
-     Ten destinations do not fit beside the brand without shrinking them to
-     an unreadable size, and this audience needs readable links. */
+  /* Desktop: the brand on the top row, the full menu on its own row below.
+     Eleven destinations do not fit beside the brand without shrinking them
+     to an unreadable size, and this audience needs readable links. */
   .site-header { backdrop-filter: saturate(1.4) blur(8px); }
   .site-header__bar { flex-wrap: wrap; min-height: 0; padding-block: .7rem 0; }
   .site-nav { display: block !important; flex: 1 0 100%; margin: 0; }
@@ -175,24 +169,13 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
     background: none; border-color: transparent;
     box-shadow: inset 0 -3px 0 var(--ls-saffron); color: var(--ls-blue-dark);
   }
-  .site-nav .nav-login { display: none; }
-  .header-login { display: inline-flex !important; }
 }
-.header-login {
-  display: none; margin-left: auto; align-items: center; gap: .45rem;
-  min-height: 44px; padding: .5rem 1.15rem;
-  background: var(--ls-saffron); color: #fff; border-radius: 11px;
-  font-weight: 700; text-decoration: none;
-}
-.header-login:hover { background: var(--ls-saffron-dk); color: #fff; }
-.header-login svg { width: 20px; height: 20px; }
-
-/* Login is hidden until the committee accounts are ready. The markup and
-   login.html are left in place, so bringing it back is deleting this block.
-   !important is needed because the rule above turns the header button on
-   with !important inside a media query. */
-.header-login,
-.site-nav .nav-login { display: none !important; }
+/* लॉगिन यहाँ हुआ करता था। 25 सितम्बर 2026 को पूरा हटा दिया गया, क्योंकि
+   Google ने उस पृष्ठ पर "Possible Phishing Detected on User Login" लगा दिया
+   था। वह ठीक ही था : पृष्ठ मोबाइल नंबर माँगता, OTP भेजने का वादा करता, और
+   नंबर किसी दूसरे डोमेन पर भेज देता था, जबकि पीछे कोई व्यवस्था थी ही नहीं।
+   जब सचमुच समिति के खाते बनें, तब नया पृष्ठ बनाइए जो अपने ही डोमेन पर भेजे।
+   पुराना रूप git में है, पर उसे वापस मत लाइए। */
 
 /* Sticky mobile action bar: the three primary journeys */
 .action-bar {
@@ -214,7 +197,7 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .action-bar svg { width: 22px; height: 22px; }
 .action-bar--pledge { background: var(--ls-saffron); }
 body { padding-bottom: 68px; }
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .action-bar { display: none; }
   body { padding-bottom: 0; }
   .site-nav[data-open="true"] { display: block; }
@@ -225,7 +208,9 @@ body { padding-bottom: 68px; }
   position: relative; isolation: isolate;
   min-height: min(82svh, 700px);
   display: grid; place-items: center;
-  padding-block: clamp(2.5rem, 7vw, 5rem);
+  /* Was 5rem at the top end, which pushed the call to action to y=750 on a
+     1440x800 laptop, right at the fold. */
+  padding-block: clamp(2rem, 4vw, 2.6rem);
   text-align: center;
   background:
     radial-gradient(120% 90% at 50% 0%, #fff8ec 0%, #fdf6ea 42%, #eef3ff 100%);
@@ -236,7 +221,7 @@ body { padding-bottom: 68px; }
   width: 100%; height: 100%; object-fit: cover;
   opacity: .5;
 }
-.hero__inner { position: relative; display: grid; gap: .85rem; justify-items: center; }
+.hero__inner { position: relative; display: grid; gap: .7rem; justify-items: center; }
 /* Campaign umbrella above the mark, running institution below it, both kept
    to one short line on a phone so neither competes with the लोकसंकल्प title. */
 .hero__umbrella {
@@ -253,7 +238,6 @@ body { padding-bottom: 68px; }
   max-width: 40ch; text-wrap: balance;
 }
 @media (min-width: 48rem) { .hero__by { max-width: none; } }
-.hero__logo { width: clamp(104px, 18vw, 152px); height: auto; filter: drop-shadow(0 6px 18px rgba(23,48,122,.16)); }
 .hero__title {
   font-size: clamp(2.4rem, 8vw, 4.6rem);
   letter-spacing: -.01em; line-height: 1.08; margin: 0;
@@ -266,11 +250,32 @@ body { padding-bottom: 68px; }
 }
 .hero__quote {
   font-family: var(--ls-font-head);
-  font-size: clamp(1.3rem, 4vw, 2.1rem);
-  color: var(--ls-saffron-dk); line-height: 1.38;
+  font-size: clamp(1.25rem, 3.6vw, 1.9rem);
+  color: var(--ls-saffron-dk); line-height: 1.32;
   max-width: 32ch; margin-block: .15rem;
 }
 .hero__chips { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; }
+/* Live figures where the decorative word-chips used to sit. A visitor should
+   see the size of the movement before they scroll, not four adjectives. */
+.hero__stats {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: .35rem 1.4rem; margin: 0;
+  font-size: .95rem; font-weight: 600; color: var(--ls-ink-soft);
+}
+.hero__stats b {
+  font-family: var(--ls-font-head); font-weight: 700;
+  font-size: 1.35rem; color: var(--ls-blue-dark);
+  font-variant-numeric: tabular-nums; margin-inline-end: .25rem;
+}
+/* On a phone the three figures do not fit on one line, and left to itself the
+   row breaks 2 + 1, which reads as a mistake. Three even columns instead, the
+   number over its label, so the row is balanced at any text size. */
+@media (max-width: 47.99rem) {
+  .hero__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem .4rem; }
+  .hero__stats > span { display: grid; justify-items: center; align-content: start; line-height: 1.3; }
+  .hero__stats b { margin-inline-end: 0; }
+}
+/* no scrim under the words any more, so no shadow to lift them off it */
 .chip {
   background: #fff; border: 1px solid var(--ls-border);
   border-radius: 999px; padding: .3rem .9rem;
@@ -385,12 +390,23 @@ body { padding-bottom: 68px; }
 }
 
 /* Impact counters */
+/* Wrapping flex, not grid. The separators are drawn by the 1px gap showing the
+   background through, so any cell a grid would leave empty appears as a grey
+   block: with eight counters on a six-wide row, two of them. Flex items on the
+   last row stretch to fill it instead, so the figures divide the width evenly
+   whatever their number and however many fit. */
 .counters {
-  display: grid; gap: 1px; background: var(--ls-border);
+  display: flex; flex-wrap: wrap; gap: 1px; background: var(--ls-border);
   border: 1px solid var(--ls-border); border-radius: var(--ls-radius); overflow: hidden;
-  grid-template-columns: repeat(auto-fit, minmax(min(50%, 10.5rem), 1fr));
 }
-.counter { background: var(--ls-surface); padding: 1.4rem .8rem; text-align: center; }
+/* Set by the figures code on a counter whose number is 0 or which the
+   deployed script does not send. A class rather than [hidden] so it is
+   independent of the date gates, and so the counter can come back by itself. */
+.counter--empty { display: none; }
+.counter {
+  flex: 1 1 min(calc(50% - 1px), 10.5rem); min-width: 0;
+  background: var(--ls-surface); padding: 1.4rem .8rem; text-align: center;
+}
 .counter svg { width: 28px; height: 28px; margin-inline: auto; color: var(--ls-saffron-dk); }
 .counter b {
   display: block; font-family: var(--ls-font-head);
@@ -421,6 +437,56 @@ body { padding-bottom: 68px; }
 @media (min-width: 52rem) { .split { grid-template-columns: 1fr 1fr; } .split--flip > :first-child { order: 2; } }
 .split figure { margin: 0; }
 .split > figure img, .split > figure > svg, .split > img { border-radius: var(--ls-radius); width: 100%; }
+
+/* A count the page works out while you type, so a miscount shows itself. */
+.hint--live:not(:empty) {
+  display: block; margin-top: .3rem; font-weight: 600;
+  color: var(--ls-green-dark);
+}
+
+/* --- अभियान परिवार : named people ---------------------------------------
+   A face and a name, nothing competing with them. Photographs arrive one at a
+   time, so a member without one shows their initials in the same circle
+   instead of a broken image or an empty hole, and the row stays even. */
+/* Rows, not tiles. Each member carries a short introduction, and paragraphs of
+   different lengths in a tile grid leave every row ragged. A face at the start
+   of a line and the words beside it reads the same whether the introduction is
+   one line or five, and stacks sensibly on a phone. */
+.people {
+  display: grid; gap: 1rem; list-style: none; padding: 0;
+  max-width: var(--ls-maxw); margin-inline: auto;
+}
+.person {
+  display: grid; grid-template-columns: auto 1fr; gap: .9rem 1.15rem;
+  align-items: start;
+  background: var(--ls-surface); border: 1px solid var(--ls-border);
+  border-radius: var(--ls-radius); padding: 1.15rem 1.25rem;
+}
+.person__photo, .person__mono {
+  width: 88px; height: 88px; border-radius: 50%;
+  border: 3px solid var(--ls-gold);
+}
+.person__photo { object-fit: cover; object-position: top center; background: var(--ls-surface-alt); display: block; }
+/* Until a photograph arrives, the same circle with initials: never a broken
+   image, never an empty hole, and the row keeps its shape either way. */
+.person__mono {
+  display: grid; place-items: center; color: #fff;
+  background: var(--ls-blue-dark);
+  font-family: var(--ls-font-head); font-size: 1.7rem; line-height: 1;
+}
+.person__about { display: grid; gap: .15rem; }
+.person__name { font-weight: 700; line-height: 1.5; font-size: 1.05rem; }
+.person__role {
+  font-size: .86rem; color: var(--ls-ink-soft); letter-spacing: .02em;
+}
+.person__about p { margin: .45rem 0 0; font-size: .96rem; max-width: 60ch; }
+/* The अध्यक्ष is marked by colour, not by a larger box. */
+.person--lead .person__mono { background: var(--ls-green-dark); }
+.person--lead .person__role { color: var(--ls-green-dark); font-weight: 700; }
+@media (max-width: 30rem) {
+  .person { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .person__about p { text-align: start; }
+}
 
 /* Checklists */
 .ticks { display: grid; gap: .7rem; }
@@ -508,6 +574,9 @@ body { padding-bottom: 68px; }
 .photo--wide img   { aspect-ratio: 3 / 2;  object-fit: cover; }
 .photo--banner img { aspect-ratio: 16 / 7; object-fit: cover; }
 .photo--square img { aspect-ratio: 1 / 1;  object-fit: cover; }
+/* A standing portrait inside a two-column band. Left to fill its column a tall
+   photograph towers over the text beside it, so it is capped and centred. */
+.photo--portrait { max-width: 22rem; justify-self: center; }
 .photo figcaption {
   margin-top: .55rem; font-size: .9rem; color: var(--ls-ink-soft); line-height: 1.6;
 }
@@ -516,6 +585,15 @@ body { padding-bottom: 68px; }
 /* Photo grid for the gallery */
 .photo-grid { display: grid; gap: 1.4rem 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); align-items: start; }
 .photo-grid .photo img { aspect-ratio: 3 / 2; object-fit: cover; }
+
+/* One photograph large enough to carry a section on its own. Capped below the
+   full wrap width: at 1120px a 3:2 image is 747px tall, which pushes the rest
+   of the page off a laptop screen. Full width on a phone, where it is small
+   anyway and the detail needs every pixel. */
+.photo--feature { max-width: 880px; margin-inline: auto; }
+.photo--feature img { aspect-ratio: 3 / 2; object-fit: cover; }
+.photo--feature a { display: block; border-radius: var(--ls-radius); }
+.photo--feature a:focus-visible { outline: 3px solid var(--ls-saffron); outline-offset: 3px; }
 
 /* Gallery: a caption's second line, and the district filter. The filter is
    hidden in the markup and shown by script, so with no JavaScript every photo
@@ -537,25 +615,63 @@ body { padding-bottom: 68px; }
   background: var(--ls-blue-dark); border-color: var(--ls-blue-dark); color: #fff;
 }
 
-/* A hero backed by a photograph rather than the illustration.
-   The scrim is what keeps the Devanagari readable over a busy crowd shot,
-   without it the title fails contrast against light kurtas and sky. */
-.hero--photo .hero__bg { opacity: 1; z-index: -2; object-position: center 42%; }
-/* Over a photograph the scrim alone cannot guarantee contrast on every pixel,
-   a crowd shot has both white kurtas and dark doorways behind the same line. */
-.hero--photo .hero__title,
-.hero--photo .hero__sub,
-.hero--photo .hero__quote { text-shadow: 0 1px 10px rgba(255, 253, 248, .95), 0 0 3px rgba(255, 253, 248, .9); }
-.hero--photo::before {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background:
-    linear-gradient(180deg, rgba(255,253,248,.90) 0%, rgba(255,253,248,.70) 34%,
-                    rgba(255,253,248,.74) 62%, rgba(255,253,248,.95) 100%);
+/* The photograph in the hero is a photograph, not a backdrop.
+   It used to sit behind the words under a heavy cream scrim, which washed the
+   picture out and still left the credit line at 2.9:1. Worse, the shot's
+   subject is mid-frame, exactly where centred text lands. Showing it as its
+   own figure fixes both: the picture is fully visible and the words sit on
+   plain cream, needing no scrim at all. */
+.hero--photo {
+  background: none;
+  /* The figure is a grid row under the text on phones. Without this the
+     ghost button's outline sat flush against the top edge of the photo. */
+  row-gap: clamp(1.4rem, 5vw, 2rem);
 }
-@media (max-width: 40rem) {
-  /* Portrait phones show far less of a wide crowd shot, so lean the scrim
-     heavier, because legibility beats the photograph here. */
-  .hero--photo::before { background: rgba(255,253,248,.9); }
+.hero--photo .hero__media {
+  margin: 0; display: grid; gap: .6rem; justify-items: center;
+  /* the figure comes first in the markup so it loads early, but the mark and
+     the name should be what a visitor meets first */
+  order: 2;
+}
+.hero--photo .hero__inner { order: 1; }
+.hero--photo .hero__bg {
+  position: static; inset: auto; z-index: auto; opacity: 1;
+  width: 100%; height: auto;
+  aspect-ratio: 3 / 2; object-fit: contain; object-position: center;
+  border-radius: calc(var(--ls-radius) * 1.15);
+  box-shadow: 0 16px 48px rgba(23, 48, 122, .18);
+}
+.hero--photo .hero__media figcaption {
+  font-size: .95rem; line-height: 1.5; color: var(--ls-ink-soft);
+  max-width: 44ch; text-align: center; text-wrap: balance;
+}
+.hero--photo .hero__media figcaption b { color: var(--ls-blue-dark); }
+
+/* Side by side once there is room, stacked before that. */
+@media (min-width: 64rem) {
+  .hero--photo {
+    display: grid; align-items: center; justify-items: stretch;
+    /* The photograph is 3:2 and is never cropped, so its height follows its
+       width. At this split the picture column lands within ~10px of the text
+       column's height, which is what stops the picture floating in a pool of
+       cream with the text ending well above it. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+    gap: clamp(1.75rem, 3vw, 2.75rem);
+    width: min(100% - 2.2rem, var(--ls-maxw)); margin-inline: auto;
+    min-height: 0; text-align: start;
+  }
+  .hero--photo .hero__media { order: 2; justify-items: stretch; }
+  .hero--photo .hero__media figcaption { text-align: start; max-width: none; }
+
+  .hero--photo .hero__inner {
+    order: 1; width: auto; max-width: none; margin-inline: 0;
+    justify-items: start; text-align: start;
+  }
+  .hero--photo .hero__by { max-width: 46ch; }
+  .hero--photo .hero__sub,
+  .hero--photo .hero__quote { max-width: 30ch; }
+  .hero--photo .hero__stats { justify-content: flex-start; }
+  .hero--photo .hero__inner .cluster--center { justify-content: flex-start; }
 }
 
 /* Story cards carrying a real thumbnail instead of the gradient block */
@@ -621,7 +737,7 @@ body { padding-bottom: 68px; }
 }
 /* It sits over page scans, so the outlined button needs its own ground. */
 .doc-actions .btn--ghost { background: var(--ls-surface); }
-@media (min-width: 62rem) {
+@media (min-width: 70rem) {
   .doc-actions { bottom: 1.4rem; gap: .6rem; }
   .doc-actions .btn { font-size: 1.02rem; padding: .7rem 1.3rem; }
 }
@@ -662,13 +778,15 @@ details.acc > summary {
 }
 details.acc > summary::-webkit-details-marker { display: none; }
 details.acc > summary::after { content: "+"; font-size: 1.6rem; color: var(--ls-saffron); line-height: 1; }
-details.acc[open] > summary::after { content: "–"; }
+details.acc[open] > summary::after { content: "-"; }
 details.acc > :not(summary) { padding-bottom: 1.1rem; }
 
 /* ---------- 8. Forms ---------- */
 .form { display: grid; gap: 1.15rem; }
 .field { display: grid; gap: .4rem; }
-.field > label { font-weight: 700; color: var(--ls-blue-dark); }
+/* सवाल का शीर्षक, चाहे वह <label> हो या रेडियो-समूह के ऊपर रखा <p>।
+   दोनों एक जैसे दिखने चाहिए, वरना एक सवाल बाकी सवालों से अलग लगता है। */
+.field > label, .field > .field__head { font-weight: 700; color: var(--ls-blue-dark); }
 .field .hint { font-size: .88rem; color: var(--ls-ink-soft); }
 input[type="text"], input[type="tel"], input[type="email"], input[type="number"],
 input[type="date"], input[type="file"], select, textarea {
@@ -682,7 +800,18 @@ fieldset { border: 0; padding: 0; }
 legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; padding: 0; }
 
 /* Big radio/checkbox tiles: easy to tap, easy to read */
+/* legend पर display:block मत लगाइए। iPhone के Safari में legend एक साधारण
+   खाना नहीं है और तब वह सिकुड़कर एक-एक शब्द प्रति पंक्ति हो जाता है। जहाँ
+   सवाल को बाकी labels जैसा दिखाना हो, वहाँ fieldset के बजाय
+   role="group" + <p class="field__head"> लगाइए; इंकलाब 28 का फ़ॉर्म देखिए। */
+
 .choices { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr)); }
+/* The tracks above are sized for short options (विद्यार्थी, युवा, नागरिक),
+   which sit two or three to a row on a phone. A sentence-length option in a
+   152px track breaks to one word per line, so blocks that carry sentences ask
+   for a single column instead. CSS cannot measure the text, so it is marked
+   in the markup. */
+.choices--wide { grid-template-columns: 1fr; }
 .choice {
   position: relative; display: flex; align-items: center; gap: .65rem;
   min-height: var(--ls-tap); padding: .8rem 1rem;
@@ -725,6 +854,29 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
   display: inline-block; padding: .3rem 2rem; margin: .8rem 0;
 }
 .cert__mark { width: 64px; height: 64px; margin: 0 auto .4rem; }
+/* Two crests, a corner each, matching what the drawn certificate does: an
+   emblem in the middle with a face beside it reads as lopsided. */
+.cert__crest {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 0 0 .2rem;
+}
+.cert__crest .cert__mark { margin: 0; }
+.cert__face {
+  width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
+  object-position: top center; border: 3px solid var(--ls-gold);
+}
+.cert__place {
+  margin: -.4rem auto .2rem; font-size: .95rem; color: var(--ls-ink-soft);
+}
+/* The preview of a portrait certificate. The PDF is A4 upright, so a narrow
+   column on screen tells the reader what they are about to download; without
+   it the preview reads as landscape and the download looks like a different
+   document. */
+.certificate--tall { max-width: 34rem; margin-inline: auto; }
+.cert__sub {
+  font-family: var(--ls-font-head); color: var(--ls-saffron-dk);
+  font-size: clamp(.98rem, 2.4vw, 1.12rem); margin: .1rem auto .6rem;
+}
 .cert__motto {
   font-family: var(--ls-font-head); color: var(--ls-saffron-dk);
   font-size: clamp(1.02rem, 2.6vw, 1.24rem); margin: 1rem auto .2rem; max-width: 34ch;
@@ -742,13 +894,53 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
   color: var(--ls-blue-dark); text-align: center; margin: 1.2rem auto .2rem;
 }
 
+/* ---------- 8b. आज का काम : one-question popup ----------
+   Three names on one site (संकल्प लें, संकल्प 21, करुणा 21) left people
+   guessing which one was meant for today. This names the single action and
+   gets out of the way. It is built by js/site.js, so a phone that never runs
+   that file simply never sees it and nothing is blocked. */
+.today-veil {
+  position: fixed; inset: 0; z-index: 300;
+  display: grid; place-items: center; padding: 1.1rem;
+  background: rgba(10, 20, 50, .58);
+  overscroll-behavior: contain;
+}
+.today-card {
+  width: min(100%, 27rem); max-height: 90vh; overflow-y: auto;
+  background: var(--ls-surface); border-radius: var(--ls-radius);
+  padding: clamp(1.3rem, 5vw, 1.9rem);
+  box-shadow: 0 24px 70px rgba(6, 14, 40, .38);
+  text-align: center;
+}
+.today-card h2 { font-size: clamp(1.35rem, 4.6vw, 1.7rem); margin-bottom: .5rem; }
+.today-card p { margin-inline: auto; color: var(--ls-ink-soft); }
+.today-card .btn { width: 100%; justify-content: center; }
+.today-card__later {
+  display: inline-block; margin-top: .9rem; padding: .5rem .6rem;
+  background: none; border: 0; cursor: pointer;
+  color: var(--ls-ink-soft); font-weight: 600; text-decoration: underline;
+  text-underline-offset: .22em;
+}
+.today-card__mark { width: 62px; height: 62px; margin: 0 auto .6rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .today-card { animation: today-rise .22s ease-out; }
+  @keyframes today-rise { from { transform: translateY(14px); opacity: 0; } }
+}
+
 /* ---------- 9. Footer ---------- */
 .site-footer { background: var(--ls-blue-dark); color: #cfd8f2; padding-block: clamp(2.5rem, 5vw, 3.6rem) 1.4rem; }
+/* The full emblem carries dark blue type inside it, so on the dark footer it
+   needs a light plate to sit on. At this size its tagline ring is actually
+   readable, which is the whole reason it lives here and not in the header. */
+.brand--seal {
+  display: inline-block; background: #fff;
+  border-radius: 18px; padding: .7rem; line-height: 0;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .18);
+}
+.brand--seal img { width: clamp(112px, 24vw, 132px); height: auto; display: block; }
 .site-footer h2, .site-footer h3 { color: #fff; font-size: 1.1rem; margin-bottom: .8rem; }
 .site-footer a { color: #dfe6fb; text-decoration: none; }
 .site-footer a:hover { color: var(--ls-gold); text-decoration: underline; }
-.site-footer .brand__name { color: #fff; }
-.site-footer .brand__name em { color: #86e39c; }
 .site-footer ul { display: grid; gap: .45rem; }
 .footer-grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
 .footer-contact li { display: grid; grid-template-columns: auto 1fr; gap: .6rem; align-items: start; }
@@ -767,6 +959,32 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
   display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; justify-content: space-between;
   font-size: .9rem;
 }
+/* बनाने वालों का उल्लेख।
+
+   यह विज्ञापन नहीं है, इसलिए विज्ञापन जैसा दिखना भी नहीं चाहिए। जो बात
+   सबसे भारी पड़ती है वह यह है कि काम सेवाभाव से हुआ, इसलिए वाक्य वही कहता
+   है और कुछ नहीं। आँख नाम पर टिके, इसके लिए केवल इतना : शीर्षक वाला फ़ॉन्ट,
+   सुनहरा रंग, और नीचे एक हल्की बिंदीदार रेखा जो छूने पर ठोस हो जाती है।
+   कोई डिब्बा नहीं, कोई बटन नहीं, कोई लोगो नहीं। */
+.footer-credit {
+  margin-top: 2.2rem; padding-top: 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, .16);
+  text-align: center;
+}
+.footer-credit .eyebrow { color: var(--ls-gold); margin-bottom: .3rem; font-size: .8rem; }
+.footer-credit p { margin-inline: auto; color: #c3cdec; font-size: .95rem; }
+.footer-credit a {
+  font-family: var(--ls-font-head); font-size: 1.12rem; font-weight: 700;
+  color: var(--ls-gold); text-decoration: none;
+  border-bottom: 1px dotted rgba(245, 179, 1, .6);
+  padding-bottom: .05em;
+}
+.footer-credit a:hover, .footer-credit a:focus-visible {
+  color: #ffd66b; border-bottom-style: solid; border-bottom-color: #ffd66b;
+}
+/* उल्लेख के ठीक नीचे कॉपीराइट है, इसलिए वहाँ दूसरी लकीर नहीं चाहिए */
+.footer-credit + .footer-bottom { margin-top: 1.1rem; padding-top: 0; border-top: 0; }
+
 .tricolor-bar { height: 5px; background: linear-gradient(90deg, var(--ls-saffron) 0 33.3%, #fff 33.3% 66.6%, var(--ls-green) 66.6% 100%); }
 
 /* ---------- 10. Utilities ---------- */
@@ -802,4 +1020,98 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
   .site-header, .action-bar, .site-footer, .hero__bg, .btn { display: none !important; }
   body { padding: 0; background: #fff; }
   a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .8em; }
+}
+
+
+/* ---------- 12. इंकलाब 28 : भेजिए, गिनती, जिलेवार ----------
+   तीनों पहले फ़ोन के लिए बने हैं। दस में से नौ लोग फ़ोन से आते हैं, इसलिए
+   पहले 360px पर ठीक किया गया है और चौड़ी स्क्रीन बाद में जोड़ी गई है। */
+
+/* भेजने वाला पट्टा। WhatsApp इस अभियान की असली डाक है, इसलिए बटन हरा,
+   बड़ा, और अंगूठे की पहुँच में। */
+.send-band {
+  background: linear-gradient(180deg, #f2fbf4, #e7f6ec);
+  border: 1px solid #c4e6cf; border-radius: 18px;
+  padding: clamp(1.1rem, 4vw, 1.6rem);
+}
+.send-band h2, .send-band h3 { color: var(--ls-green-dark); margin-bottom: .4rem; }
+.send-band__note { color: var(--ls-ink-soft); font-size: .95rem; }
+/* जो संदेश जाएगा, वह पहले दिख जाए। भेजने से पहले पढ़ लेना भरोसा देता है। */
+.send-msg {
+  margin: .9rem 0; padding: .85rem 1rem;
+  background: #fff; border: 1px solid #cfe6d7; border-radius: 14px;
+  border-inline-start: 4px solid var(--ls-green);
+  font-size: .95rem; line-height: 1.7; color: var(--ls-ink);
+  white-space: pre-line; max-width: none;
+}
+/* फ़ोन पर दोनों बटन पूरी चौड़ाई के : अंगूठे से चूकने की गुंजाइश ही न रहे।
+   यह वह पृष्ठ है जहाँ दस में से नौ लोग फ़ोन से आते हैं। */
+@media (max-width: 30rem) {
+  .send-band .cluster { flex-direction: column; align-items: stretch; }
+  .send-band .btn { width: 100%; justify-content: center; }
+}
+.btn--wa { background: #25d366; color: #0b3d1e; font-weight: 700; }
+.btn--wa:hover { background: #1db954; color: #08301a; }
+.btn--wa svg { color: #0b3d1e; }
+
+/* बचे दिनों की गोली। समय की बात है, इसलिए सोने का रंग और एक बिंदु। */
+.days-pill {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .32rem .85rem; border-radius: 999px;
+  background: #fff5d6; border: 1px solid #f0cf7a;
+  color: #7a4b00; font-weight: 700; font-size: .95rem;
+  font-family: var(--ls-font-head);
+}
+.days-pill::before {
+  content: ""; width: .55rem; height: .55rem; border-radius: 50%;
+  background: var(--ls-saffron); flex: 0 0 auto;
+  animation: ls-pulse 2.4s ease-in-out infinite;
+}
+.days-pill--today { background: #ffe9d2; border-color: #f0a35a; color: #8a3200; }
+@keyframes ls-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .days-pill::before { animation: none; } }
+
+/* जिलेवार सूची। तालिका नहीं : फ़ोन पर तालिका टूट जाती है और पढ़ने में
+   कठिन रहती है। हर जिला एक पंक्ति, नाम बाएँ, संख्या दाएँ, और पीछे एक
+   हल्की पट्टी जो बिना संख्या पढ़े बता देती है कि कौन आगे है। */
+.jila-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .45rem; }
+.jila {
+  position: relative; overflow: hidden;
+  display: flex; align-items: baseline; gap: .7rem;
+  padding: .62rem .85rem; border-radius: 12px;
+  background: var(--ls-surface-alt); border: 1px solid var(--ls-border);
+}
+/* पट्टी पंक्ति के पीछे है, पंक्ति के भीतर एक खाना नहीं। यहाँ `.jila > *`
+   लिखना भारी पड़ा था : वह पट्टी पर भी लगकर उसे absolute से relative कर
+   देता, और तब पट्टी एक असली खाना बन जाती, जिससे जिले का नाम दबकर 30px का
+   रह जाता था। इसलिए अब नियम केवल नाम और संख्या पर लगता है। */
+.jila__bar {
+  position: absolute; inset-block: 0; inset-inline-start: 0;
+  background: #e2ecff; border-inline-end: 1px solid #cddcff;
+  z-index: 0; pointer-events: none;
+}
+.jila__naam, .jila__n { position: relative; z-index: 1; }
+.jila__naam { font-weight: 700; color: var(--ls-blue-dark); min-width: 0; overflow-wrap: anywhere; }
+.jila__n { margin-inline-start: auto; font-weight: 700; color: var(--ls-blue); white-space: nowrap; }
+.jila__n small { font-weight: 400; color: var(--ls-ink-soft); margin-inline-start: .2rem; }
+/* जिस जिले से पाठक ने स्वयं पंजीकरण किया, वह अलग दिखे। */
+.jila--mera { border-color: #f0a35a; background: #fff6ec; }
+.jila--mera .jila__bar { background: #ffe7cd; border-inline-end-color: #f3c99d; }
+.jila--mera .jila__naam::after {
+  content: "आपका जिला"; margin-inline-start: .5rem;
+  font-size: .72rem; font-weight: 700; color: #8a3200;
+  background: #ffdcba; border-radius: 999px; padding: .1rem .5rem;
+  white-space: nowrap;
+}
+.jila-more {
+  margin-top: .8rem; width: 100%; min-height: var(--ls-tap);
+  background: none; border: 1px dashed var(--ls-border); border-radius: 12px;
+  color: var(--ls-blue); font-weight: 700; cursor: pointer;
+}
+.jila-more:hover { background: var(--ls-surface-alt); }
+.jila-bahar { margin-top: 1rem; font-size: .95rem; color: var(--ls-ink-soft); }
+.jila-bahar strong { color: var(--ls-blue-dark); }
+
+@media (min-width: 46rem) {
+  .jila-list { grid-template-columns: 1fr 1fr; gap: .5rem .9rem; }
 }

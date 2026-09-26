@@ -3,7 +3,8 @@
 
 Runs every gate the project lead checks by hand, so CI can fail loudly:
 structure, headings, internal links and anchors, icon ids, alt text,
-form labels, SEO tags and SVG well-formedness.
+form labels, SEO tags, SVG well-formedness, and that no long dash
+(em/en dash) reaches a published file.
 
 Usage:  python3 tools/check.py [--quiet]
 Exit code 1 if any ERROR is found. WARNs do not fail the build.
@@ -196,6 +197,9 @@ def check_svgs():
             warn(rel, f"{kb:.0f} KB, large for an inline asset")
 
 
+SITE_HOST = "loksankalp.org"
+
+
 def check_booklet_count():
     """Any page that states how many booklets there are must state the truth.
 
@@ -211,6 +215,95 @@ def check_booklet_count():
         for stated in pattern.findall(open(path, encoding='utf-8').read()):
             if int(stated) != actual:
                 err(rel, f"says {stated} booklets, {actual} exist")
+
+
+def check_canonical_host():
+    """Every absolute self-reference must name the campaign's own domain.
+
+    The site moved from a github.io project path to loksankalp.org. A page
+    left pointing at the old host tells search engines the real address is
+    somewhere else, and a share card would carry a link nobody should be
+    given. The CNAME file is what keeps the domain attached through a
+    deploy, so it is checked here too.
+    """
+    cname = os.path.join(ROOT, 'CNAME')
+    if not os.path.exists(cname):
+        err('CNAME', 'missing: the custom domain is dropped on deploy without it')
+    else:
+        host = open(cname, encoding='utf-8').read().strip()
+        if host != SITE_HOST:
+            err('CNAME', f'says {host!r}, expected {SITE_HOST!r}')
+
+    patterns = ('*.html', '*.xml', '*.txt', '*.webmanifest')
+    for pat in patterns:
+        for path in sorted(glob.glob(os.path.join(ROOT, pat))):
+            rel = os.path.relpath(path, ROOT)
+            txt = open(path, encoding='utf-8').read()
+            for bad in re.findall(r'https?://[A-Za-z0-9.-]*github\.io[^\s"\'<>)]*', txt):
+                err(rel, f'points at the old host: {bad}')
+
+
+# लंबी डैश जो कहीं नहीं चलेंगी। em dash, en dash, horizontal bar, figure dash
+# और दो-em वाली डैश। पाठक इन्हीं से सबसे पहले भाँप लेते हैं कि लेख मशीन का
+# लिखा है, और अभियान की टीम ने साफ़ कहा है कि वेबसाइट पर ये नहीं चाहिए।
+# जगह पर हिंदी का सामान्य विराम लगाइए : अल्पविराम, कोलन, या पूरा विराम।
+LONG_DASHES = {'\u2014': 'em dash', '\u2013': 'en dash', '\u2015': 'horizontal bar',
+               '\u2012': 'figure dash', '\u2e3a': 'two-em dash', '\u2e3b': 'three-em dash'}
+
+# जो फ़ाइलें ब्राउज़र तक जाती ही नहीं, उन पर यह नियम नहीं लगता।
+DASH_SKIP = ('docs/', 'google-apps-script/', 'tools/')
+
+def check_long_dashes():
+    """कोई भी लंबी डैश वेबसाइट पर न पहुँचे।
+
+    सिर्फ़ पृष्ठों का दिखने वाला पाठ नहीं : CSS का content, SVG का title,
+    manifest का नाम और JS की टिप्पणी भी। टिप्पणी इसलिए कि site.js जैसा
+    तैसा ब्राउज़र में खुल जाता है और कोई भी उसे पढ़ सकता है।
+    """
+    pats = ('*.html', '*.xml', '*.txt', '*.webmanifest',
+            'css/*.css', 'js/*.js', 'booklets/*.json', 'parivar/*.json',
+            'assets/img/*.svg')
+    for pat in pats:
+        for path in sorted(glob.glob(os.path.join(ROOT, pat))):
+            rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
+            if rel.startswith(DASH_SKIP):
+                continue
+            try:
+                txt = open(path, encoding='utf-8').read()
+            except UnicodeDecodeError:
+                continue
+            for n, line in enumerate(txt.split('\n'), 1):
+                for ch, name in LONG_DASHES.items():
+                    if ch in line:
+                        err(rel, f'line {n}: {name} ({ch!r}) मिली, '
+                                 f'हिंदी विराम लगाइए: {line.strip()[:70]!r}')
+
+
+# 25 सितम्बर 2026 : Google ने साइट पर "Possible Phishing Detected on User
+# Login" लगा दिया था। वजह एक लॉगिन पृष्ठ था जो चलता ही नहीं था : वह मोबाइल
+# नंबर माँगता, OTP भेजने का वादा करता, और वह नंबर किसी दूसरे डोमेन
+# (script.google.com) पर भेज देता। असली फ़िशिंग की पहचान यही होती है।
+#
+# पृष्ठ हटा दिया गया। यह जाँच इसलिए है कि वैसा पृष्ठ दोबारा चुपचाप न बन जाए।
+# जब सचमुच लॉगिन बने तो उसे अपने ही डोमेन पर भेजना होगा, और तभी यह जाँच
+# ढीली करनी होगी, पहले नहीं।
+CRED_WORDS = ('password', 'passwd', 'otp', 'ओटीपी', 'लॉगिन', 'login')
+
+def check_no_fake_login():
+    """कोई पृष्ठ साख माँगता हुआ न दिखे, जब तक उसके पीछे असली व्यवस्था न हो।"""
+    for path in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
+        rel = os.path.relpath(path, ROOT)
+        txt = open(path, encoding='utf-8').read()
+        if re.search(r'<input[^>]+type=["\']password["\']', txt):
+            err(rel, 'password वाला खाना है। साख माँगने वाला पृष्ठ अपने ही '
+                     'डोमेन पर भेजना चाहिए, और उसके पीछे असली व्यवस्था होनी चाहिए')
+        # फ़ॉर्म के भीतर OTP या लॉगिन का वादा
+        for m in re.finditer(r'<form\b.*?</form>', txt, re.S):
+            block = m.group(0)
+            low = block.lower()
+            if ('otp' in low or 'ओटीपी' in block) and 'type="tel"' in low:
+                err(rel, 'फ़ॉर्म मोबाइल नंबर लेकर OTP का वादा करता है। '
+                         'Google इसे फ़िशिंग मानता है जब तक वह सचमुच काम न करे')
 
 
 def main():
@@ -233,6 +326,9 @@ def main():
         check_html(p, known, page_ids)
     check_svgs()
     check_booklet_count()
+    check_canonical_host()
+    check_long_dashes()
+    check_no_fake_login()
 
     for f in ('sitemap.xml', 'robots.txt', 'site.webmanifest', '.nojekyll',
               'css/site.css', 'css/tokens.css', 'js/site.js'):
@@ -245,9 +341,7 @@ def main():
         smtxt = open(sm, encoding='utf-8').read()
         for p in pages:
             name = os.path.basename(p)
-            # login.html is deliberately out of the sitemap while login is
-            # hidden; it carries a noindex tag to match.
-            if name in ('404.html', 'login.html'):
+            if name == '404.html':
                 continue
             token = '/' if name == 'index.html' else '/' + name
             if token + '<' not in smtxt:
