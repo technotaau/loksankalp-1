@@ -147,9 +147,17 @@ v12 में `karuna21Gaon` जुड़ा था — करुणा 21 क�
 
 ### deploy करने का सही क्रम
 
+फ़ाइल सीधे यहाँ से कॉपी की जा सकती है, फ़ोन पर भी :
+`raw.githubusercontent.com/technotaau/loksankalp-1/claude/website-hindi-content-build-f4hhg9/google-apps-script/Code.gs`
+
+> **Apps Script का edit लिंक किसी को मत भेजिए**, मुझे भी नहीं। वह खाते से
+> खुलता है, और ऐसा लिंक पाने वाला किसी को भी script बदल सकता है। repo की
+> फ़ाइल ही एकमात्र सही प्रति है।
+
 1. Sheet → **Extensions → Apps Script**
 2. सारा पुराना कोड हटाकर `google-apps-script/Code.gs` चिपकाएँ → **Ctrl+S**
-3. आँख से पक्का करें कि अब फ़ाइल में `var CODE_VERSION = 12;` लिखा है
+3. आँख से पक्का करें कि अब फ़ाइल में **उतना ही `CODE_VERSION`** लिखा है
+   जितना repo की फ़ाइल में है (आज 19)
 4. **Deploy → Manage deployments → ✏️ → Version : "New version"** चुनें
 5. **Deploy**
 
