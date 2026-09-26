@@ -1255,8 +1255,12 @@
       if (!el) return;
       if (!rows.length) { el.hidden = true; return; }
       var naam = rows.map(function (r) { return r.naam; });
-      var jodo = naam.length === 1 ? naam[0]
-               : naam.slice(0, -1).join(', ') + ' और ' + naam[naam.length - 1];
+      /* आख़िरी नाम में ही "और" हो तो जोड़ने के लिए "तथा" चाहिए, वरना
+         "छत्तीसगढ़ और जम्मू और कश्मीर" जैसा दो बार और वाला वाक्य बनता है। */
+      var antim = naam[naam.length - 1];
+      var jodne = antim.indexOf('और') >= 0 ? ' तथा ' : ' और ';
+      var jodo = naam.length === 1 ? antim
+               : naam.slice(0, -1).join(', ') + jodne + antim;
       var vy = rows.reduce(function (a, r) { return a + (r.vyakti || 0); }, 0);
       el.innerHTML = '';
       el.appendChild(document.createTextNode(shuru));

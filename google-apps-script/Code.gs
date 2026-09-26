@@ -42,7 +42,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // If this changes, change max= on the form field too, because the page reads that
 // attribute for its running total, so those two never drift apart.
 var MAX_UPVAAS_SADASYA = 150;
-var CODE_VERSION = 18;          // bump when this file changes; shown in every response
+var CODE_VERSION = 19;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -215,11 +215,175 @@ function isPlace(normalised) {
   return !!normalised && normalised.length > 1 && !NOT_A_PLACE[normalised];
 }
 
+/* जगह का नाम एक ही रूप में लाना।
+
+   जिला, राज्य और देश, तीनों फ़ॉर्म में ड्रॉपडाउन हैं, इसलिए वहाँ से हमेशा
+   देवनागरी नाम ही आता है। पर Sheet में पंक्तियाँ हाथ से भी भरी जाती हैं,
+   और तब कोई "churu" या "ajmer" लिख देता है। नतीजा यह कि पृष्ठ पर चूरू और
+   churu दो अलग जिले बनकर बैठ जाते हैं, और जिलों की गिनती भी बढ़ी हुई
+   दिखती है। 26 सितम्बर को ऐसी चार पंक्तियाँ मिलीं।
+
+   नीचे की तालिका अंग्रेज़ी में लिखे रूपों को देवनागरी नाम पर ले आती है।
+   मिलान करते समय छोटे-बड़े अक्षर और बीच की जगह नहीं देखी जाती, इसलिए
+   "Sri Ganganagar", "sriganganagar" और "SRIGANGANAGAR", तीनों एक ही जगह
+   पहुँचते हैं। जो नाम तालिका में नहीं है वह जैसा आया वैसा ही रहता है,
+   इसलिए गाँवों के नाम इससे नहीं बिगड़ते। */
+var PLACE_ALIAS = {
+  // जिले
+  'ajmer': 'अजमेर',
+  'alwar': 'अलवर',
+  'udaipur': 'उदयपुर',
+  'karauli': 'करौली',
+  'kotputlibehror': 'कोटपूतली-बहरोड़',
+  'kotputlibahror': 'कोटपूतली-बहरोड़',
+  'kotputli': 'कोटपूतली-बहरोड़',
+  'kota': 'कोटा',
+  'khairthaltijara': 'खैरथल-तिजारा',
+  'khairthal': 'खैरथल-तिजारा',
+  'chittorgarh': 'चित्तौड़गढ़',
+  'chittaurgarh': 'चित्तौड़गढ़',
+  'chittor': 'चित्तौड़गढ़',
+  'churu': 'चूरू',
+  'chooru': 'चूरू',
+  'jaipur': 'जयपुर',
+  'jalore': 'जालौर',
+  'jalor': 'जालौर',
+  'jaisalmer': 'जैसलमेर',
+  'jodhpur': 'जोधपुर',
+  'jhalawar': 'झालावाड़',
+  'jhunjhunu': 'झुंझुनू',
+  'jhunjhunun': 'झुंझुनू',
+  'jhujhunu': 'झुंझुनू',
+  'tonk': 'टोंक',
+  'deeg': 'डीग',
+  'dig': 'डीग',
+  'didwanakuchaman': 'डीडवाना-कुचामन',
+  'didwana': 'डीडवाना-कुचामन',
+  'dungarpur': 'डूंगरपुर',
+  'doongarpur': 'डूंगरपुर',
+  'dausa': 'दौसा',
+  'dholpur': 'धौलपुर',
+  'dhaulpur': 'धौलपुर',
+  'nagaur': 'नागौर',
+  'nagor': 'नागौर',
+  'pali': 'पाली',
+  'pratapgarh': 'प्रतापगढ़',
+  'phalodi': 'फलौदी',
+  'falodi': 'फलौदी',
+  'banswara': 'बांसवाड़ा',
+  'barmer': 'बाड़मेर',
+  'badmer': 'बाड़मेर',
+  'baran': 'बारां',
+  'balotra': 'बालोतरा',
+  'bikaner': 'बीकानेर',
+  'bundi': 'बूंदी',
+  'boondi': 'बूंदी',
+  'beawar': 'ब्यावर',
+  'bharatpur': 'भरतपुर',
+  'bhilwara': 'भीलवाड़ा',
+  'rajsamand': 'राजसमंद',
+  'sriganganagar': 'श्रीगंगानगर',
+  'sriganganagar': 'श्रीगंगानगर',
+  'ganganagar': 'श्रीगंगानगर',
+  'shriganganagar': 'श्रीगंगानगर',
+  'salumbar': 'सलूम्बर',
+  'sawaimadhopur': 'सवाई माधोपुर',
+  'sawaimadhopur': 'सवाई माधोपुर',
+  'sirohi': 'सिरोही',
+  'sikar': 'सीकर',
+  'hanumangarh': 'हनुमानगढ़',
+  'hanumagarh': 'हनुमानगढ़',
+  // राज्य
+  'andhrapradesh': 'आंध्र प्रदेश',
+  'arunachalpradesh': 'अरुणाचल प्रदेश',
+  'assam': 'असम',
+  'bihar': 'बिहार',
+  'chhattisgarh': 'छत्तीसगढ़',
+  'goa': 'गोवा',
+  'gujarat': 'गुजरात',
+  'haryana': 'हरियाणा',
+  'himachalpradesh': 'हिमाचल प्रदेश',
+  'jharkhand': 'झारखंड',
+  'karnataka': 'कर्नाटक',
+  'kerala': 'केरल',
+  'madhyapradesh': 'मध्य प्रदेश',
+  'maharashtra': 'महाराष्ट्र',
+  'manipur': 'मणिपुर',
+  'meghalaya': 'मेघालय',
+  'mizoram': 'मिज़ोरम',
+  'nagaland': 'नागालैंड',
+  'odisha': 'ओडिशा',
+  'orissa': 'ओडिशा',
+  'punjab': 'पंजाब',
+  'sikkim': 'सिक्किम',
+  'tamilnadu': 'तमिलनाडु',
+  'tamilnadu': 'तमिलनाडु',
+  'telangana': 'तेलंगाना',
+  'tripura': 'त्रिपुरा',
+  'uttarpradesh': 'उत्तर प्रदेश',
+  'uttarakhand': 'उत्तराखंड',
+  'westbengal': 'पश्चिम बंगाल',
+  'andamanandnicobar': 'अंडमान और निकोबार',
+  'andaman': 'अंडमान और निकोबार',
+  'chandigarh': 'चंडीगढ़',
+  'delhi': 'दिल्ली',
+  'newdelhi': 'दिल्ली',
+  'jammuandkashmir': 'जम्मू और कश्मीर',
+  'jammukashmir': 'जम्मू और कश्मीर',
+  'jk': 'जम्मू और कश्मीर',
+  'ladakh': 'लद्दाख',
+  'lakshadweep': 'लक्षद्वीप',
+  'puducherry': 'पुडुचेरी',
+  'pondicherry': 'पुडुचेरी',
+  'rajasthan': 'राजस्थान',
+  // देश
+  'uae': 'संयुक्त अरब अमीरात',
+  'uae': 'संयुक्त अरब अमीरात',
+  'unitedarabemirates': 'संयुक्त अरब अमीरात',
+  'dubai': 'संयुक्त अरब अमीरात',
+  'sharjah': 'संयुक्त अरब अमीरात',
+  'abudhabi': 'संयुक्त अरब अमीरात',
+  'usa': 'अमेरिका',
+  'usa': 'अमेरिका',
+  'unitedstates': 'अमेरिका',
+  'america': 'अमेरिका',
+  'saudiarabia': 'सऊदी अरब',
+  'saudi': 'सऊदी अरब',
+  'malaysia': 'मलेशिया',
+  'kuwait': 'कुवैत',
+  'oman': 'ओमान',
+  'qatar': 'क़तर',
+  'uk': 'ब्रिटेन',
+  'uk': 'ब्रिटेन',
+  'unitedkingdom': 'ब्रिटेन',
+  'britain': 'ब्रिटेन',
+  'england': 'ब्रिटेन',
+  'canada': 'कनाडा',
+  'australia': 'ऑस्ट्रेलिया',
+  'nepal': 'नेपाल',
+  'singapore': 'सिंगापुर',
+  'southafrica': 'दक्षिण अफ़्रीका',
+  'srilanka': 'श्रीलंका',
+  'srilanka': 'श्रीलंका',
+  'bahrain': 'बहरीन',
+  'newzealand': 'न्यूज़ीलैंड',
+  'germany': 'जर्मनी',
+  'italy': 'इटली',
+  'mauritius': 'मॉरीशस',
+  'fiji': 'फ़िजी',
+  'thailand': 'थाईलैंड',
+  'myanmar': 'म्यांमार',
+  'burma': 'म्यांमार'
+};
+
 function normPlace(value) {
-  return String(value === null || value === undefined ? '' : value)
-           .replace(/\s+/g, ' ')
-           .trim()
-           .toLowerCase();
+  var v = String(value === null || value === undefined ? '' : value)
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+  if (!v) return v;
+  var key = v.replace(/[\s.\-_]/g, '');
+  return PLACE_ALIAS[key] || v;
 }
 
 function computeStats() {
