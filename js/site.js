@@ -1079,6 +1079,42 @@
     }
   }
 
+  /* "अन्य देश" वाले खाने में भारत की जगह लिख दी जाए तो वहीं रोक दीजिए।
+
+     27 सितम्बर को एक व्यक्ति ने "भारत से बाहर" चुना, फिर "अन्य देश" चुना,
+     और हाथ से "राजस्थान" लिख दिया। पृष्ठ पर राजस्थान एक देश बनकर बैठ गया।
+     सर्वर अब ऐसी पंक्ति को पहचान लेता है, पर उसे बनने ही न देना बेहतर है :
+     तब गिनती भी सही रहती है और आदमी को अपनी जगह भी ठीक से दर्ज करने को
+     मिलती है।
+
+     जाँच के लिए कोई नई सूची नहीं बनाई गई। जिले और राज्य, दोनों के नाम इसी
+     पृष्ठ के ड्रॉपडाउन में पहले से हैं, इसलिए सूची कभी पुरानी नहीं पड़ती।
+     setCustomValidity से ब्राउज़र खुद भेजने से रोक देता है और अपनी भाषा में
+     संदेश दिखाता है, इसलिए इसके लिए अलग कोई डिब्बा नहीं बनाना पड़ा। */
+  (function () {
+    var box = document.getElementById('i-desh-anya');
+    if (!box) return;
+    var bharat = {};
+    ['i-jila', 'i-rajya'].forEach(function (id) {
+      var sel = document.getElementById(id);
+      if (!sel) return;
+      Array.prototype.forEach.call(sel.options, function (o) {
+        var v = (o.value || '').trim().toLowerCase();
+        if (v && v !== 'अन्य') bharat[v] = 1;
+      });
+    });
+    ['राजस्थान', 'भारत', 'rajasthan', 'india'].forEach(function (v) { bharat[v] = 1; });
+
+    var jaancho = function () {
+      var v = box.value.trim().toLowerCase().replace(/\s+/g, ' ');
+      box.setCustomValidity(bharat[v]
+        ? 'यह जगह भारत में है। ऊपर जाकर “राजस्थान” या “भारत का अन्य राज्य” चुनिए।'
+        : '');
+    };
+    box.addEventListener('input', jaancho);
+    box.addEventListener('blur', jaancho);
+  }());
+
   /* "राजस्थान के जिले : 43" पढ़कर लगता था कि राजस्थान में 43 जिले हैं।
      गिनती असल में यह है कि कितने जिलों से लोग जुड़े। इसलिए लेबल अब कुल
      संख्या भी बताता है : "राजस्थान के 41 जिलों में से"।
