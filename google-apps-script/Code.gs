@@ -33,16 +33,23 @@ var MAX_SABHA_SANKHYA = 50000;
 //
 // The number counts the whole household, the registrant included.
 //
-// Set at 150 rather than a tighter number because a संयुक्त परिवार in these
-// villages really can run to several dozen, and the cost of the two mistakes
-// is not the same: too high lets a prank inflate the figure, which a look at
-// the sheet catches, while too low silently drops a real joint family down to
-// one person, which nobody ever notices. The sheet always keeps what was
-// typed, so an entry refused here can still be read and counted by hand.
-// If this changes, change max= on the form field too, because the page reads that
-// attribute for its running total, so those two never drift apart.
-var MAX_UPVAAS_SADASYA = 150;
-var CODE_VERSION = 20;          // bump when this file changes; shown in every response
+// This was 150 until 28 September, on the argument that a संयुक्त परिवार can
+// run to several dozen and that dropping a real family to one person is the
+// worse of the two mistakes. The sheet then settled the argument: three-digit
+// entries turned up, and no three-digit household exists. A wide limit was
+// buying a rare case at the price of a figure the campaign is judged by, so
+// the cap is now 9, the same single digit the form allows.
+//
+// Entries already saved above 9 keep their text in the sheet and count as the
+// one person who did register, the same as a blank. That understates a genuine
+// large family, and it is the honest direction to be wrong in on a public
+// number: we count only what we can vouch for.
+//
+// If this changes, change max= on #i-sadasya too. Nothing reads the attribute
+// at runtime; the two are simply the same rule stated on both sides, and the
+// form must not let through what this refuses to count.
+var MAX_UPVAAS_SADASYA = 9;
+var CODE_VERSION = 21;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
