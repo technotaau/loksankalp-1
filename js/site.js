@@ -287,20 +287,38 @@
     if (k && k !== today) (a.closest('li') || a).hidden = true;
   });
 
-  /* A campaign's own form ships hidden and is revealed at its hour, so
-     nobody sends anything before the day and nobody has to remember to switch
-     it on. Hidden is the safe default: if this file never runs the page still
-     explains what the campaign is and when it opens.
+  /* अभियान का अपना फ़ॉर्म अपने घंटे पर खुलता है और अपने घंटे पर बंद हो जाता है।
 
-     It opens at the hour and then stays open, deliberately. Somebody who
-     hears about it a day late should be able to join rather than meet a shut
-     door; what closes on time is the advertising above, not the form. */
+     पहले यह खुलकर हमेशा के लिए खुला रह जाता था, जान-बूझकर : जो एक दिन देर से
+     सुने वह भी जुड़ सके। 29 सितम्बर को उसका दूसरा पहलू दिखा। इंकलाब 28 बीत
+     चुका था, पृष्ठ का सारा प्रचार अपने आप हट चुका था, फिर भी रातोंरात 195
+     और परिवार जुड़ गए, यानी वे एक ऐसे दिन के लिए उपवास का संकल्प भेज रहे थे
+     जो निकल चुका था। आँकड़ा तब तक घोषित भी हो चुका होता है, और उसके बाद
+     बढ़ता हुआ आँकड़ा किसी को समझाया नहीं जा सकता। इसलिए अब तारीख़ बीतते ही
+     फ़ॉर्म भी बंद होता है, वैसे ही अपने आप जैसे बटन और मेन्यू हटते हैं।
+
+     तीनों हालतों में पृष्ठ कुछ न कुछ कहता है : तारीख़ से पहले data-camp-wait,
+     बीच में फ़ॉर्म, और बाद में data-camp-shut। फ़ॉर्म markup में छिपा आता है
+     और बंद वाली सूचना दिखती हुई, यानी JavaScript न चले तो पृष्ठ पर बंद
+     दरवाज़ा दिखता है, खुला नहीं। सुरक्षित दिशा यही है।
+
+     यह केवल दिखने की बात है। पुराने cache वाले फ़ोन से भेजा हुआ अब भी सर्वर
+     तक पहुँच सकता था, इसलिए Code.gs में FORM_SHUT भी है (v22)। */
   Object.keys(CAMPAIGNS).forEach(function (key) {
-    if (NOW < CAMPAIGNS[key].opens) return;
+    var c = CAMPAIGNS[key];
     var only = '[data-camp="' + key + '"]';
-    document.querySelectorAll('[data-camp-form]' + only).forEach(function (n) { n.hidden = false; });
-    document.querySelectorAll('[data-camp-wait]' + only).forEach(function (n) { n.hidden = true; });
-    document.querySelectorAll('[data-camp-count]' + only).forEach(function (n) { n.hidden = false; });
+    var khula = NOW >= c.opens && NOW < c.closes;
+    var beetGaya = NOW >= c.closes;
+    var khulaNahi = NOW < c.opens;
+    /* चारों को हर हाल में सेट कीजिए, किसी को छोड़िए मत। पहले यह "ज़रूरत पड़ने
+       पर दिखा दो" की तरह लिखा था, इसलिए markup में लिखा hidden ही अंतिम फ़ैसला
+       बन जाता था और अगला पृष्ठ बनाने वाले को याद रखना पड़ता कि कौन-सा डिब्बा
+       दिखता हुआ लिखना है और कौन-सा छिपा। अब पृष्ठ केवल यह तय करता है कि
+       JavaScript न चले तो क्या दिखे; चले तो घड़ी तय करती है। */
+    document.querySelectorAll('[data-camp-wait]' + only).forEach(function (n) { n.hidden = !khulaNahi; });
+    document.querySelectorAll('[data-camp-form]' + only).forEach(function (n) { n.hidden = !khula; });
+    document.querySelectorAll('[data-camp-shut]' + only).forEach(function (n) { n.hidden = !beetGaya; });
+    document.querySelectorAll('[data-camp-count]' + only).forEach(function (n) { n.hidden = khulaNahi; });
   });
 
   /* --- खाने जो ज़रूरत पड़ने पर ही खुलते हैं -------------------------------
@@ -1244,8 +1262,14 @@
     var sec = box.closest('[data-jila-section]') || box;
     /* न आना और खाली आना, दोनों अलग बातें हैं। पुराना deploy यह सूची भेजता
        ही नहीं; तब "किसी जिले से कोई नहीं" लिखना झूठ होता। दोनों हालत में
-       खंड चुपचाप छिपा रहता है। */
-    if (!list || !list.length || today !== 'inqlab28') { sec.hidden = true; return; }
+       खंड चुपचाप छिपा रहता है।
+
+       पहले यहाँ यह शर्त भी थी कि अभियान उसी दिन चल रहा हो। 29 सितम्बर को
+       उसका नतीजा यह निकला कि आयोजन बीतते ही "आपके जिले से कितने जुड़े" पूरा
+       खंड गायब हो गया, जबकि पढ़ने वाले उसी दिन सबसे ज़्यादा यही देखते हैं।
+       अब शर्त केवल यह है कि सूची आई हो। सूची तभी आती है जब पंजीकरण हुए हों,
+       इसलिए अभियान से पहले भी यह अपने आप ख़ाली रहकर छिपा रहता है। */
+    if (!list || !list.length) { sec.hidden = true; return; }
 
     list = list.filter(function (r) { return r.naam !== JILA_ANYA; });
     if (!list.length) { sec.hidden = true; return; }

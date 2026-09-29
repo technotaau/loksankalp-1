@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 21;          // bump when this file changes; shown in every response
+var CODE_VERSION = 22;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -67,6 +67,25 @@ var FORMS = {
   inqlab28: { tab: 'इंकलाब 28',         regPrefix: 'IN28',
               fields: ['regNo', 'naam', 'mobile', 'upvaasSadasya', 'gaon', 'jila',
                        'rajya', 'desh', 'deshAnya', 'sahmati'] }
+};
+
+/* Campaigns whose form no longer takes entries, and the moment each shut.
+   Written as UTC so the hour is the same wherever the server runs; these are
+   the same moments as CAMPAIGNS[...].closes in js/site.js.
+
+   The page stops showing the form at that hour on its own. This exists for
+   what the page cannot reach: a phone holding the old page in its cache, or
+   anything posting straight at this endpoint. On 29 September, after इंकलाब
+   28 was over and every button and menu item advertising it had already
+   stepped aside, 195 more families still came in overnight. They were sending
+   a pledge to fast on a day that had passed, and the figure they moved had
+   already been published. A shut form has to be shut on both sides.
+
+   The rows already in the sheet are untouched and keep counting. What is
+   refused is a new row, and the person is told why rather than being left to
+   wonder whether it saved. */
+var FORM_SHUT = {
+  inqlab28: Date.UTC(2026, 8, 28, 18, 30)    // 29 सित॰ 00:00 IST
 };
 
 // Human-readable column headings.
@@ -95,6 +114,12 @@ function doPost(e) {
 
     var spec = FORMS[data.form];
     if (!spec) return reply(false, 'अज्ञात फ़ॉर्म');
+
+    // बीत चुके आयोजन का फ़ॉर्म। देखिए FORM_SHUT।
+    var shutAt = FORM_SHUT[data.form];
+    if (shutAt && Date.now() >= shutAt) {
+      return reply(false, 'इस आयोजन का पंजीकरण बंद हो चुका है। पृष्ठ को ताज़ा कीजिए।');
+    }
 
     // When a classroom submits together the page retries instead of showing an
     // error, so the same submission can arrive more than once. It carries an id
