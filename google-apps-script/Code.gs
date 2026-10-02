@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 24;          // bump when this file changes; shown in every response
+var CODE_VERSION = 25;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -530,6 +530,48 @@ function placeKind(n) {
   return 'देश';
 }
 
+/* जगह के खाने एक बार देख लिए जाते हैं, हर पंक्ति पर नहीं। colOf() हर बुलावे
+   पर शीर्षक पंक्ति पढ़ता है, और दस फ़ॉर्मों की हज़ारों पंक्तियों पर वह महँगा
+   पड़ता है। जिस फ़ॉर्म में राज्य या देश का खाना ही नहीं है वहाँ -1 आता है और
+   kahanSe() सिर्फ़ जिला पढ़ता है। */
+function jagahIdx(ss, spec) {
+  return {
+    jila:     colOf(ss, spec, 'jila'),
+    rajya:    colOf(ss, spec, 'rajya'),
+    desh:     colOf(ss, spec, 'desh'),
+    deshAnya: colOf(ss, spec, 'deshAnya')
+  };
+}
+
+/* एक पंक्ति कहाँ से आई है। नाम लौटता है और उसकी तरह, या कुछ नहीं।
+
+   चार खाने इस क्रम में देखे जाते हैं : हाथ से लिखा देश, ड्रॉपडाउन का देश,
+   राज्य, और आख़िर में जिला। जो पहले भरा मिले वही नाम लिया जाता है, और वह
+   जगह किस तरह की है यह placeKind() तय करता है, खाना नहीं। 27 सितम्बर को
+   किसी ने "अन्य देश" में "राजस्थान" लिख दिया था और वह देशों की सूची में जा
+   बैठा; नाम से तय करने पर वह फिर नहीं हो सकता।
+
+   जिले पर एक अतिरिक्त कड़ाई है : नाम राजस्थान के 41 जिलों में हो, तभी जिला
+   गिना जाता है। जिला ड्रॉपडाउन है, पर Sheet में पंक्तियाँ हाथ से भी भरी
+   जाती हैं, और वहाँ "अन्य" या गाँव का नाम भी पड़ा मिलता है। ऐसा नाम पहले
+   चुपचाप देश बन जाता था। अब वह कहीं नहीं गिना जाता, जो सच है।
+
+   यही एक विधि सब फ़ॉर्मों के लिए है। पहले इंकलाब 28 और संकल्प दूत की अपनी
+   अलग नकलें थीं; एक में सुधार दूसरी में नहीं पहुँचता था। */
+function kahanSe(r, idx) {
+  var raj  = idx.rajya    < 0 ? '' : normPlace(r[idx.rajya]);
+  var des  = idx.desh     < 0 ? '' : normPlace(r[idx.desh]);
+  var desA = idx.deshAnya < 0 ? '' : normPlace(r[idx.deshAnya]);
+  var naam = isPlace(desA) ? desA : (isPlace(des) ? des : raj);
+  var kind = placeKind(naam);
+  if (kind) return { naam: naam, kya: kind };
+  // भरा तो है, पर उससे जगह का पता नहीं चलता ("राजस्थान", "भारत")
+  if (isPlace(desA) || isPlace(des) || isPlace(raj)) return null;
+  if (idx.jila < 0) return null;
+  var d = normPlace(r[idx.jila]);
+  return RAJ_JILA[d] ? { naam: d, kya: 'जिला' } : null;
+}
+
 function computeStats() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -602,57 +644,25 @@ function computeStats() {
     return box[naam];
   };
   var gI28 = colOf(ss, FORMS.inqlab28, 'gaon');
-  var jI28 = colOf(ss, FORMS.inqlab28, 'jila');
-  var rI28 = colOf(ss, FORMS.inqlab28, 'rajya');
-  var dI28 = colOf(ss, FORMS.inqlab28, 'desh');
-  var daI28 = colOf(ss, FORMS.inqlab28, 'deshAnya');
+  var iI28 = jagahIdx(ss, FORMS.inqlab28);
   var sI28 = colOf(ss, FORMS.inqlab28, 'upvaasSadasya');
   i28Rows.forEach(function (r) {
     if (gI28 >= 0) { var v = normPlace(r[gI28]); if (isPlace(v)) i28Villages[v] = 1; }
 
-    /* Where this entry is from, decided by which of the three columns is
-       filled rather than by matching the words in जिला. The जिला column holds
-       a marker for anyone outside Rajasthan ("भारत के अन्य राज्य से"), and
-       counting that as a district would put a phrase among the district
-       names. Reading the columns instead of the marker means the wording can
-       be reworded any day without the counts quietly breaking. */
     var kul = sI28 < 0 ? 0 : count(r[sI28]);
     // Blank, zero or a typo: fall back to the one person who did register.
     if (kul < 1 || kul > MAX_UPVAAS_SADASYA) kul = 1;
     i28Vyakti += kul;
 
-    var raj = rI28 < 0 ? '' : normPlace(r[rI28]);
-    var des = dI28 < 0 ? '' : normPlace(r[dI28]);
-    var desA = daI28 < 0 ? '' : normPlace(r[daI28]);
-    var b = null;
-
-    /* कौन-सा खाना भरा है, इससे यह तय होता है कि किस नाम को देखना है; पर
-       वह नाम किस तरह की जगह है, यह placeKind() तय करता है। इसी से "अन्य
-       देश" में लिखा हुआ राजस्थान देश नहीं बनता, और अगर कोई राज्य वाले खाने
-       में देश लिख दे तो वह भी सही जगह गिना जाता है। */
-    var naam = isPlace(desA) ? desA : (isPlace(des) ? des : raj);
-    var kind = placeKind(naam);
-    if (kind === 'देश') {
-      i28Countries[naam] = 1;
-      b = bucket(i28Bahar, naam, 'देश');
-    } else if (kind === 'राज्य') {
-      i28States[naam] = 1;
-      b = bucket(i28Bahar, naam, 'राज्य');
-    } else if (kind === 'जिला') {
-      i28Districts[naam] = 1;
-      b = bucket(i28ByJila, naam, 'जिला');
-    } else if (isPlace(desA) || isPlace(des) || isPlace(raj)) {
-      // भरा तो है, पर उससे जगह का पता नहीं चलता ("राजस्थान", "भारत")
-      b = null;
-    } else if (jI28 >= 0) {
-      /* ड्रॉपडाउन का आख़िरी विकल्प "अन्य" है, यानी "मेरा जिला सूची में नहीं
-         है"। राजस्थान का कोई जिला इस नाम का नहीं, इसलिए उसे एक जिला गिनना
-         "राजस्थान के जिले" वाली संख्या को एक बढ़ा देता था और पृष्ठ पर दिखने
-         वाली सूची से मेल नहीं खाता था। अब वह पंक्ति किसी जिले में नहीं गिनी
-         जाती; पृष्ठ उसे "जिनका जिला दर्ज नहीं हुआ" में जोड़ लेता है। */
-      var d = normPlace(r[jI28]);
-      if (isPlace(d) && d !== 'अन्य') { i28Districts[d] = 1; b = bucket(i28ByJila, d, 'जिला'); }
-    }
+    /* जगह kahanSe() से आती है, जो सब फ़ॉर्मों के लिए एक ही है। जिस पंक्ति से
+       जगह का पता नहीं चलता वह किसी सूची में नहीं जाती; पृष्ठ उसे "जिनका जिला
+       दर्ज नहीं हुआ" में जोड़ लेता है, और वह सच है। bahar में राजस्थान से
+       बाहर के राज्य और देश आते हैं, ताकि बाहर से जुड़ने वाले को भी अपना नाम
+       दिखे। */
+    var b = null, j = kahanSe(r, iI28);
+    if (j && j.kya === 'देश')       { i28Countries[j.naam] = 1; b = bucket(i28Bahar, j.naam, 'देश'); }
+    else if (j && j.kya === 'राज्य') { i28States[j.naam] = 1;    b = bucket(i28Bahar, j.naam, 'राज्य'); }
+    else if (j)                      { i28Districts[j.naam] = 1; b = bucket(i28ByJila, j.naam, 'जिला'); }
     if (b) { b.parivar++; b.vyakti += kul; }
   });
 
@@ -665,34 +675,20 @@ function computeStats() {
   });
 
   /* संकल्प दूत। जगह वैसे ही गिनी जाती है जैसे इंकलाब 28 में, क्योंकि फ़ॉर्म
-     में वही तीन खाने हैं : जिला, राज्य, और हाथ से लिखा हुआ देश। नाम तय करता
-     है कि वह जिला है, राज्य है या देश, खाना नहीं। वही भूल 29 सितम्बर को
-     राजस्थान को देश बना गई थी, इसलिए यहाँ वही जाँची हुई विधि दोहराई गई है।
+     में वही तीन खाने हैं : जिला, राज्य, और हाथ से लिखा हुआ देश। जगह
+     kahanSe() से आती है, जो सब फ़ॉर्मों के लिए एक ही विधि है।
 
      गिनती व्यक्तियों की है, परिवारों की नहीं : एक पंक्ति यानी एक संकल्प दूत। */
   var sdGaon = {}, sdJile = {}, sdRajya = {}, sdDesh = {};
-  var gSD  = colOf(ss, FORMS.sankalpDoot, 'gaon');
-  var jSD  = colOf(ss, FORMS.sankalpDoot, 'jila');
-  var rSD  = colOf(ss, FORMS.sankalpDoot, 'rajya');
-  var dSD  = colOf(ss, FORMS.sankalpDoot, 'desh');
-  var daSD = colOf(ss, FORMS.sankalpDoot, 'deshAnya');
+  var gSD = colOf(ss, FORMS.sankalpDoot, 'gaon');
+  var iSD = jagahIdx(ss, FORMS.sankalpDoot);
   sdRows.forEach(function (r) {
     if (gSD >= 0) { var v = normPlace(r[gSD]); if (isPlace(v)) sdGaon[v] = 1; }
 
-    var raj  = rSD  < 0 ? '' : normPlace(r[rSD]);
-    var des  = dSD  < 0 ? '' : normPlace(r[dSD]);
-    var desA = daSD < 0 ? '' : normPlace(r[daSD]);
-    var naam = isPlace(desA) ? desA : (isPlace(des) ? des : raj);
-    var kind = placeKind(naam);
-    if (kind === 'देश')       { sdDesh[naam] = 1; }
-    else if (kind === 'राज्य') { sdRajya[naam] = 1; }
-    else if (kind === 'जिला')  { sdJile[naam] = 1; }
-    else if (isPlace(desA) || isPlace(des) || isPlace(raj)) { /* "राजस्थान", "भारत" : जगह का पता नहीं चलता */ }
-    else if (jSD >= 0) {
-      // ड्रॉपडाउन का "अन्य" किसी जिले का नाम नहीं है, इसलिए गिना नहीं जाता।
-      var d = normPlace(r[jSD]);
-      if (isPlace(d) && d !== 'अन्य') sdJile[d] = 1;
-    }
+    var j = kahanSe(r, iSD);
+    if (j && j.kya === 'देश')       sdDesh[j.naam] = 1;
+    else if (j && j.kya === 'राज्य') sdRajya[j.naam] = 1;
+    else if (j)                      sdJile[j.naam] = 1;
   });
 
   // Schools are collected from the शिक्षक form and from सभा reports, into one
@@ -720,6 +716,44 @@ function computeStats() {
   if (nIdx >= 0) sabhaRows.forEach(function (r) {
     sabhaPratibhagi += count(r[nIdx]);
   });
+
+  /* पूरे अभियान की भौगोलिक पहुँच : जिले, राज्य और देश, हर फ़ॉर्म से जुड़कर।
+
+     गाँवों की तरह यहाँ भी एक जगह एक बार गिनी जाती है। जो जिला संकल्प 21 में
+     भी आया और इंकलाब 28 में भी, वह एक जिला है, दो नहीं। व्यक्तियों की गिनती
+     इसकी उलटी है, वह हर बार गिने जाते हैं, क्योंकि वह काम है और यह जगह।
+
+     दसों फ़ॉर्म इसमें हैं। सात फ़ॉर्मों में सिर्फ़ जिले का खाना है, इसलिए उनसे
+     जिले ही आते हैं; राज्य और देश इंकलाब 28 तथा संकल्प दूत से आते हैं, जहाँ
+     वे खाने बने हैं। */
+  var kulJileSet = {}, kulRajyaSet = {}, kulDeshSet = {};
+  [[sankalpRows, FORMS.sankalp], [sabhaRows, FORMS.sabha],
+   [kahaniRows, FORMS.kahani], [shikshakRows, FORMS.shikshak],
+   [yuvaRows, FORMS.yuva], [sammanRows, FORMS.samman],
+   [s21Rows, FORMS.sankalp21], [k21Rows, FORMS.karuna21],
+   [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot]].forEach(function (pair) {
+    var idx = jagahIdx(ss, pair[1]);
+    pair[0].forEach(function (r) {
+      var j = kahanSe(r, idx);
+      if (!j) return;
+      if (j.kya === 'जिला')       kulJileSet[j.naam] = 1;
+      else if (j.kya === 'राज्य') kulRajyaSet[j.naam] = 1;
+      else                        kulDeshSet[j.naam] = 1;
+    });
+  });
+  /* राजस्थान और भारत अपनी-अपनी सूची में अलग से जोड़े जाते हैं।
+
+     फ़ॉर्म में राजस्थान का आदमी अपना जिला चुनता है, "राजस्थान" नहीं; और
+     भारत का आदमी अपना राज्य चुनता है, "भारत" नहीं। इसलिए ऊपर की सूचियों में
+     राजस्थान से बाहर के राज्य और भारत से बाहर के देश ही आते हैं। उन्हीं को
+     "भारत के राज्य" और "देश" कहकर छाप देना झूठ होता : जिस राज्य से यह
+     अभियान चल रहा है वही उसमें से छूट जाता।
+
+     इसलिए : एक भी जिला जुड़ा है तो राजस्थान जुड़ा है, और एक भी जिला या राज्य
+     जुड़ा है तो भारत जुड़ा है। दोनों अनुमान नहीं हैं, आँकड़े से निकली बात हैं। */
+  var kulJileN  = Object.keys(kulJileSet).length;
+  var rajyaAnya = Object.keys(kulRajyaSet).length;
+  var deshAnyaN = Object.keys(kulDeshSet).length;
 
   var stats = {
     gaon:       Object.keys(villages).length,
@@ -768,15 +802,32 @@ function computeStats() {
     dootJile:   Object.keys(sdJile).length,
     dootRajya:  Object.keys(sdRajya).length,
     dootDesh:   Object.keys(sdDesh).length,
+    /* पूरे अभियान की पहुँच, सब फ़ॉर्म जोड़कर। मुखपृष्ठ पर यही तीन छपती हैं।
+       राजस्थान के जिले कुल 41 हैं, इसलिए jileKul भी भेजा जाता है : "41 में
+       से 41" लिखा जा सके, और सूची बढ़े तो पृष्ठ अपने आप सही रहे। */
+    kulJile:      kulJileN,
+    jileKul:      Object.keys(RAJ_JILA).length,
+    kulRajya:     rajyaAnya + (kulJileN > 0 ? 1 : 0),
+    kulDesh:      deshAnyaN + (kulJileN > 0 || rajyaAnya > 0 ? 1 : 0),
+    // नाम भी, ताकि कोई पूछे तो गिनती के पीछे की सूची दिखाई जा सके
+    kulJileSuchi:  Object.keys(kulJileSet).sort(),
+    kulRajyaSuchi: Object.keys(kulRajyaSet).sort(),
+    kulDeshSuchi:  Object.keys(kulDeshSet).sort(),
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
   // Per-district breakdown for the जिलेवार प्रगति table. Only districts that
   // actually have activity appear, so no master list of districts is needed.
   var byDistrict = {};
+  /* नाम normPlace() से होकर आता है और राजस्थान के 41 जिलों से मिलाया जाता
+     है। पहले यहाँ कच्चा मान सीधे कुंजी बन जाता था, इसलिए 2 अक्तूबर तक इस
+     तालिका में "बाड़मेर" और "Barmer" दो अलग पंक्तियाँ थीं, और ड्रॉपडाउन का
+     "अन्य" एक जिले के नाम की तरह बैठा था। जो पंक्ति किसी जिले की नहीं है वह
+     तालिका में नहीं आती; उसके संकल्प मुख्य गिनती में पहले से जुड़े हैं,
+     इसलिए कोई संख्या इससे घटती नहीं। */
   var touch = function (d) {
-    d = String(d || '').trim();
-    if (!d) return null;
+    d = normPlace(d);
+    if (!RAJ_JILA[d]) return null;
     if (!byDistrict[d]) byDistrict[d] = { gaon: {}, sabhaen: 0, samitiyan: 0, sankalp: 0 };
     return byDistrict[d];
   };
