@@ -1044,7 +1044,7 @@
       document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
     }
     pahunch(stats);
-    renderDistricts(stats.byDistrict);
+    renderDistricts(stats.byDistrict, stats.jilaBahar);
     renderJilaList(stats.inqlabByJila, stats.inqlabBahar, stats.inqlabVyakti);
     return painted;
   }
@@ -1415,7 +1415,13 @@
 
   /* Districts appear in the table only once a submission names them, so the
      campaign never publishes a district it has not actually reached. */
-  function renderDistricts(list) {
+  /* जिलेवार तालिका।
+
+     आख़िर में एक पंक्ति और जुड़ती है : जो राजस्थान से बाहर के हैं या जिनका
+     जिला दर्ज नहीं हुआ। उसे छोड़ देने पर स्तंभ जोड़ने वाले को मुखपृष्ठ से कम
+     संख्या मिलती, और वह ठीक ही समझता कि कुछ छिपाया जा रहा है। अब जोड़ ठीक
+     वही बनता है जो मुखपृष्ठ पर लिखा है। */
+  function renderDistricts(list, bahar) {
     var body = document.querySelector('[data-district-rows]');
     if (!body) return;
     // Absent (older deployed script) is not the same as empty (no entries yet);
@@ -1429,11 +1435,11 @@
       return;
     }
     body.innerHTML = '';
-    list.forEach(function (d) {
+    var pankti = function (naam, d) {
       var tr = document.createElement('tr');
       var th = document.createElement('th');
       th.setAttribute('scope', 'row');
-      th.textContent = d.jila;
+      th.textContent = naam;
       tr.appendChild(th);
       ['gaon', 'sabhaen', 'samitiyan', 'sankalp'].forEach(function (k) {
         var td = document.createElement('td');
@@ -1441,7 +1447,12 @@
         tr.appendChild(td);
       });
       body.appendChild(tr);
-    });
+    };
+    list.forEach(function (d) { pankti(d.jila, d); });
+    // पुराने deploy से bahar नहीं आता; तब तालिका पहले जैसी ही रहती है।
+    if (bahar && (bahar.sankalp || bahar.sabhaen || bahar.gaon || bahar.samitiyan)) {
+      pankti('राजस्थान से बाहर, या जिला दर्ज नहीं', bahar);
+    }
   }
 
   /* --- Footer year ------------------------------------------------------ */

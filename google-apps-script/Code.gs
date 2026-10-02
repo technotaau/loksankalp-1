@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 25;          // bump when this file changes; shown in every response
+var CODE_VERSION = 26;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -646,12 +646,17 @@ function computeStats() {
   var gI28 = colOf(ss, FORMS.inqlab28, 'gaon');
   var iI28 = jagahIdx(ss, FORMS.inqlab28);
   var sI28 = colOf(ss, FORMS.inqlab28, 'upvaasSadasya');
+  /* एक पंक्ति कितने व्यक्ति लाई। ख़ाली, शून्य या बेतुका जवाब होने पर भी एक,
+     क्योंकि पंजीकरण तो किसी ने किया ही है। जिलेवार तालिका भी यही गिनती
+     इस्तेमाल करती है, इसलिए यह अलग से रखा गया है। */
+  var i28Kul = function (r) {
+    var n = sI28 < 0 ? 0 : count(r[sI28]);
+    return (n < 1 || n > MAX_UPVAAS_SADASYA) ? 1 : n;
+  };
   i28Rows.forEach(function (r) {
     if (gI28 >= 0) { var v = normPlace(r[gI28]); if (isPlace(v)) i28Villages[v] = 1; }
 
-    var kul = sI28 < 0 ? 0 : count(r[sI28]);
-    // Blank, zero or a typo: fall back to the one person who did register.
-    if (kul < 1 || kul > MAX_UPVAAS_SADASYA) kul = 1;
+    var kul = i28Kul(r);
     i28Vyakti += kul;
 
     /* जगह kahanSe() से आती है, जो सब फ़ॉर्मों के लिए एक ही है। जिस पंक्ति से
@@ -816,43 +821,56 @@ function computeStats() {
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
-  // Per-district breakdown for the जिलेवार प्रगति table. Only districts that
-  // actually have activity appear, so no master list of districts is needed.
-  var byDistrict = {};
-  /* नाम normPlace() से होकर आता है और राजस्थान के 41 जिलों से मिलाया जाता
-     है। पहले यहाँ कच्चा मान सीधे कुंजी बन जाता था, इसलिए 2 अक्तूबर तक इस
-     तालिका में "बाड़मेर" और "Barmer" दो अलग पंक्तियाँ थीं, और ड्रॉपडाउन का
-     "अन्य" एक जिले के नाम की तरह बैठा था। जो पंक्ति किसी जिले की नहीं है वह
-     तालिका में नहीं आती; उसके संकल्प मुख्य गिनती में पहले से जुड़े हैं,
-     इसलिए कोई संख्या इससे घटती नहीं। */
-  var touch = function (d) {
-    d = normPlace(d);
-    if (!RAJ_JILA[d]) return null;
-    if (!byDistrict[d]) byDistrict[d] = { gaon: {}, sabhaen: 0, samitiyan: 0, sankalp: 0 };
-    return byDistrict[d];
+  /* जिलेवार तालिका। मुखपृष्ठ की संख्याएँ और यह तालिका एक ही आँकड़े से बनें,
+     वरना पढ़ने वाला जोड़कर पकड़ लेता है, और ठीक ही पकड़ता है।
+
+     2 अक्तूबर तक यह तालिका सिर्फ़ तीन फ़ॉर्म पढ़ती थी : सभा, ऑनलाइन संकल्प,
+     और संकल्प 21। नतीजा यह था कि उसका संकल्प जोड़ 2,07,926 बनता था जबकि
+     मुखपृष्ठ 2,25,389 कहता था, जुड़े गाँव 1,373 बनते थे जबकि मुखपृष्ठ 3,198
+     कहता था, और चार जिले (चित्तौड़गढ़, प्रतापगढ़, भरतपुर, सलूम्बर) तालिका में
+     थे ही नहीं, क्योंकि वे सिर्फ़ इंकलाब 28 से जुड़े थे।
+
+     अब वही फ़ॉर्म, उसी आधार पर गिने जाते हैं जिनसे मुखपृष्ठ की संख्या बनती
+     है। जिस पंक्ति से जिला नहीं निकलता (राजस्थान से बाहर का कोई, या जिसने
+     "अन्य" चुना) वह jilaBahar में जाती है। वह छिपाई नहीं जाती : स्तंभ जोड़ने
+     पर ठीक मुखपृष्ठ वाली संख्या बननी चाहिए, कुछ चुपचाप ग़ायब नहीं होना
+     चाहिए।
+
+     सभाएँ और समितियाँ सिर्फ़ सभा फ़ॉर्म से आती हैं, क्योंकि वे उसी की बातें
+     हैं। गाँव वहीं से आते हैं जहाँ से मुखपृष्ठ का गाँव वाला आँकड़ा आता है। */
+  var byDistrict = {}, bahar = { gaon: {}, sabhaen: 0, samitiyan: 0, sankalp: 0 };
+  var khana = function (jila) {
+    if (!jila) return bahar;
+    if (!byDistrict[jila]) byDistrict[jila] = { gaon: {}, sabhaen: 0, samitiyan: 0, sankalp: 0 };
+    return byDistrict[jila];
   };
-  var jSankalp = colOf(ss, FORMS.sankalp, 'jila');
-  var gSankalp = colOf(ss, FORMS.sankalp, 'gaon');
-  if (jSankalp >= 0) sankalpRows.forEach(function (r) {
-    var d = touch(r[jSankalp]); if (!d) return;
-    d.sankalp++;
-    var v = gSankalp < 0 ? '' : normPlace(r[gSankalp]); if (isPlace(v)) d.gaon[v] = 1;
+  /* एक फ़ॉर्म की सब पंक्तियाँ : जिला और गाँव हर जगह एक ही तरह निकलते हैं,
+     इसलिए वह यहीं हो जाता है; बाकी जो गिनना है वह kaam बताता है। */
+  var jilewar = function (rowsArr, spec, kaam) {
+    var idx = jagahIdx(ss, spec);
+    var g = colOf(ss, spec, 'gaon');
+    rowsArr.forEach(function (r) {
+      var j = kahanSe(r, idx);
+      var b = khana(j && j.kya === 'जिला' ? j.naam : '');
+      if (g >= 0) { var v = normPlace(r[g]); if (isPlace(v)) b.gaon[v] = 1; }
+      if (kaam) kaam(b, r);
+    });
+  };
+  var ek = function (b) { b.sankalp++; };
+  jilewar(sankalpRows, FORMS.sankalp,    ek);
+  jilewar(s21Rows,     FORMS.sankalp21,  ek);
+  jilewar(k21Rows,     FORMS.karuna21,   ek);
+  jilewar(sdRows,      FORMS.sankalpDoot, ek);
+  jilewar(i28Rows,     FORMS.inqlab28,   function (b, r) { b.sankalp += i28Kul(r); });
+  jilewar(sabhaRows,   FORMS.sabha,      function (b, r) {
+    b.sabhaen++;
+    if (nIdx >= 0) b.sankalp += count(r[nIdx]);   // same basis as the headline figure
+    if (samitiIdx >= 0 && String(r[samitiIdx] || '').trim() === 'हाँ') b.samitiyan++;
   });
-  var jSabha = colOf(ss, FORMS.sabha, 'jila');
-  var gSabha = colOf(ss, FORMS.sabha, 'gaon');
-  if (jSabha >= 0) sabhaRows.forEach(function (r) {
-    var d = touch(r[jSabha]); if (!d) return;
-    d.sabhaen++;
-    if (nIdx >= 0) d.sankalp += count(r[nIdx]);   // same basis as the headline figure
-    if (samitiIdx >= 0 && String(r[samitiIdx] || '').trim() === 'हाँ') d.samitiyan++;
-    var v = gSabha < 0 ? '' : normPlace(r[gSabha]); if (isPlace(v)) d.gaon[v] = 1;
-  });
-  var j21 = colOf(ss, FORMS.sankalp21, 'jila');
-  if (j21 >= 0) s21Rows.forEach(function (r) {
-    var d = touch(r[j21]); if (!d) return;
-    d.sankalp++;
-    var v = g21 < 0 ? '' : normPlace(r[g21]); if (isPlace(v)) d.gaon[v] = 1;
-  });
+  // इन दोनों में संकल्प नहीं गिना जाता, पर इनके गाँव भी जुड़े हुए गाँव हैं
+  jilewar(kahaniRows,  FORMS.kahani, null);
+  jilewar(yuvaRows,    FORMS.yuva,   null);
+
   /* इंकलाब 28 की जिलेवार सूची। सबसे बड़ा जिला पहले, ताकि पृष्ठ पर पहली
      नज़र में ही पता चले कि कहाँ सबसे ज़्यादा लोग जुड़े हैं। */
   var listOf = function (box) {
@@ -868,6 +886,10 @@ function computeStats() {
              sabhaen: byDistrict[d].sabhaen, samitiyan: byDistrict[d].samitiyan,
              sankalp: byDistrict[d].sankalp };
   }).sort(function (a, b) { return (b.sabhaen + b.sankalp) - (a.sabhaen + a.sankalp); });
+  // तालिका की आख़िरी पंक्ति : जिनका जिला दर्ज नहीं हुआ या जो राजस्थान से
+  // बाहर के हैं। इसी से स्तंभ जोड़ने पर मुखपृष्ठ वाली संख्या बनती है।
+  stats.jilaBahar = { gaon: Object.keys(bahar.gaon).length, sabhaen: bahar.sabhaen,
+                      samitiyan: bahar.samitiyan, sankalp: bahar.sankalp };
 
   /* Optional tab "मैनुअल आँकड़े": column A a key from above, column B a number.
      Two forms:
