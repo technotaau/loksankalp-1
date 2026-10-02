@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 23;          // bump when this file changes; shown in every response
+var CODE_VERSION = 24;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -544,14 +544,21 @@ function computeStats() {
   var i28Rows      = rows(ss, FORMS.inqlab28.tab);
   var sdRows       = rows(ss, FORMS.sankalpDoot.tab);
 
-  // "जुड़े हुए गाँव" counts each village once, however many forms mention it.
-  // Ten people from one village make that village count once, not ten times,
-  // and a village a सभा already reached adds nothing when its residents
-  // register individually.
+  /* "जुड़े हुए गाँव" हर गाँव को एक बार गिनता है, चाहे वह कितने ही फ़ॉर्मों में
+     आए। एक ही गाँव के दस लोग उस गाँव को दस बार नहीं बना देते, और जिस गाँव में सभा
+     हो चुकी है वहाँ का कोई व्यक्ति अलग से पंजीकरण करे तो गिनती नहीं बढ़ती।
+
+     नाम normPlace() से होकर आता है, इसलिए "चूरू" और "churu" दो गाँव नहीं बनते।
+     Sheet पर सीधे COUNTUNIQUE चलाने पर संख्या इससे कुछ ज़्यादा आएगी, कम नहीं।
+
+     सभी छह फ़ॉर्म इसमें हैं (2 अक्तूबर से)। पहले करुणा 21, इंकलाब 28 और
+     संकल्प दूत बाहर थे, इसलिए मुखपृष्ठ उन गाँवों को नहीं गिनता था जहाँ अभियान
+     सचमुच पहुँच चुका था। अकेले इंकलाब 28 के गाँव बाक़ी सब मिलाकर से ज़्यादा थे। */
   var villages = {};
   [[sankalpRows, FORMS.sankalp], [sabhaRows, FORMS.sabha],
    [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva],
-   [s21Rows, FORMS.sankalp21]].forEach(function (pair) {
+   [s21Rows, FORMS.sankalp21], [k21Rows, FORMS.karuna21],
+   [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot]].forEach(function (pair) {
     var idx = colOf(ss, pair[1], 'gaon');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
@@ -720,7 +727,17 @@ function computeStats() {
     samitiyan:  samitiyan,
     // One consolidated number. The two halves are published too, so the
     // dashboard can always show where the figure came from.
-    sankalp:         sankalpRows.length + sabhaPratibhagi + s21Rows.length,
+    /* एक आदमी ने अगर सभा में भी हिस्सा लिया, संकल्प 21 भी किया, इंकलाब 28
+       में भी नाम लिखाया और संकल्प दूत भी बना, तो वह चारों बार गिना जाता है।
+       यह जान-बूझकर है : यह संख्या लोगों की नहीं, लिए गए संकल्पों की है। गाँव
+       इसके उलटे एक बार ही गिना जाता है, क्योंकि वह जगह है, काम नहीं।
+
+       इंकलाब 28 के व्यक्ति परिवार के सदस्य हैं, जिन्होंने ख़ुद फ़ॉर्म नहीं भरा।
+       सभा के प्रतिभागी भी ऐसे ही गिने जाते हैं, आयोजक संख्या लिखता है। इसलिए
+       दोनों एक ही तरह के हैं और एक ही संख्या में जुड़ते हैं। हर हिस्सा अलग से भी
+       भेजा जाता है, ताकि कोई पूछे तो बताया जा सके कि यह संख्या किससे बनी है। */
+    sankalp:         sankalpRows.length + sabhaPratibhagi + s21Rows.length +
+                     k21Rows.length + i28Vyakti + sdRows.length,
     sankalpOnline:   sankalpRows.length,
     sabhaPratibhagi: sabhaPratibhagi,
     shikshak:   shikshakRows.length,

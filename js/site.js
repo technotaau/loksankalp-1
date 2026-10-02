@@ -1043,9 +1043,46 @@
     if (painted) {
       document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
     }
+    sankalpKaTod(stats);
     renderDistricts(stats.byDistrict);
     renderJilaList(stats.inqlabByJila, stats.inqlabBahar, stats.inqlabVyakti);
     return painted;
+  }
+
+  /* "संकल्प" किससे बना है, यह नीचे लिखा रहता है।
+
+     2 अक्तूबर को यह संख्या 2,07,977 से 2,25,377 हो गई, क्योंकि करुणा 21,
+     इंकलाब 28 और संकल्प दूत अब इसमें गिने जाते हैं। इतनी बड़ी छलाँग बिना
+     कारण बताए छोड़ देना ठीक नहीं : जो आदमी कल का आँकड़ा देख चुका है वह
+     सोचेगा कि संख्या बढ़ा-चढ़ाकर लिखी गई है।
+
+     हिस्से आँकड़ों से ही बनते हैं, यहाँ कोई संख्या लिखी नहीं गई, इसलिए यह
+     पंक्ति कभी पुरानी नहीं पड़ती। जो हिस्सा शून्य है वह अपने आप हट जाता है,
+     और कोई हिस्सा पुराने deploy से न आए तो वह चुपचाप छूट जाता है। */
+  function sankalpKaTod(stats) {
+    var box = document.querySelector('[data-sankalp-tod]');
+    if (!box) return;
+    var hisse = [
+      ['लोकसंकल्प सभा', stats.sabhaPratibhagi],
+      ['इंकलाब 28',     stats.inqlabVyakti],
+      ['ऑनलाइन संकल्प', stats.sankalpOnline],
+      ['संकल्प 21',     stats.sankalp21],
+      ['करुणा 21',      stats.karuna21],
+      ['संकल्प दूत',    stats.dootKul]
+    ].filter(function (h) { return typeof h[1] === 'number' && h[1] > 0; });
+    /* पंक्ति तभी दिखती है जब हिस्से जुड़कर ठीक वही संख्या बनें जो ऊपर छपी है।
+
+       सर्वर और वेबसाइट अलग-अलग समय पर बदलते हैं : फ़ाइल push होते ही live हो
+       जाती है, पर Code.gs हाथ से deploy करना पड़ता है। बीच के उस समय में
+       हिस्से कुल से ज़्यादा हो जाते और पढ़ने वाला जोड़कर देखता तो पकड़ लेता।
+       इस जाँच से वह बीच का समय अपने आप सँभल जाता है : पुराने deploy पर
+       पंक्ति चुपचाप छिपी रहती है और नए पर अपने आप आ जाती है। */
+    var jod = hisse.reduce(function (t, h) { return t + h[1]; }, 0);
+    if (hisse.length < 2 || jod !== stats.sankalp) { box.hidden = true; return; }
+    hisse.sort(function (a, b) { return b[1] - a[1]; });
+    box.textContent = 'इस संख्या में शामिल हैं : ' +
+      hisse.map(function (h) { return h[0] + ' ' + nf.format(h[1]); }).join(' · ');
+    box.hidden = false;
   }
 
   // Called after a submission lands: the Sheet has one more row, and the
