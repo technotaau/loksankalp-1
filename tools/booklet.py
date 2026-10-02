@@ -31,7 +31,7 @@ import pymupdf
 DPI = 150            # 595pt A4 -> 1240px wide; readable on a phone when zoomed
 QUALITY = 72         # WebP; a dense text page lands around 70-90 KB
 EAGER_PAGES = 2      # the rest wait until the reader scrolls to them
-SITE = "https://technotaau.github.io/loksankalp-1"
+SITE = "https://loksankalp.org"
 
 SAVE_OPTS = dict(garbage=4, deflate=True, deflate_images=True,
                  deflate_fonts=True, clean=True)
