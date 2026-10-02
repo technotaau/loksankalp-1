@@ -1434,7 +1434,8 @@
     'samman-done': 'samman',
     'sankalp21-done': 'sankalp21',
     'karuna21-done': 'karuna21',
-    'inqlab28-done': 'inqlab28'
+    'inqlab28-done': 'inqlab28',
+    'doot-done': 'sankalpDoot'
   };
 
   var MAX_EDGE = 1600;   // px on the long side

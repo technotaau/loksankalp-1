@@ -306,6 +306,55 @@ def check_no_fake_login():
                          'Google इसे फ़िशिंग मानता है जब तक वह सचमुच काम न करे')
 
 
+def check_form_wiring():
+    """हर फ़ॉर्म का तार सचमुच जुड़ा हो, तीनों सिरों पर।
+
+    2 अक्तूबर को संकल्प दूत का फ़ॉर्म बना, पर js/site.js की FORM_NAMES में
+    उसका नाम जोड़ना रह गया। नतीजा सबसे बुरे किस्म का था : पृष्ठ ने प्रमाण-पत्र
+    दिखा दिया, आदमी समझा कि पंजीकरण हो गया, और सर्वर को कुछ भेजा ही नहीं
+    गया। कोई त्रुटि कहीं नहीं दिखी, क्योंकि वह रास्ता "यह सहेजने वाला फ़ॉर्म
+    नहीं है" मानकर चुपचाप पुष्टि दिखा देता है।
+
+    इसलिए अब तीनों सिरे मिलाकर देखे जाते हैं : पृष्ठ का data-demo, site.js
+    की FORM_NAMES, और Code.gs की FORMS। बीच की कोई भी कड़ी टूटी हो तो build
+    यहीं रुक जाएगा, आदमी के सामने नहीं।
+    """
+    site = os.path.join(ROOT, 'js', 'site.js')
+    code = os.path.join(ROOT, 'google-apps-script', 'Code.gs')
+    if not os.path.exists(site):
+        return
+    sjs = open(site, encoding='utf-8').read()
+    m = re.search(r'var FORM_NAMES = \{(.*?)\};', sjs, re.S)
+    if not m:
+        err('js/site.js', 'FORM_NAMES नहीं मिला')
+        return
+    names = dict(re.findall(r"'([^']+)'\s*:\s*'([^']+)'", m.group(1)))
+
+    forms = set()
+    if os.path.exists(code):
+        cg = open(code, encoding='utf-8').read()
+        block = re.search(r'var FORMS = \{(.*?)\n\};', cg, re.S)
+        if block:
+            forms = set(re.findall(r'^\s*([A-Za-z0-9_]+)\s*:\s*\{', block.group(1), re.M))
+
+    for path in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
+        rel = os.path.relpath(path, ROOT)
+        txt = open(path, encoding='utf-8').read()
+        for m in re.finditer(r'<form[^>]*\sdata-demo="([^"]+)"[^>]*>', txt):
+            demo, tag = m.group(1), m.group(0)
+            # जो फ़ॉर्म जान-बूझकर कुछ नहीं सहेजता, वह यह लिखकर बताए
+            if 'data-no-save' in tag:
+                continue
+            if demo not in names:
+                err(rel, f'फ़ॉर्म data-demo="{demo}" है पर js/site.js की '
+                         f'FORM_NAMES में नहीं। ऐसा फ़ॉर्म पुष्टि दिखाएगा और '
+                         f'सर्वर को कुछ नहीं भेजेगा')
+                continue
+            if forms and names[demo] not in forms:
+                err(rel, f'data-demo="{demo}" का नाम "{names[demo]}" है, पर '
+                         f'Code.gs की FORMS में वह नहीं मिला')
+
+
 def main():
     quiet = '--quiet' in sys.argv
     pages = sorted(glob.glob(os.path.join(ROOT, '*.html')))
@@ -329,6 +378,7 @@ def main():
     check_canonical_host()
     check_long_dashes()
     check_no_fake_login()
+    check_form_wiring()
 
     for f in ('sitemap.xml', 'robots.txt', 'site.webmanifest', '.nojekyll',
               'css/site.css', 'css/tokens.css', 'js/site.js'):
