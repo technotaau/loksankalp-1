@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 22;          // bump when this file changes; shown in every response
+var CODE_VERSION = 23;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -66,6 +66,13 @@ var FORMS = {
   // certificate carries a number that can be looked up in this sheet.
   inqlab28: { tab: 'इंकलाब 28',         regPrefix: 'IN28',
               fields: ['regNo', 'naam', 'mobile', 'upvaasSadasya', 'gaon', 'jila',
+                       'rajya', 'desh', 'deshAnya', 'sahmati'] },
+  /* संकल्प दूत : स्वयंसेवक बनने का पंजीकरण, गांधी जयंती से। यह किसी
+     एक दिन का आयोजन नहीं है, इसलिए न CAMPAIGNS में है और न FORM_SHUT में।
+     क्रमांक पर regPrefix नहीं लिखा है, इसलिए nextRegNo() का अपना डिफ़ॉल्ट
+     लगता है और संख्या LS-0001 बनती है, जैसा प्रमाण-पत्र पर छपना है। */
+  sankalpDoot: { tab: 'संकल्प दूत',
+              fields: ['regNo', 'naam', 'mobile', 'aayuVarg', 'bhumika', 'gaon', 'jila',
                        'rajya', 'desh', 'deshAnya', 'sahmati'] }
 };
 
@@ -99,7 +106,8 @@ var LABELS = {
   roop: 'सहभागी के रूप में', sanstha: 'संस्था / विद्यालय', upvaas: 'उपवास',
   sankalp: 'लोकसंकल्प', photoSahmati: 'फोटो सहमति', sandesh: 'संदेश',
   regNo: 'पंजीकरण क्रमांक', upvaasSadasya: 'उपवास सदस्य',
-  rajya: 'राज्य', desh: 'देश', deshAnya: 'देश (लिखा हुआ)'
+  rajya: 'राज्य', desh: 'देश', deshAnya: 'देश (लिखा हुआ)',
+  aayuVarg: 'आयु वर्ग'
 };
 
 // ---- entry point ---------------------------------------------------------
@@ -534,6 +542,7 @@ function computeStats() {
   var s21Rows      = rows(ss, FORMS.sankalp21.tab);
   var k21Rows      = rows(ss, FORMS.karuna21.tab);
   var i28Rows      = rows(ss, FORMS.inqlab28.tab);
+  var sdRows       = rows(ss, FORMS.sankalpDoot.tab);
 
   // "जुड़े हुए गाँव" counts each village once, however many forms mention it.
   // Ten people from one village make that village count once, not ten times,
@@ -648,6 +657,37 @@ function computeStats() {
     if (isPlace(v)) s21Villages[v] = 1;
   });
 
+  /* संकल्प दूत। जगह वैसे ही गिनी जाती है जैसे इंकलाब 28 में, क्योंकि फ़ॉर्म
+     में वही तीन खाने हैं : जिला, राज्य, और हाथ से लिखा हुआ देश। नाम तय करता
+     है कि वह जिला है, राज्य है या देश, खाना नहीं। वही भूल 29 सितम्बर को
+     राजस्थान को देश बना गई थी, इसलिए यहाँ वही जाँची हुई विधि दोहराई गई है।
+
+     गिनती व्यक्तियों की है, परिवारों की नहीं : एक पंक्ति यानी एक संकल्प दूत। */
+  var sdGaon = {}, sdJile = {}, sdRajya = {}, sdDesh = {};
+  var gSD  = colOf(ss, FORMS.sankalpDoot, 'gaon');
+  var jSD  = colOf(ss, FORMS.sankalpDoot, 'jila');
+  var rSD  = colOf(ss, FORMS.sankalpDoot, 'rajya');
+  var dSD  = colOf(ss, FORMS.sankalpDoot, 'desh');
+  var daSD = colOf(ss, FORMS.sankalpDoot, 'deshAnya');
+  sdRows.forEach(function (r) {
+    if (gSD >= 0) { var v = normPlace(r[gSD]); if (isPlace(v)) sdGaon[v] = 1; }
+
+    var raj  = rSD  < 0 ? '' : normPlace(r[rSD]);
+    var des  = dSD  < 0 ? '' : normPlace(r[dSD]);
+    var desA = daSD < 0 ? '' : normPlace(r[daSD]);
+    var naam = isPlace(desA) ? desA : (isPlace(des) ? des : raj);
+    var kind = placeKind(naam);
+    if (kind === 'देश')       { sdDesh[naam] = 1; }
+    else if (kind === 'राज्य') { sdRajya[naam] = 1; }
+    else if (kind === 'जिला')  { sdJile[naam] = 1; }
+    else if (isPlace(desA) || isPlace(des) || isPlace(raj)) { /* "राजस्थान", "भारत" : जगह का पता नहीं चलता */ }
+    else if (jSD >= 0) {
+      // ड्रॉपडाउन का "अन्य" किसी जिले का नाम नहीं है, इसलिए गिना नहीं जाता।
+      var d = normPlace(r[jSD]);
+      if (isPlace(d) && d !== 'अन्य') sdJile[d] = 1;
+    }
+  });
+
   // Schools are collected from the शिक्षक form and from सभा reports, into one
   // set. A school a teacher registered and a सभा later named counts once.
   var schools = {};
@@ -704,6 +744,13 @@ function computeStats() {
     inqlabJile:     Object.keys(i28Districts).length,
     inqlabRajya:    Object.keys(i28States).length,
     inqlabDesh:     Object.keys(i28Countries).length,
+    // संकल्प दूत : स्वयंसेवक। यह संख्या मुख्य "संकल्प" वाली गिनती से अलग
+    // रखी गई है, क्योंकि संकल्प लेना और स्वयंसेवक बनना एक बात नहीं है।
+    dootKul:    sdRows.length,
+    dootGaon:   Object.keys(sdGaon).length,
+    dootJile:   Object.keys(sdJile).length,
+    dootRajya:  Object.keys(sdRajya).length,
+    dootDesh:   Object.keys(sdDesh).length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
