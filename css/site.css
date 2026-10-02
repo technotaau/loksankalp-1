@@ -1115,3 +1115,23 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 @media (min-width: 46rem) {
   .jila-list { grid-template-columns: 1fr 1fr; gap: .5rem .9rem; }
 }
+
+/* संकल्प दूत के पाँच संकल्प।
+
+   गिनती यहाँ सजावट नहीं है : पाँचों संकल्प एक क्रम में पढ़े जाते हैं और
+   लोग आपस में "तीसरा संकल्प" कहकर बात करेंगे, इसलिए अंक दिखना ज़रूरी है।
+   इसीलिए यह <ol> है और अंक अपने गोले में बैठता है, सूची के अपने निशान के
+   भरोसे नहीं, जो हर ब्राउज़र में अलग दिखता है। */
+.pledges { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+.pledge {
+  display: grid; grid-template-columns: auto 1fr; gap: .9rem; align-items: start;
+  background: var(--ls-surface); border: 1px solid var(--ls-border);
+  border-radius: var(--ls-radius); padding: 1rem 1.1rem;
+}
+.pledge__n {
+  display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%;
+  background: var(--ls-saffron); color: #fff;
+  font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums;
+}
+.pledge h3 { margin: 0 0 .25rem; font-size: 1.05rem; }
+.pledge p { margin: 0; }
