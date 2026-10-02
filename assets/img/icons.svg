@@ -93,6 +93,18 @@
     <path d="M3 6.4 12 13l9-6.6"/>
   </symbol>
 
+  <symbol id="ic-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 4.2 3.4 6.4v13.4L9 17.6l6 2.2 5.6-2.2V4.2L15 6.4 9 4.2z"/>
+    <path d="M9 4.2v13.4"/>
+    <path d="M15 6.4v13.4"/>
+  </symbol>
+
+  <symbol id="ic-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M3 12h18"/>
+    <ellipse cx="12" cy="12" rx="4.2" ry="9"/>
+  </symbol>
+
   <symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M12 21.2s7-6.5 7-11.2a7 7 0 1 0-14 0c0 4.7 7 11.2 7 11.2z"/>
     <circle cx="12" cy="9.8" r="2.6"/>
