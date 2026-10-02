@@ -1043,9 +1043,49 @@
     if (painted) {
       document.querySelectorAll('[data-stats-note]').forEach(function (n) { n.hidden = true; });
     }
+    pahunch(stats);
     renderDistricts(stats.byDistrict);
     renderJilaList(stats.inqlabByJila, stats.inqlabBahar, stats.inqlabVyakti);
     return painted;
+  }
+
+  /* अभियान कहाँ-कहाँ पहुँचा, एक वाक्य में।
+
+     "राजस्थान के सभी 41 जिलों सहित 16 राज्यों और भारत सहित 6 देशों से
+     सहभागिता।" काउंटर बताते हैं कि आंदोलन कितना बड़ा है, यह पंक्ति बताती है
+     कि वह कितनी दूर तक फैला है। दोनों बातें अलग हैं।
+
+     कोई संख्या यहाँ लिखी नहीं गई, सब आँकड़ों से आती है, इसलिए यह पंक्ति कभी
+     पुरानी नहीं पड़ती। जिलों की कुल संख्या भी सर्वर से आती है, इसलिए कल
+     राजस्थान में कोई नया जिला बने तो "सभी 41" अपने आप सुधर जाता है।
+
+     पुराने deploy से ये गिनतियाँ नहीं आतीं। तब पंक्ति चुपचाप छिपी रहती है :
+     फ़ाइल push होते ही live हो जाती है पर Code.gs हाथ से deploy होता है, और
+     बीच का वह समय अपने आप सँभल जाता है। */
+  function pahunch(stats) {
+    var box = document.querySelector('[data-pahunch]');
+    if (!box) return;
+    var jile = stats.kulJile, kulJile = stats.jileKul;
+    var rajya = stats.kulRajya, desh = stats.kulDesh;
+    if (!jile || !rajya || !desh) { box.hidden = true; return; }
+    // एक जिला हो तो "जिलों" नहीं, "जिले"
+    // संख्या और उसका शब्द बीच में न टूटें, इसलिए अटूट जगह : छोटे फ़ोन पर
+    // "41" एक पंक्ति के आख़िर में और "जिलों" अगली में नहीं जाता।
+    var ginti = function (n, ek, bahu) { return nf.format(n) + '\u00A0' + (n === 1 ? ek : bahu); };
+    /* "सभी 41" तभी, जब सचमुच सभी हों। एक भी छूटा हो तो "41 में से 37", क्योंकि
+       यही सच है और यही अगली बार बढ़ने की जगह दिखाता है। */
+    var jilaBhag = kulJile && jile >= kulJile
+      ? 'राजस्थान के सभी ' + ginti(kulJile, 'जिले', 'जिलों')
+      : 'राजस्थान के ' + (kulJile ? nf.format(kulJile) + ' में से ' : '') +
+        ginti(jile, 'जिले', 'जिलों');
+    /* भारत देशों की गिनी हुई सूची में नहीं होता, वह अलग से जुड़ता है, क्योंकि
+       फ़ॉर्म में भारत का आदमी अपना राज्य चुनता है, "भारत" नहीं। गिनती सूची से
+       बड़ी है, इसका मतलब भारत जुड़ चुका है। */
+    var bharat = (stats.kulDeshSuchi || []).length < desh;
+    box.textContent = jilaBhag + ' सहित ' + ginti(rajya, 'राज्य', 'राज्यों') +
+      ' और ' + (bharat ? 'भारत सहित ' : '') + ginti(desh, 'देश', 'देशों') +
+      ' से सहभागिता';
+    box.hidden = false;
   }
 
   // Called after a submission lands: the Sheet has one more row, and the
