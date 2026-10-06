@@ -583,6 +583,18 @@ body { padding-bottom: 68px; }
 .section--ink .photo figcaption { color: #c6d1f2; }
 
 /* Photo grid for the gallery */
+/* अख़बार की कतरनें। दो कतारें, क्योंकि कतरन पढ़ने के लिए होती है।
+
+   एक कतार में पूरी चौड़ाई पर खींचने से छोटी कतरनों के अक्षर फैलकर पढ़ने
+   लायक़ नहीं रहते; तीन कतारों में वे इतनी छोटी हो जाती हैं कि शीर्षक भी
+   मुश्किल से पढ़ा जाए। 26rem की न्यूनतम चौड़ाई दोनों से बचाती है।
+
+   .photo-grid से अलग इसलिए कि वह चित्र को 3:2 में काट देता है, और कतरन
+   कटकर अधूरी हो जाती है। */
+.media-grid { display: grid; gap: 1.8rem 1.2rem; align-items: start;
+              grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); }
+.media-grid .photo a { display: block; }
+
 .photo-grid { display: grid; gap: 1.4rem 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); align-items: start; }
 .photo-grid .photo img { aspect-ratio: 3 / 2; object-fit: cover; }
 
