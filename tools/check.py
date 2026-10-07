@@ -217,6 +217,31 @@ def check_booklet_count():
                 err(rel, f"says {stated} booklets, {actual} exist")
 
 
+def check_sawal_mod():
+    """sawal/ के तीनों पते एक ही हों।
+
+    loksankalp.org/sawal एक मोड़ है जो Google Form पर पहुँचाता है, और वह पता
+    फ़ाइल में तीन बार लिखा है : meta refresh में, दिखने वाले बटन में, और
+    location.replace में। तीनों एक काम करते हैं, इसलिए तीनों एक जैसे रहने
+    चाहिए।
+
+    फ़ॉर्म बदलने पर दो जगह बदलकर तीसरी छूट जाना बहुत आसान है, और तब आधे लोग
+    नए फ़ॉर्म पर जाते हैं और आधे पुराने पर। जो जहाँ पहुँचा वहीं लिख आता है,
+    और सवाल दो शीटों में बँट जाते हैं। पकड़ में तब आता है जब बहुत देर हो
+    चुकी होती है, इसलिए यह जाँच यहाँ है।
+    """
+    path = os.path.join(ROOT, 'sawal', 'index.html')
+    if not os.path.exists(path):
+        return                      # मोड़ हटा दिया गया हो तो जाँचने को कुछ नहीं
+    rel = 'sawal/index.html'
+    pate = set(re.findall(r'https://docs\.google\.com/forms/[^"\'\s>]+', 
+                          open(path, encoding='utf-8').read()))
+    if not pate:
+        err(rel, 'फ़ॉर्म का कोई पता नहीं मिला')
+    elif len(pate) > 1:
+        err(rel, 'फ़ॉर्म के पते आपस में नहीं मिलते: ' + ' | '.join(sorted(pate)))
+
+
 def check_canonical_host():
     """Every absolute self-reference must name the campaign's own domain.
 
@@ -376,6 +401,7 @@ def main():
     check_svgs()
     check_booklet_count()
     check_canonical_host()
+    check_sawal_mod()
     check_long_dashes()
     check_no_fake_login()
     check_form_wiring()
