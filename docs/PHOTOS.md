@@ -17,13 +17,16 @@ the 1400px one.
 | `sankalp-shapath` | `mera-sankalp.html` page header; home gallery |
 | `manch-shapath` | `mera-sankalp.html`, before संकल्प के बाद क्या |
 | `yuva-flags-courtyard` | `yuva-manch.html` page header; home gallery |
-| `manav-shrinkhala-aerial` | `yuva-manch.html`, before युवा क्या कर सकते हैं; home gallery |
+| `manav-nashamukt-bharat` | `yuva-manch.html`, before युवा क्या कर सकते हैं; home gallery |
 | `vidyalaya-assembly` | `shikshak-network.html` page header; home gallery |
 | `tractor-rally-aerial` | home gallery lead; `safalta-kahaniyan.html` page header |
 | `tractor-rally-portrait` | `samman.html` page header |
 | `sabha-standing-crowd` | `gram-sabha.html`, before सभा कैसे आयोजित करें; home gallery |
 | `sabha-ground-wide` | `gram-sabha.html`, before the समिति section |
 | `abhiyan-banner` | `sansadhan.html` page header |
+| `bhagat-singh-1929` | `inqlab-28.html` आह्वान के साथ खड़ा चित्र |
+| `jyani` | `abhiyan-parivar.html` प्रणेता वाले हिस्से में खड़ा चित्र |
+| `sankalp-21-manch` | `sankalp-21.html` “जो हुआ” के साथ |
 | `video-parichay`, `video-sabha`, `video-good-parenting`, `video-vivah`, `video-shok-sabha` | `sansadhan.html` वीडियो सामग्री cards. YouTube thumbnails, kept locally so a slow phone loads no third-party image. |
 
 One upload was a byte-identical duplicate and was dropped.
@@ -81,3 +84,47 @@ WebP या छोटे आकार नहीं बनते, और को�
 जिला फ़िल्टर तभी दिखता है जब दो या अधिक जिलों की तस्वीरें हों, और वह
 जावास्क्रिप्ट से ही दिखाया जाता है, ताकि JS बंद होने पर सारी तस्वीरें
 दिखती रहें।
+
+
+## अभियान के बाहर से आया एक चित्र
+
+`assets/img/photos/bhagat-singh-1929.jpg` और उसी की वर्गाकार कटाई
+`assets/img/bhagat-singh-seal.jpg` (प्रमाण-पत्र की गोल मुद्रा के लिए) —
+
+- **स्रोत :** Wikimedia Commons, *File:Bhagat Singh 1929.jpg*
+- **स्थिति :** सार्वजनिक डोमेन (**PD-India**) — छायाचित्रों पर कॉपीराइट
+  प्रकाशन से 60 वर्ष तक रहता है, 1929 का चित्र बहुत पहले मुक्त हो चुका है।
+- इसीलिए यही चित्र चुना गया। स्टॉक एजेंसियों (Alamy आदि) के चित्र और
+  ई-कॉमर्स पर बिकने वाले पोस्टरों की तस्वीरें लाइसेंस वाली होती हैं और उन पर
+  watermark भी होता है; उन्हें सार्वजनिक वेबसाइट पर नहीं लगाया जा सकता।
+
+`assets/img/photos/gandhi-dandi-1930.jpg` —
+
+- **स्रोत :** Wikimedia Commons, *File:Marche sel.jpg*
+- **स्थिति :** सार्वजनिक डोमेन (**PD-India**, साथ में PD-India-URAA), वही
+  कसौटी जिस पर भगत सिंह वाला चित्र लिया गया था। मार्च 1930 का छायाचित्र है।
+- **क्यों यही :** दांडी यात्रा में आगे गांधी जी और पीछे साधारण लोगों की लंबी
+  क़तार। संकल्प दूत का पूरा विचार यही है, एक आदमी से शुरू होकर अनेक तक।
+  चौड़ी कटाई में ही वह क़तार दिखती है, इसलिए यह `photo--wide` है।
+- उतारते समय Wikimedia ने मूल फ़ाइल देने से मना किया (429) और थंबनेल लेने
+  को कहा। इसलिए 1920px वाला थंबनेल लिया गया, जो 1400px की सबसे बड़ी
+  variant के लिए पर्याप्त है। **फ़ाइल का हैश पता अंदाज़े से मत बनाइए**,
+  वह API के `imageinfo` से लीजिए।
+- EXIF नहीं है; फ़ाइल नए सिरे से लिखी गई थी, इसलिए कुछ बचा ही नहीं।
+
+**नियम :** बाहर से कोई भी चित्र लगाने से पहले यह देख लें कि वह सार्वजनिक
+डोमेन का है या अभियान का अपना खींचा हुआ। संदेह हो तो न लगाएँ।
+
+
+## अख़बारों की कतरनें
+
+`assets/img/media/` में। ये अभियान के अपने चित्र नहीं हैं, इसलिए `photos/`
+से अलग रखी हैं और responsive variants वाली व्यवस्था से बाहर हैं।
+
+हर कतरन के साथ अख़बार का नाम, शहर, तारीख़ और शीर्षक figcaption में लिखा जाता
+है। अख़बार की अपनी वेबसाइट पर वही ख़बर हो तो कतरन के बजाय उसका लिंक बेहतर
+रहता है — पढ़ने में आसान, वज़न में हल्का, और अधिकार का सवाल भी नहीं उठता।
+
+| फ़ाइल | कहाँ |
+|---|---|
+| `patrika-2026-09-22` | `sankalp-21.html` मीडिया कवरेज — राजस्थान पत्रिका, बीकानेर, 22 सित॰ 2026 |

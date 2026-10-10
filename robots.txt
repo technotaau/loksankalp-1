@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://technotaau.github.io/loksankalp-1/sitemap.xml
+# docs/ अभियान की अपनी कार्य-पुस्तिका है, पाठकों के लिए नहीं : runbook,
+# मसौदे, और चैटबोट के लिए आई सामग्री। GitHub Pages पूरी शाखा परोसता है,
+# इसलिए ये फ़ाइलें पते से खुल तो जाती हैं, पर खोज के नतीजों में इनका आना
+# किसी के काम का नहीं। अधूरे मसौदे का खोज में आना नुक़सान ही करता है।
+Disallow: /docs/
+
+# /sawal सिर्फ़ एक मोड़ है जो Google Form पर भेजता है। पृष्ठ में भी noindex
+# लिखा है; यह उसी बात का दूसरा ताला है।
+Disallow: /sawal/
+
+Sitemap: https://loksankalp.org/sitemap.xml

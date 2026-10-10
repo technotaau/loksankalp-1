@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>नशे पर आपका सवाल · लोकसंकल्प</title>
+
+<!-- यह अभियान का अपना छोटा पता है : loksankalp.org/sawal
+
+     यह पृष्ठ पढ़ने के लिए नहीं है, सिर्फ़ Google Form तक पहुँचाने के लिए है।
+     इसके दो कारण हैं।
+
+     एक, Google का अपना पता 68 अक्षर लंबा है और उसमें /viewform और /edit का
+     फ़र्क़ आँख से पकड़ में नहीं आता। 7 अक्तूबर को यही हुआ : ग्रुप में एक बार
+     /edit वाला पता चला गया और लोगों को "You need access" दिखने लगा।
+
+     दो, और यही बड़ा कारण है : कल फ़ॉर्म बदलना पड़े तो सिर्फ़ नीचे की एक
+     पंक्ति बदलनी होगी। हर WhatsApp ग्रुप में दोबारा पता भेजने की ज़रूरत नहीं
+     पड़ेगी, और जो पुराने संदेश वहाँ पड़े हैं वे भी अपने आप नए फ़ॉर्म पर
+     पहुँचाने लगेंगे।
+
+     पता बदलने पर यहाँ तीन जगह बदलिए : meta refresh, नीचे का बटन, और
+     location.replace. तीनों एक ही पते की तीन नकलें हैं, तीनों एक जैसी रहें। -->
+<meta http-equiv="refresh" content="0; url=https://docs.google.com/forms/d/e/1FAIpQLSd47sH0CoAC2XOcHu5Nm7vKpxbSYF8VKDwtwcrmzZLIEZ8XVw/viewform">
+
+<!-- खोज में यह पृष्ठ न आए। आना फ़ॉर्म को चाहिए, इस मोड़ को नहीं। -->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://loksankalp.org/sawal/">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+
+<style>
+  /* शैली यहीं लिखी है, css/site.css से नहीं आती : यह पृष्ठ एक पल का मेहमान
+     है और उसके लिए पूरी stylesheet उतारना फ़ालतू की देरी है। रंग वही हैं जो
+     css/tokens.css में हैं। */
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center;
+         background: #fffdf8; color: #16192b; text-align: center; padding: 1.5rem;
+         font-family: "Noto Sans Devanagari", "Hind", system-ui, -apple-system, sans-serif; }
+  .box { max-width: 30rem; }
+  img { width: 92px; height: 92px; }
+  h1 { font-family: "Tiro Devanagari Hindi", "Noto Serif Devanagari", Georgia, serif;
+       font-size: 1.5rem; font-weight: 600; margin: 1.2rem 0 .6rem; }
+  p { color: #4a5068; line-height: 1.7; margin: 0 0 1.6rem; }
+  a.btn { display: inline-block; background: #e8730c; color: #fff; text-decoration: none;
+          font-size: 1.05rem; font-weight: 600; padding: .85rem 1.8rem; border-radius: 999px; }
+  a.btn:hover, a.btn:focus { background: #c25c05; }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <img src="../assets/img/logo-mark.svg" alt="लोकसंकल्प" width="92" height="92">
+  <h1>नशे पर आपका सवाल</h1>
+  <!-- यह तभी दिखता है जब अपने आप पहुँचाना किसी कारण से न हो सके। -->
+  <p>फ़ॉर्म खुल रहा है। न खुले तो नीचे दबाइए।</p>
+  <p><a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSd47sH0CoAC2XOcHu5Nm7vKpxbSYF8VKDwtwcrmzZLIEZ8XVw/viewform">फ़ॉर्म खोलिए</a></p>
+</div>
+
+<script>
+  /* replace(), assign() नहीं : पीछे वाला बटन दबाने पर आदमी इसी मोड़ पर लौटकर
+     फिर आगे न भेज दिया जाए। */
+  location.replace('https://docs.google.com/forms/d/e/1FAIpQLSd47sH0CoAC2XOcHu5Nm7vKpxbSYF8VKDwtwcrmzZLIEZ8XVw/viewform');
+</script>
+
+</body>
+</html>

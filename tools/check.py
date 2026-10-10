@@ -3,7 +3,8 @@
 
 Runs every gate the project lead checks by hand, so CI can fail loudly:
 structure, headings, internal links and anchors, icon ids, alt text,
-form labels, SEO tags and SVG well-formedness.
+form labels, SEO tags, SVG well-formedness, and that no long dash
+(em/en dash) reaches a published file.
 
 Usage:  python3 tools/check.py [--quiet]
 Exit code 1 if any ERROR is found. WARNs do not fail the build.
@@ -196,6 +197,9 @@ def check_svgs():
             warn(rel, f"{kb:.0f} KB, large for an inline asset")
 
 
+SITE_HOST = "loksankalp.org"
+
+
 def check_booklet_count():
     """Any page that states how many booklets there are must state the truth.
 
@@ -211,6 +215,205 @@ def check_booklet_count():
         for stated in pattern.findall(open(path, encoding='utf-8').read()):
             if int(stated) != actual:
                 err(rel, f"says {stated} booklets, {actual} exist")
+
+
+def check_system_prompt_ek_hi():
+    """बॉट का system prompt दो जगह पड़ा है; दोनों एक ही रहें।
+
+    एक जगह अलग फ़ाइल में (ai-counsellor-system-prompt-v1.txt), और दूसरी
+    architecture दस्तावेज़ के परिशिष्ट A में। 10 अक्तूबर को आते समय दोनों
+    बिल्कुल एक थे।
+
+    यही प्रश्न का कारण भी है : जिस दिन कोई एक में सुधार करेगा और दूसरी भूल
+    जाएगा, उस दिन दो system prompt हो जाएँगे और किसी को पता नहीं चलेगा कि
+    असली कौन सा है। यह साधारण फ़ाइल नहीं है; इसी में लिखा है कि आपातकाल में
+    बॉट क्या करेगा और क्या कभी नहीं करेगा। पुराना रूप चल पड़ना यहाँ महँगा है।
+    """
+    import difflib
+    txt_p = os.path.join(ROOT, 'docs', 'sankalp-saathi',
+                         'ai-counsellor-system-prompt-v1.txt')
+    md_p = os.path.join(ROOT, 'docs', 'sankalp-saathi',
+                        'ai-counsellor-architecture-v1.md')
+    if not (os.path.exists(txt_p) and os.path.exists(md_p)):
+        return
+    rel = 'docs/sankalp-saathi/ai-counsellor-system-prompt-v1.txt'
+    SIR = 'LOK SANKALP AI COUNSELLING SUPPORT AGENT'
+    blocks = re.findall(r'```\n(.*?)\n```', open(md_p, encoding='utf-8').read(), re.S)
+    app = [b for b in blocks if b.lstrip().startswith(SIR)]
+    if not app:
+        err(rel, 'architecture के परिशिष्ट A में system prompt नहीं मिला')
+        return
+    # Word खाली जगह खा जाता है, इसलिए तुलना से पहले वह हटा दी जाती है
+    saaf = lambda t: [l.strip() for l in t.strip().split('\n') if l.strip()]
+    a, b = saaf(app[0]), saaf(open(txt_p, encoding='utf-8').read())
+    if a != b:
+        farq = [l for l in difflib.unified_diff(a, b, lineterm='', n=0)
+                if l[:1] in '+-' and l[:3] not in ('---', '+++')]
+        err(rel, f'परिशिष्ट A से मेल नहीं खाता, {len(farq)} पंक्तियों का फ़र्क़; '
+                 f'पहली: {farq[0][:90] if farq else ""}')
+
+
+def check_sawal_mod():
+    """sawal/ के तीनों पते एक ही हों।
+
+    loksankalp.org/sawal एक मोड़ है जो Google Form पर पहुँचाता है, और वह पता
+    फ़ाइल में तीन बार लिखा है : meta refresh में, दिखने वाले बटन में, और
+    location.replace में। तीनों एक काम करते हैं, इसलिए तीनों एक जैसे रहने
+    चाहिए।
+
+    फ़ॉर्म बदलने पर दो जगह बदलकर तीसरी छूट जाना बहुत आसान है, और तब आधे लोग
+    नए फ़ॉर्म पर जाते हैं और आधे पुराने पर। जो जहाँ पहुँचा वहीं लिख आता है,
+    और सवाल दो शीटों में बँट जाते हैं। पकड़ में तब आता है जब बहुत देर हो
+    चुकी होती है, इसलिए यह जाँच यहाँ है।
+    """
+    path = os.path.join(ROOT, 'sawal', 'index.html')
+    if not os.path.exists(path):
+        return                      # मोड़ हटा दिया गया हो तो जाँचने को कुछ नहीं
+    rel = 'sawal/index.html'
+    pate = set(re.findall(r'https://docs\.google\.com/forms/[^"\'\s>]+', 
+                          open(path, encoding='utf-8').read()))
+    if not pate:
+        err(rel, 'फ़ॉर्म का कोई पता नहीं मिला')
+    elif len(pate) > 1:
+        err(rel, 'फ़ॉर्म के पते आपस में नहीं मिलते: ' + ' | '.join(sorted(pate)))
+
+
+def check_canonical_host():
+    """Every absolute self-reference must name the campaign's own domain.
+
+    The site moved from a github.io project path to loksankalp.org. A page
+    left pointing at the old host tells search engines the real address is
+    somewhere else, and a share card would carry a link nobody should be
+    given. The CNAME file is what keeps the domain attached through a
+    deploy, so it is checked here too.
+    """
+    cname = os.path.join(ROOT, 'CNAME')
+    if not os.path.exists(cname):
+        err('CNAME', 'missing: the custom domain is dropped on deploy without it')
+    else:
+        host = open(cname, encoding='utf-8').read().strip()
+        if host != SITE_HOST:
+            err('CNAME', f'says {host!r}, expected {SITE_HOST!r}')
+
+    patterns = ('*.html', '*.xml', '*.txt', '*.webmanifest')
+    for pat in patterns:
+        for path in sorted(glob.glob(os.path.join(ROOT, pat))):
+            rel = os.path.relpath(path, ROOT)
+            txt = open(path, encoding='utf-8').read()
+            for bad in re.findall(r'https?://[A-Za-z0-9.-]*github\.io[^\s"\'<>)]*', txt):
+                err(rel, f'points at the old host: {bad}')
+
+
+# लंबी डैश जो कहीं नहीं चलेंगी। em dash, en dash, horizontal bar, figure dash
+# और दो-em वाली डैश। पाठक इन्हीं से सबसे पहले भाँप लेते हैं कि लेख मशीन का
+# लिखा है, और अभियान की टीम ने साफ़ कहा है कि वेबसाइट पर ये नहीं चाहिए।
+# जगह पर हिंदी का सामान्य विराम लगाइए : अल्पविराम, कोलन, या पूरा विराम।
+LONG_DASHES = {'\u2014': 'em dash', '\u2013': 'en dash', '\u2015': 'horizontal bar',
+               '\u2012': 'figure dash', '\u2e3a': 'two-em dash', '\u2e3b': 'three-em dash'}
+
+# जो फ़ाइलें ब्राउज़र तक जाती ही नहीं, उन पर यह नियम नहीं लगता।
+DASH_SKIP = ('docs/', 'google-apps-script/', 'tools/')
+
+def check_long_dashes():
+    """कोई भी लंबी डैश वेबसाइट पर न पहुँचे।
+
+    सिर्फ़ पृष्ठों का दिखने वाला पाठ नहीं : CSS का content, SVG का title,
+    manifest का नाम और JS की टिप्पणी भी। टिप्पणी इसलिए कि site.js जैसा
+    तैसा ब्राउज़र में खुल जाता है और कोई भी उसे पढ़ सकता है।
+    """
+    pats = ('*.html', '*.xml', '*.txt', '*.webmanifest',
+            'css/*.css', 'js/*.js', 'booklets/*.json', 'parivar/*.json',
+            'assets/img/*.svg')
+    for pat in pats:
+        for path in sorted(glob.glob(os.path.join(ROOT, pat))):
+            rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
+            if rel.startswith(DASH_SKIP):
+                continue
+            try:
+                txt = open(path, encoding='utf-8').read()
+            except UnicodeDecodeError:
+                continue
+            for n, line in enumerate(txt.split('\n'), 1):
+                for ch, name in LONG_DASHES.items():
+                    if ch in line:
+                        err(rel, f'line {n}: {name} ({ch!r}) मिली, '
+                                 f'हिंदी विराम लगाइए: {line.strip()[:70]!r}')
+
+
+# 25 सितम्बर 2026 : Google ने साइट पर "Possible Phishing Detected on User
+# Login" लगा दिया था। वजह एक लॉगिन पृष्ठ था जो चलता ही नहीं था : वह मोबाइल
+# नंबर माँगता, OTP भेजने का वादा करता, और वह नंबर किसी दूसरे डोमेन
+# (script.google.com) पर भेज देता। असली फ़िशिंग की पहचान यही होती है।
+#
+# पृष्ठ हटा दिया गया। यह जाँच इसलिए है कि वैसा पृष्ठ दोबारा चुपचाप न बन जाए।
+# जब सचमुच लॉगिन बने तो उसे अपने ही डोमेन पर भेजना होगा, और तभी यह जाँच
+# ढीली करनी होगी, पहले नहीं।
+CRED_WORDS = ('password', 'passwd', 'otp', 'ओटीपी', 'लॉगिन', 'login')
+
+def check_no_fake_login():
+    """कोई पृष्ठ साख माँगता हुआ न दिखे, जब तक उसके पीछे असली व्यवस्था न हो।"""
+    for path in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
+        rel = os.path.relpath(path, ROOT)
+        txt = open(path, encoding='utf-8').read()
+        if re.search(r'<input[^>]+type=["\']password["\']', txt):
+            err(rel, 'password वाला खाना है। साख माँगने वाला पृष्ठ अपने ही '
+                     'डोमेन पर भेजना चाहिए, और उसके पीछे असली व्यवस्था होनी चाहिए')
+        # फ़ॉर्म के भीतर OTP या लॉगिन का वादा
+        for m in re.finditer(r'<form\b.*?</form>', txt, re.S):
+            block = m.group(0)
+            low = block.lower()
+            if ('otp' in low or 'ओटीपी' in block) and 'type="tel"' in low:
+                err(rel, 'फ़ॉर्म मोबाइल नंबर लेकर OTP का वादा करता है। '
+                         'Google इसे फ़िशिंग मानता है जब तक वह सचमुच काम न करे')
+
+
+def check_form_wiring():
+    """हर फ़ॉर्म का तार सचमुच जुड़ा हो, तीनों सिरों पर।
+
+    2 अक्तूबर को संकल्प दूत का फ़ॉर्म बना, पर js/site.js की FORM_NAMES में
+    उसका नाम जोड़ना रह गया। नतीजा सबसे बुरे किस्म का था : पृष्ठ ने प्रमाण-पत्र
+    दिखा दिया, आदमी समझा कि पंजीकरण हो गया, और सर्वर को कुछ भेजा ही नहीं
+    गया। कोई त्रुटि कहीं नहीं दिखी, क्योंकि वह रास्ता "यह सहेजने वाला फ़ॉर्म
+    नहीं है" मानकर चुपचाप पुष्टि दिखा देता है।
+
+    इसलिए अब तीनों सिरे मिलाकर देखे जाते हैं : पृष्ठ का data-demo, site.js
+    की FORM_NAMES, और Code.gs की FORMS। बीच की कोई भी कड़ी टूटी हो तो build
+    यहीं रुक जाएगा, आदमी के सामने नहीं।
+    """
+    site = os.path.join(ROOT, 'js', 'site.js')
+    code = os.path.join(ROOT, 'google-apps-script', 'Code.gs')
+    if not os.path.exists(site):
+        return
+    sjs = open(site, encoding='utf-8').read()
+    m = re.search(r'var FORM_NAMES = \{(.*?)\};', sjs, re.S)
+    if not m:
+        err('js/site.js', 'FORM_NAMES नहीं मिला')
+        return
+    names = dict(re.findall(r"'([^']+)'\s*:\s*'([^']+)'", m.group(1)))
+
+    forms = set()
+    if os.path.exists(code):
+        cg = open(code, encoding='utf-8').read()
+        block = re.search(r'var FORMS = \{(.*?)\n\};', cg, re.S)
+        if block:
+            forms = set(re.findall(r'^\s*([A-Za-z0-9_]+)\s*:\s*\{', block.group(1), re.M))
+
+    for path in sorted(glob.glob(os.path.join(ROOT, '*.html'))):
+        rel = os.path.relpath(path, ROOT)
+        txt = open(path, encoding='utf-8').read()
+        for m in re.finditer(r'<form[^>]*\sdata-demo="([^"]+)"[^>]*>', txt):
+            demo, tag = m.group(1), m.group(0)
+            # जो फ़ॉर्म जान-बूझकर कुछ नहीं सहेजता, वह यह लिखकर बताए
+            if 'data-no-save' in tag:
+                continue
+            if demo not in names:
+                err(rel, f'फ़ॉर्म data-demo="{demo}" है पर js/site.js की '
+                         f'FORM_NAMES में नहीं। ऐसा फ़ॉर्म पुष्टि दिखाएगा और '
+                         f'सर्वर को कुछ नहीं भेजेगा')
+                continue
+            if forms and names[demo] not in forms:
+                err(rel, f'data-demo="{demo}" का नाम "{names[demo]}" है, पर '
+                         f'Code.gs की FORMS में वह नहीं मिला')
 
 
 def main():
@@ -233,6 +436,12 @@ def main():
         check_html(p, known, page_ids)
     check_svgs()
     check_booklet_count()
+    check_canonical_host()
+    check_sawal_mod()
+    check_system_prompt_ek_hi()
+    check_long_dashes()
+    check_no_fake_login()
+    check_form_wiring()
 
     for f in ('sitemap.xml', 'robots.txt', 'site.webmanifest', '.nojekyll',
               'css/site.css', 'css/tokens.css', 'js/site.js'):
@@ -245,9 +454,7 @@ def main():
         smtxt = open(sm, encoding='utf-8').read()
         for p in pages:
             name = os.path.basename(p)
-            # login.html is deliberately out of the sitemap while login is
-            # hidden; it carries a noindex tag to match.
-            if name in ('404.html', 'login.html'):
+            if name == '404.html':
                 continue
             token = '/' if name == 'index.html' else '/' + name
             if token + '<' not in smtxt:
