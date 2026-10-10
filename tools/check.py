@@ -217,6 +217,42 @@ def check_booklet_count():
                 err(rel, f"says {stated} booklets, {actual} exist")
 
 
+def check_system_prompt_ek_hi():
+    """बॉट का system prompt दो जगह पड़ा है; दोनों एक ही रहें।
+
+    एक जगह अलग फ़ाइल में (ai-counsellor-system-prompt-v1.txt), और दूसरी
+    architecture दस्तावेज़ के परिशिष्ट A में। 10 अक्तूबर को आते समय दोनों
+    बिल्कुल एक थे।
+
+    यही प्रश्न का कारण भी है : जिस दिन कोई एक में सुधार करेगा और दूसरी भूल
+    जाएगा, उस दिन दो system prompt हो जाएँगे और किसी को पता नहीं चलेगा कि
+    असली कौन सा है। यह साधारण फ़ाइल नहीं है; इसी में लिखा है कि आपातकाल में
+    बॉट क्या करेगा और क्या कभी नहीं करेगा। पुराना रूप चल पड़ना यहाँ महँगा है।
+    """
+    import difflib
+    txt_p = os.path.join(ROOT, 'docs', 'sankalp-saathi',
+                         'ai-counsellor-system-prompt-v1.txt')
+    md_p = os.path.join(ROOT, 'docs', 'sankalp-saathi',
+                        'ai-counsellor-architecture-v1.md')
+    if not (os.path.exists(txt_p) and os.path.exists(md_p)):
+        return
+    rel = 'docs/sankalp-saathi/ai-counsellor-system-prompt-v1.txt'
+    SIR = 'LOK SANKALP AI COUNSELLING SUPPORT AGENT'
+    blocks = re.findall(r'```\n(.*?)\n```', open(md_p, encoding='utf-8').read(), re.S)
+    app = [b for b in blocks if b.lstrip().startswith(SIR)]
+    if not app:
+        err(rel, 'architecture के परिशिष्ट A में system prompt नहीं मिला')
+        return
+    # Word खाली जगह खा जाता है, इसलिए तुलना से पहले वह हटा दी जाती है
+    saaf = lambda t: [l.strip() for l in t.strip().split('\n') if l.strip()]
+    a, b = saaf(app[0]), saaf(open(txt_p, encoding='utf-8').read())
+    if a != b:
+        farq = [l for l in difflib.unified_diff(a, b, lineterm='', n=0)
+                if l[:1] in '+-' and l[:3] not in ('---', '+++')]
+        err(rel, f'परिशिष्ट A से मेल नहीं खाता, {len(farq)} पंक्तियों का फ़र्क़; '
+                 f'पहली: {farq[0][:90] if farq else ""}')
+
+
 def check_sawal_mod():
     """sawal/ के तीनों पते एक ही हों।
 
@@ -402,6 +438,7 @@ def main():
     check_booklet_count()
     check_canonical_host()
     check_sawal_mod()
+    check_system_prompt_ek_hi()
     check_long_dashes()
     check_no_fake_login()
     check_form_wiring()
