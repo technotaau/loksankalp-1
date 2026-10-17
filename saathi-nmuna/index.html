@@ -228,7 +228,22 @@ li{line-height:1.6}
 (function(){
   var $=function(id){return document.getElementById(id)};
   var BANK=[];
-  var state={age:null, cand:null, sample:null, voice:null, started:false};
+  var state={age:null, cand:null, sample:null, voice:null, started:false, sankatBheja:false};
+
+  /* ======================================================================
+     संकट पर जिस इंसान तक बात पहुँचेगी। सिर्फ़ यही चार पंक्तियाँ भरनी हैं।
+
+     naam और number खाली हों तो पर्दे पर सिर्फ़ सरकारी नंबर दिखते हैं और
+     केंद्र वाला डिब्बा आता ही नहीं। यह जान-बूझकर है : आधा भरा नाम दिखाने
+     से कुछ न दिखाना बेहतर है, क्योंकि संकट में आदमी उसी पर भरोसा करेगा।
+     ====================================================================== */
+  var SANKAT = {
+    naam:   '',                 // जैसे : डॉ. अमुक अमुक
+    pad:    '',                 // जैसे : परामर्शदाता, नई किरण नशा मुक्ति केंद्र
+    number: '',                 // दस अंक, बिना +91
+    waada:  '24 घंटे, हर दिन'
+  };
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbw5DbR-p0ech2BN7RwQ3LDVu9iFLYuawX7Pa7ph5-MVJFz0NAgi-aT-6UsC6T1fFlCwbw/exec';
 
   var LINES=[
     ['112','किसी भी आपात स्थिति में'],
@@ -580,6 +595,80 @@ li{line-height:1.6}
     return d;
   }
 
+  /* केंद्र के नामज़द इंसान का डिब्बा। नंबर छूते ही फ़ोन मिलता है, और
+     नक़ल का बटन इसलिए है कि संकट में नंबर याद नहीं रहता। */
+  function kendraBox(){
+    if(!SANKAT.number || !SANKAT.naam) return null;
+    var d=el('div','card');
+    d.style.border='2px solid var(--ok)';
+    d.appendChild(el('div','src','केंद्र से सीधे बात'));
+    d.querySelector('.src').style.color='var(--ok)';
+    d.appendChild(el('p',null,'<b>'+esc(SANKAT.naam)+'</b>'+(SANKAT.pad? '<br><span class="note">'+esc(SANKAT.pad)+'</span>':'')));
+    var row=el('div','line');
+    var a=document.createElement('a');
+    a.href='tel:'+SANKAT.number; a.textContent=SANKAT.number;
+    a.style.cssText='font-family:var(--head);font-size:1.5rem;color:var(--ink);text-decoration:none;flex:0 0 auto';
+    row.appendChild(a);
+    row.appendChild(el('span',null,esc(SANKAT.waada)));
+    var cp=el('button',null,'नक़ल');
+    cp.addEventListener('click', function(){
+      try{ navigator.clipboard.writeText(SANKAT.number).then(function(){cp.textContent='हो गया'},
+            function(){cp.textContent=SANKAT.number}); }catch(e){ cp.textContent=SANKAT.number; }
+    });
+    row.appendChild(cp); d.appendChild(row);
+    return d;
+  }
+
+  /* वापस फ़ोन : सिर्फ़ तभी, जब आदमी ख़ुद बटन दबाकर नंबर लिखे। बिना दबाए
+     कुछ भी नहीं भेजा जाता और कहीं कुछ दर्ज नहीं होता। */
+  function callbackBox(rasta){
+    var d=el('div','card');
+    d.style.border='1px solid var(--line)';
+    var b=el('button','big alt','मुझे केंद्र से फ़ोन करवाइए');
+    var form=el('div',null,''); form.hidden=true;
+    form.style.cssText='display:flex;flex-direction:column;gap:.6rem';
+    var inp=document.createElement('input');
+    inp.type='tel'; inp.inputMode='numeric'; inp.id='sankat-mob';
+    inp.placeholder='आपका मोबाइल नंबर';
+    inp.setAttribute('aria-label','आपका मोबाइल नंबर');
+    inp.style.cssText='border:2px solid var(--line);border-radius:var(--r);padding:.85rem .9rem;'+
+                      'font-size:1.05rem;font-family:var(--body);background:var(--surface);color:var(--ink)';
+    var send=el('button','big','भेजिए');
+    var msg=el('p','note','');
+    form.appendChild(el('p','note','नंबर के सिवा कुछ नहीं भेजा जाता। न नाम, न आपका सवाल।'));
+    form.appendChild(inp); form.appendChild(send); form.appendChild(msg);
+    b.addEventListener('click', function(){
+      b.hidden=true; form.hidden=false; inp.focus();
+      say('अपना मोबाइल नंबर लिखिए। केंद्र से आपको फ़ोन किया जाएगा।');
+    });
+    send.addEventListener('click', function(){
+      var m=(inp.value||'').replace(/\D/g,'');
+      if(m.length<10){ msg.textContent='पूरा दस अंकों का नंबर लिखिए।'; return; }
+      if(state.sankatBheja){ msg.textContent='भेज चुके हैं।'; return; }
+      send.disabled=true; msg.textContent='भेजा जा रहा है...';
+      fetch(ENDPOINT, {method:'POST', body: JSON.stringify({
+        form:'sankat', reqId:'sk-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),
+        values:{ rasta: rasta, mobile: m, kahan: 'saathi-nmuna' }
+      })}).then(function(r){ return r.json() }).then(function(res){
+        if(res && res.ok){
+          state.sankatBheja=true;
+          form.innerHTML='';
+          form.appendChild(el('p',null,'<b>भेज दिया गया।</b> केंद्र से आपको फ़ोन किया जाएगा। '+
+            'तब तक ऊपर दिया नंबर आप ख़ुद भी मिला सकते हैं।'));
+          say('भेज दिया गया। केंद्र से आपको फ़ोन किया जाएगा।');
+        } else {
+          send.disabled=false;
+          msg.textContent='अभी नहीं भेजा जा सका। ऊपर दिया नंबर ख़ुद मिलाइए।';
+        }
+      }).catch(function(){
+        send.disabled=false;
+        msg.textContent='अभी नहीं भेजा जा सका। ऊपर दिया नंबर ख़ुद मिलाइए।';
+      });
+    });
+    d.appendChild(b); d.appendChild(form);
+    return d;
+  }
+
   function answer(c){
     var out=$('out'); out.innerHTML=''; show('s-out');
 
@@ -589,10 +678,17 @@ li{line-height:1.6}
       a.appendChild(el('h2',null,'यह रुकने की बात नहीं है'));
       a.appendChild(el('p',null,'अभी किसी बड़े को बुलाइए और नीचे दिया नंबर मिलाइए। मैं इस पर कोई सलाह नहीं दूँगा।'));
       a.appendChild(linesBox());
-      a.appendChild(el('p','note','साथ ही केंद्र के नामज़द व्यक्ति को सूचना चली गई है। असली ऐप में यह सचमुच जाएगी; इस नमूने में नहीं।'));
       out.appendChild(a);
-      say('यह रुकने की बात नहीं है। अभी किसी बड़े को बुलाइए। एक सौ बारह मिलाइए। एक सौ बारह। '+
-          'या एक सौ आठ पर एंबुलेंस बुलाइए। मैं इस पर कोई सलाह नहीं दूँगा।');
+      var kb1=kendraBox(); if(kb1) out.appendChild(kb1);
+      out.appendChild(callbackBox('आपातकाल'));
+      if(!SANKAT.number) out.appendChild(el('p','note',
+        'केंद्र का अपना नंबर अभी इस पन्ने में नहीं डाला गया है, इसलिए ऊपर सिर्फ़ सरकारी नंबर दिख रहे हैं।'));
+      var bol='यह रुकने की बात नहीं है। अभी किसी बड़े को बुलाइए। एक सौ बारह मिलाइए। एक सौ बारह। '+
+              'या एक सौ आठ पर एंबुलेंस बुलाइए। मैं इस पर कोई सलाह नहीं दूँगा।';
+      if(SANKAT.number && SANKAT.naam){
+        bol += ' केंद्र से सीधे बात करनी हो तो '+SANKAT.naam+' को फ़ोन कीजिए। नंबर पर्दे पर लिखा है।';
+      }
+      say(bol);
       return;
     }
 
@@ -603,7 +699,9 @@ li{line-height:1.6}
       w.appendChild(el('p',null,'यह सवाल उन में है जिन पर मशीन को सलाह नहीं देनी चाहिए। इसमें दवा, मात्रा, गर्भावस्था या सुरक्षा का मामला हो सकता है।'));
       w.appendChild(el('p',null,'<b>14446</b> नशा मुक्ति हेल्पलाइन पर बात कीजिए, या नई किरण नशा मुक्ति केंद्र आइए।'));
       out.appendChild(w);
+      var kb2=kendraBox(); if(kb2) out.appendChild(kb2);
       out.appendChild(linesBox());
+      out.appendChild(callbackBox('ऊँचा जोखिम'));
       say('इस पर मैं सलाह नहीं दूँगा। यह उन सवालों में है जिन पर इंसान से बात करनी चाहिए। '+
           'चौदह हज़ार चार सौ छियालीस पर नशा मुक्ति हेल्पलाइन से बात कीजिए।');
       return;
@@ -681,7 +779,7 @@ li{line-height:1.6}
     [11,'अभियान की सोलहों पुस्तिकाओं से जवाब, पन्ने का हवाला देकर',1],
     [12,'ख़तरे के शब्द सीधे सवाल में भी पकड़े जाते हैं',1],
     [13,'मंज़ूर जवाब : 124 में से 8 लिखे गए हैं, बाक़ी बाक़ी हैं',0],
-    [14,'केंद्र के नामज़द व्यक्ति को सूचना : नाम अभी तय नहीं',0],
+    [14,'संकट पर केंद्र के नामज़द इंसान का नंबर, और मर्ज़ी से वापस फ़ोन',1],
     [15,'कोश से न मिले तो बनाया हुआ जवाब : जान बूझकर बंद है',0]
   ];
   var lg=$('legend');

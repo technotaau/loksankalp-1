@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 26;          // bump when this file changes; shown in every response
+var CODE_VERSION = 27;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -73,8 +73,23 @@ var FORMS = {
      लगता है और संख्या LS-0001 बनती है, जैसा प्रमाण-पत्र पर छपना है। */
   sankalpDoot: { tab: 'संकल्प दूत',
               fields: ['regNo', 'naam', 'mobile', 'aayuVarg', 'bhumika', 'gaon', 'jila',
-                       'rajya', 'desh', 'deshAnya', 'sahmati'] }
+                       'rajya', 'desh', 'deshAnya', 'sahmati'] },
+  /* संकट : संकल्प साथी से आने वाली एकमात्र पंक्ति जो किसी तकलीफ़ में पड़े
+     आदमी की है। इसीलिए इसमें सिर्फ़ तीन खाने हैं और नाम कोई नहीं।
+
+     मोबाइल तभी आता है जब आदमी ख़ुद बटन दबाकर लिखे। बाक़ी सब में वह खाली
+     रहता है, और पंक्ति सिर्फ़ यह बताती है कि किसी ने संकट वाला पर्दा देखा।
+     यह गिनती के लिए काम का है और किसी की पहचान नहीं खोलता।
+
+     SANKAT_EMAIL भरा हो तो हर पंक्ति पर तुरंत सूचना भी जाती है। शीट में
+     पंक्ति पड़ी रहना सूचना नहीं है; सूचना वही है जो किसी को पहुँचे। */
+  sankat:   { tab: 'संकट', fields: ['rasta', 'mobile', 'kahan'], alert: true }
 };
+
+/* जिसे संकट की सूचना जाएगी। खाली छोड़ दीजिए तो कोई मेल नहीं जाती और
+   पंक्ति चुपचाप सहेज ली जाती है। एक से ज़्यादा पते अल्पविराम से अलग कीजिए।
+   यह पता किसी को दिखता नहीं; सिर्फ़ यहाँ रहता है। */
+var SANKAT_EMAIL = '';
 
 /* Campaigns whose form no longer takes entries, and the moment each shut.
    Written as UTC so the hour is the same wherever the server runs; these are
@@ -107,7 +122,8 @@ var LABELS = {
   sankalp: 'लोकसंकल्प', photoSahmati: 'फोटो सहमति', sandesh: 'संदेश',
   regNo: 'पंजीकरण क्रमांक', upvaasSadasya: 'उपवास सदस्य',
   rajya: 'राज्य', desh: 'देश', deshAnya: 'देश (लिखा हुआ)',
-  aayuVarg: 'आयु वर्ग'
+  aayuVarg: 'आयु वर्ग',
+  rasta: 'कौन सा रास्ता', kahan: 'कहाँ से'
 };
 
 // ---- entry point ---------------------------------------------------------
@@ -171,6 +187,29 @@ function doPost(e) {
       if (reqId) seen.put(seenKey, regNo || '1', 21600);   // six hours
     } finally {
       lock.releaseLock();
+    }
+
+    // संकट की सूचना। ताले के बाहर, क्योंकि मेल भेजना धीमा है और उसके लिए
+    // क़तार रोकना उसी भीड़ को बनाता है जिससे बचना है। मेल न जा सके तो भी
+    // पंक्ति सहेजी जा चुकी है, इसलिए यहाँ की चूक आदमी पर नहीं गिरती।
+    if (spec.alert && SANKAT_EMAIL) {
+      try {
+        var mob = clean(data.values ? data.values.mobile : '');
+        MailApp.sendEmail({
+          to: SANKAT_EMAIL,
+          subject: 'संकल्प साथी : संकट की सूचना' + (mob ? ' (वापस फ़ोन चाहिए)' : ''),
+          body: 'संकल्प साथी पर अभी किसी ने संकट वाला पर्दा देखा है।\n\n' +
+                'समय : ' + timestamp() + '\n' +
+                'रास्ता : ' + clean(data.values ? data.values.rasta : '') + '\n' +
+                'कहाँ से : ' + clean(data.values ? data.values.kahan : '') + '\n' +
+                'मोबाइल : ' + (mob || 'नहीं दिया') + '\n\n' +
+                (mob ? 'इस नंबर पर फ़ोन कीजिए। आदमी ने ख़ुद माँगा है।'
+                     : 'नंबर नहीं दिया गया, इसलिए पलटकर संपर्क नहीं हो सकता। ' +
+                       'यह सिर्फ़ गिनती के लिए है।')
+        });
+      } catch (mailErr) {
+        // जान-बूझकर चुप। सहेजना हो चुका।
+      }
     }
     // A new row changes the published figures, so the cached copy is now
     // wrong. Dropping it means the very next reader recomputes: someone who
