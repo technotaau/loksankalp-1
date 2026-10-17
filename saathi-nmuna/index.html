@@ -338,6 +338,7 @@ li{line-height:1.6}
     return o;
   }
   var DOCS=[], DF={}, Nd=0, IDF={}, AVG=1, TF=[];
+  var KOSH=[], KD=[], KS=[], KN=0, KIDF={}, KAVG=1, KTF=[];
   function index(){
     DOCS=BANK.map(function(b){return toks(b.q+' '+b.v)});
     Nd=DOCS.length; DF={};
@@ -345,6 +346,36 @@ li{line-height:1.6}
     IDF={}; for(var w in DF) IDF[w]=Math.log(1+(Nd-DF[w]+0.5)/(DF[w]+0.5));
     AVG=DOCS.reduce(function(a,d){return a+d.length},0)/Nd;
     TF=DOCS.map(function(d){ var t={}; d.forEach(function(w){t[w]=(t[w]||0)+1}); return t });
+  }
+  /* पुस्तिकाओं का कोश : 1,198 टुकड़े, सोलह पुस्तिकाओं के 452 पन्नों से।
+     हर टुकड़े के साथ लिखा है कि वह किस पुस्तिका के किस पन्ने से आया। */
+  function indexKosh(){
+    KD=KOSH.map(function(c){ return toks(c.h+' '+c.x) });
+    KS=KD.map(function(d){ var o={}; d.forEach(function(w){o[w]=1}); return o });
+    KN=KD.length; var kdf={};
+    KS.forEach(function(o){ for(var w in o) kdf[w]=(kdf[w]||0)+1 });
+    KIDF={}; for(var w in kdf) KIDF[w]=Math.log(1+(KN-kdf[w]+0.5)/(kdf[w]+0.5));
+    KAVG=KD.reduce(function(a,d){return a+d.length},0)/KN;
+    KTF=KD.map(function(d){ var t={}; d.forEach(function(w){t[w]=(t[w]||0)+1}); return t });
+  }
+  function searchKosh(q){
+    if(!KN) return {i:-1, cover:0, got:0};
+    var qt=toks(q), qs={}, k;
+    qt.forEach(function(w){ qs[w]=1 });
+    var best=-1, bs=0;
+    for(var i=0;i<KN;i++){
+      var dl=KD[i].length, sc=0;
+      for(var j=0;j<qt.length;j++){
+        var f=KTF[i][qt[j]]||0;
+        if(f) sc+=(KIDF[qt[j]]||0)*(f*2.5)/(f+1.5*(0.25+0.75*dl/KAVG));
+      }
+      sc *= (KOSH[i].w||1);
+      if(sc>bs){bs=sc;best=i}
+    }
+    if(best<0) return {i:-1, cover:0, got:0};
+    var tot=0, got=0, n=0;
+    for(k in qs){ var w8=(KIDF[k]||1); tot+=w8; if(KTF[best][k]){ got+=w8; n++ } }
+    return {i:best, cover: tot? got/tot : 0, got:n};
   }
   /* क्रम BM25 से लगता है, पर स्वीकार करने का फ़ैसला ढकाव से होता है :
      सवाल के अपने शब्दों में से कितने उस जोड़ में सचमुच मौजूद हैं। यह 0 से
@@ -425,13 +456,51 @@ li{line-height:1.6}
   /* 0.40 और कम से कम दो शब्द। यह सीमा उन आठ असली सवालों पर नापकर चुनी गई
      है जो loksankalp.org/sawal से आए : आठ में से सात ठीक से छँट जाते हैं,
      और जो एक ग़लत निकल आता है उसे पुष्टि का क़दम पकड़ लेता है। */
-  var PAKKA=0.40, KAM_SE_KAM=2;
+  var PAKKA=0.40, KAM_SE_KAM=2, KOSH_PAKKA=0.45;
+
+  /* कोश वाला रास्ता सवाल-सूची को छोड़ देता है, इसलिए ख़तरे की छँटाई सीधे
+     सवाल के शब्दों पर भी करनी पड़ती है, वरना फाटक बच निकलेगा। */
+  var AAPAT=['बेहोश','होश नहीं','उठ नहीं','सांस','साँस','दौरा','दौरे','झाग','ओवरडोज','overdose',
+             'आत्महत्या','खुदकुशी','मर जाऊ','मर जाउ','जान दे','खत्म कर द','ख़त्म कर द','मार रहा',
+             'मारपीट','हिंसा','खून','लहू','seizure','fits','जहर','ज़हर','नस काट'];
+  var UNCHA=['गर्भ','गर्भवती','pregnan','दवा','दवाई','गोली','मात्रा','dose','खुराक',
+             'withdrawal','कंपकंपी','काँप','कांप','घर पर छुड़','detox','इंजेक्शन','सुई',
+             'डिप्रेशन','depression','मानसिक रोग'];
+  function hasAny(q, list){
+    var t=roman(q||'').toLowerCase();
+    for(var i=0;i<list.length;i++) if(t.indexOf(list[i])>=0) return true;
+    return false;
+  }
   function ask(q){
     if(!q){ say('कुछ लिखिए या बोलिए, फिर पूछिए।'); return; }
+    /* पहला फाटक : ख़तरे के शब्द सीधे सवाल में। यह सूची से पहले चलता है। */
+    if(hasAny(q, AAPAT)){ state.cand={id:'',c:'',r:'Emergency',q:q}; answer(state.cand); return; }
+    var hi = hasAny(q, UNCHA);
     var r=search(q);
-    if(r.i<0 || r.cover<PAKKA || r.got<KAM_SE_KAM){ notUnderstood(q); return; }
-    state.cand=BANK[r.i];
-    askConfirm(BANK[r.i].q);
+    if(r.i>=0 && r.cover>=PAKKA && r.got>=KAM_SE_KAM){
+      state.cand=BANK[r.i];
+      if(hi && state.cand.r!=='Emergency') state.cand={id:BANK[r.i].id,c:BANK[r.i].c,r:'High',q:BANK[r.i].q};
+      askConfirm(state.cand.q);
+      return;
+    }
+    if(hi){ state.cand={id:'',c:'',r:'High',q:q}; answer(state.cand); return; }
+    /* सूची में नहीं मिला। अब अभियान की अपनी पुस्तिकाओं में देखिए। */
+    var k=searchKosh(q);
+    if(k.i>=0 && k.cover>=KOSH_PAKKA && k.got>=KAM_SE_KAM){
+      state.cand={id:'',c:'',r:'',q:q,kosh:KOSH[k.i]};
+      askConfirmKosh(q, KOSH[k.i]);
+      return;
+    }
+    notUnderstood(q);
+  }
+
+  function askConfirmKosh(q, c){
+    $('heard').innerHTML = 'आपने पूछा : <b>'+esc(q)+'</b><br><br>'+
+      'पुस्तिका <b>'+esc(c.t)+'</b> में इस बारे में यह लिखा है :<br>«'+esc(c.h||'')+'»';
+    show('s-confirm');
+    setTimeout(function(){
+      say('आपने पूछा, '+q+'  इस बारे में पुस्तिका '+c.t+' में लिखा हुआ है। सुनाऊँ? हाँ या ना।');
+    }, 600);
   }
   $('b-ask').addEventListener('click', function(){ ask($('q').value.trim()) });
 
@@ -540,7 +609,21 @@ li{line-height:1.6}
       return;
     }
 
-    /* 3. कोश में जवाब है */
+    /* 3. अभियान की अपनी पुस्तिका से */
+    if(c.kosh){
+      var kb=el('div','answer');
+      kb.appendChild(el('div','src','पुस्तिका से · '+esc(c.kosh.t)+' · पन्ना '+c.kosh.p));
+      if(c.kosh.h) kb.appendChild(el('p',null,'<b>'+esc(c.kosh.h)+'</b>'));
+      kb.appendChild(el('p',null,esc(c.kosh.x)));
+      out.appendChild(kb);
+      out.appendChild(el('p','note','यह अभियान की अपनी पुस्तिका का पाठ है, जस का तस। '+
+        'मशीन ने इसे बनाया नहीं, सिर्फ़ ढूँढकर पढ़ा है। पूरी पुस्तिका '+
+        '<a href="../sansadhan.html">सामग्री केंद्र</a> में है।'));
+      say((c.kosh.h? c.kosh.h+'। ':'')+c.kosh.x);
+      return;
+    }
+
+    /* 4. लिखा हुआ मंज़ूर जवाब */
     var text = ANS[c.id];
     if(text){
       var b=el('div','answer');
@@ -562,6 +645,14 @@ li{line-height:1.6}
       out.appendChild(linesBox());
       say('इसका जवाब कोश में नहीं है। आपकी उम्र अठारह से कम है, इसलिए मैं इसका जवाब बनाकर नहीं दूँगा। '+
           'अपने शिक्षक से या घर के किसी बड़े से बात कीजिए। या दस अट्ठानबे मिलाइए।');
+      return;
+    }
+
+    /* सूची में सवाल है पर मंज़ूर जवाब अभी लिखा नहीं गया : तब भी हार मत
+       मानिए, पहले अभियान की अपनी पुस्तिकाओं में देख लीजिए। */
+    var kk = searchKosh(c.q || '');
+    if(kk.i>=0 && kk.cover>=KOSH_PAKKA && kk.got>=KAM_SE_KAM){
+      answer({id:'', c:'', r:'', q:c.q, kosh:KOSH[kk.i]});
       return;
     }
 
@@ -587,10 +678,11 @@ li{line-height:1.6}
     [8,'जोखिम का फाटक : आपातकाल पर जवाब बनता ही नहीं',1],
     [9,'जवाब हिंदी में बोलकर सुनाया जाता है',1],
     [10,'जँचे हुए सरकारी नंबर, छूकर नक़ल करने लायक़',1],
-    [11,'मंज़ूर जवाब : 124 में से 8 लिखे गए हैं, बाक़ी बाक़ी हैं',0],
-    [12,'अभियान की पुस्तिकाओं से जवाब : पाठ निकाला जा रहा है',0],
-    [13,'केंद्र के नामज़द व्यक्ति को सूचना : नाम अभी तय नहीं',0],
-    [14,'कोश से न मिले तो बनाया हुआ जवाब : जान बूझकर बंद है',0]
+    [11,'अभियान की सोलहों पुस्तिकाओं से जवाब, पन्ने का हवाला देकर',1],
+    [12,'ख़तरे के शब्द सीधे सवाल में भी पकड़े जाते हैं',1],
+    [13,'मंज़ूर जवाब : 124 में से 8 लिखे गए हैं, बाक़ी बाक़ी हैं',0],
+    [14,'केंद्र के नामज़द व्यक्ति को सूचना : नाम अभी तय नहीं',0],
+    [15,'कोश से न मिले तो बनाया हुआ जवाब : जान बूझकर बंद है',0]
   ];
   var lg=$('legend');
   LEG.forEach(function(L){
@@ -611,7 +703,12 @@ li{line-height:1.6}
   $('b-start').disabled=true;
   fetch('bank.json', {cache:'no-cache'})
     .then(function(r){ if(!r.ok) throw 0; return r.json() })
-    .then(function(j){ BANK=j; index(); $('b-start').disabled=false; status('तैयार'); })
+    .then(function(j){
+      BANK=j; index(); $('b-start').disabled=false; status('तैयार');
+      return fetch('kosh.json', {cache:'default'})
+        .then(function(r){ if(!r.ok) throw 0; return r.json() })
+        .then(function(k){ KOSH=k; indexKosh(); });
+    })
     .catch(function(){
       status('कोश नहीं खुला');
       $('b-start').disabled=false;
