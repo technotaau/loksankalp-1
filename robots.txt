@@ -10,5 +10,6 @@ Disallow: /docs/
 # /sawal सिर्फ़ एक मोड़ है जो Google Form पर भेजता है। पृष्ठ में भी noindex
 # लिखा है; यह उसी बात का दूसरा ताला है।
 Disallow: /sawal/
+Disallow: /saathi-nmuna/
 
 Sitemap: https://loksankalp.org/sitemap.xml

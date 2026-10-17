@@ -323,7 +323,7 @@ def check_long_dashes():
     """
     pats = ('*.html', '*.xml', '*.txt', '*.webmanifest',
             'css/*.css', 'js/*.js', 'booklets/*.json', 'parivar/*.json',
-            'assets/img/*.svg')
+            'assets/img/*.svg', 'sawal/*.html', 'saathi-nmuna/*.html')
     for pat in pats:
         for path in sorted(glob.glob(os.path.join(ROOT, pat))):
             rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
