@@ -1103,6 +1103,31 @@
     var seen = cached();
     var shown = seen ? paint(seen, false) : false;
 
+    /* पहली बार आने वाले के पास कुछ सहेजा हुआ नहीं होता, और Apps Script
+       ठंडा पड़ा हो तो पहला जवाब 20 सेकंड से ऊपर ले लेता है। तब तक पर्दे पर
+       ख़ाली डिब्बे रहते हैं और देखने वाला समझता है कि साइट टूटी हुई है।
+
+       इसलिए साइट अपने साथ आँकड़ों की एक तैयार प्रति रखती है, stats.json,
+       जो उसी CDN से आती है जिससे पन्ना आता है और उतनी ही तेज़ी से पहुँचती
+       है। वह तुरंत छप जाती है; असली आँकड़े जब आते हैं तब चुपचाप उसकी जगह
+       ले लेते हैं। प्रति रोज़ अपने आप ताज़ा होती है, देखिए
+       .github/workflows/stats.yml और tools/stats-snapshot.py।
+
+       यह दौड़ नहीं है : जो पहले पहुँचे वह छपता है, और असली आँकड़े बाद में
+       आएँ तो ऊपर लिख देते हैं। उल्टा कभी नहीं होता, इसलिए पुरानी प्रति
+       नई संख्या को कभी नहीं मिटाती। */
+    var live = false;
+    if (!shown && window.fetch) {
+      fetch('stats.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (res) {
+          if (live || shown) return;                 // असली आँकड़े पहले आ गए
+          if (!res || !res.ok || !res.stats) return;
+          shown = paint(res.stats, true);
+        })
+        .catch(function () { /* प्रति न मिले तो नीचे वाला रास्ता चलता ही है */ });
+    }
+
     var pending = window.LOKSANKALP_STATS;
     if (!pending && (window.LOKSANKALP_FORM_ENDPOINT || '').trim() && window.fetch) {
       pending = fetch((window.LOKSANKALP_FORM_ENDPOINT || '').trim() + '?stats=1')
@@ -1111,12 +1136,13 @@
 
     if (pending) {
       pending.then(function (res) {
+        live = true;
         if (!res || !res.ok || !res.stats) throw new Error('no stats');
         remember(res.stats);
         paint(res.stats, !shown);
       }).catch(function () {
         // Nothing invented and no zeros: say plainly that the figures did not
-        // arrive, unless cached ones are already on screen.
+        // arrive, unless cached ones or the shipped snapshot are on screen.
         if (shown) return;
         // In the hero an empty figure reads as a broken page, so it goes.
         document.querySelectorAll('[data-hero-stats]').forEach(function (n) { n.hidden = true; });
