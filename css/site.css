@@ -1147,3 +1147,17 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 }
 .pledge h3 { margin: 0 0 .25rem; font-size: 1.05rem; }
 .pledge p { margin: 0; }
+
+/* एक पोस्टर, जो फ़ोन पर किनारे से किनारे तक जाता है।
+
+   चौड़े अनुपात वाला पोस्टर (3:1) छोटे पर्दे पर बहुत कम ऊँचा बचता है, और
+   उसके भीतर लिखा हुआ पढ़ने लायक़ नहीं रहता। हाशिया हटाकर उसे जितना बड़ा
+   किया जा सकता है, किया जाता है। 40rem से ऊपर वह अपने हाशिये में लौट
+   आता है, जहाँ पन्ने की बाक़ी पंक्तियों से कटा हुआ नहीं लगता। */
+/* .wrap हर तरफ़ 1.1rem छोड़ता है (width: min(100% - 2.2rem, …)), वही हटाइए */
+.poster { margin-inline: -1.1rem; }
+.poster img { width: 100%; height: auto; border-radius: 0; }
+@media (min-width: 40rem) {
+  .poster { margin-inline: 0; }
+  .poster img { border-radius: var(--ls-radius); }
+}
