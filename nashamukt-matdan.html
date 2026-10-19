@@ -129,7 +129,7 @@
       <p class="mt-2">आइए, अपनी पंचायत के चुनाव को नशामुक्त रखने का लोकसंकल्प लें।</p>
       <p class="mt-3">
         <a class="btn btn--primary btn--lg" href="#form">संकल्प लें</a>
-        <a class="btn btn--ghost btn--lg" href="gram-sabha.html">अपने गाँव में संकल्प सभा करें</a>
+        <a class="btn btn--ghost btn--lg" href="#sabha">अपने गाँव में संकल्प सभा करें</a>
       </p>
     </div>
   </section>
@@ -235,6 +235,116 @@
           <p class="form-note">आपकी जानकारी कहाँ रहती है और कैसे हटवाई जा सकती है, यह <a href="nijta.html">निजता</a> पृष्ठ पर लिखा है।</p>
           <p>
             <button class="btn btn--primary btn--lg" type="submit">संकल्प दर्ज करें</button>
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint" id="sabha" aria-labelledby="sabha-h">
+    <div class="wrap wrap--narrow">
+      <p class="eyebrow">गाँव-गाँव</p>
+      <h2 id="sabha-h">नशामुक्त मतदान संकल्प सभा का पंजीकरण</h2>
+      <p class="mt-2">यह फ़ॉर्म गाँव में हुई सभा के लिए है, किसी एक व्यक्ति के संकल्प के लिए नहीं। सभा करवाने वाला एक बार भरे और लिख दे कि कितने लोगों ने सामूहिक संकल्प लिया। वही संख्या नीचे की गिनती में जुड़ जाएगी।</p>
+
+      <div data-camp-wait data-camp="matdan" hidden>
+        <p class="form-note">पंजीकरण अभी खुला नहीं है।</p>
+      </div>
+
+      <div data-camp-shut data-camp="matdan">
+        <p class="form-note"><strong>पंजीकरण अब बंद हो चुका है।</strong></p>
+      </div>
+
+      <div data-camp-form data-camp="matdan" hidden>
+        <form class="form" data-demo="matdan-sabha-done">
+          <noscript>
+            <p class="form-note"><strong>यह फ़ॉर्म भेजने के लिए जावास्क्रिप्ट चालू होनी चाहिए।</strong> कृपया ब्राउज़र में जावास्क्रिप्ट चालू करें, या <a href="mailto:info@loksankalp.org">info@loksankalp.org</a> पर भेज दें।</p>
+          </noscript>
+          <p hidden aria-hidden="true">
+            <label>यह खाली छोड़ें
+              <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </label>
+          </p>
+          <div class="field">
+            <label for="s-gaon">गाँव / वार्ड <span aria-hidden="true">*</span></label>
+            <input type="text" id="s-gaon" name="gaon" required>
+          </div>
+          <div class="field">
+            <label for="s-block">पंचायत समिति / ब्लॉक</label>
+            <input type="text" id="s-block" name="block" aria-describedby="s-block-hint">
+            <span class="hint" id="s-block-hint">पता न हो तो खाली छोड़ दीजिए।</span>
+          </div>
+          <div class="field">
+            <label for="s-jila">जिला <span aria-hidden="true">*</span></label>
+            <select translate="no" id="s-jila" name="jila" required>
+            <option value="">जिला चुनें</option>
+          <option>अजमेर</option>
+          <option>अलवर</option>
+          <option>उदयपुर</option>
+          <option>करौली</option>
+          <option>कोटपूतली-बहरोड़</option>
+          <option>कोटा</option>
+          <option>खैरथल-तिजारा</option>
+          <option>चित्तौड़गढ़</option>
+          <option>चूरू</option>
+          <option>जयपुर</option>
+          <option>जालौर</option>
+          <option>जैसलमेर</option>
+          <option>जोधपुर</option>
+          <option>झालावाड़</option>
+          <option>झुंझुनू</option>
+          <option>टोंक</option>
+          <option>डीग</option>
+          <option>डीडवाना-कुचामन</option>
+          <option>डूंगरपुर</option>
+          <option>दौसा</option>
+          <option>धौलपुर</option>
+          <option>नागौर</option>
+          <option>पाली</option>
+          <option>प्रतापगढ़</option>
+          <option>फलौदी</option>
+          <option>बांसवाड़ा</option>
+          <option>बाड़मेर</option>
+          <option>बारां</option>
+          <option>बालोतरा</option>
+          <option>बीकानेर</option>
+          <option>बूंदी</option>
+          <option>ब्यावर</option>
+          <option>भरतपुर</option>
+          <option>भीलवाड़ा</option>
+          <option>राजसमंद</option>
+          <option>श्रीगंगानगर</option>
+          <option>सलूम्बर</option>
+          <option>सवाई माधोपुर</option>
+          <option>सिरोही</option>
+          <option>सीकर</option>
+          <option>हनुमानगढ़</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="s-tithi">सभा की तिथि <span aria-hidden="true">*</span></label>
+            <input type="date" id="s-tithi" name="tithi" required>
+          </div>
+          <div class="field">
+            <label for="s-sankhya">कितने लोगों ने सामूहिक संकल्प लिया? <span aria-hidden="true">*</span></label>
+            <input type="number" id="s-sankhya" name="sankhya" inputmode="numeric" min="1" max="5000" step="1" required
+                   aria-describedby="s-sankhya-hint">
+            <span class="hint" id="s-sankhya-hint">सभा में उपस्थित जिन लोगों ने संकल्प लिया, उनकी कुल संख्या।</span>
+          </div>
+          <div class="field">
+            <label for="s-naam">सभा करवाने वाले का नाम <span aria-hidden="true">*</span></label>
+            <input type="text" id="s-naam" name="naam" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="s-mobile">मोबाइल नंबर <span aria-hidden="true">*</span></label>
+            <input type="tel" id="s-mobile" name="mobile" autocomplete="tel" inputmode="numeric" required>
+          </div>
+          <div class="field">
+            <label class="choice"><input type="checkbox" name="sahmati" value="हाँ" required>यह सभा सचमुच हुई है, और मैं यह जानकारी लोकसंकल्प अभियान के पास दर्ज किए जाने की सहमति देता / देती हूँ।</label>
+          </div>
+          <p class="form-note">आपकी जानकारी कहाँ रहती है और कैसे हटवाई जा सकती है, यह <a href="nijta.html">निजता</a> पृष्ठ पर लिखा है।</p>
+          <p>
+            <button class="btn btn--primary btn--lg" type="submit">सभा दर्ज करें</button>
           </p>
         </form>
       </div>

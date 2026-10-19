@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 28;          // bump when this file changes; shown in every response
+var CODE_VERSION = 29;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -88,7 +88,17 @@ var FORMS = {
      व्यक्ति का, इसलिए ब्लॉक भी पूछा जाता है : पंचायत चुनाव ब्लॉक पर लड़े
      जाते हैं और गिनती वहीं काम आती है। */
   matdan:   { tab: 'नशामुक्त मतदान',
-              fields: ['naam', 'mobile', 'gaon', 'block', 'jila', 'bhumika', 'sahmati'] }
+              fields: ['naam', 'mobile', 'gaon', 'block', 'jila', 'bhumika', 'sahmati'] },
+  /* नशामुक्त मतदान संकल्प सभा : गाँव में हुई सभा का पंजीकरण, व्यक्ति का
+     संकल्प नहीं। इसीलिए यह अलग फ़ॉर्म और अलग शीट है।
+
+     आयोजक लिखता है कि कितने लोगों ने सामूहिक संकल्प लिया। वही संख्या
+     "नागरिक" में जुड़ती है, ठीक वैसे ही जैसे ग्राम सभा के प्रतिभागी और
+     इंकलाब 28 के परिवार सदस्य जुड़ते हैं : फ़ॉर्म एक भरता है, संकल्प कई
+     लेते हैं। */
+  matdanSabha: { tab: 'नशामुक्त मतदान सभा',
+              fields: ['gaon', 'block', 'jila', 'tithi', 'sankhya',
+                       'naam', 'mobile', 'sahmati'] }
 };
 
 /* जिसे संकट की सूचना जाएगी। खाली छोड़ दीजिए तो कोई मेल नहीं जाती और
@@ -630,6 +640,7 @@ function computeStats() {
   var i28Rows      = rows(ss, FORMS.inqlab28.tab);
   var sdRows       = rows(ss, FORMS.sankalpDoot.tab);
   var mdRows       = rows(ss, FORMS.matdan.tab);
+  var msRows       = rows(ss, FORMS.matdanSabha.tab);
 
   /* "जुड़े हुए गाँव" हर गाँव को एक बार गिनता है, चाहे वह कितने ही फ़ॉर्मों में
      आए। एक ही गाँव के दस लोग उस गाँव को दस बार नहीं बना देते, और जिस गाँव में सभा
@@ -646,7 +657,7 @@ function computeStats() {
    [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva],
    [s21Rows, FORMS.sankalp21], [k21Rows, FORMS.karuna21],
    [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot],
-   [mdRows, FORMS.matdan]].forEach(function (pair) {
+   [mdRows, FORMS.matdan], [msRows, FORMS.matdanSabha]].forEach(function (pair) {
     var idx = colOf(ss, pair[1], 'gaon');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
@@ -730,22 +741,34 @@ function computeStats() {
      kahanSe() से आती है, जो सब फ़ॉर्मों के लिए एक ही विधि है।
 
      गिनती व्यक्तियों की है, परिवारों की नहीं : एक पंक्ति यानी एक संकल्प दूत। */
-  /* नशामुक्त मतदान की अपनी गिनती : गाँव, नागरिक, ब्लॉक, जिले। */
+  /* नशामुक्त मतदान की अपनी गिनती : गाँव, नागरिक, ब्लॉक, जिले।
+
+     दोनों फ़ॉर्म एक ही गिनती में जुड़ते हैं : व्यक्ति का संकल्प और गाँव की
+     सभा। गाँव, ब्लॉक और जिला जगहें हैं, इसलिए एक बार ही गिने जाते हैं,
+     चाहे दोनों फ़ॉर्म से आएँ। नागरिक काम है, इसलिए जुड़ते जाते हैं। */
   var mdGaon = {}, mdBlock = {}, mdJile = {};
-  var gMD = colOf(ss, FORMS.matdan, 'gaon');
-  var bMD = colOf(ss, FORMS.matdan, 'block');
-  var jMD = colOf(ss, FORMS.matdan, 'jila');
-  mdRows.forEach(function (r) {
-    if (gMD >= 0) { var v = normPlace(r[gMD]); if (isPlace(v)) mdGaon[v] = 1; }
-    if (jMD >= 0) { var d = normPlace(r[jMD]); if (RAJ_JILA[d]) mdJile[d] = 1; }
-    /* ब्लॉक का नाम जिले के साथ जोड़कर गिना जाता है। "बीकानेर" नाम का ब्लॉक
-       एक से ज़्यादा जिलों में हो सकता है, और उन्हें एक गिन लेना संख्या को
-       चुपचाप कम कर देता। */
-    if (bMD >= 0) {
-      var b = normPlace(r[bMD]);
-      if (isPlace(b)) mdBlock[b + ' | ' + (jMD >= 0 ? normPlace(r[jMD]) : '')] = 1;
-    }
-  });
+  var msPratibhagi = 0;
+
+  var mdEk = function (spec, rowsArr, sankhyaBhi) {
+    var g = colOf(ss, spec, 'gaon');
+    var b = colOf(ss, spec, 'block');
+    var j = colOf(ss, spec, 'jila');
+    var n = sankhyaBhi ? colOf(ss, spec, 'sankhya') : -1;
+    rowsArr.forEach(function (r) {
+      if (g >= 0) { var v = normPlace(r[g]); if (isPlace(v)) mdGaon[v] = 1; }
+      if (j >= 0) { var d = normPlace(r[j]); if (RAJ_JILA[d]) mdJile[d] = 1; }
+      /* ब्लॉक का नाम जिले के साथ जोड़कर गिना जाता है। "बीकानेर" नाम का
+         ब्लॉक एक से ज़्यादा जिलों में हो सकता है, और उन्हें एक गिन लेना
+         संख्या को चुपचाप कम कर देता। */
+      if (b >= 0) {
+        var bl = normPlace(r[b]);
+        if (isPlace(bl)) mdBlock[bl + ' | ' + (j >= 0 ? normPlace(r[j]) : '')] = 1;
+      }
+      if (n >= 0) msPratibhagi += count(r[n]);
+    });
+  };
+  mdEk(FORMS.matdan, mdRows, false);
+  mdEk(FORMS.matdanSabha, msRows, true);
 
   var sdGaon = {}, sdJile = {}, sdRajya = {}, sdDesh = {};
   var gSD = colOf(ss, FORMS.sankalpDoot, 'gaon');
@@ -800,7 +823,7 @@ function computeStats() {
    [yuvaRows, FORMS.yuva], [sammanRows, FORMS.samman],
    [s21Rows, FORMS.sankalp21], [k21Rows, FORMS.karuna21],
    [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot],
-   [mdRows, FORMS.matdan]].forEach(function (pair) {
+   [mdRows, FORMS.matdan], [msRows, FORMS.matdanSabha]].forEach(function (pair) {
     var idx = jagahIdx(ss, pair[1]);
     pair[0].forEach(function (r) {
       var j = kahanSe(r, idx);
@@ -840,7 +863,8 @@ function computeStats() {
        दोनों एक ही तरह के हैं और एक ही संख्या में जुड़ते हैं। हर हिस्सा अलग से भी
        भेजा जाता है, ताकि कोई पूछे तो बताया जा सके कि यह संख्या किससे बनी है। */
     sankalp:         sankalpRows.length + sabhaPratibhagi + s21Rows.length +
-                     k21Rows.length + i28Vyakti + sdRows.length + mdRows.length,
+                     k21Rows.length + i28Vyakti + sdRows.length +
+                     mdRows.length + msPratibhagi,
     sankalpOnline:   sankalpRows.length,
     sabhaPratibhagi: sabhaPratibhagi,
     shikshak:   shikshakRows.length,
@@ -868,7 +892,8 @@ function computeStats() {
     // रखी गई है, क्योंकि संकल्प लेना और स्वयंसेवक बनना एक बात नहीं है।
     /* नशामुक्त मतदान। नागरिक वही हैं जिन्होंने अपने नाम से संकल्प लिया,
        इसलिए यह पंक्तियों की सीधी गिनती है, किसी परिवार की नहीं। */
-    matdanNagrik: mdRows.length,
+    matdanNagrik: mdRows.length + msPratibhagi,
+    matdanSabhaen: msRows.length,
     matdanGaon:   Object.keys(mdGaon).length,
     matdanBlock:  Object.keys(mdBlock).length,
     matdanJile:   Object.keys(mdJile).length,

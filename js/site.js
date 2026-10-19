@@ -1523,7 +1523,8 @@
     'karuna21-done': 'karuna21',
     'inqlab28-done': 'inqlab28',
     'doot-done': 'sankalpDoot',
-    'matdan-done': 'matdan'
+    'matdan-done': 'matdan',
+    'matdan-sabha-done': 'matdanSabha'
   };
 
   var MAX_EDGE = 1600;   // px on the long side
