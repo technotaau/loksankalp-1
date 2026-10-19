@@ -1161,3 +1161,17 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
   .poster { margin-inline: 0; }
   .poster img { border-radius: var(--ls-radius); }
 }
+
+/* बाहरी ख़बरों की सूची। सूची के भीतर रखा चिह्न किसी नियम से नहीं बँधा था,
+   इसलिए वह पूरे चौड़े में फैल जाता था; यहाँ उसे पंक्ति के अक्षरों के नाप
+   पर बाँधा गया है और वह लिखे हुए के साथ ही रहता है। */
+.linklist { list-style: none; padding-left: 0; }
+.linklist li + li { margin-top: .7rem; }
+.linklist a { display: inline-flex; align-items: baseline; gap: .45rem; }
+.linklist a svg { width: .95em; height: .95em; flex: none; align-self: center; }
+
+/* अकेली खड़ी कतरन। अख़बार की कतरन स्कैन होती है, इसलिए उसे अपनी असली
+   चौड़ाई से बड़ा करने पर अक्षर फैल जाते हैं और ख़बर पढ़ी नहीं जाती।
+   width: fit-content उसे उसी नाप पर रोक देता है, और छोटे पर्दे पर
+   max-width: 100% उसे सिकोड़कर पन्ने में बिठा देता है। */
+.photo--clip { width: fit-content; max-width: 100%; margin-inline: auto; }
