@@ -132,6 +132,9 @@
     <div class="cluster cluster--center" style="margin-top:.55rem">
       <!-- Today's action leads the hero while a campaign is open. Hidden here
            and revealed by js/site.js, so the hero never offers a closed form. -->
+      <a class="btn btn--primary btn--lg" href="nashamukt-matdan.html" data-camp-hero data-camp="matdan" hidden>
+        <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>नशामुक्त मतदान का संकल्प
+      </a>
       <a class="btn btn--primary btn--lg" href="inqlab-28.html" data-camp-hero data-camp="inqlab28" hidden>
         <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-users"></use></svg>इंकलाब 28 में जुड़ें
       </a>
@@ -151,6 +154,28 @@
 <!-- Hidden in the markup and revealed by js/site.js only while इंकलाब 28 is
      open. If that file never runs, the संकल्प 21 card below stays and this
      one never appears: the page is never left pointing at a closed form. -->
+<!-- ============ नशामुक्त मतदान : दशहरे से पंचायत चुनाव तक ============ -->
+<section class="section section--tint" aria-labelledby="md-card" data-camp-card data-camp="matdan" hidden
+         style="padding-block:clamp(1.4rem,3vw,2.2rem)">
+  <div class="wrap">
+    <div class="card card--gold">
+      <div class="card__ic"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg></div>
+      <p class="eyebrow">दशहरा · नशामुक्त पंचायत चुनाव</p>
+      <h2 id="md-card">इस दशहरा नशे रूपी रावण का दहन करें</h2>
+      <p><span class="days-pill" data-camp-days data-camp="matdan" hidden></span></p>
+      <p>नशामुक्त जीवन, नशामुक्त समारोह, नशामुक्त पंचायत चुनाव। पंचायत चुनाव में न नशा लेंगे, न बाँटेंगे, न उसके वितरण का समर्थन करेंगे। <strong>मतदान का आधार हमारा विवेक हो, नशा या कोई प्रलोभन नहीं।</strong></p>
+      <p class="card__actions">
+        <a class="btn btn--primary btn--lg" href="nashamukt-matdan.html">
+          <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>नशामुक्त मतदान का संकल्प लें
+        </a>
+        <a class="btn btn--ghost btn--lg" href="gram-sabha.html">
+          <svg aria-hidden="true"><use href="assets/img/icons.svg#ic-committee"></use></svg>गाँव में संकल्प सभा करें
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
 <section class="section section--tint" aria-labelledby="i28-card" data-camp-card data-camp="inqlab28" hidden
          style="padding-block:clamp(1.4rem,3vw,2.2rem)">
   <div class="wrap">
@@ -289,6 +314,18 @@
     <!-- अभियान कहाँ-कहाँ पहुँचा। js/site.js इसे आँकड़ों से बनाता है, यहाँ
          कोई संख्या लिखी नहीं है, इसलिए यह कभी पुरानी नहीं पड़ती। -->
     <p class="center lead mt-2" data-pahunch hidden></p>
+
+    <div data-camp-count data-camp="matdan" hidden>
+      <p class="eyebrow center mt-4">दशहरा से अब तक</p>
+      <h3 class="center">नशामुक्त पंचायत चुनाव का संकल्प लेने वाले</h3>
+      <div class="counters mt-2">
+        <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg><b data-stat="matdanGaon" data-count="0" data-loading>0</b><span>गाँव</span></div>
+        <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg><b data-stat="matdanNagrik" data-count="0" data-loading>0</b><span>नागरिक</span></div>
+        <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-committee"></use></svg><b data-stat="matdanBlock" data-count="0" data-loading>0</b><span>ब्लॉक</span></div>
+        <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pin"></use></svg><b data-stat="matdanJile" data-count="0" data-loading>0</b><span>जिले</span></div>
+      </div>
+      <p class="center mt-2"><a class="btn btn--ghost" href="nashamukt-matdan.html">नशामुक्त मतदान का संकल्प लें</a></p>
+    </div>
     <p class="center mt-2" data-stats-note><span class="placeholder-note">आँकड़े जुड़ रहे हैं…</span></p>
   </div>
 </section>
@@ -720,7 +757,7 @@
 
 <!-- ================= MOBILE ACTION BAR ================= -->
 <nav class="action-bar" aria-label="मुख्य कार्य">
-  <a class="action-bar--pledge" href="mera-sankalp.html" data-camp-swap data-camp="inqlab28" data-camp-href="inqlab-28.html" data-camp-label="इंकलाब 28" data-camp-icon="ic-users"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>संकल्प लें</a>
+  <a class="action-bar--pledge" href="mera-sankalp.html" data-camp-swap data-camp="matdan" data-camp-href="nashamukt-matdan.html" data-camp-label="नशामुक्त मतदान" data-camp-icon="ic-pledge"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pledge"></use></svg>संकल्प लें</a>
   <a href="gram-sabha.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg>लोकसंकल्प सभा</a>
   <a href="sahayata-kendra.html"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-help"></use></svg>सहायता</a>
 </nav>

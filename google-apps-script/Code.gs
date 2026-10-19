@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 27;          // bump when this file changes; shown in every response
+var CODE_VERSION = 28;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -83,7 +83,12 @@ var FORMS = {
 
      SANKAT_EMAIL भरा हो तो हर पंक्ति पर तुरंत सूचना भी जाती है। शीट में
      पंक्ति पड़ी रहना सूचना नहीं है; सूचना वही है जो किसी को पहुँचे। */
-  sankat:   { tab: 'संकट', fields: ['rasta', 'mobile', 'kahan'], alert: true }
+  sankat:   { tab: 'संकट', fields: ['rasta', 'mobile', 'kahan'], alert: true },
+  /* नशामुक्त मतदान : दशहरे से पंचायत चुनाव तक। यह संकल्प जगह का है जितना
+     व्यक्ति का, इसलिए ब्लॉक भी पूछा जाता है : पंचायत चुनाव ब्लॉक पर लड़े
+     जाते हैं और गिनती वहीं काम आती है। */
+  matdan:   { tab: 'नशामुक्त मतदान',
+              fields: ['naam', 'mobile', 'gaon', 'block', 'jila', 'bhumika', 'sahmati'] }
 };
 
 /* जिसे संकट की सूचना जाएगी। खाली छोड़ दीजिए तो कोई मेल नहीं जाती और
@@ -624,6 +629,7 @@ function computeStats() {
   var k21Rows      = rows(ss, FORMS.karuna21.tab);
   var i28Rows      = rows(ss, FORMS.inqlab28.tab);
   var sdRows       = rows(ss, FORMS.sankalpDoot.tab);
+  var mdRows       = rows(ss, FORMS.matdan.tab);
 
   /* "जुड़े हुए गाँव" हर गाँव को एक बार गिनता है, चाहे वह कितने ही फ़ॉर्मों में
      आए। एक ही गाँव के दस लोग उस गाँव को दस बार नहीं बना देते, और जिस गाँव में सभा
@@ -639,7 +645,8 @@ function computeStats() {
   [[sankalpRows, FORMS.sankalp], [sabhaRows, FORMS.sabha],
    [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva],
    [s21Rows, FORMS.sankalp21], [k21Rows, FORMS.karuna21],
-   [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot]].forEach(function (pair) {
+   [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot],
+   [mdRows, FORMS.matdan]].forEach(function (pair) {
     var idx = colOf(ss, pair[1], 'gaon');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
@@ -723,6 +730,23 @@ function computeStats() {
      kahanSe() से आती है, जो सब फ़ॉर्मों के लिए एक ही विधि है।
 
      गिनती व्यक्तियों की है, परिवारों की नहीं : एक पंक्ति यानी एक संकल्प दूत। */
+  /* नशामुक्त मतदान की अपनी गिनती : गाँव, नागरिक, ब्लॉक, जिले। */
+  var mdGaon = {}, mdBlock = {}, mdJile = {};
+  var gMD = colOf(ss, FORMS.matdan, 'gaon');
+  var bMD = colOf(ss, FORMS.matdan, 'block');
+  var jMD = colOf(ss, FORMS.matdan, 'jila');
+  mdRows.forEach(function (r) {
+    if (gMD >= 0) { var v = normPlace(r[gMD]); if (isPlace(v)) mdGaon[v] = 1; }
+    if (jMD >= 0) { var d = normPlace(r[jMD]); if (RAJ_JILA[d]) mdJile[d] = 1; }
+    /* ब्लॉक का नाम जिले के साथ जोड़कर गिना जाता है। "बीकानेर" नाम का ब्लॉक
+       एक से ज़्यादा जिलों में हो सकता है, और उन्हें एक गिन लेना संख्या को
+       चुपचाप कम कर देता। */
+    if (bMD >= 0) {
+      var b = normPlace(r[bMD]);
+      if (isPlace(b)) mdBlock[b + ' | ' + (jMD >= 0 ? normPlace(r[jMD]) : '')] = 1;
+    }
+  });
+
   var sdGaon = {}, sdJile = {}, sdRajya = {}, sdDesh = {};
   var gSD = colOf(ss, FORMS.sankalpDoot, 'gaon');
   var iSD = jagahIdx(ss, FORMS.sankalpDoot);
@@ -775,7 +799,8 @@ function computeStats() {
    [kahaniRows, FORMS.kahani], [shikshakRows, FORMS.shikshak],
    [yuvaRows, FORMS.yuva], [sammanRows, FORMS.samman],
    [s21Rows, FORMS.sankalp21], [k21Rows, FORMS.karuna21],
-   [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot]].forEach(function (pair) {
+   [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot],
+   [mdRows, FORMS.matdan]].forEach(function (pair) {
     var idx = jagahIdx(ss, pair[1]);
     pair[0].forEach(function (r) {
       var j = kahanSe(r, idx);
@@ -815,7 +840,7 @@ function computeStats() {
        दोनों एक ही तरह के हैं और एक ही संख्या में जुड़ते हैं। हर हिस्सा अलग से भी
        भेजा जाता है, ताकि कोई पूछे तो बताया जा सके कि यह संख्या किससे बनी है। */
     sankalp:         sankalpRows.length + sabhaPratibhagi + s21Rows.length +
-                     k21Rows.length + i28Vyakti + sdRows.length,
+                     k21Rows.length + i28Vyakti + sdRows.length + mdRows.length,
     sankalpOnline:   sankalpRows.length,
     sabhaPratibhagi: sabhaPratibhagi,
     shikshak:   shikshakRows.length,
@@ -841,6 +866,12 @@ function computeStats() {
     inqlabDesh:     Object.keys(i28Countries).length,
     // संकल्प दूत : स्वयंसेवक। यह संख्या मुख्य "संकल्प" वाली गिनती से अलग
     // रखी गई है, क्योंकि संकल्प लेना और स्वयंसेवक बनना एक बात नहीं है।
+    /* नशामुक्त मतदान। नागरिक वही हैं जिन्होंने अपने नाम से संकल्प लिया,
+       इसलिए यह पंक्तियों की सीधी गिनती है, किसी परिवार की नहीं। */
+    matdanNagrik: mdRows.length,
+    matdanGaon:   Object.keys(mdGaon).length,
+    matdanBlock:  Object.keys(mdBlock).length,
+    matdanJile:   Object.keys(mdJile).length,
     dootKul:    sdRows.length,
     dootGaon:   Object.keys(sdGaon).length,
     dootJile:   Object.keys(sdJile).length,
