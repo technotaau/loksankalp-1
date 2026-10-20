@@ -470,7 +470,13 @@
     }
   };
 
+  /* पॉपअप अभी बंद है। टीम ने 20 अक्टूबर को कहा कि बाद में लगाएँगे।
+     ऊपर की सारी सामग्री जस की तस रखी है : इसे true कर देने भर से वही
+     पॉपअप फिर चलने लगेगा, दोबारा लिखना नहीं पड़ेगा। */
+  var POPUP_CHALU = false;
+
   (function () {
+    if (!POPUP_CHALU) return;
     var pop = POPUPS[today];
     if (!pop) return;
     var SEEN = 'ls-today-' + today;
