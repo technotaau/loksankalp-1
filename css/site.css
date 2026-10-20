@@ -1175,3 +1175,9 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
    width: fit-content उसे उसी नाप पर रोक देता है, और छोटे पर्दे पर
    max-width: 100% उसे सिकोड़कर पन्ने में बिठा देता है। */
 .photo--clip { width: fit-content; max-width: 100%; margin-inline: auto; }
+
+/* चिपका हुआ शीर्ष पट्टा लंगर वाले खंड का शीर्षक ढक लेता था : लिंक खुलता
+   तो शीर्षक पट्टे के पीछे रहता। scroll-margin-top उतनी जगह छोड़ देता है।
+   पट्टे की ऊँचाई पर्दे के साथ बदलती है, इसलिए वह js/site.js से नापकर
+   --ls-sticky में रखी जाती है। जावास्क्रिप्ट न चले तो 5rem काम चला देता है। */
+main [id] { scroll-margin-top: calc(var(--ls-sticky, 5rem) + .8rem); }

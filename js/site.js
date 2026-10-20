@@ -126,6 +126,53 @@
     requestAnimationFrame(tick);
   };
 
+  /* --- चिपके पट्टे की ऊँचाई, ताकि लंगर उसके नीचे खुले ------------------ */
+  (function () {
+    var patta = document.querySelector('.site-header');
+    if (!patta) return;
+    var naapo = function () {
+      var h = getComputedStyle(patta).position === 'sticky'
+        ? Math.round(patta.getBoundingClientRect().height) : 0;
+      document.documentElement.style.setProperty('--ls-sticky', h + 'px');
+    };
+    naapo();
+    window.addEventListener('resize', naapo);
+  }());
+
+  /* --- लंगर वाला पता खुलने पर सही जगह पर लाइए ------------------------- */
+  /* पन्ना खुलते ही ब्राउज़र #लंगर पर कूदता है, पर उस घड़ी ऊपर की तस्वीरें और
+     सजीव आँकड़े अपनी अंतिम ऊँचाई नहीं ले पाए होते। वे बाद में बैठते हैं और
+     नीचे का सब कुछ खिसक जाता है, जिससे बाँटा गया लिंक गलत जगह खुलता है।
+     डैशबोर्ड पर यह दो हज़ार पिक्सल तक चला जाता था।
+
+     इसलिए पन्ना बैठ जाने के बाद उसी लंगर पर एक बार और लाया जाता है। यह
+     सिर्फ़ तभी चलता है जब आदमी ने ख़ुद कुछ नहीं खिसकाया, वरना उसका पढ़ना
+     बीच में से छिन जाता। हिलाना बिना झटके के, क्योंकि कूद पहले ही लग चुकी है। */
+  (function () {
+    if (!window.location.hash) return;
+    var lakshya;
+    try { lakshya = document.querySelector(window.location.hash); } catch (e) { return; }
+    if (!lakshya) return;
+
+    var chhua = false;
+    var dekho = function () { chhua = true; };
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (e) {
+      window.addEventListener(e, dekho, { once: true, passive: true });
+    });
+
+    var laao = function () {
+      if (chhua) return;
+      lakshya.scrollIntoView({ block: 'start', behavior: 'auto' });
+    };
+
+    // एक बार जब सब कुछ लद जाए, और एक बार उसके थोड़ी देर बाद, क्योंकि
+    // आँकड़े गूगल शीट से आते हैं और वे सबसे आख़िर में बैठते हैं।
+    window.addEventListener('load', function () {
+      laao();
+      setTimeout(function () { laao(); window.removeEventListener('wheel', dekho); }, 1200);
+    });
+  }());
+
   /* --- Reveal on scroll ------------------------------------------------- */
   var reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
