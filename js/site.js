@@ -139,37 +139,122 @@
     window.addEventListener('resize', naapo);
   }());
 
-  /* --- लंगर वाला पता खुलने पर सही जगह पर लाइए ------------------------- */
-  /* पन्ना खुलते ही ब्राउज़र #लंगर पर कूदता है, पर उस घड़ी ऊपर की तस्वीरें और
-     सजीव आँकड़े अपनी अंतिम ऊँचाई नहीं ले पाए होते। वे बाद में बैठते हैं और
-     नीचे का सब कुछ खिसक जाता है, जिससे बाँटा गया लिंक गलत जगह खुलता है।
-     डैशबोर्ड पर यह दो हज़ार पिक्सल तक चला जाता था।
+  /* --- लंगर वाला पता सही जगह पर खोलिए --------------------------------- */
+  /* पन्ना खुलते ही ब्राउज़र #लंगर पर कूदता है, पर उस घड़ी ऊपर की तस्वीरें
+     अभी लदी नहीं होतीं और चलते अभियान के आँकड़ों वाला खंड अभी खुला नहीं
+     होता। वे बाद में बैठते हैं और पन्ना नीचे की ओर बढ़ जाता है : डैशबोर्ड
+     पर ढाई हज़ार पिक्सल तक। लंगर वाला खंड तब पर्दे से बाहर रह जाता है।
 
-     इसलिए पन्ना बैठ जाने के बाद उसी लंगर पर एक बार और लाया जाता है। यह
-     सिर्फ़ तभी चलता है जब आदमी ने ख़ुद कुछ नहीं खिसकाया, वरना उसका पढ़ना
-     बीच में से छिन जाता। हिलाना बिना झटके के, क्योंकि कूद पहले ही लग चुकी है। */
-  (function () {
-    if (!window.location.hash) return;
-    var lakshya;
-    try { lakshya = document.querySelector(window.location.hash); } catch (e) { return; }
-    if (!lakshya) return;
+     "थोड़ी देर बाद एक बार और कूद जाओ" से यह ठीक नहीं होता : वह कूद ख़ुद
+     दिखती है, और CSS के scroll-behavior: smooth के कारण दो सेकंड तक सरकती
+     रहती है। इसलिए कूदने के बजाय खंड को उसकी जगह पर टिकाए रखा जाता है।
+     जब तक पन्ना बैठ नहीं जाता, हर फ़्रेम में देखा जाता है कि खंड अपनी जगह
+     पर है या नहीं, और न हो तो बिना किसी चाल के वहीं रख दिया जाता है। ऊपर
+     की सामग्री बढ़ती रहती है, पर खंड पर्दे पर हिलता हुआ नहीं दिखता।
 
-    var chhua = false;
-    var dekho = function () { chhua = true; };
-    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (e) {
-      window.addEventListener(e, dekho, { once: true, passive: true });
-    });
+     आदमी ने पहिया घुमाया, छुआ, कुंजी दबाई या पट्टी खींची : टिकाना उसी क्षण
+     छूट जाता है। उसका पढ़ना बीच में से छीनना इस पूरी कवायद से बुरा होगा।
+     scrollY का अपने आप बदलना आदमी नहीं माना जाता, क्योंकि ऊपर की सामग्री
+     बढ़ने पर ब्राउज़र ख़ुद भी पन्ने को सँभालता है। */
+  var jad = document.documentElement;
 
-    var laao = function () {
-      if (chhua) return;
-      lakshya.scrollIntoView({ block: 'start', behavior: 'auto' });
+  /* लक्ष्य को चिपके पट्टे के ठीक नीचे, बिना किसी चाल के। */
+  function lakshyaParRakho(el) {
+    var chahiye = window.scrollY + el.getBoundingClientRect().top
+                - parseFloat(getComputedStyle(el).scrollMarginTop || 0);
+    chahiye = Math.max(0, Math.round(chahiye));
+    if (Math.abs(chahiye - window.scrollY) < 1) return;
+    var pehle = jad.style.scrollBehavior;
+    jad.style.scrollBehavior = 'auto';      // यह सुधार दिखना ही नहीं चाहिए
+    window.scrollTo(0, chahiye);
+    jad.style.scrollBehavior = pehle;
+  }
+
+  /* avadhi मिलीसेकंड तक लक्ष्य को उसकी जगह पर टिकाए रखिए। सुधार तीन मौक़ों
+     पर लगता है : हर फ़्रेम पर, पन्ने की ऊँचाई बदलने पर, और किसी तस्वीर के
+     लदने पर। अकेला फ़्रेम काफ़ी नहीं था, क्योंकि नाप उसके बाद होती है।
+     pehleThamneDo सही हो तो पहले उस सरकन के थमने का इंतज़ार होता है जो लिंक
+     दबाने पर CSS ख़ुद चलाता है; उसे बीच में तोड़ना झटका लगता। */
+  function lakshyaKoTikao(el, avadhi, pehleThamneDo) {
+    if (!el) return;
+    var chhodo = false;
+    var chhodDo = function () { chhodo = true; };
+    var ghatnaen = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
+    ghatnaen.forEach(function (g) { window.addEventListener(g, chhodDo, { passive: true }); });
+
+    /* ऊँचाई बदलने की ख़बर ResizeObserver से उसी क्षण मिलती है, नाप हो चुकने
+       के बाद पर रंग भरने से पहले। requestAnimationFrame उससे पहले चलता है,
+       इसलिए अकेले उसके भरोसे रहने पर एक फ़्रेम ग़लत जगह पर छप जाता था :
+       तस्वीर लदी, पन्ना बढ़ा, और सुधार अगले फ़्रेम में आया। वही झलक दिखती थी। */
+    var nazar = null;
+    if (window.ResizeObserver) {
+      nazar = new ResizeObserver(function () {
+        if (chhodo || pehleThamneDo) return;
+        lakshyaParRakho(el);
+      });
+      try { nazar.observe(document.body); } catch (e) { nazar = null; }
+    }
+    /* पन्ना बढ़ता सबसे ज़्यादा तब है जब कोई तस्वीर लदती है। उसकी ख़बर सीधे
+       यहीं ले लीजिए, ताकि सुधार उसी घड़ी लगे और एक फ़्रेम भी ग़लत जगह पर
+       न छपे। capture पर, क्योंकि load बुलबुले की तरह ऊपर नहीं आता। */
+    var tasveerLadi = function () { if (!chhodo && !pehleThamneDo) lakshyaParRakho(el); };
+    document.addEventListener('load', tasveerLadi, true);
+
+    var nazarHatao = function () {
+      if (nazar) { nazar.disconnect(); nazar = null; }
+      document.removeEventListener('load', tasveerLadi, true);
     };
 
-    // एक बार जब सब कुछ लद जाए, और एक बार उसके थोड़ी देर बाद, क्योंकि
-    // आँकड़े गूगल शीट से आते हैं और वे सबसे आख़िर में बैठते हैं।
-    window.addEventListener('load', function () {
-      laao();
-      setTimeout(function () { laao(); window.removeEventListener('wheel', dekho); }, 1200);
+    var shuru = null, pichhlaY = null, thamaFrame = 0;
+    var ghadi = function (ab) {
+      if (shuru === null) shuru = ab;
+      if (chhodo || ab - shuru > avadhi) {
+        ghatnaen.forEach(function (g) { window.removeEventListener(g, chhodDo); });
+        nazarHatao();
+        return;
+      }
+      if (pehleThamneDo) {
+        // लगातार तीन फ़्रेम जगह न बदले, तभी सरकन थमी मानी जाती है
+        if (pichhlaY !== null && Math.abs(window.scrollY - pichhlaY) < 1) thamaFrame++;
+        else thamaFrame = 0;
+        pichhlaY = window.scrollY;
+        if (thamaFrame >= 3) lakshyaParRakho(el);
+      } else {
+        lakshyaParRakho(el);
+      }
+      requestAnimationFrame(ghadi);
+    };
+    requestAnimationFrame(ghadi);
+  }
+
+  function hashKaLakshya() {
+    if (!window.location.hash || window.location.hash === '#') return null;
+    try { return document.querySelector(window.location.hash); } catch (e) { return null; }
+  }
+
+  (function () {
+    var el = hashKaLakshya();
+    if (el) {
+      lakshyaParRakho(el);
+      lakshyaKoTikao(el, 1800, false);
+      window.addEventListener('load', function () { lakshyaParRakho(el); });
+    }
+
+    // पन्ने के भीतर का लिंक : सरकन CSS चलाता है, हम सिर्फ़ उसके थमने पर
+    // बची हुई चूक सुधारते हैं, ताकि बढ़ती सामग्री उसे बहका न दे।
+    document.addEventListener('click', function (ev) {
+      var a = ev.target.closest && ev.target.closest('a[href^="#"]');
+      if (!a) return;
+      var h = a.getAttribute('href');
+      if (!h || h === '#') return;
+      var t;
+      try { t = document.querySelector(h); } catch (e) { return; }
+      if (t) lakshyaKoTikao(t, 2500, true);
+    }, true);
+
+    window.addEventListener('hashchange', function () {
+      var t = hashKaLakshya();
+      if (t) lakshyaKoTikao(t, 1500, true);
     });
   }());
 
