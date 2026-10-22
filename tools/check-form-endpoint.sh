@@ -23,9 +23,39 @@ if printf '%s' "$body" | grep -q '"ok"'; then
   # Require the version marker, not merely a stats object: an older script
   # returns stats without it, and would otherwise look healthy.
   if printf '%s' "$stats" | grep -q '"version"'; then
-    ver=$(printf '%s' "$stats" | grep -o '"version":[0-9]*' | head -1)
-    echo "✅ stats endpoint live  (${ver:-version not reported})"
+    live=$(printf '%s' "$stats" | grep -o '"version":[0-9]*' | head -1 | grep -o '[0-9]*')
+    echo "✅ stats endpoint live  (version ${live:-?})"
     printf '   %s\n' "$(printf '%s' "$stats" | head -c 260)"
+
+    # Reporting the version is not the same as running the current one. Three
+    # times now a deploy looked done while the endpoint kept serving the code
+    # it was last pointed at, and the only way to see it was to read the number
+    # and compare it by hand. So compare it here.
+    here=$(dirname "$0")
+    src="$here/../google-apps-script/Code.gs"
+    want=$(grep -o 'CODE_VERSION *= *[0-9]*' "$src" 2>/dev/null | grep -o '[0-9]*' | head -1)
+    if [ -n "$want" ] && [ -n "$live" ]; then
+      if [ "$live" -lt "$want" ]; then
+        echo
+        echo "❌ the deployment is BEHIND the repository."
+        echo "     live endpoint : version $live"
+        echo "     Code.gs here  : version $want"
+        echo "   The new code was written but is not being served. Redeploy:"
+        echo "     1. Sheet > Extensions > Apps Script"
+        echo "        Select all, delete, paste google-apps-script/Code.gs, Ctrl+S."
+        echo "        Confirm the file now reads  var CODE_VERSION = $want;"
+        echo "     2. Deploy > Manage deployments > pencil (edit)"
+        echo "        Version:  New version    <-- leaving the old number here"
+        echo "                                     is what makes Deploy a no-op"
+        echo "     3. Deploy, then re-run this script."
+        exit 1
+      fi
+      if [ "$live" -gt "$want" ]; then
+        echo "⚠️  the endpoint runs version $live, newer than Code.gs here ($want)."
+        echo "   Someone edited the script in the browser without committing it."
+        echo "   Copy the editor's code back into google-apps-script/Code.gs."
+      fi
+    fi
   else
     if printf '%s' "$stats" | grep -q '"stats"'; then
       echo "⚠️  stats work, but this is an older script (no version marker,"

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="ls-logo-title">
-  <title id="ls-logo-title">लोकसंकल्प — नशे की सामाजिक स्वीकृति के विरुद्ध जनआंदोलन</title>
+  <title id="ls-logo-title">लोकसंकल्प : नशे की सामाजिक स्वीकृति के विरुद्ध जनआंदोलन</title>
   <defs>
     <linearGradient id="ringA" gradientUnits="userSpaceOnUse" x1="17" y1="231" x2="495" y2="231">
       <stop offset="0" stop-color="#E8730C"/>
@@ -32,7 +32,11 @@
     <text font-size="23" fill="#17307A" letter-spacing="0.4">
       <textPath href="#arcTop" startOffset="50%" text-anchor="middle">नशे की सामाजिक स्वीकृति के विरुद्ध</textPath>
     </text>
-    <text x="256" y="98" font-size="18" fill="#E8730C" text-anchor="middle" letter-spacing="1.5">— जनआंदोलन —</text>
+    <text x="256" y="98" font-size="18" fill="#E8730C" text-anchor="middle" letter-spacing="1.5">जनआंदोलन</text>
+    <g stroke="#E8730C" stroke-width="2" stroke-linecap="round">
+      <line x1="176" y1="92" x2="200" y2="92"/>
+      <line x1="312" y1="92" x2="336" y2="92"/>
+    </g>
   </g>
 
   <g id="lg-scene">

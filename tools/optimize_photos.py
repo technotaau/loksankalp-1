@@ -16,6 +16,7 @@ DIR = os.path.join(ROOT, 'assets/img/photos')
 # down until the large WebP lands near 100 KB. The 800px WebP is what a phone
 # actually downloads; the JPEG exists only for browsers without WebP.
 VARIANTS = [(760, 'webp', 72), (1400, 'webp', 70), (1400, 'jpg', 72)]
+BUDGET = 120 * 1024        # per variant; what a slow connection can afford
 force = '--force' in sys.argv
 
 
@@ -43,10 +44,17 @@ def main():
                 if fmt == 'webp':
                     v.save(out, 'WEBP', quality=q, method=6)
                 else:
-                    v.save(out, 'JPEG', quality=q, optimize=True, progressive=True)
+                    # The JPEG is only a fallback for browsers without WebP, but
+                    # a detail-dense crowd photograph can blow past the budget at
+                    # the tuned quality. Step down until it fits rather than ship
+                    # a 160 KB fallback to whoever has the oldest phone.
+                    for jq in range(q, 44, -6):
+                        v.save(out, 'JPEG', quality=jq, optimize=True, progressive=True)
+                        if os.path.getsize(out) <= BUDGET:
+                            break
                 kb = os.path.getsize(out) / 1024
                 total += os.path.getsize(out)
-                flag = '  ← over 120 KB' if kb > 120 else ''
+                flag = '  ← over budget' if os.path.getsize(out) > BUDGET else ''
                 print(f'  {os.path.basename(out):42} {kb:6.0f} KB{flag}')
     print(f'\nvariants total: {total/1024:.0f} KB')
 

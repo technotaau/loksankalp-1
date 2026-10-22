@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#17307a">
+<meta name="description" content="संकल्प साथी का भीतरी नमूना। सार्वजनिक नहीं।">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<title>संकल्प साथी : भीतरी नमूना</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Tiro+Devanagari+Hindi&display=swap">
+
+<style>
+/* बनावट : फ़ोन के लिए एक ही स्तंभ, बड़े छूने लायक़ बटन, और हर पर्दे पर
+   एक ही काम। रंग अभियान के अपने tokens से, गहरे रूप के लिए दोबारा चुने हुए। */
+:root{
+  --bg:#fffdf8; --surface:#ffffff; --surface-2:#f4f6fb; --line:#e3e6ef;
+  --ink:#16192b; --soft:#4a5068; --faint:#8189a3;
+  --brand:#17307a; --brand-soft:#eaeefb; --on-brand:#ffffff;
+  --accent:#c25c05; --accent-soft:#fdf0e3;
+  --crit:#b3261e; --crit-bg:#fdecea; --crit-ink:#7c1a14;
+  --warn:#8a5a00; --warn-bg:#fdf3df;
+  --ok:#1b7a34; --ok-soft:#e8f4ea;
+  --head:"Tiro Devanagari Hindi","Noto Serif Devanagari",Georgia,serif;
+  --body:"Noto Sans Devanagari",system-ui,-apple-system,sans-serif;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#12131c; --surface:#1a1c27; --surface-2:#222534; --line:#2e3242;
+    --ink:#e9ecf5; --soft:#aeb5c9; --faint:#7f87a0;
+    --brand:#8fa6e8; --brand-soft:#1b2136; --on-brand:#12131c;
+    --accent:#d9761a; --accent-soft:#2a1d10;
+    --crit:#f07167; --crit-bg:#2e1614; --crit-ink:#ffc9c2;
+    --warn:#e0a53a; --warn-bg:#2b2211;
+    --ok:#5cc274; --ok-soft:#142a1a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#12131c; --surface:#1a1c27; --surface-2:#222534; --line:#2e3242;
+  --ink:#e9ecf5; --soft:#aeb5c9; --faint:#7f87a0;
+  --brand:#8fa6e8; --brand-soft:#1b2136; --on-brand:#12131c;
+  --accent:#d9761a; --accent-soft:#2a1d10;
+  --crit:#f07167; --crit-bg:#2e1614; --crit-ink:#ffc9c2;
+  --warn:#e0a53a; --warn-bg:#2b2211;
+  --ok:#5cc274; --ok-soft:#142a1a;
+}
+html{-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+body{background:var(--bg); color:var(--ink); font-family:var(--body);
+     font-size:17px; line-height:1.7; margin:0;
+     padding-block:1.25rem 3rem; padding-left:1rem; padding-right:1rem;
+     -webkit-text-size-adjust:100%}
+.app{max-width:30rem; margin:0 auto; display:flex; flex-direction:column; gap:1rem}
+.wide{max-width:46rem; margin:2.5rem auto 0; display:flex; flex-direction:column; gap:1rem}
+h1,h2{font-family:var(--head); font-weight:400; margin:0; line-height:1.3; text-wrap:balance}
+h1{font-size:1.9rem}
+h2{font-size:1.3rem}
+p{margin:0}
+button{font-family:var(--body); font-size:1rem; cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+
+.top{display:flex; align-items:center; gap:.7rem}
+.mark{width:40px;height:40px;border-radius:12px;background:var(--brand);color:var(--on-brand);
+      display:grid;place-items:center;font-family:var(--head);font-size:1.3rem;flex:0 0 auto}
+.tag{display:inline-block;background:var(--accent-soft);color:var(--accent);
+     border-radius:999px;padding:.25rem .7rem;font-size:.72rem;font-weight:700;letter-spacing:.04em}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+      padding:1.1rem 1.15rem;display:flex;flex-direction:column;gap:.8rem}
+.note{font-size:.85rem;color:var(--faint);line-height:1.55}
+
+.big{width:100%;border:0;border-radius:var(--r);padding:1.05rem 1.1rem;
+     background:var(--brand);color:var(--on-brand);font-weight:700;font-size:1.08rem;
+     display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:60px}
+.big.alt{background:var(--surface);color:var(--ink);border:2px solid var(--line)}
+.big.warnb{background:var(--crit);color:#fff}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.topic{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);
+       padding:.95rem .7rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+       min-height:112px;justify-content:center;color:var(--ink);text-align:center}
+.topic svg{width:34px;height:34px;stroke:var(--accent);fill:none;stroke-width:1.7;
+           stroke-linecap:round;stroke-linejoin:round}
+.topic span{font-weight:700;font-size:.95rem;line-height:1.3;text-wrap:balance}
+.topic:active{border-color:var(--accent);background:var(--accent-soft)}
+
+.ask{display:flex;gap:.5rem;align-items:stretch}
+.ask input{flex:1;min-width:0;border:2px solid var(--line);border-radius:var(--r);
+           padding:.85rem .9rem;font-size:1rem;font-family:var(--body);
+           background:var(--surface);color:var(--ink)}
+.mic{flex:0 0 auto;width:58px;border:2px solid var(--line);border-radius:var(--r);
+     background:var(--surface);display:grid;place-items:center}
+.mic svg{width:24px;height:24px;stroke:var(--brand);fill:none;stroke-width:1.8;
+         stroke-linecap:round;stroke-linejoin:round}
+
+.bubble{background:var(--brand-soft);border-radius:var(--r);padding:.9rem 1rem;
+        font-size:1.02rem;line-height:1.65}
+.answer{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--accent);
+        border-radius:var(--r);padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.6rem}
+.answer .src{font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+.answer.gen{border-left-color:var(--brand)} .answer.gen .src{color:var(--brand)}
+
+.alarm{background:var(--crit-bg);border:2px solid var(--crit);border-radius:var(--r);
+       padding:1.1rem;display:flex;flex-direction:column;gap:.85rem;color:var(--crit-ink)}
+.alarm h2{color:var(--crit)}
+.caut{background:var(--warn-bg);border:2px solid var(--warn);border-radius:var(--r);
+      padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.6rem}
+
+.lines{display:flex;flex-direction:column;gap:.5rem}
+.line{display:flex;align-items:center;gap:.7rem;background:var(--surface);
+      border:1px solid var(--line);border-radius:12px;padding:.6rem .8rem}
+.line b{font-family:var(--head);font-size:1.4rem;color:var(--ink);
+        font-variant-numeric:tabular-nums;flex:0 0 auto;min-width:4.6rem}
+.line span{font-size:.88rem;color:var(--soft);line-height:1.4;flex:1;min-width:0}
+.line button{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);
+             border-radius:9px;padding:.4rem .6rem;font-size:.8rem;flex:0 0 auto}
+
+.bar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;
+     background:var(--surface-2);border-radius:12px;padding:.6rem .75rem;font-size:.85rem}
+.bar b{font-variant-numeric:tabular-nums}
+.speaking{display:inline-flex;gap:3px;align-items:flex-end;height:14px}
+.speaking i{width:3px;background:var(--accent);border-radius:2px;animation:eq .9s ease-in-out infinite}
+.speaking i:nth-child(2){animation-delay:.15s} .speaking i:nth-child(3){animation-delay:.3s}
+@keyframes eq{0%,100%{height:4px}50%{height:14px}}
+@media (prefers-reduced-motion:reduce){.speaking i{animation:none;height:9px}}
+
+.flow{display:flex;flex-direction:column;gap:.45rem}
+.fs{display:grid;grid-template-columns:1.7rem 1fr;gap:.7rem;align-items:start;font-size:.92rem}
+.fs b{font-family:var(--head);color:var(--accent);font-weight:400;font-size:1.05rem}
+.fs.off b{color:var(--faint)}
+.fs.off{color:var(--soft)}
+hr{border:none;border-top:1px solid var(--line);margin:.2rem 0}
+ul{margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:.35rem}
+li{line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="top">
+    <div class="mark">सं</div>
+    <div style="flex:1;min-width:0">
+      <h1>संकल्प साथी</h1>
+      <span class="tag">भीतरी नमूना · सार्वजनिक नहीं</span>
+    </div>
+  </div>
+
+  <!-- पर्दा 0 : शुरुआत और मशीन होने की घोषणा -->
+  <section id="s-start" class="card">
+    <p style="font-size:1.05rem">यह लोकसंकल्प का साथी है। नशे के बारे में जो पूछना हो, पूछिए। जवाब बोलकर सुनाया जाएगा।</p>
+    <button class="big" id="b-start">शुरू कीजिए</button>
+    <p class="note">दबाते ही आवाज़ चालू होगी। फ़ोन का साइलेंट बंद कर लीजिए।</p>
+  </section>
+
+  <!-- पर्दा 1 : उम्र का फाटक -->
+  <section id="s-age" class="card" hidden>
+    <h2>एक बात पहले</h2>
+    <p id="age-q" style="font-size:1.05rem">क्या आपकी उम्र 18 साल से कम है?</p>
+    <div class="pair">
+      <button class="big alt" data-age="1">हाँ, कम है</button>
+      <button class="big alt" data-age="0">नहीं, 18 से ऊपर</button>
+    </div>
+    <p class="note">यह इसलिए पूछा जाता है कि 18 से कम उम्र वालों को मशीन का बनाया हुआ जवाब कभी नहीं दिया जाता। उन्हें सिर्फ़ मंज़ूर किया हुआ जवाब और इंसान तक का रास्ता मिलता है।</p>
+  </section>
+
+  <!-- पर्दा 2 : मुख्य -->
+  <section id="s-home" class="card" hidden>
+    <p id="home-lead" style="font-size:1.02rem">किस बारे में पूछना है? किसी भी डिब्बे पर उँगली रखिए, वह ख़ुद बोलेगा।</p>
+    <div class="grid" id="topics"></div>
+    <hr>
+    <p class="note" style="font-weight:700;color:var(--ink);font-size:.95rem">या अपने शब्दों में पूछिए</p>
+    <div class="ask">
+      <input id="q" type="text" placeholder="यहाँ लिखिए" autocomplete="off" aria-label="अपना सवाल लिखिए">
+      <button class="mic" id="b-mic" aria-label="बोलकर पूछिए" title="बोलकर पूछिए">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg>
+      </button>
+    </div>
+    <button class="big" id="b-ask">पूछिए</button>
+  </section>
+
+  <!-- पर्दा 3 : पुष्टि -->
+  <section id="s-confirm" class="card" hidden>
+    <span class="tag">पुष्टि</span>
+    <p class="note">यह वही क़दम है जो ग़लत सुने हुए सवाल को ग़लत जवाब बनने से रोकता है।</p>
+    <div class="bubble" id="heard"></div>
+    <div class="pair">
+      <button class="big" id="b-yes">हाँ, यही</button>
+      <button class="big alt" id="b-no">नहीं</button>
+    </div>
+  </section>
+
+  <!-- पर्दा 4 : जवाब -->
+  <section id="s-out" class="card" hidden>
+    <div id="out"></div>
+    <button class="big alt" id="b-again">दूसरा सवाल पूछिए</button>
+  </section>
+
+  <div class="bar" id="statusbar">
+    <span id="st">तैयार</span>
+  </div>
+</div>
+
+<div class="wide">
+  <div class="card">
+    <h2>यह पन्ना क्या है</h2>
+    <div class="flow" id="legend"></div>
+    <hr>
+    <p class="note"><b style="color:var(--ink)">जवाब अभी मंज़ूर नहीं हैं।</b> यहाँ जो जवाब दिखते हैं वे दिखाने भर के लिए लिखे गए हैं। असली जवाब केंद्र से मंज़ूर होकर आएँगे, और ऊँचे जोखिम वाले जवाब चिकित्सक से जँचकर।</p>
+    <p class="note">सवालों का मिलान 124 सवालों पर चल रहा है, जो टीम के भेजे दस्तावेज़ से बने हैं। <code>loksankalp.org/sawal</code> से अब तक आए आठ असली सवालों पर नापकर देखा गया कि यह मिलान आठ में से सिर्फ़ एक पर सही जोड़ निकालता है। इसीलिए पुष्टि का क़दम और साफ़ इनकार, दोनों ज़रूरी हैं।</p><p class="note"><b style="color:var(--ink)">यह पता किसी को आम तौर पर मत भेजिए।</b> पन्ना खोज के नतीजों में नहीं आता, पर पता जानने वाला इसे खोल सकता है।</p>
+  </div>
+  <div class="card">
+    <h2>जँचे हुए नंबर</h2>
+    <div class="lines" id="lines2"></div>
+    <p class="note">ये पाँच सरकारी स्रोतों से जाँचे गए हैं। बीकानेर से फ़ोन करके जाँचना अभी बाक़ी है। 181 और 1800-11-2356 जान बूझकर नहीं रखे गए।</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var BANK=[];
+  var state={age:null, cand:null, sample:null, voice:null, started:false, sankatBheja:false};
+
+  /* ======================================================================
+     संकट पर जिस इंसान तक बात पहुँचेगी। सिर्फ़ यही चार पंक्तियाँ भरनी हैं।
+
+     naam और number खाली हों तो पर्दे पर सिर्फ़ सरकारी नंबर दिखते हैं और
+     केंद्र वाला डिब्बा आता ही नहीं। यह जान-बूझकर है : आधा भरा नाम दिखाने
+     से कुछ न दिखाना बेहतर है, क्योंकि संकट में आदमी उसी पर भरोसा करेगा।
+     ====================================================================== */
+  var SANKAT = {
+    naam:   '',                 // जैसे : डॉ. अमुक अमुक
+    pad:    '',                 // जैसे : परामर्शदाता, नई किरण नशा मुक्ति केंद्र
+    number: '',                 // दस अंक, बिना +91
+    waada:  '24 घंटे, हर दिन'
+  };
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbw5DbR-p0ech2BN7RwQ3LDVu9iFLYuawX7Pa7ph5-MVJFz0NAgi-aT-6UsC6T1fFlCwbw/exec';
+
+  var LINES=[
+    ['112','किसी भी आपात स्थिति में'],
+    ['14446','नशा मुक्ति हेल्पलाइन, 24 घंटे'],
+    ['14416','टेली मानस, मन की तकलीफ़'],
+    ['1098','बच्चों के लिए'],
+    ['108','एंबुलेंस, राजस्थान']
+  ];
+
+  var ICON={
+    gharwale:'<path d="M4 20v-7l8-6 8 6v7"/><path d="M9 20v-5h6v5"/>',
+    chhodna:'<path d="M12 3v7"/><path d="M5.6 8.6a9 9 0 1 0 12.8 0"/>',
+    bachche:'<circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/>',
+    sharab:'<path d="M5 4h14l-7 8z"/><path d="M12 12v6"/><path d="M8.5 20h7"/>',
+    tambaku:'<rect x="3" y="11" width="14" height="5" rx="1.5"/><path d="M19 9c1.2.9 1.2 2.1 0 3"/><path d="M20 16h1"/>',
+    samaj:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.6 2.6 14.4 0 17"/>'
+  };
+  var TOPICS=[
+    {k:'gharwale', t:'घर में कोई नशा करता है', say:'घर में कोई नशा करता है',  pick:'FAM_001'},
+    {k:'chhodna',  t:'नशा छोड़ना है',          say:'नशा छोड़ना है',          pick:'QUIT_001'},
+    {k:'bachche',  t:'बच्चे और पढ़ाई',          say:'बच्चे और पढ़ाई',          pick:'PAR_001'},
+    {k:'sharab',   t:'शराब',                   say:'शराब',                   pick:'ALC_001'},
+    {k:'tambaku',  t:'बीड़ी, गुटखा, तंबाकू',    say:'बीड़ी, गुटखा और तंबाकू',  pick:'TOB_001'},
+    {k:'samaj',    t:'समाज और रिवाज़',          say:'समाज और रिवाज़',          pick:'SOC_001'}
+  ];
+
+  /* दिखाने भर के जवाब। असली जवाब केंद्र से मंज़ूर होकर आएँगे। */
+  var ANS={
+    'FAM_001':'जो छोड़ना ही नहीं चाहता, उसे ज़बरदस्ती नहीं छुड़ाया जा सकता, पर उसके आसपास की बात बदली जा सकती है। पहली बात, पीने के बाद बहस मत कीजिए, वह बेकार जाती है। सुबह शांत समय चुनिए और यह कहिए कि आप डरती हैं, न कि यह कि वह ग़लत है। दूसरी, नशे के लिए पैसे देना बंद कीजिए, पर खाना और इलाज बंद मत कीजिए। और तीसरी, नज़दीकी नशा मुक्ति केंद्र से आप ख़ुद एक बार बात कर लीजिए, चाहे वे साथ चलने को तैयार न हों। और अगर मारपीट होती है तो यह घर की बात नहीं रह जाती, मदद लीजिए।',
+    'QUIT_001':'छोड़ने का पहला क़दम तारीख़ तय करना है। एक दिन चुनिए जो दो हफ़्ते के भीतर हो, और घर में किसी एक आदमी को बता दीजिए। उस दिन से पहले घर से नशे का सामान हटा दीजिए। और यह याद रखिए कि कुछ नशे अचानक छोड़ना ख़तरनाक होता है, इसलिए शुरू करने से पहले एक बार डॉक्टर से पूछ लेना सबसे अच्छा रहता है।',
+    'TOB_001':'बीड़ी और सिगरेट छोड़ने में सबसे मुश्किल पहले तीन दिन होते हैं, और तलब आमतौर पर पाँच से दस मिनट में अपने आप उतर जाती है। उस वक़्त पानी पीजिए, टहल आइए, या सौंफ़ मुँह में रखिए। दूसरी बात, जिस समय आप सबसे ज़्यादा पीते थे उसी समय कोई दूसरा काम रख लीजिए। और तीसरी, घर को पूरी तरह धुआँ मुक्त कर दीजिए, इससे आपके साथ घर के बाक़ी लोगों का भी बचाव होता है।',
+    'SOC_001':'सामाजिक स्वीकृति का मतलब है समाज का यह मान लेना कि नशा करना सामान्य बात है। जब शादी में शराब परोसी जाती है, जब मेहमान को गुटखा की मनुहार की जाती है, जब बीड़ी को बड़े होने की निशानी माना जाता है, तब नशा अपराध नहीं, रिवाज़ बन जाता है। यही लोकसंकल्प की मुख्य बात है। नशा छुड़ाना एक आदमी का काम है, पर स्वीकृति हटाना पूरे गाँव का। और स्वीकृति हटते ही अगली पीढ़ी तक नशा पहुँचना अपने आप कम हो जाता है।',
+    'ALC_001':'लत बन जाने की पहचान मात्रा से नहीं, क़ाबू से होती है। चार बातें देखिए। एक, जितना सोचकर बैठते हैं उससे ज़्यादा पी जाते हैं। दो, छोड़ने की कोशिश की और टिक नहीं पाए। तीन, न मिले तो बेचैनी, हाथ कांपना या नींद न आना होता है। चार, पीने के कारण काम, पैसा या घर का रिश्ता बिगड़ रहा है फिर भी पीना जारी है। इनमें से दो भी हों तो यह शौक़ नहीं रह गया है। एक बार किसी जानकार से बात कर लीजिए।',
+    'PAR_001':'अचानक बदलाव पर ध्यान दीजिए, एक चीज़ पर नहीं। पैसे की माँग बढ़ना, दोस्त पूरी तरह बदल जाना, कमरे में अकेले रहना, नींद और भूख का बिगड़ना, पढ़ाई छूटना। इनमें से तीन चार बातें एक साथ दिखें तो बात करने का समय है। बात आरोप से नहीं, सवाल से शुरू कीजिए, और उसे addict कहकर मत पुकारिए।',
+    'EDU_001':'लत वह हालत है जिसमें आदमी चाहकर भी रुक नहीं पाता। आदत और लत में फ़र्क़ क़ाबू का है। आदत वह है जिसे आप चाहें तो छोड़ सकते हैं। लत में छोड़ने का इरादा होता है पर शरीर और मन दोनों बेचैन हो जाते हैं, और आदमी नुक़सान जानते हुए भी करता रहता है। यह दिमाग़ में होने वाला असली बदलाव है, चरित्र की कमी नहीं। इसीलिए इसे बीमारी माना जाता है, और बीमारी का इलाज होता है।',
+    'REL_001':'दोबारा शुरू हो जाना हार नहीं है। ज़्यादातर लोग दो तीन बार कोशिश करने के बाद ही छोड़ पाते हैं। जो हुआ उसे छिपाइए मत, बल्कि यह देखिए कि किस मौक़े पर हुआ, किसके साथ हुआ, और किस समय हुआ। वही तीन बातें अगली बार से बचाती हैं।'
+  };
+
+  /* ---------- बोलना ---------- */
+  function pickVoice(){
+    var vs=(window.speechSynthesis&&speechSynthesis.getVoices())||[];
+    var hi=vs.filter(function(v){return /^hi(\b|-)/i.test(v.lang||'')});
+    return hi[0]||null;
+  }
+  function say(text, done){
+    if(!window.speechSynthesis){ if(done)done(); return; }
+    try{ speechSynthesis.cancel(); }catch(e){}
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang='hi-IN'; u.rate=0.86; u.pitch=1;
+    if(!state.voice) state.voice=pickVoice();
+    if(state.voice) u.voice=state.voice;
+    u.onstart=function(){ status('बोल रहा है', true) };
+    u.onend=function(){ status('तैयार'); if(done)done() };
+    u.onerror=function(){ status('आवाज़ नहीं चली'); if(done)done() };
+    try{ speechSynthesis.speak(u); }catch(e){ if(done)done(); }
+  }
+  function status(t, speaking){
+    $('st').innerHTML = speaking
+      ? '<span class="speaking"><i></i><i></i><i></i></span> &nbsp;'+t
+      : t;
+  }
+
+  /* ---------- मिलान ---------- */
+  /* गाँव से आने वाले सवाल अक्सर रोमन अक्षरों में आते हैं। जो आठ असली सवाल
+     अब तक आए, उनमें से तीन रोमन में थे। इसलिए मिलान से पहले नशों के नाम
+     और कुछ आम शब्द देवनागरी में बदल दिए जाते हैं। */
+  var ROMAN={
+    nasha:'नशा', nashe:'नशा', nasha:'नशा', sharab:'शराब', sarab:'शराब',
+    daru:'शराब', alcohol:'शराब', drink:'शराब', drinking:'शराब', wine:'शराब',
+    beer:'शराब', gutkha:'गुटखा', gutka:'गुटखा', guthka:'गुटखा', khaini:'खैनी',
+    tambaku:'तंबाकू', tambakhu:'तंबाकू', tamakhu:'तंबाकू', tobacco:'तंबाकू',
+    bidi:'बीड़ी', beedi:'बीड़ी', cigarette:'सिगरेट', sigret:'सिगरेट',
+    smoking:'सिगरेट', charas:'चरस', ganja:'गांजा', gaanja:'गांजा',
+    bhang:'भांग', afeem:'अफ़ीम', afim:'अफ़ीम', opium:'अफ़ीम', amal:'अफ़ीम',
+    doda:'डोडा', post:'पोस्त', chitta:'चिट्टा', smack:'स्मैक', ladka:'बेटा',
+    beta:'बेटा', beti:'बेटी', bacha:'बच्चा', bachcha:'बच्चा', bachche:'बच्चे',
+    pati:'पति', patni:'पत्नी', papa:'पिता', ghar:'घर', pariwar:'परिवार',
+    parivar:'परिवार', dost:'दोस्त', school:'स्कूल', college:'कॉलेज',
+    chhodna:'छोड़ना', chodna:'छोड़ना', chhodne:'छोड़ना', lat:'लत',
+    aadat:'आदत', adat:'आदत', ilaj:'इलाज', dawa:'दवा', doctor:'डॉक्टर',
+    peena:'पीना', pine:'पीना', pita:'पीना', khana:'खाना', tension:'तनाव',
+    gussa:'गुस्सा', nind:'नींद', neend:'नींद', madad:'मदद', kaise:'कैसे',
+    kya:'क्या', kyon:'क्यों', vyakti:'व्यक्ति', aadmi:'आदमी',
+    anand:'आनंद', ghinn:'घिन', ghin:'घिन', sharam:'शर्म', dar:'डर',
+    karne:'करना', karta:'करना', vale:'वाला', wale:'वाला', khane:'खाना',
+    lene:'लेना', aata:'आना', aati:'आना', kabhi:'कभी', apne:'अपना',
+    saman:'समान', bimari:'बीमारी', nuksan:'नुक़सान', fayda:'फ़ायदा'
+  };
+  function roman(q){
+    return (q||'').replace(/[A-Za-z]+/g, function(w){
+      var k=w.toLowerCase();
+      return ROMAN[k] ? ROMAN[k] : w;
+    });
+  }
+
+  var STOP=('का की के को में से है हैं और या पर कि यह वह ये एक कोई कुछ नहीं ना तो ही भी अगर जब तक लिए '+
+            'क्या कैसे कौन कब क्यों मैं मेरा मुझे हम आप इस उस अपने अपना रहा रही रहे कर करना किया होता '+
+            'होती हो जो बहुत साथ करें करूं क्या वाला आना होना लेना अपना कभी').split(' ');
+  var SW={}; STOP.forEach(function(w){SW[w]=1});
+  function toks(s){
+    s=roman(s||'').toLowerCase().replace(/[^ऀ-ॿa-z0-9]+/g,' ');
+    var o=[],p=s.split(' ');
+    for(var i=0;i<p.length;i++){
+      var w=p[i]; if(w.length<2||SW[w]) continue;
+      o.push(w); if(w.length>5) o.push(w.slice(0,5));
+    }
+    return o;
+  }
+  var DOCS=[], DF={}, Nd=0, IDF={}, AVG=1, TF=[];
+  var KOSH=[], KD=[], KS=[], KN=0, KIDF={}, KAVG=1, KTF=[];
+  function index(){
+    DOCS=BANK.map(function(b){return toks(b.q+' '+b.v)});
+    Nd=DOCS.length; DF={};
+    DOCS.forEach(function(d){ var seen={}; d.forEach(function(w){ if(!seen[w]){seen[w]=1; DF[w]=(DF[w]||0)+1} }) });
+    IDF={}; for(var w in DF) IDF[w]=Math.log(1+(Nd-DF[w]+0.5)/(DF[w]+0.5));
+    AVG=DOCS.reduce(function(a,d){return a+d.length},0)/Nd;
+    TF=DOCS.map(function(d){ var t={}; d.forEach(function(w){t[w]=(t[w]||0)+1}); return t });
+  }
+  /* पुस्तिकाओं का कोश : 1,198 टुकड़े, सोलह पुस्तिकाओं के 452 पन्नों से।
+     हर टुकड़े के साथ लिखा है कि वह किस पुस्तिका के किस पन्ने से आया। */
+  function indexKosh(){
+    KD=KOSH.map(function(c){ return toks(c.h+' '+c.x) });
+    KS=KD.map(function(d){ var o={}; d.forEach(function(w){o[w]=1}); return o });
+    KN=KD.length; var kdf={};
+    KS.forEach(function(o){ for(var w in o) kdf[w]=(kdf[w]||0)+1 });
+    KIDF={}; for(var w in kdf) KIDF[w]=Math.log(1+(KN-kdf[w]+0.5)/(kdf[w]+0.5));
+    KAVG=KD.reduce(function(a,d){return a+d.length},0)/KN;
+    KTF=KD.map(function(d){ var t={}; d.forEach(function(w){t[w]=(t[w]||0)+1}); return t });
+  }
+  function searchKosh(q){
+    if(!KN) return {i:-1, cover:0, got:0};
+    var qt=toks(q), qs={}, k;
+    qt.forEach(function(w){ qs[w]=1 });
+    var best=-1, bs=0;
+    for(var i=0;i<KN;i++){
+      var dl=KD[i].length, sc=0;
+      for(var j=0;j<qt.length;j++){
+        var f=KTF[i][qt[j]]||0;
+        if(f) sc+=(KIDF[qt[j]]||0)*(f*2.5)/(f+1.5*(0.25+0.75*dl/KAVG));
+      }
+      sc *= (KOSH[i].w||1);
+      if(sc>bs){bs=sc;best=i}
+    }
+    if(best<0) return {i:-1, cover:0, got:0};
+    var tot=0, got=0, n=0;
+    for(k in qs){ var w8=(KIDF[k]||1); tot+=w8; if(KTF[best][k]){ got+=w8; n++ } }
+    return {i:best, cover: tot? got/tot : 0, got:n};
+  }
+  /* क्रम BM25 से लगता है, पर स्वीकार करने का फ़ैसला ढकाव से होता है :
+     सवाल के अपने शब्दों में से कितने उस जोड़ में सचमुच मौजूद हैं। यह 0 से
+     1 के बीच रहता है, इसलिए इसकी सीमा का कोई मतलब बनता है। */
+  function search(q){
+    var qt=toks(q), best=-1, bs=0, qs={}, k;
+    qt.forEach(function(w){ qs[w]=1 });
+    for(var i=0;i<Nd;i++){
+      var dl=DOCS[i].length, sc=0;
+      for(var j=0;j<qt.length;j++){
+        var f=TF[i][qt[j]]||0;
+        if(f) sc+=(IDF[qt[j]]||0)*(f*2.5)/(f+1.5*(0.25+0.75*dl/AVG));
+      }
+      if(sc>bs){bs=sc;best=i}
+    }
+    if(best<0) return {i:-1, cover:0, got:0};
+    var tot=0, got=0, nGot=0;
+    for(k in qs){
+      var w8=(IDF[k]||1);
+      tot+=w8;
+      if(TF[best][k]){ got+=w8; nGot++ }
+    }
+    return {i:best, cover: tot? got/tot : 0, got:nGot};
+  }
+
+  /* ---------- पर्दे ---------- */
+  function show(id){
+    ['s-start','s-age','s-home','s-confirm','s-out'].forEach(function(x){ $(x).hidden = (x!==id) });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  $('b-start').addEventListener('click', function(){
+    state.started=true;
+    show('s-age');
+    say('नमस्कार। यह एक मशीन है, कोई डॉक्टर या काउंसलर नहीं। यह सिर्फ़ जानकारी देती है और राह दिखाती है। '+
+        'एक बात पहले पूछनी है। क्या आपकी उम्र अठारह साल से कम है?');
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-age]'), function(b){
+    b.addEventListener('click', function(){
+      state.age = b.getAttribute('data-age')==='1' ? 'child' : 'adult';
+      buildTopics();
+      $('home-lead').textContent = state.age==='child'
+        ? 'ठीक है। आपके लिए सिर्फ़ मंज़ूर किए हुए जवाब रहेंगे। किस बारे में पूछना है?'
+        : 'किस बारे में पूछना है? किसी भी डिब्बे पर उँगली रखिए, वह ख़ुद बोलेगा।';
+      show('s-home');
+      say(state.age==='child'
+        ? 'ठीक है। आपके लिए सिर्फ़ मंज़ूर किए हुए जवाब रहेंगे, मशीन का बनाया हुआ जवाब नहीं। अब बताइए, किस बारे में पूछना है?'
+        : 'ठीक है। अब बताइए, किस बारे में पूछना है? किसी भी डिब्बे पर उँगली रखिए।');
+    });
+  });
+
+  function buildTopics(){
+    var g=$('topics'); g.innerHTML='';
+    TOPICS.forEach(function(t){
+      var b=document.createElement('button');
+      b.className='topic'; b.type='button';
+      b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+ICON[t.k]+'</svg><span>'+t.t+'</span>';
+      b.addEventListener('click', function(){
+        say(t.say);
+        var hit=null;
+        for(var i=0;i<BANK.length;i++){ if(BANK[i].id===t.pick){ hit=BANK[i]; break; } }
+        if(hit){ state.cand=hit; askConfirm(hit.q); }
+      });
+      g.appendChild(b);
+    });
+  }
+
+  function askConfirm(q){
+    $('heard').textContent='आपने यह पूछा : “'+q+'”';
+    show('s-confirm');
+    setTimeout(function(){ say('मैंने यह समझा। '+q+'  सही है? हाँ या ना।'); }, 650);
+  }
+
+  /* आठ असली सवालों पर नापकर देखा गया कि यह मिलान आठ में से सिर्फ़ एक पर
+     सही जोड़ निकालता है। इसलिए कमज़ोर मेल पर कोई अंदाज़ा नहीं लगाया जाता :
+     साफ़ कह दिया जाता है कि समझ नहीं आया, और डिब्बे दिखा दिए जाते हैं। */
+  /* 0.40 और कम से कम दो शब्द। यह सीमा उन आठ असली सवालों पर नापकर चुनी गई
+     है जो loksankalp.org/sawal से आए : आठ में से सात ठीक से छँट जाते हैं,
+     और जो एक ग़लत निकल आता है उसे पुष्टि का क़दम पकड़ लेता है। */
+  var PAKKA=0.40, KAM_SE_KAM=2, KOSH_PAKKA=0.45;
+
+  /* कोश वाला रास्ता सवाल-सूची को छोड़ देता है, इसलिए ख़तरे की छँटाई सीधे
+     सवाल के शब्दों पर भी करनी पड़ती है, वरना फाटक बच निकलेगा। */
+  var AAPAT=['बेहोश','होश नहीं','उठ नहीं','सांस','साँस','दौरा','दौरे','झाग','ओवरडोज','overdose',
+             'आत्महत्या','खुदकुशी','मर जाऊ','मर जाउ','जान दे','खत्म कर द','ख़त्म कर द','मार रहा',
+             'मारपीट','हिंसा','खून','लहू','seizure','fits','जहर','ज़हर','नस काट'];
+  var UNCHA=['गर्भ','गर्भवती','pregnan','दवा','दवाई','गोली','मात्रा','dose','खुराक',
+             'withdrawal','कंपकंपी','काँप','कांप','घर पर छुड़','detox','इंजेक्शन','सुई',
+             'डिप्रेशन','depression','मानसिक रोग'];
+  function hasAny(q, list){
+    var t=roman(q||'').toLowerCase();
+    for(var i=0;i<list.length;i++) if(t.indexOf(list[i])>=0) return true;
+    return false;
+  }
+  function ask(q){
+    if(!q){ say('कुछ लिखिए या बोलिए, फिर पूछिए।'); return; }
+    /* पहला फाटक : ख़तरे के शब्द सीधे सवाल में। यह सूची से पहले चलता है। */
+    if(hasAny(q, AAPAT)){ state.cand={id:'',c:'',r:'Emergency',q:q}; answer(state.cand); return; }
+    var hi = hasAny(q, UNCHA);
+    var r=search(q);
+    if(r.i>=0 && r.cover>=PAKKA && r.got>=KAM_SE_KAM){
+      state.cand=BANK[r.i];
+      if(hi && state.cand.r!=='Emergency') state.cand={id:BANK[r.i].id,c:BANK[r.i].c,r:'High',q:BANK[r.i].q};
+      askConfirm(state.cand.q);
+      return;
+    }
+    if(hi){ state.cand={id:'',c:'',r:'High',q:q}; answer(state.cand); return; }
+    /* सूची में नहीं मिला। अब अभियान की अपनी पुस्तिकाओं में देखिए। */
+    var k=searchKosh(q);
+    if(k.i>=0 && k.cover>=KOSH_PAKKA && k.got>=KAM_SE_KAM){
+      state.cand={id:'',c:'',r:'',q:q,kosh:KOSH[k.i]};
+      askConfirmKosh(q, KOSH[k.i]);
+      return;
+    }
+    notUnderstood(q);
+  }
+
+  function askConfirmKosh(q, c){
+    $('heard').innerHTML = 'आपने पूछा : <b>'+esc(q)+'</b><br><br>'+
+      'पुस्तिका <b>'+esc(c.t)+'</b> में इस बारे में यह लिखा है :<br>«'+esc(c.h||'')+'»';
+    show('s-confirm');
+    setTimeout(function(){
+      say('आपने पूछा, '+q+'  इस बारे में पुस्तिका '+c.t+' में लिखा हुआ है। सुनाऊँ? हाँ या ना।');
+    }, 600);
+  }
+  $('b-ask').addEventListener('click', function(){ ask($('q').value.trim()) });
+
+  function notUnderstood(q){
+    var out=$('out'); out.innerHTML=''; show('s-out');
+    var k=el('div','caut');
+    k.appendChild(el('h2',null,'मुझे यह समझ नहीं आया'));
+    k.appendChild(el('p',null,'आपने पूछा : <b>'+esc(q)+'</b>'));
+    k.appendChild(el('p',null,'मैं अंदाज़े से कोई जवाब नहीं दूँगा, क्योंकि ग़लत जवाब न देने से बुरा होता है। नीचे के डिब्बों में से चुनिए, या <b>14446</b> पर नशा मुक्ति हेल्पलाइन से बात कीजिए।'));
+    out.appendChild(k);
+    out.appendChild(linesBox());
+    say('मुझे यह समझ नहीं आया। मैं अंदाज़े से जवाब नहीं दूँगा। डिब्बों में से चुनिए, या चौदह हज़ार चार सौ छियालीस पर बात कीजिए।');
+  }
+  function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML }
+  $('q').addEventListener('keydown', function(e){ if(e.key==='Enter') $('b-ask').click(); });
+
+  /* माइक। Android के Chrome पर एक बार में एक ही वाक्य लिया जा सकता है,
+     और iPhone पर home screen से खोलने पर यह चलता ही नहीं। इसलिए हर हाल
+     में लिखकर पूछने का रास्ता खुला रखा गया है। */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var rec=null, listening=false;
+  if(!SR){ $('b-mic').title='इस ब्राउज़र में बोलकर पूछना नहीं चलता'; }
+  $('b-mic').addEventListener('click', function(){
+    if(!SR){
+      say('इस फ़ोन के ब्राउज़र में बोलकर पूछना नहीं चलता। लिखकर पूछिए।');
+      $('q').focus(); return;
+    }
+    if(listening){ try{ rec.stop() }catch(e){} return; }
+    try{ speechSynthesis.cancel() }catch(e){}
+    rec = new SR();
+    rec.lang='hi-IN'; rec.interimResults=false; rec.maxAlternatives=1;
+    rec.onstart=function(){ listening=true; $('b-mic').style.borderColor='var(--crit)'; status('सुन रहा है, बोलिए') };
+    rec.onresult=function(ev){
+      var t='';
+      try{ t=ev.results[0][0].transcript||'' }catch(e){}
+      $('q').value=t;
+      status('तैयार');
+      if(t.trim()) ask(t.trim());
+    };
+    rec.onerror=function(ev){
+      status('तैयार');
+      var c=(ev && ev.error)||'';
+      if(c==='not-allowed'||c==='service-not-allowed'){
+        say('माइक की इजाज़त नहीं मिली। ब्राउज़र की सेटिंग में माइक चालू कीजिए, या लिखकर पूछिए।');
+      } else if(c==='no-speech'){
+        say('कुछ सुनाई नहीं दिया। दोबारा दबाकर बोलिए।');
+      } else {
+        say('अभी सुन नहीं पाया। लिखकर पूछिए।');
+      }
+    };
+    rec.onend=function(){ listening=false; $('b-mic').style.borderColor=''; if(status) status('तैयार') };
+    try{ rec.start() }catch(e){ listening=false; say('माइक चालू नहीं हो पाया। लिखकर पूछिए।') }
+  });
+
+  $('b-no').addEventListener('click', function(){
+    say('ठीक है। डिब्बों में से चुनिए, या दोबारा लिखिए।');
+    show('s-home');
+  });
+  $('b-again').addEventListener('click', function(){ $('q').value=''; show('s-home'); });
+
+  $('b-yes').addEventListener('click', function(){ answer(state.cand); });
+
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
+  function linesBox(){
+    var d=el('div','lines');
+    LINES.forEach(function(L){
+      var row=el('div','line');
+      row.appendChild(el('b',null,L[0]));
+      row.appendChild(el('span',null,L[1]));
+      var c=el('button',null,'नक़ल');
+      c.addEventListener('click', function(){
+        try{ navigator.clipboard.writeText(L[0]).then(function(){c.textContent='हो गया'},function(){c.textContent=L[0]}); }
+        catch(e){ c.textContent=L[0]; }
+      });
+      row.appendChild(c); d.appendChild(row);
+    });
+    return d;
+  }
+
+  /* केंद्र के नामज़द इंसान का डिब्बा। नंबर छूते ही फ़ोन मिलता है, और
+     नक़ल का बटन इसलिए है कि संकट में नंबर याद नहीं रहता। */
+  function kendraBox(){
+    if(!SANKAT.number || !SANKAT.naam) return null;
+    var d=el('div','card');
+    d.style.border='2px solid var(--ok)';
+    d.appendChild(el('div','src','केंद्र से सीधे बात'));
+    d.querySelector('.src').style.color='var(--ok)';
+    d.appendChild(el('p',null,'<b>'+esc(SANKAT.naam)+'</b>'+(SANKAT.pad? '<br><span class="note">'+esc(SANKAT.pad)+'</span>':'')));
+    var row=el('div','line');
+    var a=document.createElement('a');
+    a.href='tel:'+SANKAT.number; a.textContent=SANKAT.number;
+    a.style.cssText='font-family:var(--head);font-size:1.5rem;color:var(--ink);text-decoration:none;flex:0 0 auto';
+    row.appendChild(a);
+    row.appendChild(el('span',null,esc(SANKAT.waada)));
+    var cp=el('button',null,'नक़ल');
+    cp.addEventListener('click', function(){
+      try{ navigator.clipboard.writeText(SANKAT.number).then(function(){cp.textContent='हो गया'},
+            function(){cp.textContent=SANKAT.number}); }catch(e){ cp.textContent=SANKAT.number; }
+    });
+    row.appendChild(cp); d.appendChild(row);
+    return d;
+  }
+
+  /* वापस फ़ोन : सिर्फ़ तभी, जब आदमी ख़ुद बटन दबाकर नंबर लिखे। बिना दबाए
+     कुछ भी नहीं भेजा जाता और कहीं कुछ दर्ज नहीं होता। */
+  function callbackBox(rasta){
+    var d=el('div','card');
+    d.style.border='1px solid var(--line)';
+    var b=el('button','big alt','मुझे केंद्र से फ़ोन करवाइए');
+    var form=el('div',null,''); form.hidden=true;
+    form.style.cssText='display:flex;flex-direction:column;gap:.6rem';
+    var inp=document.createElement('input');
+    inp.type='tel'; inp.inputMode='numeric'; inp.id='sankat-mob';
+    inp.placeholder='आपका मोबाइल नंबर';
+    inp.setAttribute('aria-label','आपका मोबाइल नंबर');
+    inp.style.cssText='border:2px solid var(--line);border-radius:var(--r);padding:.85rem .9rem;'+
+                      'font-size:1.05rem;font-family:var(--body);background:var(--surface);color:var(--ink)';
+    var send=el('button','big','भेजिए');
+    var msg=el('p','note','');
+    form.appendChild(el('p','note','नंबर के सिवा कुछ नहीं भेजा जाता। न नाम, न आपका सवाल।'));
+    form.appendChild(inp); form.appendChild(send); form.appendChild(msg);
+    b.addEventListener('click', function(){
+      b.hidden=true; form.hidden=false; inp.focus();
+      say('अपना मोबाइल नंबर लिखिए। केंद्र से आपको फ़ोन किया जाएगा।');
+    });
+    send.addEventListener('click', function(){
+      var m=(inp.value||'').replace(/\D/g,'');
+      if(m.length<10){ msg.textContent='पूरा दस अंकों का नंबर लिखिए।'; return; }
+      if(state.sankatBheja){ msg.textContent='भेज चुके हैं।'; return; }
+      send.disabled=true; msg.textContent='भेजा जा रहा है...';
+      fetch(ENDPOINT, {method:'POST', body: JSON.stringify({
+        form:'sankat', reqId:'sk-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),
+        values:{ rasta: rasta, mobile: m, kahan: 'saathi-nmuna' }
+      })}).then(function(r){ return r.json() }).then(function(res){
+        if(res && res.ok){
+          state.sankatBheja=true;
+          form.innerHTML='';
+          form.appendChild(el('p',null,'<b>भेज दिया गया।</b> केंद्र से आपको फ़ोन किया जाएगा। '+
+            'तब तक ऊपर दिया नंबर आप ख़ुद भी मिला सकते हैं।'));
+          say('भेज दिया गया। केंद्र से आपको फ़ोन किया जाएगा।');
+        } else {
+          send.disabled=false;
+          msg.textContent='अभी नहीं भेजा जा सका। ऊपर दिया नंबर ख़ुद मिलाइए।';
+        }
+      }).catch(function(){
+        send.disabled=false;
+        msg.textContent='अभी नहीं भेजा जा सका। ऊपर दिया नंबर ख़ुद मिलाइए।';
+      });
+    });
+    d.appendChild(b); d.appendChild(form);
+    return d;
+  }
+
+  function answer(c){
+    var out=$('out'); out.innerHTML=''; show('s-out');
+
+    /* 1. आपातकाल : जवाब बनाया ही नहीं जाता */
+    if(c.r==='Emergency'){
+      var a=el('div','alarm');
+      a.appendChild(el('h2',null,'यह रुकने की बात नहीं है'));
+      a.appendChild(el('p',null,'अभी किसी बड़े को बुलाइए और नीचे दिया नंबर मिलाइए। मैं इस पर कोई सलाह नहीं दूँगा।'));
+      a.appendChild(linesBox());
+      out.appendChild(a);
+      var kb1=kendraBox(); if(kb1) out.appendChild(kb1);
+      out.appendChild(callbackBox('आपातकाल'));
+      if(!SANKAT.number) out.appendChild(el('p','note',
+        'केंद्र का अपना नंबर अभी इस पन्ने में नहीं डाला गया है, इसलिए ऊपर सिर्फ़ सरकारी नंबर दिख रहे हैं।'));
+      var bol='यह रुकने की बात नहीं है। अभी किसी बड़े को बुलाइए। एक सौ बारह मिलाइए। एक सौ बारह। '+
+              'या एक सौ आठ पर एंबुलेंस बुलाइए। मैं इस पर कोई सलाह नहीं दूँगा।';
+      if(SANKAT.number && SANKAT.naam){
+        bol += ' केंद्र से सीधे बात करनी हो तो '+SANKAT.naam+' को फ़ोन कीजिए। नंबर पर्दे पर लिखा है।';
+      }
+      say(bol);
+      return;
+    }
+
+    /* 2. ऊँचा जोखिम : छोटी चेतावनी और इंसान का रास्ता */
+    if(c.r==='High'){
+      var w=el('div','caut');
+      w.appendChild(el('h2',null,'इस पर इंसान से बात कीजिए'));
+      w.appendChild(el('p',null,'यह सवाल उन में है जिन पर मशीन को सलाह नहीं देनी चाहिए। इसमें दवा, मात्रा, गर्भावस्था या सुरक्षा का मामला हो सकता है।'));
+      w.appendChild(el('p',null,'<b>14446</b> नशा मुक्ति हेल्पलाइन पर बात कीजिए, या नई किरण नशा मुक्ति केंद्र आइए।'));
+      out.appendChild(w);
+      var kb2=kendraBox(); if(kb2) out.appendChild(kb2);
+      out.appendChild(linesBox());
+      out.appendChild(callbackBox('ऊँचा जोखिम'));
+      say('इस पर मैं सलाह नहीं दूँगा। यह उन सवालों में है जिन पर इंसान से बात करनी चाहिए। '+
+          'चौदह हज़ार चार सौ छियालीस पर नशा मुक्ति हेल्पलाइन से बात कीजिए।');
+      return;
+    }
+
+    /* 3. अभियान की अपनी पुस्तिका से */
+    if(c.kosh){
+      var kb=el('div','answer');
+      kb.appendChild(el('div','src','पुस्तिका से · '+esc(c.kosh.t)+' · पन्ना '+c.kosh.p));
+      if(c.kosh.h) kb.appendChild(el('p',null,'<b>'+esc(c.kosh.h)+'</b>'));
+      kb.appendChild(el('p',null,esc(c.kosh.x)));
+      out.appendChild(kb);
+      out.appendChild(el('p','note','यह अभियान की अपनी पुस्तिका का पाठ है, जस का तस। '+
+        'मशीन ने इसे बनाया नहीं, सिर्फ़ ढूँढकर पढ़ा है। पूरी पुस्तिका '+
+        '<a href="../sansadhan.html">सामग्री केंद्र</a> में है।'));
+      say((c.kosh.h? c.kosh.h+'। ':'')+c.kosh.x);
+      return;
+    }
+
+    /* 4. लिखा हुआ मंज़ूर जवाब */
+    var text = ANS[c.id];
+    if(text){
+      var b=el('div','answer');
+      b.appendChild(el('div','src','कोश से · '+(c.id||'')));
+      b.appendChild(el('p',null,text));
+      out.appendChild(b);
+      out.appendChild(el('p','note','यह जवाब नमूने के लिए लिखा गया है। असली जवाब केंद्र से मंज़ूर होकर आएगा।'));
+      say(text);
+      return;
+    }
+
+    /* 4. कोश में नहीं। बच्चों को कभी नहीं बनाया जाता। */
+    if(state.age==='child'){
+      var k=el('div','caut');
+      k.appendChild(el('h2',null,'इसका जवाब कोश में नहीं है'));
+      k.appendChild(el('p',null,'आपकी उम्र 18 से कम है, इसलिए मशीन इसका जवाब बनाकर नहीं देगी। यह नियम जान बूझकर रखा गया है।'));
+      k.appendChild(el('p',null,'अपने शिक्षक से, घर के किसी बड़े से, या <b>1098</b> पर बात कीजिए।'));
+      out.appendChild(k);
+      out.appendChild(linesBox());
+      say('इसका जवाब कोश में नहीं है। आपकी उम्र अठारह से कम है, इसलिए मैं इसका जवाब बनाकर नहीं दूँगा। '+
+          'अपने शिक्षक से या घर के किसी बड़े से बात कीजिए। या दस अट्ठानबे मिलाइए।');
+      return;
+    }
+
+    /* सूची में सवाल है पर मंज़ूर जवाब अभी लिखा नहीं गया : तब भी हार मत
+       मानिए, पहले अभियान की अपनी पुस्तिकाओं में देख लीजिए। */
+    var kk = searchKosh(c.q || '');
+    if(kk.i>=0 && kk.cover>=KOSH_PAKKA && kk.got>=KAM_SE_KAM){
+      answer({id:'', c:'', r:'', q:c.q, kosh:KOSH[kk.i]});
+      return;
+    }
+
+    var n=el('div','caut');
+    n.appendChild(el('h2',null,'इस सवाल का जवाब अभी लिखा नहीं गया'));
+    n.appendChild(el('p',null,'यह सवाल कोश में है, पर इसका मंज़ूर जवाब अभी तैयार नहीं हुआ। मैं अपने मन से जवाब नहीं बनाऊँगा।'));
+    n.appendChild(el('p',null,'<b>14446</b> नशा मुक्ति हेल्पलाइन पर बात कीजिए, या नई किरण नशा मुक्ति केंद्र, राजकीय डूंगर महाविद्यालय, बीकानेर आइए।'));
+    out.appendChild(n);
+    out.appendChild(linesBox());
+    say('इस सवाल का मंज़ूर जवाब अभी तैयार नहीं हुआ। मैं अपने मन से जवाब नहीं बनाऊँगा। '+
+        'चौदह हज़ार चार सौ छियालीस पर बात कीजिए।');
+  }
+
+  /* ---------- नीचे की समझाइश ---------- */
+  var LEG=[
+    [1,'मशीन होने की घोषणा पहले दस सेकंड में, आवाज़ में',1],
+    [2,'उम्र का फाटक : 18 से कम पर बनाया हुआ जवाब कभी नहीं',1],
+    [3,'बड़े चिह्न वाले बटन, हर बटन ख़ुद बोलता है',1],
+    [4,'बोलकर पूछना, हिंदी में',1],
+    [5,'रोमन अक्षरों में लिखा सवाल भी पकड़ में आता है',1],
+    [6,'पुष्टि का क़दम : मशीन जो समझी वह दोहराकर पूछती है',1],
+    [7,'ठीक से समझ न आए तो अंदाज़ा नहीं, साफ़ इनकार',1],
+    [8,'जोखिम का फाटक : आपातकाल पर जवाब बनता ही नहीं',1],
+    [9,'जवाब हिंदी में बोलकर सुनाया जाता है',1],
+    [10,'जँचे हुए सरकारी नंबर, छूकर नक़ल करने लायक़',1],
+    [11,'अभियान की सोलहों पुस्तिकाओं से जवाब, पन्ने का हवाला देकर',1],
+    [12,'ख़तरे के शब्द सीधे सवाल में भी पकड़े जाते हैं',1],
+    [13,'मंज़ूर जवाब : 124 में से 8 लिखे गए हैं, बाक़ी बाक़ी हैं',0],
+    [14,'संकट पर केंद्र के नामज़द इंसान का नंबर, और मर्ज़ी से वापस फ़ोन',1],
+    [15,'कोश से न मिले तो बनाया हुआ जवाब : जान बूझकर बंद है',0]
+  ];
+  var lg=$('legend');
+  LEG.forEach(function(L){
+    var d=el('div','fs'+(L[2]?'':' off'));
+    d.appendChild(el('b',null,L[2]?'✓':'·'));
+    d.appendChild(el('span',null,L[1]));
+    lg.appendChild(d);
+  });
+  var l2=$('lines2'); var lb=linesBox(); while(lb.firstChild) l2.appendChild(lb.firstChild);
+
+  /* ---------- तैयारी ---------- */
+  if(window.speechSynthesis){
+    pickVoice();
+    speechSynthesis.onvoiceschanged=function(){ state.voice=pickVoice() };
+  }
+  show('s-start');
+  status('कोश पढ़ा जा रहा है');
+  $('b-start').disabled=true;
+  fetch('bank.json', {cache:'no-cache'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json() })
+    .then(function(j){
+      BANK=j; index(); $('b-start').disabled=false; status('तैयार');
+      return fetch('kosh.json', {cache:'default'})
+        .then(function(r){ if(!r.ok) throw 0; return r.json() })
+        .then(function(k){ KOSH=k; indexKosh(); });
+    })
+    .catch(function(){
+      status('कोश नहीं खुला');
+      $('b-start').disabled=false;
+      $('b-start').textContent='कोश नहीं खुला, दोबारा खोलिए';
+    });
+})();
+</script>
+</body>
+</html>
