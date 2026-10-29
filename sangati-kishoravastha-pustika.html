@@ -22,9 +22,17 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/logo-mark.svg">
 <link rel="manifest" href="site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Tiro+Devanagari+Hindi&display=swap">
+<link rel="preload" href="assets/fonts/noto-sans-devanagari-400-devanagari.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<!-- जावास्क्रिप्ट है या नहीं, यह CSS को रंग भरने से पहले बता दीजिए।
+     मेन्यू बिना JS के खुली सूची की तरह दिखता है, ताकि वह तब भी काम करे।
+     पर JS होने पर वह सूची बंद होती थी तभी, जब js/site.js आ पहुँचता :
+     धीमे 3G पर नौ से साढ़े सत्रह सेकंड बाद। तब तक चौदह लिंक पन्ने को
+     नीचे धकेले रखते और फिर पूरा पन्ना तीन-चौथाई पर्दा ऊपर कूद जाता।
+     नापा तो CLS 0.94 से 1.02 निकला, जबकि "ख़राब" की सीमा 0.25 है।
+     यह पंक्ति head में है, इसलिए पहली बार रंग भरने से पहले चलती है और
+     कूद पड़ती ही नहीं। बिना JS वाला रास्ता जस का तस है। -->
+<script>document.documentElement.className += ' js';</script>
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/site.css">
 </head>

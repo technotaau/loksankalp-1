@@ -121,9 +121,14 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .nav-toggle[aria-expanded="true"] .nav-toggle__open { display: none; }
 .nav-toggle[aria-expanded="true"] .nav-toggle__close { display: block; }
 
+/* बिना जावास्क्रिप्ट मेन्यू खुली सूची रहता है, वरना उस पाठक के पास पन्ने
+   बदलने का कोई रास्ता नहीं बचता। पहले यह सूची तभी बंद होती थी जब
+   js/site.js आकर बटन को [hidden] से बाहर निकालता; तब तक वह पन्ने को नीचे
+   धकेले रखती और फिर सब कुछ ऊपर कूदता। अब .js वर्ग head में ही लग जाता है,
+   इसलिए सूची पहली बार रंग भरने से पहले ही बंद हो चुकी होती है। */
 .site-nav { display: block; }
-.nav-toggle:not([hidden]) ~ .site-nav { display: none; }
-.nav-toggle:not([hidden]) ~ .site-nav[data-open="true"] {
+.js .site-nav { display: none; }
+.js .site-nav[data-open="true"] {
   display: block;
   /* Header height varies with how the brand tagline wraps, so it is measured
      at runtime rather than hardcoded; 72px is only the pre-JS fallback. */
@@ -195,7 +200,7 @@ strong { font-weight: 700; color: var(--ls-blue-dark); }
 .action-bar a:last-child { border-right: 0; }
 .action-bar a:hover, .action-bar a:focus-visible { background: var(--ls-blue); color: #fff; }
 .action-bar svg { width: 22px; height: 22px; }
-.action-bar--pledge { background: var(--ls-saffron); }
+.action-bar--pledge { background: var(--ls-saffron-cta); }
 body { padding-bottom: 68px; }
 @media (min-width: 70rem) {
   .action-bar { display: none; }
@@ -293,8 +298,8 @@ body { padding-bottom: 68px; }
 .btn svg { width: 22px; height: 22px; }
 .btn:hover { transform: translateY(-2px); }
 .btn:active { transform: translateY(0); }
-.btn--primary { background: var(--ls-saffron); color: #fff; box-shadow: 0 4px 14px rgba(232,115,12,.3); }
-.btn--primary:hover { background: var(--ls-saffron-dk); color: #fff; }
+.btn--primary { background: var(--ls-saffron-cta); color: #fff; box-shadow: 0 4px 14px rgba(168,79,4,.3); }
+.btn--primary:hover { background: var(--ls-saffron-cta-dk); color: #fff; }
 .btn--secondary { background: var(--ls-blue-dark); color: #fff; }
 .btn--secondary:hover { background: var(--ls-blue); color: #fff; }
 .btn--ghost { background: #fff; color: var(--ls-blue-dark); border-color: var(--ls-blue-dark); }
@@ -320,8 +325,10 @@ body { padding-bottom: 68px; }
 }
 .journey__ic svg { width: 30px; height: 30px; }
 .journey b { display: block; font-size: 1.2rem; font-family: var(--ls-font-head); }
-.journey span { font-size: .93rem; opacity: .92; line-height: 1.5; }
-.journey--pledge { background: var(--ls-saffron); }
+/* opacity अक्षरों को पीछे के रंग में घोल देता है : 0.92 पर भी सफ़ेद
+   केसरी में घुलकर 4.45:1 रह जाता था, चाहिए 4.5:1। पूरा सफ़ेद रखिए। */
+.journey span { font-size: .93rem; line-height: 1.5; }
+.journey--pledge { background: var(--ls-saffron-cta); }
 .journey--sabha  { background: var(--ls-blue-dark); }
 .journey--help   { background: var(--ls-green); }
 
@@ -610,7 +617,9 @@ body { padding-bottom: 68px; }
 /* Gallery: a caption's second line, and the district filter. The filter is
    hidden in the markup and shown by script, so with no JavaScript every photo
    stays on the page instead of leaving dead buttons behind. */
-.photo__meta { display: block; margin-top: .15rem; font-size: .82rem; opacity: .8; }
+/* opacity: .8 अक्षरों को पन्ने के रंग में घोल देता था और अनुपात गिरा
+   देता था। रंग सीधा दीजिए, धुँधलाइए मत। */
+.photo__meta { display: block; margin-top: .15rem; font-size: .82rem; color: var(--ls-ink-soft); }
 .photo-grid .photo a { display: block; border-radius: var(--ls-radius); }
 .photo-grid .photo a:focus-visible { outline: 3px solid var(--ls-saffron); outline-offset: 3px; }
 .filters {
