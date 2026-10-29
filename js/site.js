@@ -1859,8 +1859,11 @@
         track('form_bhara', { form: outId });
         if (window.LOKSANKALP_REFRESH_STATS) window.LOKSANKALP_REFRESH_STATS();
       }).catch(function (err) {
+        /* सर्वर ने ख़ुद कारण बताया हो तो वही दिखाइए : "यह खाना भरना ज़रूरी
+           है : मोबाइल नंबर" आदमी को वह बात बताता है जो वह सुधार सकता है।
+           अपना बनाया हुआ संदेश उसकी जगह रख देना उससे यह मौक़ा छीन लेता है। */
         setStatus(form, err && err.fatal
-          ? 'यह फ़ॉर्म अभी सेवा से जुड़ा नहीं है। कृपया थोड़ी देर बाद प्रयास करें, अथवा info@loksankalp.org पर भेज दें।'
+          ? (err.kaha || 'यह फ़ॉर्म अभी सेवा से जुड़ा नहीं है। कृपया थोड़ी देर बाद प्रयास करें, अथवा info@loksankalp.org पर भेज दें।')
           : err && err.slow
             ? 'इंटरनेट धीमा लग रहा है। कृपया दोबारा भेजें।'
             : 'अभी सहेजा नहीं जा सका। कृपया दोबारा भेजें।', 'error');
@@ -1879,13 +1882,15 @@
           .then(function (r) { return r.json(); })
           .then(function (res) {
             if (res && res.ok) return res;
-            /* The script answering "अज्ञात फ़ॉर्म" means it is running a
-               version that predates this form. That is a settled answer, not
-               a queue: retrying it five times makes the person wait most of a
-               minute to be told the same thing. Fail at once and say what is
-               actually wrong. */
-            if (res && res.message === 'अज्ञात फ़ॉर्म') throw { fatal: true };
-            throw { slow: false };
+            /* सर्वर ने JSON में जवाब दे दिया, यानी उसने सोच-समझकर मना किया :
+               कोई ज़रूरी खाना ख़ाली है, या आयोजन बीत चुका है, या फ़ॉर्म का नाम
+               वह नहीं जानता। यह क़तार नहीं, तय जवाब है। पहले इनमें से सिर्फ़
+               "अज्ञात फ़ॉर्म" तुरंत रुकता था और बाक़ी सब पाँच बार दोहराए जाते
+               थे : आदमी इक्यावन सेकंड रुककर "दोबारा भेजें" पढ़ता, और दोबारा
+               भेजने पर वही मना फिर मिलता। अब सर्वर की कही बात उसी घड़ी
+               दिखाई जाती है। दोहराना वहीं बचा है जहाँ उसका मतलब है : जब
+               जवाब आया ही नहीं, या बीच में टूट गया। */
+            throw { fatal: true, kaha: (res && res.message) || '' };
           })
           .catch(function (err) {
             if (err && err.fatal) throw err;

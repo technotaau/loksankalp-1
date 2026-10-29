@@ -1181,3 +1181,16 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
    पट्टे की ऊँचाई पर्दे के साथ बदलती है, इसलिए वह js/site.js से नापकर
    --ls-sticky में रखी जाती है। जावास्क्रिप्ट न चले तो 5rem काम चला देता है। */
 main [id] { scroll-margin-top: calc(var(--ls-sticky, 5rem) + .8rem); }
+
+/* सहायता केंद्र की हेल्पलाइन सूची। नंबर अपने आप में एक बटन है, इसलिए पूरी
+   पंक्ति को उँगली भर ऊँचा रखा गया है : परेशानी में आदमी ठीक निशाना नहीं
+   लगा पाता। फ़ोन पर दबाते ही डायलर खुल जाता है। */
+.helplines { list-style: none; padding-left: 0; margin: 0; }
+.helplines li { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .8rem; }
+.helplines li + li { border-top: 1px solid var(--ls-border); }
+.helplines a {
+  display: inline-flex; align-items: center; min-height: var(--ls-tap);
+  font-size: 1.35rem; letter-spacing: .02em; text-decoration: none;
+}
+.helplines a:hover strong, .helplines a:focus-visible strong { text-decoration: underline; }
+.helplines span { color: var(--ls-ink-soft); }

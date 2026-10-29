@@ -49,29 +49,29 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 29;          // bump when this file changes; shown in every response
+var CODE_VERSION = 30;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
-  sankalp:  { tab: 'संकल्प',           fields: ['naam', 'mobile', 'bhumika', 'jila', 'gaon', 'sweecha'] },
-  sabha:    { tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'vidyalaya', 'tithi', 'sankhya', 'samiti', 'report'] },
-  kahani:   { tab: 'सफलता कहानियाँ',   fields: ['shirshak', 'naam', 'mobile', 'gaon', 'jila', 'shreni', 'kahani', 'sahmati'] },
-  shikshak: { tab: 'शिक्षक',           fields: ['naam', 'mobile', 'vidyalaya', 'jila', 'pad', 'yogdan'] },
-  yuva:     { tab: 'युवा क्लब',        fields: ['club', 'naam', 'mobile', 'gaon', 'jila', 'sadasya', 'ruchi'] },
-  samman:   { tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] },
+  sankalp:  { must: ['naam', 'sweecha'], tab: 'संकल्प',           fields: ['naam', 'mobile', 'bhumika', 'jila', 'gaon', 'sweecha'] },
+  sabha:    { must: ['gaon', 'jila', 'vidyalaya', 'tithi', 'sankhya', 'samiti', 'report'], tab: 'ग्राम सभा',        fields: ['gaon', 'block', 'jila', 'vidyalaya', 'tithi', 'sankhya', 'samiti', 'report'] },
+  kahani:   { must: ['shirshak', 'naam', 'kahani', 'sahmati'], tab: 'सफलता कहानियाँ',   fields: ['shirshak', 'naam', 'mobile', 'gaon', 'jila', 'shreni', 'kahani', 'sahmati'] },
+  shikshak: { must: ['naam', 'mobile', 'vidyalaya', 'jila'], tab: 'शिक्षक',           fields: ['naam', 'mobile', 'vidyalaya', 'jila', 'pad', 'yogdan'] },
+  yuva:     { must: ['club', 'naam', 'mobile', 'gaon', 'jila'], tab: 'युवा क्लब',        fields: ['club', 'naam', 'mobile', 'gaon', 'jila', 'sadasya', 'ruchi'] },
+  samman:   { must: ['shreni', 'namit', 'karya', 'naam'], tab: 'सम्मान नामांकन',   fields: ['shreni', 'namit', 'sthan', 'jila', 'karya', 'naam', 'mobile'] },
   sankalp21:{ tab: 'संकल्प 21',         fields: ['naam', 'mobile', 'jila', 'gaon', 'roop', 'sanstha',
                                                  'upvaas', 'sankalp', 'sahmati', 'photoSahmati'] },
   karuna21: { tab: 'करुणा 21',          fields: ['naam', 'mobile', 'jila', 'gaon', 'sandesh', 'sahmati'] },
   // regNo is not a form field: the script fills it in under the lock so every
   // certificate carries a number that can be looked up in this sheet.
-  inqlab28: { tab: 'इंकलाब 28',         regPrefix: 'IN28',
+  inqlab28: { must: ['naam', 'mobile', 'upvaasSadasya', 'gaon', 'sahmati'], tab: 'इंकलाब 28',         regPrefix: 'IN28',
               fields: ['regNo', 'naam', 'mobile', 'upvaasSadasya', 'gaon', 'jila',
                        'rajya', 'desh', 'deshAnya', 'sahmati'] },
   /* संकल्प दूत : स्वयंसेवक बनने का पंजीकरण, गांधी जयंती से। यह किसी
      एक दिन का आयोजन नहीं है, इसलिए न CAMPAIGNS में है और न FORM_SHUT में।
      क्रमांक पर regPrefix नहीं लिखा है, इसलिए nextRegNo() का अपना डिफ़ॉल्ट
      लगता है और संख्या LS-0001 बनती है, जैसा प्रमाण-पत्र पर छपना है। */
-  sankalpDoot: { tab: 'संकल्प दूत',
+  sankalpDoot: { must: ['naam', 'mobile', 'gaon', 'bhumika', 'aayuVarg', 'sahmati'], tab: 'संकल्प दूत',
               fields: ['regNo', 'naam', 'mobile', 'aayuVarg', 'bhumika', 'gaon', 'jila',
                        'rajya', 'desh', 'deshAnya', 'sahmati'] },
   /* संकट : संकल्प साथी से आने वाली एकमात्र पंक्ति जो किसी तकलीफ़ में पड़े
@@ -87,7 +87,7 @@ var FORMS = {
   /* नशामुक्त मतदान : दशहरे से पंचायत चुनाव तक। यह संकल्प जगह का है जितना
      व्यक्ति का, इसलिए ब्लॉक भी पूछा जाता है : पंचायत चुनाव ब्लॉक पर लड़े
      जाते हैं और गिनती वहीं काम आती है। */
-  matdan:   { tab: 'नशामुक्त मतदान',
+  matdan:   { must: ['naam', 'mobile', 'gaon', 'jila', 'sahmati'], tab: 'नशामुक्त मतदान',
               fields: ['naam', 'mobile', 'gaon', 'block', 'jila', 'bhumika', 'sahmati'] },
   /* नशामुक्त मतदान संकल्प सभा : गाँव में हुई सभा का पंजीकरण, व्यक्ति का
      संकल्प नहीं। इसीलिए यह अलग फ़ॉर्म और अलग शीट है।
@@ -96,7 +96,7 @@ var FORMS = {
      "नागरिक" में जुड़ती है, ठीक वैसे ही जैसे ग्राम सभा के प्रतिभागी और
      इंकलाब 28 के परिवार सदस्य जुड़ते हैं : फ़ॉर्म एक भरता है, संकल्प कई
      लेते हैं। */
-  matdanSabha: { tab: 'नशामुक्त मतदान सभा',
+  matdanSabha: { must: ['gaon', 'jila', 'tithi', 'sankhya', 'naam', 'mobile', 'sahmati'], tab: 'नशामुक्त मतदान सभा',
               fields: ['gaon', 'block', 'jila', 'tithi', 'sankhya',
                        'naam', 'mobile', 'sahmati'] }
 };
@@ -122,7 +122,11 @@ var SANKAT_EMAIL = '';
    refused is a new row, and the person is told why rather than being left to
    wonder whether it saved. */
 var FORM_SHUT = {
-  inqlab28: Date.UTC(2026, 8, 28, 18, 30)    // 29 सित॰ 00:00 IST
+  inqlab28:    Date.UTC(2026, 8, 28, 18, 30),   // 29 सित॰ 00:00 IST
+  // नशामुक्त मतदान : वही घड़ी जो js/site.js के CAMPAIGNS.matdan.closes में है।
+  // चुनाव की असली तारीख़ तय होने पर दोनों जगह एक साथ बदलिए।
+  matdan:      Date.UTC(2026, 10, 30, 18, 30),  // 1 दिस॰ 00:00 IST
+  matdanSabha: Date.UTC(2026, 10, 30, 18, 30)
 };
 
 // Human-readable column headings.
@@ -143,6 +147,29 @@ var LABELS = {
 
 // ---- entry point ---------------------------------------------------------
 
+/**
+ * पहला ज़रूरी खाना जो ख़ाली है, वरना ''.
+ *
+ * सहमति के डिब्बे पर सिर्फ़ "कुछ है" काफ़ी नहीं : बिना निशान लगाए ब्राउज़र
+ * उसे भेजता ही नहीं, इसलिए उसका ख़ाली आना यही कहता है कि सहमति नहीं दी गई।
+ * गिनती वाले खानों में शून्य या बकवास को भी ख़ाली ही माना जाता है, क्योंकि
+ * count() उन्हें आगे चलकर 0 बना देता है और पंक्ति चुपचाप बेकार बैठ जाती है।
+ */
+function missingFields(spec, values) {
+  if (!spec.must || !spec.must.length) return '';
+  var v = values || {};
+  for (var i = 0; i < spec.must.length; i++) {
+    var f = spec.must[i];
+    var val = String(v[f] === null || v[f] === undefined ? '' : v[f]).trim();
+    if (!val) return LABELS[f] || f;
+    if (f === 'sankhya' || f === 'upvaasSadasya' || f === 'sadasya') {
+      var n = Number(val);
+      if (!isFinite(n) || Math.floor(n) < 1) return LABELS[f] || f;
+    }
+  }
+  return '';
+}
+
 function doPost(e) {
   try {
     if (!e || !e.postData || !e.postData.contents) return reply(false, 'खाली अनुरोध');
@@ -153,6 +180,15 @@ function doPost(e) {
 
     var spec = FORMS[data.form];
     if (!spec) return reply(false, 'अज्ञात फ़ॉर्म');
+
+    // ज़रूरी खाने सचमुच भरे हैं या नहीं। यह जाँच यहाँ इसलिए है कि ब्राउज़र
+    // का required सिर्फ़ ब्राउज़र में चलता है : सीधे इस पते पर भेजा गया
+    // अनुरोध उसे छूता तक नहीं। 20 अक्तूबर को जाँच करते हुए मेरा अपना
+    // ख़ाली अनुरोध पंक्ति बनकर बैठ गया था, और sankhya में कोई भी संख्या
+    // भेजकर मुखपृष्ठ का आँकड़ा हिलाया जा सकता था। दोनों दरवाज़े यही बंद
+    // करता है। सूची spec.must में है और पन्ने के required से मिलती है।
+    var kami = missingFields(spec, data.values);
+    if (kami) return reply(false, 'यह खाना भरना ज़रूरी है : ' + kami);
 
     // बीत चुके आयोजन का फ़ॉर्म। देखिए FORM_SHUT।
     var shutAt = FORM_SHUT[data.form];
