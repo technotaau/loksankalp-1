@@ -957,6 +957,16 @@ legend { font-weight: 700; color: var(--ls-blue-dark); margin-bottom: .6rem; pad
 .footer-grid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
 .footer-contact li { display: grid; grid-template-columns: auto 1fr; gap: .6rem; align-items: start; }
 .footer-contact svg { width: 20px; height: 20px; margin-top: .32rem; color: var(--ls-gold); }
+/* फ़ुटर में हेल्पलाइन का नंबर। वाक्य के बीच बैठा लिंक सिर्फ़ रंग से अलग हो
+   तो रंग न पहचानने वाले को दिखता ही नहीं कि वह दबाया जा सकता है : नापा तो
+   आसपास के पाठ से अंतर 1.14:1 निकला, चाहिए 3:1। रेखा खींचने से वह शर्त
+   रंग के बिना पूरी होती है। ऊँचाई उँगली भर रखी गई है, क्योंकि यह नशा
+   मुक्ति हेल्पलाइन है और हर पन्ने पर यही एक नंबर है। */
+.footer-contact a[href^="tel:"] {
+  display: inline-flex; align-items: center; min-height: var(--ls-tap);
+  text-decoration: underline; text-underline-offset: .22em;
+  font-weight: 700; letter-spacing: .02em;
+}
 /* Needs to outrank `.site-footer ul { display: grid }`, which otherwise
    stacks the icons vertically now that this is a list. */
 .site-footer .socials { display: flex; gap: .6rem; margin-top: .9rem; list-style: none; padding: 0; flex-wrap: wrap; }
