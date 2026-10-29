@@ -32,6 +32,25 @@
     window.dataLayer = window.dataLayer || [];
     var gtag = function () { window.dataLayer.push(arguments); };
     window.gtag = gtag;
+    /* कुकी नहीं। पहले _ga और _ga_<ID> बनती थीं, दो साल की, और पूछे बिना :
+       सहमति माँगने वाला कोई डिब्बा वेबसाइट पर है ही नहीं। Do Not Track का
+       इंतज़ाम ऊपर है और ठीक चलता है, पर Chrome for Android में वह सेटिंग
+       होती ही नहीं, यानी हमारे लगभग सारे पाठकों पर वह कभी नहीं चलता।
+
+       analytics_storage: 'denied' GA4 का अपना रास्ता है : गिनती बिना कुकी
+       के चलती रहती है। कौन-सा पृष्ठ कितनी बार खुला, कहाँ से आए, फ़ोन है या
+       कंप्यूटर, यह सब मिलता रहेगा। सिर्फ़ यह नहीं पता चलेगा कि लौटकर आने
+       वाला वही आदमी है या नया। उस एक आँकड़े के बदले गाँव के आदमी के फ़ोन
+       में दो साल की कुकी न रखना सही सौदा है, और सहमति का डिब्बा भी नहीं
+       दिखाना पड़ता, जो धीमे नेट पर एक और रुकावट ही होता।
+
+       यह config से पहले आना चाहिए, वरना कुकी बन चुकी होती है। */
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied'
+    });
     gtag('js', new Date());
     gtag('config', ID, {
       allow_google_signals: false,

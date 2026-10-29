@@ -520,7 +520,7 @@ body { padding-bottom: 68px; }
 .rail { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; scroll-snap-type: x mandatory; scrollbar-width: thin; }
 .rail > * { flex: 0 0 min(84%, 20rem); scroll-snap-align: start; }
 .story { background: var(--ls-surface); border: 1px solid var(--ls-border); border-radius: var(--ls-radius); overflow: hidden; text-decoration: none; display: block; height: 100%; }
-.story:hover { border-color: #c9d6ff; }
+a.story:hover { border-color: #c9d6ff; }
 .story__thumb {
   position: relative; aspect-ratio: 16 / 9;
   background: linear-gradient(135deg, var(--ls-blue-dark), var(--ls-green));

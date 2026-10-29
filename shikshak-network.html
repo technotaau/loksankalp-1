@@ -81,7 +81,13 @@
 
 <!-- ================= PAGE HEAD ================= -->
 <section class="page-head page-head--photo">
-  <img src="assets/img/photos/vidyalaya-assembly-1400.jpg" alt="" width="887" height="590" fetchpriority="high" decoding="async">
+  <!-- फ़ोन पर 760px वाला रूप काफ़ी है; 1400px भेजना धीमे नेट पर
+       बेकार का बोझ था। बिना webp वाले ब्राउज़र को नीचे का jpg मिलता है। -->
+  <picture>
+    <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/vidyalaya-assembly-760.webp">
+    <source type="image/webp" srcset="assets/img/photos/vidyalaya-assembly-1400.webp">
+    <img src="assets/img/photos/vidyalaya-assembly-1400.jpg" alt="" width="887" height="590" fetchpriority="high" decoding="async">
+  </picture>
 
   <div class="wrap">
     <nav class="crumbs" aria-label="आप कहाँ हैं">
@@ -317,24 +323,21 @@
         <h3>कक्षा में नशामुक्ति संवाद कैसे करें</h3>
         <p>विद्यार्थियों से इस विषय पर सहज और भयमुक्त बातचीत के तरीके।</p>
         <p class="mt-2"><span class="placeholder-note">तिथि शीघ्र घोषित</span></p>
-        <p class="mt-2"><a class="btn btn--ghost" href="#">पंजीकरण<svg aria-hidden="true"><use href="assets/img/icons.svg#ic-arrow-right"></use></svg></a></p>
       </div>
       <div class="card">
         <div class="card__ic"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-calendar"></use></svg></div>
         <h3>अभिभावक संवाद बैठक का संचालन</h3>
         <p>बैठक की तैयारी, विषय-क्रम और अभिभावकों की सहभागिता बढ़ाने के उपाय।</p>
         <p class="mt-2"><span class="placeholder-note">तिथि शीघ्र घोषित</span></p>
-        <p class="mt-2"><a class="btn btn--ghost" href="#">पंजीकरण<svg aria-hidden="true"><use href="assets/img/icons.svg#ic-arrow-right"></use></svg></a></p>
       </div>
       <div class="card">
         <div class="card__ic"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-calendar"></use></svg></div>
         <h3>ग्राम/वार्ड लोकसंकल्प सभा की तैयारी</h3>
         <p>पंचायत के सहयोग से सभा आयोजित करने की चरणबद्ध प्रक्रिया।</p>
         <p class="mt-2"><span class="placeholder-note">तिथि शीघ्र घोषित</span></p>
-        <p class="mt-2"><a class="btn btn--ghost" href="#">पंजीकरण<svg aria-hidden="true"><use href="assets/img/icons.svg#ic-arrow-right"></use></svg></a></p>
       </div>
     </div>
-    <p class="center mt-2"><span class="placeholder-note">वेबिनार कार्यक्रम placeholder है। तिथि तय होने पर अपडेट होगा</span></p>
+    <p class="center mt-2"><span class="placeholder-note">तिथियाँ तय होते ही यहीं दिखेंगी</span></p>
   </div>
 </section>
 

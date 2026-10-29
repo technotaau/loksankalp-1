@@ -81,7 +81,13 @@
 
 <!-- ================= PAGE HEAD ================= -->
 <section class="page-head page-head--photo">
-  <img src="assets/img/photos/tractor-rally-aerial-1400.jpg" alt="" width="1400" height="803" fetchpriority="high" decoding="async">
+  <!-- फ़ोन पर 760px वाला रूप काफ़ी है; 1400px भेजना धीमे नेट पर
+       बेकार का बोझ था। बिना webp वाले ब्राउज़र को नीचे का jpg मिलता है। -->
+  <picture>
+    <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/tractor-rally-aerial-760.webp">
+    <source type="image/webp" srcset="assets/img/photos/tractor-rally-aerial-1400.webp">
+    <img src="assets/img/photos/tractor-rally-aerial-1400.jpg" alt="" width="1400" height="803" fetchpriority="high" decoding="async">
+  </picture>
 
   <div class="wrap">
     <nav class="crumbs" aria-label="ब्रेडक्रम्ब">
@@ -179,36 +185,36 @@
         </span>
       </a>
 
-      <a class="story" href="#">
-        <span class="story__thumb"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-play"></use></svg></span>
+      <div class="story">
+        <span class="story__thumb"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-story"></use></svg></span>
         <span class="story__body">
           <span class="story__tag">नशा छोड़ चुके व्यक्तियों की कहानियाँ</span>
           <b>दोबारा शुरुआत</b>
           <span>नशे से प्रभावित एक व्यक्ति ने उपचार लिया और आज परिवार के साथ सामान्य जीवन जी रहा है।</span>
           <span style="display:block;margin-top:.7rem"><span class="placeholder-note">उदाहरण : वास्तविक कहानी शीघ्र</span></span>
         </span>
-      </a>
+      </div>
 
-      <a class="story" href="#">
-        <span class="story__thumb"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-play"></use></svg></span>
+      <div class="story">
+        <span class="story__thumb"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-story"></use></svg></span>
         <span class="story__body">
           <span class="story__tag">प्रेरक शिक्षक पहल</span>
           <b>कक्षा से गाँव तक</b>
           <span>एक शिक्षक ने विद्यार्थियों के साथ मिलकर अभिभावक संवाद की शुरुआत की।</span>
           <span style="display:block;margin-top:.7rem"><span class="placeholder-note">उदाहरण : वास्तविक कहानी शीघ्र</span></span>
         </span>
-      </a>
+      </div>
 
 
-      <a class="story" href="#">
-        <span class="story__thumb"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-play"></use></svg></span>
+      <div class="story">
+        <span class="story__thumb"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-story"></use></svg></span>
         <span class="story__body">
           <span class="story__tag">मॉडल ग्राम की सफलताएँ</span>
           <b>पूरा गाँव एक संकल्प पर</b>
           <span>ग्राम/वार्ड समिति ने हर सामाजिक आयोजन को नशामुक्त रखने का निर्णय लिया।</span>
           <span style="display:block;margin-top:.7rem"><span class="placeholder-note">उदाहरण : वास्तविक कहानी शीघ्र</span></span>
         </span>
-      </a>
+      </div>
 
     </div>
     <p class="center mt-2"><span class="placeholder-note">जिन कार्डों पर “उदाहरण” लिखा है वे प्रतीकात्मक हैं, उनमें किसी वास्तविक व्यक्ति, परिवार या गाँव का उल्लेख नहीं है</span></p>

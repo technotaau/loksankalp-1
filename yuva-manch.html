@@ -81,7 +81,13 @@
 
 <!-- ================= PAGE HEAD ================= -->
 <section class="page-head page-head--photo">
-  <img src="assets/img/photos/yuva-flags-courtyard-1400.jpg" alt="" width="1400" height="931" fetchpriority="high" decoding="async">
+  <!-- फ़ोन पर 760px वाला रूप काफ़ी है; 1400px भेजना धीमे नेट पर
+       बेकार का बोझ था। बिना webp वाले ब्राउज़र को नीचे का jpg मिलता है। -->
+  <picture>
+    <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/yuva-flags-courtyard-760.webp">
+    <source type="image/webp" srcset="assets/img/photos/yuva-flags-courtyard-1400.webp">
+    <img src="assets/img/photos/yuva-flags-courtyard-1400.jpg" alt="" width="1400" height="931" fetchpriority="high" decoding="async">
+  </picture>
 
   <div class="wrap">
     <nav class="crumbs" aria-label="आप कहाँ हैं">
@@ -318,26 +324,26 @@
       <p>तिथि घोषित होते ही भाग लेने का लिंक यहीं सक्रिय हो जाएगा।</p>
     </div>
     <div class="grid grid--3">
-      <a class="card card--link card--saffron" href="#">
+      <div class="card card--saffron">
         <div class="card__ic"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-camera"></use></svg></div>
         <h3>पोस्टर प्रतियोगिता</h3>
         <p>“नशे को नहीं, संस्कारों को सामाजिक स्वीकृति” विषय पर अपना पोस्टर बनाएँ।</p>
         <p class="mt-2"><span class="placeholder-note">तिथि शीघ्र घोषित</span></p>
-      </a>
-      <a class="card card--link card--green" href="#">
+      </div>
+      <div class="card card--green">
         <div class="card__ic"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-play"></use></svg></div>
         <h3>लघु वीडियो प्रतियोगिता</h3>
         <p>मोबाइल से एक मिनट का वीडियो बनाएँ और अपने गाँव की पहल दिखाएँ।</p>
         <p class="mt-2"><span class="placeholder-note">तिथि शीघ्र घोषित</span></p>
-      </a>
-      <a class="card card--link card--saffron" href="#">
+      </div>
+      <div class="card card--saffron">
         <div class="card__ic"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-chat"></use></svg></div>
         <h3>भाषण प्रतियोगिता</h3>
         <p>विद्यालय या ग्राम/वार्ड सभा के मंच से अपनी बात रखें और दूसरों को प्रेरित करें।</p>
         <p class="mt-2"><span class="placeholder-note">तिथि शीघ्र घोषित</span></p>
-      </a>
+      </div>
     </div>
-    <p class="center mt-2"><span class="placeholder-note">प्रतियोगिता कार्यक्रम placeholder है। तिथि तय होने पर अपडेट होगा</span></p>
+    <p class="center mt-2"><span class="placeholder-note">तिथियाँ तय होते ही यहीं दिखेंगी</span></p>
   </div>
 </section>
 

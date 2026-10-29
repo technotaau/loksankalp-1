@@ -81,7 +81,13 @@
 
 <!-- ================= PAGE HEAD ================= -->
 <section class="page-head page-head--photo">
-  <img src="assets/img/photos/sankalp-shapath-1400.jpg" alt="" width="1400" height="931" fetchpriority="high" decoding="async">
+  <!-- फ़ोन पर 760px वाला रूप काफ़ी है; 1400px भेजना धीमे नेट पर
+       बेकार का बोझ था। बिना webp वाले ब्राउज़र को नीचे का jpg मिलता है। -->
+  <picture>
+    <source type="image/webp" media="(max-width: 760px)" srcset="assets/img/photos/sankalp-shapath-760.webp">
+    <source type="image/webp" srcset="assets/img/photos/sankalp-shapath-1400.webp">
+    <img src="assets/img/photos/sankalp-shapath-1400.jpg" alt="" width="1400" height="931" fetchpriority="high" decoding="async">
+  </picture>
 
   <div class="wrap">
     <nav class="crumbs" aria-label="ब्रेडक्रम्ब">
