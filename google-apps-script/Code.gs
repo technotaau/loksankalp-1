@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 30;          // bump when this file changes; shown in every response
+var CODE_VERSION = 31;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -998,6 +998,18 @@ function computeStats() {
     if (nIdx >= 0) b.sankalp += count(r[nIdx]);   // same basis as the headline figure
     if (samitiIdx >= 0 && String(r[samitiIdx] || '').trim() === 'हाँ') b.samitiyan++;
   });
+  /* नशामुक्त मतदान के दोनों फ़ॉर्म। ये मुखपृष्ठ के संकल्प में जुड़ते हैं
+     (देखिए ऊपर, sankalp का जोड़), इसलिए यहाँ भी जुड़ने चाहिए। 29 अक्तूबर
+     को जोड़कर देखा तो तालिका 2,26,623 बनती थी और मुखपृष्ठ 2,27,018 कहता
+     था : फ़र्क़ ठीक 395, यानी matdanNagrik। व्यक्तिगत संकल्प एक व्यक्ति है,
+     और सभा में जितने लोगों ने सामूहिक संकल्प लिया उतने। वही आधार जिससे
+     matdanNagrik बनता है, वरना यही फ़र्क़ दूसरी शक्ल में लौट आएगा। */
+  jilewar(mdRows, FORMS.matdan, function (b) { b.sankalp += 1; });
+  var msIdx = colOf(ss, FORMS.matdanSabha, 'sankhya');
+  jilewar(msRows, FORMS.matdanSabha, function (b, r) {
+    if (msIdx >= 0) b.sankalp += count(r[msIdx]);
+  });
+
   // इन दोनों में संकल्प नहीं गिना जाता, पर इनके गाँव भी जुड़े हुए गाँव हैं
   jilewar(kahaniRows,  FORMS.kahani, null);
   jilewar(yuvaRows,    FORMS.yuva,   null);
