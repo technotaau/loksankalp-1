@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://technotaau.github.io/loksankalp-1/sitemap.xml
+# docs/ अब इस शाखा में है ही नहीं, इसलिए पते से भी नहीं खुलता। यह पंक्ति
+# सिर्फ़ उन खोज इंजनों के लिए बची है जिनके पास पुराना पता पड़ा हो।
+# 29 अक्टूबर 2026 : वहाँ अभियान की कार्य-पुस्तिका और संकल्प साथी का बिना
+# विशेषज्ञ-जाँच वाला डेटासेट रखा था, और Disallow खोज रोकता है, आदमी को
+# नहीं। सामग्री शाखा docs-archive-2026-10-29 में सुरक्षित है।
+Disallow: /docs/
+
+# /sawal सिर्फ़ एक मोड़ है जो Google Form पर भेजता है। पृष्ठ में भी noindex
+# लिखा है; यह उसी बात का दूसरा ताला है।
+Disallow: /sawal/
+Disallow: /saathi-nmuna/
+
+Sitemap: https://loksankalp.org/sitemap.xml
