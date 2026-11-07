@@ -388,7 +388,7 @@ li{line-height:1.6}
   /* विषयों का पेड़ ped.json से आता है : 13 मुख्य विषय, 20 उप-विषय,
      320 सवाल। पहले यहाँ छह डिब्बे हाथ से लिखे थे और हर डिब्बा एक ही
      सवाल पर ले जाता था, यानी बाक़ी 314 सवाल किसी को दिखते ही नहीं थे। */
-  var PED=[];
+  var PED=[], ROOP={};
 
   /* दिखाने भर के जवाब। असली जवाब केंद्र से मंज़ूर होकर आएँगे। */
   var ANS={
@@ -680,7 +680,18 @@ li{line-height:1.6}
   var DOCS=[], DF={}, Nd=0, IDF={}, IDF_MAX=1, AVG=1, TF=[];
   var KOSH=[], KD=[], KS=[], KN=0, KIDF={}, KAVG=1, KTF=[];
   function index(){
-    DOCS=BANK.map(function(b){return toks(b.q+' '+b.v)});
+    /* हर सवाल के साथ उसके लिखे हुए रूप भी सूची में जाते हैं।
+
+       वजह नाप से निकली : मशीन दूसरे शब्दों में पूछे गए सवाल को ढूँढ़
+       नहीं पाती, क्योंकि सवाल और उसके दूसरे रूप में साझा शब्द बहुत कम
+       होते हैं। उसे चतुर बनाने के बजाय उसे वे शब्द दे दिए गए हैं जो
+       लोग सचमुच बोलते हैं। */
+    DOCS=BANK.map(function(b){
+      var t=b.q+' '+(b.v||'');
+      var r=ROOP[b.id];
+      if(r) t += ' ' + r.join(' ');
+      return toks(t);
+    });
     Nd=DOCS.length; DF={};
     DOCS.forEach(function(d){ var seen={}; d.forEach(function(w){ if(!seen[w]){seen[w]=1; DF[w]=(DF[w]||0)+1} }) });
     IDF={}; IDF_MAX=0;
@@ -737,6 +748,11 @@ li{line-height:1.6}
       if(BANK[i].v){
         var b=asliToks(BANK[i].v).join(' ');
         if(b && SEEDHA[b]===undefined) SEEDHA[b]=i;
+      }
+      var rr=ROOP[BANK[i].id];
+      if(rr) for(var k=0;k<rr.length;k++){
+        var c=asliToks(rr[k]).join(' ');
+        if(c && SEEDHA[c]===undefined) SEEDHA[c]=i;
       }
     }
   }
@@ -1456,10 +1472,11 @@ li{line-height:1.6}
   $('b-start').disabled=true;
   Promise.all([
     fetch('bank.json', {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),
-    fetch('ped.json',  {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() })
+    fetch('ped.json',  {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),
+    fetch('roop.json', {cache:'no-cache'}).then(function(r){ return r.ok? r.json() : {} }).catch(function(){ return {} })
   ])
     .then(function(dono){
-      BANK=dono[0]; PED=dono[1]; index(); $('b-start').disabled=false; status('तैयार');
+      BANK=dono[0]; PED=dono[1]; ROOP=dono[2]||{}; index(); $('b-start').disabled=false; status('तैयार');
       return fetch('kosh.json', {cache:'default'})
         .then(function(r){ if(!r.ok) throw 0; return r.json() })
         .then(function(k){ KOSH=k; indexKosh(); });
