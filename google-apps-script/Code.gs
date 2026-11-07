@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 31;          // bump when this file changes; shown in every response
+var CODE_VERSION = 32;          // bump when this file changes; shown in every response
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -83,7 +83,11 @@ var FORMS = {
 
      SANKAT_EMAIL भरा हो तो हर पंक्ति पर तुरंत सूचना भी जाती है। शीट में
      पंक्ति पड़ी रहना सूचना नहीं है; सूचना वही है जो किसी को पहुँचे। */
-  sankat:   { tab: 'संकट', fields: ['rasta', 'mobile', 'kahan'], alert: true },
+  /* सहमति का खाना 7 नवंबर 2026 को जोड़ा गया। बाक़ी सब खानों में यह
+     पहले से था; संकट वाले में ही नहीं था, जबकि डेटा वहीं सबसे नाज़ुक
+     है। must में डालने से बिना सहमति की पंक्ति ठुकरा दी जाती है। */
+  sankat:   { must: ['mobile', 'sahmati'], tab: 'संकट',
+              fields: ['rasta', 'mobile', 'kahan', 'sahmati'], alert: true },
   /* नशामुक्त मतदान : दशहरे से पंचायत चुनाव तक। यह संकल्प जगह का है जितना
      व्यक्ति का, इसलिए ब्लॉक भी पूछा जाता है : पंचायत चुनाव ब्लॉक पर लड़े
      जाते हैं और गिनती वहीं काम आती है। */
@@ -104,7 +108,7 @@ var FORMS = {
 /* जिसे संकट की सूचना जाएगी। खाली छोड़ दीजिए तो कोई मेल नहीं जाती और
    पंक्ति चुपचाप सहेज ली जाती है। एक से ज़्यादा पते अल्पविराम से अलग कीजिए।
    यह पता किसी को दिखता नहीं; सिर्फ़ यहाँ रहता है। */
-var SANKAT_EMAIL = '';
+var SANKAT_EMAIL = 'c.singh@gmail.com';
 
 /* Campaigns whose form no longer takes entries, and the moment each shut.
    Written as UTC so the hour is the same wherever the server runs; these are
