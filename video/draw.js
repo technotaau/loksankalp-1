@@ -1,9 +1,5 @@
 /* लोकसंकल्प के वीडियो के पर्दे।
 
-   PHOTO_DIR : जिन तस्वीरों पर GPS Map Camera का वॉटरमार्क जला हुआ है वे
-   काटकर अलग फ़ोल्डर में रखी जाती हैं, बाक़ी रिपो से सीधे आती हैं। banao.sh
-   यह फ़ोल्डर बनाता है। देखिए video/README.md।
-
    हर पर्दा समय lt (उस पर्दे का अपना समय, सेकंड) से बनता है।
    कहीं CSS की अपनी चाल नहीं चलती। */
 
@@ -169,7 +165,7 @@ const DRAW = {
     box.style.opacity = fade(lt,0.3,99);
     box.style.transform = 'translateY('+tween(lt,0.3,1.0,26,0).toFixed(1)+'px) scale('+tween(lt,0,s.der,1.0,1.05,p=>p).toFixed(4)+')';
     const im = document.createElement('img');
-    im.src = '../assets/img/media/' + s.file + '.webp';
+    im.src = 'img/' + s.file + '.webp';
     box.appendChild(im);
     w.appendChild(box);
     const t = E('div','katran-text');
@@ -331,4 +327,159 @@ const DRAW = {
     w.appendChild(q);
     st.appendChild(w);
   }
+};
+
+/* ================= दूसरे दौर के पर्दे ================= */
+
+/* ठंडा खुलना : सिर्फ़ तस्वीर, फिर एक पंक्ति */
+DRAW.khulna = function(st, s, lt){
+  st.appendChild(tasveer(s.photo, lt, s.der, s.kb||{z0:1.14,z1:1.26}));
+  const w = E('div','wrap over hushed');
+  const h = E('h1','on-photo', s.text);
+  h.style.fontSize = '78px';
+  h.style.opacity = fade(lt, s.kab||3.2, 99, 1.4);
+  h.style.transform = 'translateY('+tween(lt, s.kab||3.2, 1.6, 22, 0).toFixed(1)+'px)';
+  w.appendChild(h);
+  st.appendChild(w);
+  if(s.patta) patta(st, s.patta, lt, (s.kab||3.2)+1.0);
+};
+
+/* तस्वीर पर पंक्तियाँ, एक एक करके */
+DRAW.panktiyan = function(st, s, lt){
+  const ph = tasveer(s.photo, lt, s.der, s.kb||{z0:1.12,z1:1.24});
+  ph.classList.add('ghana');
+  st.appendChild(ph);
+  const w = E('div','wrap over');
+  if(s.upar){ const u=E('p','small on-photo-sub',s.upar); u.style.opacity=fade(lt,0.3,99); w.appendChild(u) }
+  s.list.forEach((t,i)=>{
+    const p = E('p','misal-line on-photo', t);
+    const aaye = (s.pehla||0.9) + i*(s.antar||1.6);
+    p.style.opacity = fade(lt, aaye, 99);
+    p.style.transform = 'translateY('+tween(lt,aaye,0.9,20,0).toFixed(1)+'px)';
+    w.appendChild(p);
+  });
+  st.appendChild(w);
+  if(s.patta) patta(st, s.patta, lt, 1.0);
+};
+
+/* अख़बार की कतरन।
+
+   पूरे पर्दे पर फैलाकर देखा गया और वह ग़लत निकला : कतरन लंबी होती है और
+   पर्दा चौड़ा, इसलिए cover से कटकर आधा सिरलेख रह जाता था और नीचे का लिखा
+   उसी पर चढ़ जाता था। अब कतरन पूरी दिखती है, बड़ी, और धीरे धँसती हुई। */
+DRAW.katranBada = function(st, s, lt){
+  const bg = E('div','katran-bg');
+  st.appendChild(bg);
+  const w = E('div','wrap wide katran-wrap');
+  const box = E('div','katran-box');
+  box.style.opacity = fade(lt,0.25,99,0.8);
+  box.style.transform = 'translateY('+tween(lt,0.25,1.1,22,0).toFixed(1)+'px) scale('+
+    tween(lt,0,s.der,1.0,1.045,p=>p).toFixed(4)+')';
+  if(!window.__imgCache) window.__imgCache = {};
+  let im = window.__imgCache['K'+s.file];
+  if(!im){ im = document.createElement('img'); im.src='../assets/img/media/'+s.file+'.webp'; window.__imgCache['K'+s.file]=im }
+  box.appendChild(im.cloneNode());
+  w.appendChild(box);
+  const t = E('div','katran-text');
+  const a = E('div','akhbar', s.akhbar);
+  a.style.opacity = fade(lt,0.9,99);
+  t.appendChild(a);
+  const h = E('div','sheerShak', '\u201c'+s.sheershak+'\u201d');
+  h.style.opacity = fade(lt,1.3,99);
+  h.style.transform='translateY('+tween(lt,1.3,1.0,20,0).toFixed(1)+'px)';
+  t.appendChild(h);
+  if(s.niche){ const n=E('p','small',s.niche); n.style.opacity=fade(lt,2.2,99); t.appendChild(n) }
+  w.appendChild(t);
+  st.appendChild(w);
+};
+
+/* तस्वीरों की लड़ी, ऊपर गिनती चढ़ती हुई */
+DRAW.ladi = function(st, s, lt){
+  const ek = s.der / s.photos.length;
+  const i  = Math.min(s.photos.length-1, Math.floor(lt/ek));
+  const li = lt - i*ek;
+  /* एक तस्वीर से दूसरी में घुलना */
+  const cur = tasveer(s.photos[i], li, ek, {z0:1.10,z1:1.22});
+  cur.classList.add('ghana');
+  st.appendChild(cur);
+  const pichla = st.lastChild;
+  pichla.style.opacity = (li < 0.45 && i>0) ? easeOut(li/0.45).toFixed(3) : '1';
+  if(li < 0.45 && i>0){
+    const prev = tasveer(s.photos[i-1], ek, ek, {z0:1.10,z1:1.22});
+    prev.classList.add('ghana');
+    st.insertBefore(prev, pichla);
+  }
+  const w = E('div','wrap wide over');
+  if(s.title){ const h=E('h2','sheersh on-photo',s.title); h.style.opacity=fade(lt,0.3,99); w.appendChild(h) }
+  const g = E('div','grid4');
+  s.list.forEach((x,k)=>{
+    const c = E('div','stat');
+    const aaye = 0.8 + k*0.45;
+    c.style.opacity = fade(lt, aaye, 99);
+    c.appendChild(E('div','snum on-photo-num', ginti(lt, aaye, 3.0, x[0])));
+    c.appendChild(E('div','slabel on-photo-sub', x[1]));
+    g.appendChild(c);
+  });
+  w.appendChild(g);
+  const f = E('p','small foot on-photo-sub', s.foot);
+  f.style.opacity = fade(lt, 1.0+s.list.length*0.45, 99);
+  w.appendChild(f);
+  st.appendChild(w);
+};
+
+/* चेहरे : संरक्षक मंडल */
+DRAW.chehre = function(st, s, lt){
+  const w = E('div','wrap wide');
+  const h = E('h2','sheersh', s.title);
+  h.style.opacity = fade(lt,0.2,99);
+  w.appendChild(h);
+  if(s.upShirshak){ const u=E('p','lead',s.upShirshak); u.style.opacity=fade(lt,0.5,99); u.style.marginTop='0'; u.style.marginBottom='40px'; w.appendChild(u) }
+  const g = E('div','faces');
+  s.list.forEach((x,i)=>{
+    const c = E('div','face');
+    const aaye = 0.9 + i*0.28;
+    c.style.opacity = fade(lt, aaye, 99);
+    c.style.transform = 'translateY('+tween(lt,aaye,0.7,18,0).toFixed(1)+'px)';
+    if(!window.__imgCache) window.__imgCache={};
+    let im = window.__imgCache['P'+x[0]];
+    if(!im){ im=document.createElement('img'); im.src='../assets/img/parivar/'+x[0]+'.jpg'; window.__imgCache['P'+x[0]]=im }
+    const box=E('div','face-img'); box.appendChild(im.cloneNode());
+    c.appendChild(box);
+    c.appendChild(E('div','face-name', x[1]));
+    if(x[2]) c.appendChild(E('div','face-pad', x[2]));
+    g.appendChild(c);
+  });
+  w.appendChild(g);
+  st.appendChild(w);
+};
+
+/* एक आदमी : तस्वीर बाएँ, बात दाएँ */
+DRAW.vyakti = function(st, s, lt){
+  const w = E('div','wrap wide vyakti-wrap');
+  if(!window.__imgCache) window.__imgCache = {};
+  let base = window.__imgCache['V'+s.photo];
+  if(!base){ base=document.createElement('img'); base.src='../assets/img/photos/'+s.photo+'.jpg'; window.__imgCache['V'+s.photo]=base }
+  const im = base;
+  im.className = 'vyakti-img';
+  im.style.opacity = fade(lt,0.3,99);
+  im.style.transform = 'scale('+tween(lt,0,s.der,1.0,1.06,p=>p).toFixed(4)+')';
+  w.appendChild(im);
+  const t = E('div','vyakti-text');
+  const e = E('div','eyebrow-s', s.title); e.style.opacity=fade(lt,0.5,99); t.appendChild(e);
+  const n = E('div','pname-big', s.naam); n.style.opacity=fade(lt,0.8,99);
+  n.style.transform='translateY('+tween(lt,0.8,0.9,18,0).toFixed(1)+'px)'; t.appendChild(n);
+  const p = E('p','lead', s.pad); p.style.opacity=fade(lt,1.2,99); t.appendChild(p);
+  const g = E('div','ticks');
+  s.list.forEach((x,i)=>{
+    const c = E('div','tick');
+    const aaye = 1.8 + i*0.5;
+    c.style.opacity = fade(lt, aaye, 99);
+    c.style.transform='translateX('+tween(lt,aaye,0.6,-16,0).toFixed(1)+'px)';
+    c.appendChild(E('span','tmark','·'));
+    c.appendChild(E('span','ttext-s', x));
+    g.appendChild(c);
+  });
+  t.appendChild(g);
+  w.appendChild(t);
+  st.appendChild(w);
 };

@@ -12,8 +12,7 @@ body{font-family:"Noto Sans Devanagari",sans-serif;-webkit-font-smoothing:antial
 
 .wrap{text-align:center;max-width:1380px;padding:0 70px;position:relative;z-index:2}
 .wrap.wide{max-width:1700px}
-.wrap.over{max-width:1500px;padding:64px 80px;border-radius:26px;
-  background:radial-gradient(ellipse 76% 86% at 50% 50%, rgba(8,15,28,.62) 0%, rgba(8,15,28,.34) 62%, rgba(8,15,28,0) 100%)}
+.wrap.over{max-width:1500px;padding:40px 70px;background:none}
 
 h1{font-family:"Tiro Devanagari Hindi",serif;font-size:92px;color:var(--gehra);
    line-height:1.3;font-weight:400}
@@ -47,11 +46,17 @@ p.cite{font-size:26px;color:#8794A6;margin-top:36px}
 .photo{position:absolute;inset:0;overflow:hidden;z-index:0}
 .photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:center}
 .veil{position:absolute;inset:0;
+  /* तस्वीर पर लिखा हुआ पढ़ा जाना चाहिए, यही पहली शर्त है। गाढ़ा पर्दा
+     तस्वीर को दबाता नहीं, उसे पीछे रखता है। हल्के पर्दे पर नापकर देखा :
+     उजली तस्वीर पर सफ़ेद अक्षर गुम हो जाते थे। */
   background:
-    radial-gradient(ellipse 66% 46% at 50% 44%, rgba(8,15,28,.70) 0%, rgba(8,15,28,.38) 60%, rgba(8,15,28,0) 100%),
-    linear-gradient(180deg,rgba(8,15,28,.50) 0%,rgba(8,15,28,.18) 38%,rgba(8,15,28,.30) 66%,rgba(8,15,28,.72) 100%)}
-.on-photo{color:#fff;text-shadow:0 2px 26px rgba(0,0,0,.72),0 1px 3px rgba(0,0,0,.5)}
-.on-photo-sub{color:#EFEAE1;text-shadow:0 2px 20px rgba(0,0,0,.7)}
+    radial-gradient(ellipse 72% 54% at 50% 46%, rgba(6,12,24,.80) 0%, rgba(6,12,24,.58) 58%, rgba(6,12,24,.34) 100%),
+    linear-gradient(180deg,rgba(6,12,24,.56) 0%,rgba(6,12,24,.34) 36%,rgba(6,12,24,.44) 66%,rgba(6,12,24,.80) 100%)}
+/* तस्वीर पर सब कुछ उजला। !important इसलिए कि h2.sheersh और p.small जैसे
+   चुनाव (element + class) .on-photo से ज़्यादा ताक़तवर हैं, और उनका गहरा
+   रंग तस्वीर पर जीत जाता था। "63 दिन में" इसी वजह से ग़ायब हो गया था। */
+.on-photo{color:#fff !important;text-shadow:0 2px 26px rgba(0,0,0,.75),0 1px 3px rgba(0,0,0,.55)}
+.on-photo-sub{color:#EFEAE1 !important;text-shadow:0 2px 20px rgba(0,0,0,.75)}
 .on-photo-line{background:var(--kesari-halka)}
 .tarikh{font-size:32px;color:#F2A24E;margin-bottom:24px;font-weight:600}
 .tarikh{text-shadow:0 2px 18px rgba(0,0,0,.75)}
@@ -59,13 +64,13 @@ p.cite{font-size:26px;color:#8794A6;margin-top:36px}
   color:#D8D1C6;z-index:3;text-shadow:0 2px 16px rgba(0,0,0,.8)}
 
 /* अख़बार की कतरन */
-.katran-wrap{display:flex;align-items:center;gap:66px;text-align:left}
-.katran-box{flex:0 0 720px;background:#fff;padding:14px;border:1px solid var(--lakeer);
+.katran-wrap{display:flex;align-items:center;gap:72px;text-align:left}
+.katran-box{flex:0 0 880px;background:#fff;padding:14px;border:1px solid var(--lakeer);
   box-shadow:0 18px 46px rgba(22,38,63,.14);transform-origin:center}
-.katran-box img{width:100%;height:auto;max-height:800px;object-fit:contain;display:block}
+.katran-box img{width:100%;height:auto;max-height:930px;object-fit:contain;display:block}
 .katran-text{flex:1}
-.akhbar{font-size:28px;color:var(--kesari);margin-bottom:24px;font-weight:600}
-.sheerShak{font-family:"Tiro Devanagari Hindi",serif;font-size:50px;color:var(--gehra);line-height:1.42}
+.akhbar{font-size:29px;color:var(--kesari);margin-bottom:26px;font-weight:600;line-height:1.45}
+.sheerShak{font-family:"Tiro Devanagari Hindi",serif;font-size:52px;color:var(--gehra);line-height:1.42}
 
 /* गिनती */
 .stat{text-align:center}
@@ -102,3 +107,53 @@ p.cite{font-size:26px;color:#8794A6;margin-top:36px}
 
 /* लोग */
 .pname-big{font-family:"Tiro Devanagari Hindi",serif;font-size:76px;color:var(--gehra);line-height:1.25}
+
+/* ===== दूसरे दौर ===== */
+.wrap.hushed{background:none}
+.on-photo-num{color:#F2A24E !important;text-shadow:0 2px 24px rgba(0,0,0,.8)}
+.photo + .photo{z-index:1}
+
+/* पूरे पर्दे की कतरन */
+.katran-full{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:center top;transform-origin:center 22%}
+.veil-katran{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(8,15,28,.22) 0%,rgba(8,15,28,.10) 34%,rgba(8,15,28,.72) 72%,rgba(8,15,28,.93) 100%)}
+.katran-niche{position:absolute;left:0;right:0;bottom:70px;max-width:1620px;margin:0 auto;
+  padding:0 80px;background:none;text-align:center}
+.katran-niche .akhbar{color:#F2A24E;margin-bottom:18px}
+.katran-niche .sheerShak{text-align:center;font-size:54px;line-height:1.38}
+
+/* चेहरे */
+.faces{display:grid;grid-template-columns:repeat(5,1fr);gap:28px 22px;max-width:1500px;margin:0 auto}
+.face{text-align:center}
+.face-img{width:150px;height:150px;border-radius:50%;overflow:hidden;margin:0 auto 16px;
+  border:3px solid #fff;box-shadow:0 8px 24px rgba(22,38,63,.16)}
+.face-img img{width:100%;height:100%;object-fit:cover;display:block}
+.face-name{font-size:25px;color:var(--gehra);line-height:1.35;font-weight:600}
+.face-pad{font-size:20px;color:var(--soft);margin-top:6px;line-height:1.4}
+
+/* एक आदमी */
+.vyakti-wrap{display:flex;align-items:center;gap:74px;text-align:left}
+.vyakti-img{flex:0 0 480px;width:480px;height:600px;object-fit:cover;object-position:center 18%;
+  border-radius:16px;box-shadow:0 20px 50px rgba(22,38,63,.20)}
+.vyakti-text{flex:1}
+.eyebrow-s{font-size:26px;color:var(--kesari);margin-bottom:18px;font-weight:600}
+.vyakti-text .pname-big{font-size:68px}
+.vyakti-text .lead{font-size:32px;margin-top:18px;margin-bottom:34px}
+.ttext-s{font-size:30px;color:var(--gehra);line-height:1.5}
+.vyakti-text .tmark{color:var(--kesari);font-size:30px}
+.vyakti-text .ticks{gap:18px}
+
+/* हमेशा दिखने वाला नाम */
+#mark{position:absolute;left:54px;bottom:42px;z-index:9;display:flex;align-items:center;gap:13px;
+  opacity:.5}
+#mark img{width:34px;height:34px}
+#mark span{font-family:"Tiro Devanagari Hindi",serif;font-size:25px;color:var(--gehra)}
+#mark.ulta span{color:#fff}
+#mark.ulta{opacity:.72}
+
+.katran-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 90% 80% at 32% 50%, #fff 0%, var(--kagaz) 62%);z-index:0}
+/* लड़ी और पंक्तियों पर और गाढ़ा, क्योंकि वहाँ लिखा ही मुख्य है */
+.photo.ghana .veil{background:
+  linear-gradient(180deg,rgba(6,12,24,.74) 0%,rgba(6,12,24,.62) 40%,rgba(6,12,24,.66) 70%,rgba(6,12,24,.86) 100%)}

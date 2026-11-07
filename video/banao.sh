@@ -26,7 +26,7 @@ for f in assets/img/photos/*.jpg; do
     cp "$f" "$KATI/$b.jpg"
   fi
 done
-echo "तस्वीरें तैयार : $(ls "$KATI" | wc -l)"
+echo "तस्वीरें तैयार : $(ls "$KATI" | wc -l) (चार काटी गईं)"
 
 # 2. पन्ना परोसिए। तस्वीरें कटी हुई वाली जगह से आएँगी।
 python3 -m http.server 8750 >/dev/null 2>&1 &
@@ -50,9 +50,17 @@ ffmpeg -y -hide_banner -loglevel error \
   -i bina-awaz.mp4 -f lavfi -i anullsrc=r=48000:cl=stereo \
   -c:v copy -c:a aac -b:a 96k -shortest -movflags +faststart \
   loksankalp-prastuti.mp4
+
+# हल्की प्रति : WhatsApp और ईमेल के लिए, करीब 15 MB
+ffmpeg -y -hide_banner -loglevel error \
+  -i bina-awaz.mp4 -f lavfi -i anullsrc=r=48000:cl=stereo \
+  -vf scale=1280:720 -c:v libx264 -preset slow -crf 25 -pix_fmt yuv420p \
+  -c:a aac -b:a 64k -shortest -movflags +faststart \
+  loksankalp-halka.mp4
+
 rm -f bina-awaz.mp4
 rm -rf frames
 
 echo
-ls -la loksankalp-prastuti.mp4
+ls -la loksankalp-prastuti.mp4 loksankalp-halka.mp4
 ffprobe -v error -show_entries format=duration -show_entries stream=width,height,r_frame_rate -of default=nw=1 loksankalp-prastuti.mp4

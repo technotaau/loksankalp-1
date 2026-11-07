@@ -79,6 +79,15 @@ function frame(t){
   else if(lt > s.der-GHUL) o = 1-easeIn((lt-(s.der-GHUL))/GHUL);
   st.style.opacity = o.toFixed(4);
   document.getElementById('clock').textContent = t.toFixed(2);
+  /* नाम का रंग : तस्वीर वाले पर्दे पर उजला, क्रीम पर गहरा।
+     पहले और आख़िरी पर्दे पर नाम नहीं, क्योंकि वहाँ नाम ख़ुद बड़ा लिखा है। */
+  const mk = document.getElementById('mark');
+  if(mk){
+    const photoWala = !!st.querySelector('.photo');
+    mk.className = photoWala ? 'ulta' : '';
+    const chhipa = s.markChhipa || t < 2 || t > KUL-2;
+    mk.style.opacity = chhipa ? 0 : (photoWala ? .72 : .5);
+  }
 }
 
 window.__frame = frame;
