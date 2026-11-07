@@ -198,6 +198,14 @@ li{line-height:1.6}
   </div>
 
   <!-- पर्दा 0 : शुरुआत और मशीन होने की घोषणा -->
+  <!-- बंद का पर्दा। Apps Script में SAATHI_BAND को true करने पर यही दिखता है।
+       बाक़ी सब छिप जाता है, ताकि कोई जवाब ग़लती से भी न दिखे। -->
+  <section id="s-band" class="card" hidden>
+    <h2 style="margin-top:0">साथी अभी बंद है</h2>
+    <p id="band-sandesh" style="font-size:1.05rem"></p>
+    <div id="band-lines"></div>
+  </section>
+
   <section id="s-start" class="card">
     <p style="font-size:1.05rem">यह लोकसंकल्प का साथी है। नशे के बारे में जो पूछना हो, पूछिए। जवाब बोलकर सुनाया जाएगा।</p>
     <button class="big" id="b-start">शुरू कीजिए</button>
@@ -339,7 +347,7 @@ li{line-height:1.6}
 (function(){
   var $=function(id){return document.getElementById(id)};
   var BANK=[];
-  var state={age:null, cand:null, sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null, vishay:null};
+  var state={band:false, age:null, cand:null, sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null, vishay:null};
 
   /* ======================================================================
      संकट पर जिस इंसान तक बात पहुँचेगी। सिर्फ़ यही चार पंक्तियाँ भरनी हैं।
@@ -491,6 +499,7 @@ li{line-height:1.6}
     return hi[0];
   }
   function say(text, done){
+    if(state.band){ if(done)done(); return; }   // बंद है तो कुछ नहीं बोला जाता
     if(!window.speechSynthesis){ if(done)done(); return; }
     try{ speechSynthesis.cancel(); }catch(e){}
     var u=new SpeechSynthesisUtterance(bolneLayak(text));
@@ -800,7 +809,8 @@ li{line-height:1.6}
 
   /* ---------- पर्दे ---------- */
   function show(id){
-    ['s-start','s-age','s-home','s-list','s-confirm','s-out'].forEach(function(x){ $(x).hidden = (x!==id) });
+    if(state.band && id!=='s-band') return;   // बंद है तो कोई और पर्दा नहीं खुलता
+    ['s-band','s-start','s-age','s-home','s-list','s-confirm','s-out'].forEach(function(x){ $(x).hidden = (x!==id) });
     window.scrollTo({top:0, behavior:'smooth'});
   }
 
@@ -1478,6 +1488,32 @@ li{line-height:1.6}
   show('s-start');
   status('कोश पढ़ा जा रहा है');
   $('b-start').disabled=true;
+  /* साथी को बंद करना। Apps Script से हालत पूछी जाती है, एक बार, पन्ना
+     खुलते वक़्त। script न मिले या देर करे तो साथी चलता रहता है : उसके
+     जवाब पहले से मंज़ूर होकर इसी पन्ने में रखे हैं, और इंटरनेट की एक
+     झिझक पर मदद का रास्ता बंद कर देना ज़्यादा बड़ा नुक़सान है। */
+  function bandKaro(sandesh){
+    state.band=true;
+    try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+    $('band-sandesh').textContent = sandesh ||
+      'संकल्प साथी अभी बंद है। नशे से जुड़ी किसी भी बात के लिए 14446 पर बात कीजिए।';
+    var lb=$('band-lines'); lb.innerHTML=''; lb.appendChild(linesBox());
+    ['s-start','s-age','s-home','s-list','s-confirm','s-out'].forEach(function(x){ $(x).hidden=true });
+    $('s-band').hidden=false;
+    status('बंद है');
+    window.scrollTo({top:0});
+  }
+  (function haalatPoochho(){
+    if(!window.AbortController || !window.fetch) return;
+    var ac=new AbortController();
+    var ghanti=setTimeout(function(){ ac.abort() }, 5000);
+    fetch(ENDPOINT+'?saathi=1', {signal:ac.signal, cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : null })
+      .then(function(d){ if(d && d.band===true) bandKaro(d.sandesh) })
+      .catch(function(){ /* हालत नहीं मिली, साथी चलता रहेगा */ })
+      .then(function(){ clearTimeout(ghanti) });
+  })();
+
   Promise.all([
     fetch('bank.json', {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),
     fetch('ped.json',  {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),

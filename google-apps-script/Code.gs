@@ -49,7 +49,23 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 32;          // bump when this file changes; shown in every response
+var CODE_VERSION = 33;          // bump when this file changes; shown in every response
+
+// ---- संकल्प साथी का बंद करने का स्विच ------------------------------------
+//
+// इसे true करके "Deploy > Manage deployments > Edit > Deploy" दबाइए।
+// एक मिनट के भीतर हर खुले साथी पन्ने पर जवाब बंद हो जाएँगे और सिर्फ़
+// 14446 वाला सन्देश दिखेगा। वापस चालू करने के लिए false कर दीजिए।
+//
+// यह क्यों है : अगर कोई जवाब ग़लत निकला, तो पूरी वेबसाइट गिराए बिना और
+// कोड दोबारा चढ़ाए बिना साथी को रोका जा सके। कोई प्रोग्रामर नहीं चाहिए।
+//
+// ध्यान रहे : साथी हालत पूछने के लिए इसी script से बात करता है। अगर
+// script ही न मिले तो साथी चलता रहेगा, बंद नहीं होगा। ऐसा जानकर रखा है,
+// क्योंकि साथी के जवाब पहले से मंज़ूर होकर पन्ने में ही रखे होते हैं, और
+// इंटरनेट की एक झिझक पर मदद का रास्ता बंद कर देना ज़्यादा बड़ा नुक़सान है।
+var SAATHI_BAND = false;
+var SAATHI_BAND_SANDESH = 'संकल्प साथी अभी बंद है। नशे से जुड़ी किसी भी बात के लिए 14446 पर बात कीजिए, यह मुफ़्त है और चौबीस घंटे चलती है। जान का ख़तरा हो तो 112 मिलाइए।';
 
 // Column order per form. Add a field here and it appears as a new column.
 var FORMS = {
@@ -283,6 +299,16 @@ function doPost(e) {
  * moves when a real submission arrives. Delete a row and the count drops.
  */
 function doGet(e) {
+  // संकल्प साथी खुलते वक़्त यही पूछता है। कोई शीट नहीं पढ़ी जाती, इसलिए
+  // यह सस्ता है और हर बार ताज़ा जवाब देता है।
+  if (e && e.parameter && e.parameter.saathi) {
+    return json(JSON.stringify({
+      ok: true,
+      version: CODE_VERSION,
+      band: SAATHI_BAND === true,
+      sandesh: SAATHI_BAND === true ? SAATHI_BAND_SANDESH : ''
+    }));
+  }
   if (!e || !e.parameter || !e.parameter.stats) {
     return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
   }
