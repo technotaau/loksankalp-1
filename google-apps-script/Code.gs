@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 33;          // bump when this file changes; shown in every response
+var CODE_VERSION = 34;          // bump when this file changes; shown in every response
 
 // ---- संकल्प साथी का बंद करने का स्विच ------------------------------------
 //
@@ -309,6 +309,11 @@ function doGet(e) {
       sandesh: SAATHI_BAND === true ? SAATHI_BAND_SANDESH : ''
     }));
   }
+  // मंज़ूर हो चुके जवाब। सिर्फ़ वे पंक्तियाँ लौटती हैं जिनकी मंज़ूरी खाने में
+  // "हाँ" लिखा है और मंज़ूर करने वाले का नाम भरा है। बाक़ी छूट जाती हैं।
+  if (e && e.parameter && e.parameter.jawab) {
+    return json(JSON.stringify(manzoorJawab()));
+  }
   if (!e || !e.parameter || !e.parameter.stats) {
     return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
   }
@@ -328,6 +333,69 @@ function doGet(e) {
 }
 
 function statsCacheKey() { return 'stats-v' + CODE_VERSION; }
+
+// ---- संकल्प साथी के जवाबों की मंज़ूरी ------------------------------------
+
+var JAWAB_TAB = 'जवाब';
+// खाने के नाम। शीट की पहली पंक्ति से पढ़े जाते हैं, जगह से नहीं, ताकि कोई
+// खाना जोड़ने या खिसकाने पर यह टूटे नहीं।
+var JAWAB_COLS = ['id', 'सवाल', 'जवाब', 'स्रोत', 'मंज़ूरी', 'मंज़ूर करने वाला', 'तारीख़'];
+
+/**
+ * जवाब टैब पढ़कर सिर्फ़ मंज़ूर हो चुकी पंक्तियाँ लौटाता है।
+ *
+ * मंज़ूरी तब मानी जाती है जब "मंज़ूरी" खाने में हाँ (या haan, yes, y, ✓) हो
+ * और "मंज़ूर करने वाला" खाने में नाम भरा हो। नाम इसलिए ज़रूरी है कि आगे
+ * यह बताया जा सके कि किस जवाब को किसने मंज़ूर किया। बिना नाम की मंज़ूरी
+ * अधूरी है और उसे यहाँ नहीं गिना जाता।
+ *
+ * कुछ भी लिखा नहीं जाता। यह सिर्फ़ पढ़ता है।
+ */
+function manzoorJawab() {
+  var out = { ok: true, version: CODE_VERSION, kul: 0, manzoor: 0, jawab: [] };
+  var ss, sh;
+  try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (err) {
+    out.ok = false; out.message = 'शीट नहीं खुली: ' + err; return out;
+  }
+  sh = ss.getSheetByName(JAWAB_TAB);
+  if (!sh) { out.message = 'टैब "' + JAWAB_TAB + '" अभी बना नहीं है'; return out; }
+  if (sh.getLastRow() < 2) { out.message = 'टैब खाली है'; return out; }
+
+  var vals = sh.getRange(1, 1, sh.getLastRow(), sh.getLastColumn()).getValues();
+  var head = vals[0].map(function (h) { return String(h).trim(); });
+  var at = {};
+  JAWAB_COLS.forEach(function (c) { at[c] = head.indexOf(c); });
+  var kami = JAWAB_COLS.filter(function (c) { return at[c] < 0; });
+  if (kami.length) {
+    out.ok = false;
+    out.message = 'इन खानों के नाम पहली पंक्ति में नहीं मिले: ' + kami.join(', ');
+    return out;
+  }
+
+  var HAAN = ['हाँ', 'हां', 'haan', 'han', 'yes', 'y', '✓', 'true'];
+  for (var i = 1; i < vals.length; i++) {
+    var r = vals[i];
+    var id = String(r[at['id']]).trim();
+    if (!id) continue;
+    out.kul++;
+    var m = String(r[at['मंज़ूरी']]).trim().toLowerCase();
+    var by = String(r[at['मंज़ूर करने वाला']]).trim();
+    if (HAAN.indexOf(m) < 0 || !by) continue;
+    var a = String(r[at['जवाब']]).trim();
+    if (!a) continue;
+    var tar = r[at['तारीख़']];
+    if (tar instanceof Date) tar = Utilities.formatDate(tar, 'Asia/Kolkata', 'yyyy-MM-dd');
+    out.manzoor++;
+    out.jawab.push({
+      id:  id,
+      a:   a,
+      src: String(r[at['स्रोत']]).trim(),
+      by:  by,
+      on:  String(tar || '').trim()
+    });
+  }
+  return out;
+}
 
 /**
  * Where a field's column actually is, read from the sheet's own heading row.

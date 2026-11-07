@@ -347,6 +347,19 @@ li{line-height:1.6}
 (function(){
   var $=function(id){return document.getElementById(id)};
   var BANK=[];
+  /* शीट से मंज़ूर होकर आए जवाब। jawab.json में सिर्फ़ वे जाते हैं जिनकी
+     शीट में मंज़ूरी हाँ है और मंज़ूर करने वाले का नाम भरा है, यह tools/jawab-lao.py
+     देखता है। फ़ाइल न हो तो साथी नमूने के जवाबों पर चलता रहता है। */
+  var MANZOOR={};
+
+  /* किसी सवाल का जवाब। मंज़ूर जवाब पहले, नमूने का जवाब बाद में।
+     namuna सच हो तो पर्दे पर साफ़ लिखा जाता है कि यह नमूना है। */
+  function jawabKa(id){
+    if(MANZOOR[id]) return MANZOOR[id];
+    if(ANS[id]) return { a: ANS[id], namuna: true };
+    return null;
+  }
+
   var state={band:false, age:null, cand:null, sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null, vishay:null};
 
   /* ======================================================================
@@ -868,7 +881,7 @@ li{line-height:1.6}
         if(!r) return;
         var b=document.createElement('button');
         b.className='qrow'; b.type='button';
-        var kaisa = r.r==='Emergency' ? 'em' : r.r==='High' ? 'hi' : ANS[r.id] ? '' : 'na';
+        var kaisa = r.r==='Emergency' ? 'em' : r.r==='High' ? 'hi' : jawabKa(r.id) ? '' : 'na';
         b.innerHTML='<span class="dot '+kaisa+'" aria-hidden="true"></span><span>'+esc(r.q)+'</span>';
         b.addEventListener('click', function(){ state.cand=r; answer(r); });
         L.appendChild(b);
@@ -1343,7 +1356,7 @@ li{line-height:1.6}
        अब नियम एक ही है : अठारह से कम उम्र वाले को सिर्फ़ केंद्र से मंज़ूर
        किया हुआ लिखा जवाब मिलता है। पुस्तिका का कच्चा अंश नहीं, क्योंकि
        वह बड़ों के पढ़ने के लिए लिखा गया है। */
-    if(state.age==='child' && !ANS[c.id]){
+    if(state.age==='child' && !jawabKa(c.id)){
       var kb3=el('div','caut');
       kb3.appendChild(el('h2',null,'इसका जवाब अभी तैयार नहीं है'));
       kb3.appendChild(el('p',null,'आपकी उम्र 18 से कम है, इसलिए साथी आपको सिर्फ़ वही जवाब देता है जो केंद्र से मंज़ूर हो चुका हो। इस सवाल पर वैसा जवाब अभी तैयार नहीं हुआ। यह नियम जान बूझकर रखा गया है।'));
@@ -1371,15 +1384,23 @@ li{line-height:1.6}
     }
 
     /* 4. लिखा हुआ मंज़ूर जवाब */
-    var text = ANS[c.id];
-    if(text){
+    var J = jawabKa(c.id);
+    if(J){
       var b=el('div','answer');
-      b.appendChild(el('div','src','कोश से · '+(c.id||'')));
-      b.appendChild(el('p',null,text));
+      /* मंज़ूर जवाब पर पुस्तिका और पन्ना दिखता है, ताकि पढ़ने वाला चाहे तो
+         ख़ुद पुस्तिका में वही जगह देख ले। नमूने के जवाब पर वह नहीं दिखता,
+         क्योंकि उसका कोई पन्ना नहीं है। */
+      b.appendChild(el('div','src', J.namuna ? ('नमूना · '+(c.id||''))
+        : ((J.src ? esc(J.src) : 'अभियान की पुस्तिका')+' · '+(c.id||''))));
+      b.appendChild(el('p',null,J.a));
       out.appendChild(b);
-      out.appendChild(el('p','note','यह जवाब नमूने के लिए लिखा गया है। असली जवाब केंद्र से मंज़ूर होकर आएगा।'));
+      if(J.namuna){
+        out.appendChild(el('p','note','यह जवाब नमूने के लिए लिखा गया है। असली जवाब केंद्र से मंज़ूर होकर आएगा।'));
+      } else if(J.by){
+        out.appendChild(el('p','note','यह जवाब '+esc(J.by)+' ने मंज़ूर किया'+(J.on? ', '+esc(J.on):'')+'।'));
+      }
       rayDikhao(c.id||'');
-      say(text);
+      say(J.a);
       return;
     }
 
@@ -1517,10 +1538,13 @@ li{line-height:1.6}
   Promise.all([
     fetch('bank.json', {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),
     fetch('ped.json',  {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),
-    fetch('roop.json', {cache:'no-cache'}).then(function(r){ return r.ok? r.json() : {} }).catch(function(){ return {} })
+    fetch('roop.json', {cache:'no-cache'}).then(function(r){ return r.ok? r.json() : {} }).catch(function(){ return {} }),
+    fetch('jawab.json',{cache:'no-cache'}).then(function(r){ return r.ok? r.json() : [] }).catch(function(){ return [] })
   ])
     .then(function(dono){
-      BANK=dono[0]; PED=dono[1]; ROOP=dono[2]||{}; index(); $('b-start').disabled=false; status('तैयार');
+      BANK=dono[0]; PED=dono[1]; ROOP=dono[2]||{};
+      (dono[3]||[]).forEach(function(j){ if(j && j.id && j.a) MANZOOR[j.id]=j });
+      index(); $('b-start').disabled=false; status('तैयार');
       return fetch('kosh.json', {cache:'default'})
         .then(function(r){ if(!r.ok) throw 0; return r.json() })
         .then(function(k){ KOSH=k; indexKosh(); });

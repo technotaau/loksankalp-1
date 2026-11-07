@@ -9,7 +9,7 @@ form labels, SEO tags, SVG well-formedness, and that no long dash
 Usage:  python3 tools/check.py [--quiet]
 Exit code 1 if any ERROR is found. WARNs do not fail the build.
 """
-import os, re, sys, glob
+import os, re, sys, glob, json
 import xml.dom.minidom
 from html.parser import HTMLParser
 
@@ -416,6 +416,68 @@ def check_form_wiring():
                          f'Code.gs की FORMS में वह नहीं मिला')
 
 
+def check_saathi_jawab():
+    """saathi-nmuna/jawab.json : हर जवाब मंज़ूर होकर आया हो, और असली सवाल पर हो.
+
+    यह द्वार इसलिए है कि बिना मंज़ूरी का जवाब साइट पर न चढ़ सके. मंज़ूरी का
+    मतलब है शीट में मंज़ूर करने वाले का नाम और तारीख़. tools/jawab-lao.py
+    यही जाँच शीट से लाते वक़्त भी करता है, पर कोई फ़ाइल हाथ से बदल दे तो
+    वह जाँच बच जाती है, इसलिए यहाँ दोबारा.
+
+    फ़ाइल न हो तो कुछ नहीं कहा जाता : साथी तब नमूने के जवाबों पर चलता है.
+    """
+    f = os.path.join(ROOT, 'saathi-nmuna', 'jawab.json')
+    if not os.path.exists(f):
+        return
+    name = 'saathi-nmuna/jawab.json'
+    try:
+        rows = json.load(open(f, encoding='utf-8'))
+    except Exception as e:
+        err(name, 'JSON टूटा हुआ: %s' % e)
+        return
+    if not isinstance(rows, list):
+        err(name, 'JSON में सूची होनी चाहिए')
+        return
+
+    bank_f = os.path.join(ROOT, 'saathi-nmuna', 'bank.json')
+    bank = {}
+    if os.path.exists(bank_f):
+        try:
+            bank = {r['id']: r for r in json.load(open(bank_f, encoding='utf-8'))}
+        except Exception:
+            bank = {}
+
+    seen = set()
+    for r in rows:
+        i = (r or {}).get('id') or '(बिना id)'
+        if i in seen:
+            err(name, '%s दो बार है' % i)
+        seen.add(i)
+        if not (r.get('by') or '').strip():
+            err(name, '%s : मंज़ूर करने वाले का नाम नहीं' % i)
+        if not (r.get('on') or '').strip():
+            err(name, '%s : मंज़ूरी की तारीख़ नहीं' % i)
+        a = (r.get('a') or '').strip()
+        if not a:
+            err(name, '%s : जवाब खाली' % i)
+        if '\u2014' in a or '\u2013' in a:
+            err(name, '%s : dash है' % i)
+        elif a and not (400 <= len(a) <= 1100):
+            err(name, '%s : लंबाई %d, 400 से 1100 के बीच होनी चाहिए' % (i, len(a)))
+        if a and re.search(r'\d+\s*(mg|मिग्रा|मिलीग्राम|ml|एमएल|गोली|गोलियाँ|खुराक)', a, re.I):
+            err(name, '%s : मात्रा या खुराक है' % i)
+        if '1800-11-2356' in a:
+            err(name, '%s : जो नंबर छापना मना है वह है' % i)
+        if not (r.get('src') or '').strip():
+            err(name, '%s : स्रोत नहीं' % i)
+        if bank:
+            b = bank.get(i)
+            if b is None:
+                err(name, '%s : यह सवाल bank.json में नहीं है' % i)
+            elif b.get('r') in ('Emergency', 'High'):
+                err(name, '%s : जोखिम %s है, इस पर लिखा जवाब दिखता ही नहीं' % (i, b['r']))
+
+
 def main():
     quiet = '--quiet' in sys.argv
     pages = sorted(glob.glob(os.path.join(ROOT, '*.html')))
@@ -442,6 +504,7 @@ def main():
     check_long_dashes()
     check_no_fake_login()
     check_form_wiring()
+    check_saathi_jawab()
 
     for f in ('sitemap.xml', 'robots.txt', 'site.webmanifest', '.nojekyll',
               'css/site.css', 'css/tokens.css', 'js/site.js'):
