@@ -89,6 +89,10 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent); o
            stroke-linecap:round;stroke-linejoin:round}
 .topic span{font-weight:700;font-size:.95rem;line-height:1.3;text-wrap:balance}
 .topic:active{border-color:var(--accent);background:var(--accent-soft)}
+/* तुरंत मदद : बाक़ी से अलग दिखे, बिना पढ़े पहचान में आ जाए */
+.topic.turant{border-color:var(--crit);background:var(--crit-bg)}
+.topic.turant svg{stroke:var(--crit)}
+.topic.turant span{color:var(--crit-ink)}
 
 .ask{display:flex;gap:.5rem;align-items:stretch}
 .ask input{flex:1;min-width:0;border:2px solid var(--line);border-radius:var(--r);
@@ -112,6 +116,28 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent); o
 .caut{background:var(--warn-bg);border:2px solid var(--warn);border-radius:var(--r);
       padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.6rem}
 
+.back{display:inline-flex;align-items:center;gap:.3rem;background:none;border:0;padding:.5rem .2rem;
+  font:inherit;font-size:.95rem;font-weight:700;color:var(--brand);cursor:pointer;min-height:48px}
+.back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round}
+.upnaam{font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--accent-ink);margin:1.1rem 0 .5rem}
+.chabi{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin:.6rem 0 .2rem;
+  font-size:.78rem;color:var(--soft)}
+.chabi span{display:inline-flex;align-items:center;gap:.3rem}
+.chabi .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);display:inline-block}
+.chabi .dot.na{background:var(--line)} .chabi .dot.hi{background:var(--warn)}
+.chabi .dot.em{background:var(--crit)}
+.qlist{display:flex;flex-direction:column;gap:.45rem}
+.qrow{display:flex;gap:.6rem;align-items:flex-start;width:100%;text-align:left;
+  background:var(--surface);border:2px solid var(--line);border-radius:var(--r);
+  padding:.8rem .85rem;font:inherit;font-size:.98rem;color:var(--ink);
+  min-height:48px;cursor:pointer;line-height:1.4}
+.qrow:active{border-color:var(--accent);background:var(--accent-soft)}
+.qrow .dot{flex:0 0 auto;width:9px;height:9px;border-radius:50%;margin-top:.42rem;background:var(--ok)}
+.qrow .dot.na{background:var(--line)}
+.qrow .dot.hi{background:var(--warn)}
+.qrow .dot.em{background:var(--crit)}
 .namune{display:flex;flex-wrap:wrap;gap:.5rem}
 .namune button{background:var(--surface);border:2px solid var(--line);border-radius:999px;
   padding:.6rem .9rem;font:inherit;font-size:.9rem;font-weight:600;color:var(--ink);
@@ -241,6 +267,24 @@ li{line-height:1.6}
     <div class="namune" id="namune"></div>
   </section>
 
+  <!-- पर्दा : एक विषय के सारे सवाल। आदमी अपना सवाल ख़ुद चुनता है,
+       इसलिए यहाँ से सीधे जवाब पर जाया जाता है, पुष्टि माँगे बिना। -->
+  <section id="s-list" class="card" hidden>
+    <button class="back" id="b-back" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      सब विषय
+    </button>
+    <h2 id="list-head" style="margin:.4rem 0 .2rem"></h2>
+    <p class="note" id="list-lead"></p>
+    <div class="chabi" aria-hidden="true">
+      <span><i class="dot"></i>जवाब तैयार</span>
+      <span><i class="dot na"></i>जवाब अभी नहीं</span>
+      <span><i class="dot hi"></i>इंसान से बात</span>
+      <span><i class="dot em"></i>तुरंत मदद</span>
+    </div>
+    <div id="list-body"></div>
+  </section>
+
   <!-- पर्दा 3 : पुष्टि -->
   <section id="s-confirm" class="card" hidden>
     <span class="tag">पुष्टि</span>
@@ -282,7 +326,7 @@ li{line-height:1.6}
     <div class="flow" id="legend"></div>
     <hr>
     <p class="note"><b style="color:var(--ink)">जवाब अभी मंज़ूर नहीं हैं।</b> यहाँ जो जवाब दिखते हैं वे दिखाने भर के लिए लिखे गए हैं। असली जवाब केंद्र से मंज़ूर होकर आएँगे, और ऊँचे जोखिम वाले जवाब चिकित्सक से जँचकर।</p>
-    <p class="note">सवालों का मिलान 124 सवालों पर चल रहा है, जो टीम के भेजे दस्तावेज़ से बने हैं। इनमें से 43 के जवाब लिख दिए गए हैं। <code>loksankalp.org/sawal</code> से अब तक आए आठ असली सवालों पर नापकर देखा गया कि यह मिलान आठ में से सिर्फ़ एक पर सही जोड़ निकालता है। इसीलिए पुष्टि का क़दम और साफ़ इनकार, दोनों ज़रूरी हैं।</p><p class="note"><b style="color:var(--ink)">यह पता किसी को आम तौर पर मत भेजिए।</b> पन्ना खोज के नतीजों में नहीं आता, पर पता जानने वाला इसे खोल सकता है।</p>
+    <p class="note">सवालों का मिलान 320 सवालों पर चल रहा है, जो टीम के भेजे दस्तावेज़ से बने हैं। अब हर सवाल विषय के पेड़ में छूकर भी पढ़ा जा सकता है, सिर्फ़ लिखकर ढूँढ़ने पर निर्भर नहीं। इनमें से 43 के जवाब लिख दिए गए हैं। <code>loksankalp.org/sawal</code> से अब तक आए आठ असली सवालों पर नापकर देखा गया कि यह मिलान आठ में से सिर्फ़ एक पर सही जोड़ निकालता है। इसीलिए पुष्टि का क़दम और साफ़ इनकार, दोनों ज़रूरी हैं।</p><p class="note"><b style="color:var(--ink)">यह पता किसी को आम तौर पर मत भेजिए।</b> पन्ना खोज के नतीजों में नहीं आता, पर पता जानने वाला इसे खोल सकता है।</p>
   </div>
   <div class="card">
     <h2>जँचे हुए नंबर</h2>
@@ -295,7 +339,7 @@ li{line-height:1.6}
 (function(){
   var $=function(id){return document.getElementById(id)};
   var BANK=[];
-  var state={age:null, cand:null, sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null};
+  var state={age:null, cand:null, sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null, vishay:null};
 
   /* ======================================================================
      संकट पर जिस इंसान तक बात पहुँचेगी। सिर्फ़ यही चार पंक्तियाँ भरनी हैं।
@@ -324,22 +368,27 @@ li{line-height:1.6}
     ['108','एंबुलेंस, राजस्थान']
   ];
 
+  /* निशान। हर विषय का अपना, ताकि पढ़ने से पहले पहचान में आ जाए।
+     ये सीधी लकीरों वाले हैं, छोटे पर्दे पर भी साफ़ दिखने के लिए। */
   var ICON={
-    gharwale:'<path d="M4 20v-7l8-6 8 6v7"/><path d="M9 20v-5h6v5"/>',
-    chhodna:'<path d="M12 3v7"/><path d="M5.6 8.6a9 9 0 1 0 12.8 0"/>',
-    bachche:'<circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/>',
+    turant:'<path d="M12 3L2 20h20z"/><path d="M12 10v4"/><path d="M12 17h.01"/>',
+    samajh:'<circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.4a2.9 2.9 0 1 1 3.6 2.8V14"/><path d="M12.4 17.2h.01"/>',
+    chhodna:'<path d="M5 19L19 5"/><circle cx="12" cy="12" r="8.5"/>',
+    ghar:'<path d="M3.5 11L12 4l8.5 7"/><path d="M6 10.5V20h12v-9.5"/><path d="M10 20v-5h4v5"/>',
+    bachche:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.4 2.7-6 6-6s6 2.6 6 6"/><circle cx="17.5" cy="10.5" r="2.2"/><path d="M15 20c0-2.4 1.3-4.2 3.3-4.2S21.5 17.6 21.5 20"/>',
+    ilaj:'<path d="M12 5v14"/><path d="M5 12h14"/><rect x="3" y="3" width="18" height="18" rx="4"/>',
+    nayi:'<path d="M12 21s-7-4.6-7-10a4.6 4.6 0 0 1 7-3.9A4.6 4.6 0 0 1 19 11c0 5.4-7 10-7 10z"/>',
     sharab:'<path d="M5 4h14l-7 8z"/><path d="M12 12v6"/><path d="M8.5 20h7"/>',
     tambaku:'<rect x="3" y="11" width="14" height="5" rx="1.5"/><path d="M19 9c1.2.9 1.2 2.1 0 3"/><path d="M20 16h1"/>',
-    samaj:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.6 2.6 14.4 0 17"/>'
+    man:'<path d="M9 3.5A5 5 0 0 0 4.5 11c0 1.3.5 2.4 1.3 3.2V18a2 2 0 0 0 2 2h1"/><path d="M15 3.5A5 5 0 0 1 19.5 11c0 1.3-.5 2.4-1.3 3.2V18a2 2 0 0 1-2 2h-1"/><path d="M12 3v17"/>',
+    auraten:'<circle cx="12" cy="8" r="4.2"/><path d="M12 12.5V21"/><path d="M9 18h6"/>',
+    samaj:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.6 2.6 14.4 0 17"/>',
+    kaam:'<rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 13h18"/>'
   };
-  var TOPICS=[
-    {k:'gharwale', t:'घर में कोई नशा करता है', say:'घर में कोई नशा करता है',  pick:'FAM_001'},
-    {k:'chhodna',  t:'नशा छोड़ना है',          say:'नशा छोड़ना है',          pick:'QUIT_001'},
-    {k:'bachche',  t:'बच्चे और पढ़ाई',          say:'बच्चे और पढ़ाई',          pick:'PAR_001'},
-    {k:'sharab',   t:'शराब',                   say:'शराब',                   pick:'ALC_001'},
-    {k:'tambaku',  t:'बीड़ी, गुटखा, तंबाकू',    say:'बीड़ी, गुटखा और तंबाकू',  pick:'TOB_001'},
-    {k:'samaj',    t:'समाज और रिवाज़',          say:'समाज और रिवाज़',          pick:'SOC_001'}
-  ];
+  /* विषयों का पेड़ ped.json से आता है : 13 मुख्य विषय, 20 उप-विषय,
+     320 सवाल। पहले यहाँ छह डिब्बे हाथ से लिखे थे और हर डिब्बा एक ही
+     सवाल पर ले जाता था, यानी बाक़ी 314 सवाल किसी को दिखते ही नहीं थे। */
+  var PED=[];
 
   /* दिखाने भर के जवाब। असली जवाब केंद्र से मंज़ूर होकर आएँगे। */
   var ANS={
@@ -735,7 +784,7 @@ li{line-height:1.6}
 
   /* ---------- पर्दे ---------- */
   function show(id){
-    ['s-start','s-age','s-home','s-confirm','s-out'].forEach(function(x){ $(x).hidden = (x!==id) });
+    ['s-start','s-age','s-home','s-list','s-confirm','s-out'].forEach(function(x){ $(x).hidden = (x!==id) });
     window.scrollTo({top:0, behavior:'smooth'});
   }
 
@@ -763,19 +812,47 @@ li{line-height:1.6}
 
   function buildTopics(){
     var g=$('topics'); g.innerHTML='';
-    TOPICS.forEach(function(t){
+    PED.forEach(function(m){
       var b=document.createElement('button');
-      b.className='topic'; b.type='button';
-      b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+ICON[t.k]+'</svg><span>'+t.t+'</span>';
-      b.addEventListener('click', function(){
-        say(t.say);
-        var hit=null;
-        for(var i=0;i<BANK.length;i++){ if(BANK[i].id===t.pick){ hit=BANK[i]; break; } }
-        if(hit){ state.cand=hit; askConfirm(hit.q); }
-      });
+      b.className='topic'+(m.id==='turant'?' turant':''); b.type='button';
+      b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICON[m.id]||ICON.samaj)+'</svg>'+
+                  '<span>'+esc(m.naam)+'</span>';
+      b.addEventListener('click', function(){ kholoVishay(m); });
       g.appendChild(b);
     });
   }
+
+  /* एक विषय के सारे सवाल, उप-विषय के नीचे बँटे हुए।
+
+     यहाँ से सीधे जवाब पर जाया जाता है, पुष्टि माँगे बिना। वजह साफ़ है :
+     आदमी ने सवाल ख़ुद पढ़कर चुना है, तो दोहराकर पूछने की कोई बात नहीं।
+     पुष्टि सिर्फ़ तब चाहिए जब मशीन ने अंदाज़ा लगाया हो। */
+  function kholoVishay(m){
+    state.vishay=m;
+    $('list-head').textContent=m.naam;
+    $('list-lead').textContent=m.lead||'';
+    var box=$('list-body'); box.innerHTML='';
+    m.up.forEach(function(u){
+      if(!u.sawal.length) return;
+      if(m.up.length>1) box.appendChild(el('div','upnaam', esc(u.naam)));
+      var L=el('div','qlist');
+      u.sawal.forEach(function(qid){
+        var r=null;
+        for(var i=0;i<BANK.length;i++) if(BANK[i].id===qid){ r=BANK[i]; break; }
+        if(!r) return;
+        var b=document.createElement('button');
+        b.className='qrow'; b.type='button';
+        var kaisa = r.r==='Emergency' ? 'em' : r.r==='High' ? 'hi' : ANS[r.id] ? '' : 'na';
+        b.innerHTML='<span class="dot '+kaisa+'" aria-hidden="true"></span><span>'+esc(r.q)+'</span>';
+        b.addEventListener('click', function(){ state.cand=r; answer(r); });
+        L.appendChild(b);
+      });
+      box.appendChild(L);
+    });
+    show('s-list');
+    say(m.naam+'। नीचे की सूची में से अपना सवाल चुनिए।');
+  }
+  $('b-back').addEventListener('click', function(){ show('s-home'); });
 
   function askConfirm(q){
     $('heard').textContent='आपने यह पूछा : “'+q+'”';
@@ -1301,6 +1378,7 @@ li{line-height:1.6}
   /* ---------- नीचे की समझाइश ---------- */
   var LEG=[
     [1,'मशीन होने की घोषणा पहले दस सेकंड में, आवाज़ में',1],
+    [0,'320 सवाल, 13 विषयों में बँटे हुए, छूकर पढ़ने लायक़',1],
     [2,'उम्र का फाटक : 18 से कम पर बनाया हुआ जवाब कभी नहीं',1],
     [3,'बड़े चिह्न वाले बटन, हर बटन ख़ुद बोलता है',1],
     [4,'बोलकर पूछना, हिंदी में',1],
@@ -1315,7 +1393,7 @@ li{line-height:1.6}
     [13,'आवाज़ चुनने और रफ़्तार बदलने का रास्ता',1],
     [14,'हर जवाब पर राय : काम का लगा या नहीं, इसी फ़ोन में दर्ज',1],
     [15,'संकट पर केंद्र के नामज़द इंसान का नंबर, और मर्ज़ी से वापस फ़ोन',1],
-    [16,'लिखे हुए जवाब : 124 सवालों में से 43 पर। बाक़ी 81 अभी बाक़ी हैं',0],
+    [16,'लिखे हुए जवाब : 320 सवालों में से 43 पर। बाक़ी 277 अभी बाक़ी हैं',0],
     [17,'कोश से न मिले तो बनाया हुआ जवाब : जान बूझकर बंद है',0]
   ];
   var lg=$('legend');
@@ -1376,10 +1454,12 @@ li{line-height:1.6}
   show('s-start');
   status('कोश पढ़ा जा रहा है');
   $('b-start').disabled=true;
-  fetch('bank.json', {cache:'no-cache'})
-    .then(function(r){ if(!r.ok) throw 0; return r.json() })
-    .then(function(j){
-      BANK=j; index(); $('b-start').disabled=false; status('तैयार');
+  Promise.all([
+    fetch('bank.json', {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),
+    fetch('ped.json',  {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() })
+  ])
+    .then(function(dono){
+      BANK=dono[0]; PED=dono[1]; index(); $('b-start').disabled=false; status('तैयार');
       return fetch('kosh.json', {cache:'default'})
         .then(function(r){ if(!r.ok) throw 0; return r.json() })
         .then(function(k){ KOSH=k; indexKosh(); });
