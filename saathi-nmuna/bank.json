@@ -258,7 +258,7 @@
  {
   "id": "WDL_001",
   "c": "WDL",
-  "r": "Moderate",
+  "r": "High",
   "fixed": 0,
   "q": "withdrawal क्या होता है?",
   "v": "नशा छोड़ते ही शरीर खराब क्यों होने लगता है?"
@@ -282,7 +282,7 @@
  {
   "id": "WDL_004",
   "c": "WDL",
-  "r": "Moderate",
+  "r": "High",
   "fixed": 0,
   "q": "withdrawal में चिड़चिड़ापन क्यों होता है?",
   "v": "छोड़ने के बाद बहुत गुस्सा आ रहा है।"
@@ -418,7 +418,7 @@
  {
   "id": "TRT_005",
   "c": "TRT",
-  "r": "Routine",
+  "r": "High",
   "fixed": 0,
   "q": "addiction treatment में medicines कैसे मदद करती हैं?",
   "v": "दवा से नशा छूट सकता है?"
@@ -530,7 +530,7 @@
  {
   "id": "MH_003",
   "c": "MH",
-  "r": "Moderate",
+  "r": "High",
   "fixed": 0,
   "q": "नींद के लिए शराब या pills लेना सुरक्षित है?",
   "v": "बिना शराब के मुझे नींद नहीं आती।"
@@ -602,7 +602,7 @@
  {
   "id": "TOB_004",
   "c": "TOB",
-  "r": "Moderate",
+  "r": "High",
   "fixed": 0,
   "q": "nicotine withdrawal क्या है?",
   "v": "cigarette छोड़ने पर बेचैनी क्यों होती है?"
@@ -618,7 +618,7 @@
  {
   "id": "TOB_006",
   "c": "TOB",
-  "r": "Routine",
+  "r": "High",
   "fixed": 0,
   "q": "क्या vaping सुरक्षित है?",
   "v": "cigarette की जगह vape करूं तो ठीक रहेगा?"
@@ -1770,7 +1770,7 @@
  {
   "id": "N1_098",
   "c": "MH",
-  "r": "High",
+  "r": "Moderate",
   "fixed": false,
   "q": "addiction के साथ psychiatrist कब जरूरी है?",
   "v": ""
@@ -2357,14 +2357,6 @@
   "r": "Emergency",
   "fixed": false,
   "q": "नशे के बाद seizures हों तो क्या करें?",
-  "v": ""
- },
- {
-  "id": "N1_172",
-  "c": "EMG",
-  "r": "Emergency",
-  "fixed": false,
-  "q": "नशा करने वाला व्यक्ति आत्महत्या की बात करे तो क्या करें?",
   "v": ""
  },
  {
