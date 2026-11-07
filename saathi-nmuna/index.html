@@ -609,6 +609,7 @@ li{line-height:1.6}
     for(var w in DF){ IDF[w]=Math.log(1+(Nd-DF[w]+0.5)/(DF[w]+0.5)); if(IDF[w]>IDF_MAX) IDF_MAX=IDF[w]; }
     AVG=DOCS.reduce(function(a,d){return a+d.length},0)/Nd;
     TF=DOCS.map(function(d){ var t={}; d.forEach(function(w){t[w]=(t[w]||0)+1}); return t });
+    SEEDHA=null;
   }
   /* पुस्तिकाओं का कोश : 1,198 टुकड़े, सोलह पुस्तिकाओं के 452 पन्नों से।
      हर टुकड़े के साथ लिखा है कि वह किस पुस्तिका के किस पन्ने से आया। */
@@ -643,7 +644,29 @@ li{line-height:1.6}
   /* क्रम BM25 से लगता है, पर स्वीकार करने का फ़ैसला ढकाव से होता है :
      सवाल के अपने शब्दों में से कितने उस जोड़ में सचमुच मौजूद हैं। यह 0 से
      1 के बीच रहता है, इसलिए इसकी सीमा का कोई मतलब बनता है। */
+  /* हूबहू वही सवाल : सीधे वहीं भेजिए, ढँकाव का हिसाब किए बिना।
+
+     सीमा 0.50 करने के बाद पकड़ा गया कि दो सवाल अपने ही शब्दों से लिखने
+     पर भी नहीं मिल रहे थे। जो सवाल सूची में अक्षर दर अक्षर मौजूद है,
+     उस पर कोई हिसाब लगाना ही नहीं चाहिए। यह डिब्बों, नमूनों और उन
+     लोगों के लिए भी है जो सूची में से पढ़कर लिखते हैं। */
+  var SEEDHA=null;
+  function seedhaBanao(){
+    SEEDHA={};
+    for(var i=0;i<BANK.length;i++){
+      var a=asliToks(BANK[i].q).join(' ');
+      if(a && SEEDHA[a]===undefined) SEEDHA[a]=i;
+      if(BANK[i].v){
+        var b=asliToks(BANK[i].v).join(' ');
+        if(b && SEEDHA[b]===undefined) SEEDHA[b]=i;
+      }
+    }
+  }
   function search(q){
+    if(SEEDHA===null) seedhaBanao();
+    var sidha=SEEDHA[asliToks(q).join(' ')];
+    if(sidha!==undefined) return {i:sidha, cover:1, got:99};
+
     var qt=toks(q), best=-1, bs=0, qs={}, k;
     qt.forEach(function(w){ qs[w]=1 });
     for(var i=0;i<Nd;i++){
