@@ -13,20 +13,18 @@ mkdir -p "$OUT_DIR"
 KATI="video/kati"
 rm -rf "$KATI"; mkdir -p "$KATI"
 
-# 1. जिन तस्वीरों में GPS Map Camera का वॉटरमार्क जला हुआ है, उन्हें काटिए।
-#    वॉटरमार्क में स्कूल के अक्षांश-देशांतर और समय तक लिखे हैं, और ये
-#    स्कूल की तस्वीरें हैं जिनमें बच्चे हैं। नीचे का 32 प्रतिशत जाता है।
-KATNI="lodheran-poora-vidyalaya lodheran-sabha-maidan lodheran-sankalp-pankti lodheran-sabha-baithe"
+# 1. तस्वीरें एक जगह रख लीजिए।
+#
+#    पहले यहाँ कटाई भी होती थी, क्योंकि कुछ तस्वीरों में GPS Map Camera का
+#    वॉटरमार्क जला हुआ था जिसमें स्कूल के अक्षांश-देशांतर और समय तक लिखे थे।
+#    7 नवंबर 2026 को वे दस तस्वीरें रिपो में ही काट दी गईं, इसलिए अब यहाँ
+#    कटाई नहीं होती। सिर्फ़ नक़ल होती है, ताकि सर्वर एक ही जगह से परोसे।
 for f in assets/img/photos/*.jpg; do
   b=$(basename "$f" .jpg)
   case "$b" in *-1400|*-760) continue;; esac
-  if echo "$KATNI" | grep -qw "$b"; then
-    ffmpeg -y -hide_banner -loglevel error -i "$f" -vf "crop=iw:ih*0.68:0:0" "$KATI/$b.jpg"
-  else
-    cp "$f" "$KATI/$b.jpg"
-  fi
+  cp "$f" "$KATI/$b.jpg"
 done
-echo "तस्वीरें तैयार : $(ls "$KATI" | wc -l) (चार काटी गईं)"
+echo "तस्वीरें तैयार : $(ls "$KATI" | wc -l)"
 
 # 2. पन्ना परोसिए। तस्वीरें कटी हुई वाली जगह से आएँगी।
 python3 -m http.server 8750 >/dev/null 2>&1 &
