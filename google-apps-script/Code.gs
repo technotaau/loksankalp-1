@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 34;          // bump when this file changes; shown in every response
+var CODE_VERSION = 35;          // bump when this file changes; shown in every response
 
 // ---- संकल्प साथी का बंद करने का स्विच ------------------------------------
 //
@@ -118,7 +118,43 @@ var FORMS = {
      लेते हैं। */
   matdanSabha: { must: ['gaon', 'jila', 'tithi', 'sankhya', 'naam', 'mobile', 'sahmati'], tab: 'नशामुक्त मतदान सभा',
               fields: ['gaon', 'block', 'jila', 'tithi', 'sankhya',
-                       'naam', 'mobile', 'sahmati'] }
+                       'naam', 'mobile', 'sahmati'] },
+
+  /* ===== तंबाकू मुक्त आतिथ्य =====================================
+     तीन अलग फ़ॉर्म, तीन अलग शीट। यह जानबूझकर है।
+
+     एक व्यक्ति की शपथ, एक परिवार का निर्णय और एक गाँव की सभा तीन अलग
+     चीज़ें हैं। इन्हें एक शीट में मिला देने पर गिनती झूठी हो जाती :
+     परिवार का एक प्रतिनिधि अपने घर के सब लोगों की शपथ नहीं है, और सभा
+     में बैठे दो सौ लोग दो सौ व्यक्तिगत संकल्प नहीं हैं। इसीलिए तीनों
+     की गिनती अलग दिखती है और जोड़कर "कुल लोग" कभी नहीं निकाली जाती।
+
+     क्रमांक LS-TA-0001 बनता है। दस्तावेज़ में LS-TA-2026-0001 लिखा था,
+     पर nextRegNo की गिनती शीट के साथ चलती रहती है, साल के साथ नहीं।
+     2027 में भी वह 2026 ही छापता, इसलिए साल नहीं डाला। */
+  atithya: { must: ['naam', 'aayuVarg', 'gaon', 'sahmati'], tab: 'आतिथ्य संकल्प', regPrefix: 'LS-TA',
+              fields: ['regNo', 'naam', 'aayuVarg', 'abhibhavak', 'mobile', 'email', 'gaon', 'basaav', 'block', 'jila',
+                       'rajya', 'desh', 'deshAnya', 'sahayata', 'sahmati', 'naamSarvajanik'] },
+
+  /* परिवार : एक वयस्क प्रतिनिधि अपने घर का निर्णय दर्ज करता है। घर के
+     बाक़ी लोगों के नाम और नंबर जानबूझकर नहीं पूछे जाते, सिर्फ़ यह कि
+     कितने वयस्क सहमत हुए। */
+  atithyaParivar: { must: ['naam', 'mobile', 'gaon', 'tithi', 'sahmati'], tab: 'आतिथ्य परिवार', regPrefix: 'LS-TAP',
+              fields: ['regNo', 'naam', 'mobile', 'parivarNaam', 'gaon', 'basaav',
+                       'block', 'jila', 'rajya', 'desh', 'deshAnya', 'tithi',
+                       'vayaskSadasya', 'sahmati', 'naamSarvajanik'] },
+
+  /* गाँव या वार्ड की सभा। dayra सबसे ज़रूरी खाना है : यह बताता है कि
+     निर्णय पूरे गाँव का है या सिर्फ़ उन परिवारों का जो सहमत हुए। यह
+     must में इसीलिए है। इसके बिना एक छोटी बैठक पूरे गाँव का फ़ैसला
+     दिखने लगती। */
+  atithyaGram: { must: ['gaon', 'jila', 'tithi', 'sankhya', 'naam', 'mobile', 'dayra', 'sahmati'],
+              tab: 'आतिथ्य ग्राम सभा', regPrefix: 'LS-TAG',
+              fields: ['regNo', 'gaon', 'basaav', 'panchayat', 'gramKod', 'block', 'jila',
+                       'rajya', 'tithi', 'sthal', 'sankhya', 'samuh', 'dayra',
+                       'prabhaviTithi', 'naam', 'pad', 'mobile',
+                       'pushti1', 'pushti1Mobile', 'pushti2', 'pushti2Mobile',
+                       'anuvarti', 'sahmati'] }
 };
 
 /* जिसे संकट की सूचना जाएगी। खाली छोड़ दीजिए तो कोई मेल नहीं जाती और
@@ -162,7 +198,17 @@ var LABELS = {
   regNo: 'पंजीकरण क्रमांक', upvaasSadasya: 'उपवास सदस्य',
   rajya: 'राज्य', desh: 'देश', deshAnya: 'देश (लिखा हुआ)',
   aayuVarg: 'आयु वर्ग',
-  rasta: 'कौन सा रास्ता', kahan: 'कहाँ से'
+  rasta: 'कौन सा रास्ता', kahan: 'कहाँ से',
+  // तंबाकू मुक्त आतिथ्य
+  abhibhavak: 'अभिभावक / शिक्षक',
+  email: 'ईमेल', basaav: 'ग्रामीण / शहरी', sahayata: 'सहायता चाहिए',
+  naamSarvajanik: 'नाम सार्वजनिक सूची में', parivarNaam: 'परिवार का प्रदर्शन नाम',
+  vayaskSadasya: 'सहमत वयस्क सदस्य', panchayat: 'पंचायत / नगर',
+  gramKod: 'ग्राम कोड', sthal: 'सभा का स्थान', samuh: 'उपस्थित समूह',
+  dayra: 'निर्णय का दायरा', prabhaviTithi: 'निर्णय की प्रभावी तिथि',
+  pushti1: 'पुष्टिकर्ता 1', pushti1Mobile: 'पुष्टिकर्ता 1 मोबाइल',
+  pushti2: 'पुष्टिकर्ता 2', pushti2Mobile: 'पुष्टिकर्ता 2 मोबाइल',
+  anuvarti: 'अनुवर्ती जाँच की सहमति'
 };
 
 // ---- entry point ---------------------------------------------------------

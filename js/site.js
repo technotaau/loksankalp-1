@@ -493,15 +493,24 @@
      और रुकावट दिखती भी नहीं क्योंकि खाना परदे पर है ही नहीं। इसलिए required
      दिखने के साथ लगता है और छिपने के साथ हटता है; छिपते समय उसका भरा मान भी
      मिटता है, वरना कोई क्षेत्र बदल दे तो पुराना जिला चुपचाप साथ चला जाए। */
-  (function () {
-    var form = document.querySelector('form[data-demo]');
-    var boxes = document.querySelectorAll('[data-show-when]');
-    if (!form || !boxes.length) return;
+  /* 11 नवंबर 2026 : यह खंड पहले सिर्फ़ पहले फ़ॉर्म से जुड़ता था
+     (querySelector, querySelectorAll). एक पन्ने पर एक ही फ़ॉर्म था, इसलिए
+     चलता रहा। तंबाकू मुक्त आतिथ्य पर तीन फ़ॉर्म हैं : व्यक्ति, परिवार और
+     गाँव। पुराने कोड में दूसरे और तीसरे फ़ॉर्म के शर्त वाले खाने कभी न
+     खुलते, और उनका data-req कभी न लगता, यानी ज़रूरी खाना ख़ाली भी चला
+     जाता। अब हर फ़ॉर्म अपने ही खानों से जुड़ता है। एक फ़ॉर्म वाले पन्नों
+     पर व्यवहार जस का तस है। */
+  document.querySelectorAll('form[data-demo]').forEach(function (form) {
+    var boxes = form.querySelectorAll('[data-show-when]');
+    if (!boxes.length) return;
 
     // The trigger may be one control with an id, or a group of radios sharing
     // a name. Reading both here keeps the markup free of a second attribute.
     var valueOf = function (key) {
-      var one = document.getElementById(key);
+      // इसी फ़ॉर्म के भीतर देखिए। तीन फ़ॉर्म वाले पन्ने पर id पूरे पन्ने में
+      // अलग होते हैं, पर खोज फ़ॉर्म तक सीमित रखना ही सही है : किसी और
+      // फ़ॉर्म का खाना इस फ़ॉर्म की शर्त तय न करे।
+      var one = form.querySelector('#' + (window.CSS && CSS.escape ? CSS.escape(key) : key));
       if (one) return one.closest('[data-show-when][hidden]') ? null : one.value;
       var picked = form.querySelector('[name="' + key + '"]:checked');
       return picked ? picked.value : '';
@@ -531,7 +540,7 @@
 
     form.addEventListener('change', apply);
     apply();
-  })();
+  });
 
   /* --- आज का काम : one question, one button ------------------------------
      People arriving from WhatsApp met three invitations at once, संकल्प लें,
@@ -1681,7 +1690,13 @@
     'inqlab28-done': 'inqlab28',
     'doot-done': 'sankalpDoot',
     'matdan-done': 'matdan',
-    'matdan-sabha-done': 'matdanSabha'
+    'matdan-sabha-done': 'matdanSabha',
+    /* तंबाकू मुक्त आतिथ्य के तीन पंजीकरण। तीनों अलग शीट में जाते हैं :
+       एक व्यक्ति की शपथ, एक परिवार का निर्णय और एक गाँव की सभा, तीनों
+       अलग चीज़ें हैं और इन्हें जोड़कर "कुल लोग" नहीं निकाला जाता। */
+    'atithya-done': 'atithya',
+    'atithya-parivar-done': 'atithyaParivar',
+    'atithya-gram-done': 'atithyaGram'
   };
 
   var MAX_EDGE = 1600;   // px on the long side
@@ -1793,6 +1808,14 @@
       // confirmation renders, which would otherwise blank the certificate.
       var naamField = form.querySelector('[name="naam"]');
       var naamValue = naamField ? naamField.value.trim() : '';
+      /* कुछ प्रमाणपत्र किसी और खाने के नाम से बनते हैं। परिवार के
+         प्रमाणपत्र पर प्रतिनिधि का नहीं, परिवार का प्रदर्शन नाम छपना
+         चाहिए ("श्री रामलाल जी का परिवार")। वह खाना वैकल्पिक है, इसलिए
+         ख़ाली होने पर naam वाला नाम ही रहता है और वाक्य तब भी ठीक बनता
+         है : "रामलाल के परिवार ने ..."। जिस पन्ने पर यह निशान नहीं है,
+         वहाँ कुछ नहीं बदलता। */
+      var certNaamField = form.querySelector('[data-cert-naam]');
+      if (certNaamField && certNaamField.value.trim()) naamValue = certNaamField.value.trim();
 
       /* गाँव/शहर और उसके साथ जिला, राज्य या देश, जो भी भरा हो। अकेला गाँव
          का नाम अधूरा रहता है : लोडेरा कई हो सकते हैं, और टोरंटो लिखने वाले का
