@@ -71,7 +71,13 @@ const path = require('path');
     await pg.waitForTimeout(220);
     const r = await pg.evaluate(() => {
       const vis = id => { const n = document.getElementById(id); return n && !n.hidden; };
-      if (vis('s-confirm')) return { parda: 'पुष्टि', text: document.getElementById('heard').textContent };
+      if (vis('s-confirm')) {
+        const t = document.getElementById('heard').textContent || '';
+        // पुस्तिका वाला मेल और सूची वाला मेल अलग गिने जाते हैं। दोनों को
+        // एक साथ "पहुँच गया" गिनना नाप को बढ़ा-चढ़ाकर दिखाता है :
+        // पुस्तिका का मेल अक्सर बेतुका होता है और फिर भी पुष्टि तक पहुँचता है।
+        return { parda: /पुस्तिका/.test(t) ? 'पुस्तिका' : 'पुष्टि', text: t };
+      }
       if (vis('s-out')) {
         const o = document.getElementById('out');
         const h = o.querySelector('h2,h3');
@@ -83,8 +89,15 @@ const path = require('path');
     out.push({ ...s, ...r });
   }
 
-  const pahuncha = out.filter(r => r.parda === 'पुष्टि' || (r.parda === 'जवाब' && r.samjha)).length;
-  console.log('कुल ' + out.length + ' | पहुँचे ' + pahuncha + ' | इनकार ' + (out.length - pahuncha));
+  const n = p => out.filter(r => r.parda === p).length;
+  const suchi = n('पुष्टि') + out.filter(r => r.parda === 'जवाब' && r.samjha).length;
+  const kosh = n('पुस्तिका');
+  console.log('कुल ' + out.length
+    + ' | सूची से मेल ' + suchi
+    + ' | पुस्तिका से ' + kosh
+    + ' | इनकार ' + (out.length - suchi - kosh));
+  console.log('(पुस्तिका वाले मेल हाथ से देखिए। वे अक्सर बेतुके होते हैं,'
+    + ' इसलिए उन्हें सफलता में नहीं गिना जाता।)');
   if (errs.length) console.log('JS ख़राबी : ' + errs.slice(0, 3).join(' | '));
   if (process.env.OUT) {
     fs.writeFileSync(process.env.OUT, JSON.stringify(out, null, 1));
