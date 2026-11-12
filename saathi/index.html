@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#17307a">
-<meta name="description" content="नशे के सवालों का सीधा जवाब, गाँव की हिंदी में। 320 सवाल, 240 पर मंज़ूर किया हुआ जवाब, हर एक के साथ उसका आधार। आपका सवाल आपके फ़ोन से बाहर नहीं जाता।">
+<meta name="description" content="नशे के सवालों का सीधा जवाब, गाँव की हिंदी में। 320 सवाल, 240 पर मंज़ूर किया हुआ जवाब, हर एक के साथ उसका आधार। आपका सवाल लोकसंकल्प तक नहीं आता।">
 <link rel="canonical" href="https://loksankalp.org/saathi/">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <title>संकल्प साथी : नशे के सवालों का जवाब | लोकसंकल्प</title>
@@ -98,6 +98,9 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent); o
 .ask input{flex:1;min-width:0;border:2px solid var(--line);border-radius:var(--r);
            padding:.85rem .9rem;font-size:1rem;font-family:var(--body);
            background:var(--surface);color:var(--ink)}
+.big.sun-raha{background:var(--crit);border-color:var(--crit)}
+.mic-ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-inline-end:.4rem}
 .mic{flex:0 0 auto;width:58px;border:2px solid var(--line);border-radius:var(--r);
      background:var(--surface);display:grid;place-items:center}
 .mic svg{width:24px;height:24px;stroke:var(--brand);fill:none;stroke-width:1.8;
@@ -214,7 +217,7 @@ li{line-height:1.6}
     <p style="font-size:1.05rem">यह लोकसंकल्प का साथी है। नशे के बारे में जो पूछना हो, पूछिए। जवाब बोलकर सुनाया जाएगा।</p>
     <button class="big" id="b-start">शुरू कीजिए</button>
     <p class="note">दबाते ही आवाज़ चालू होगी। फ़ोन का साइलेंट बंद कर लीजिए।</p>
-    <p class="note">आपका नाम नहीं पूछा जाता, और आप जो सवाल लिखेंगे वह आपके फ़ोन से बाहर नहीं जाता।
+    <p class="note">आपका नाम नहीं पूछा जाता। जवाब ढूँढ़ने का सारा काम आपके ही फ़ोन में होता है, और आपका सवाल लोकसंकल्प तक नहीं आता। एक बात साफ़ जान लीजिए : बोलकर पूछने पर आपकी आवाज़ आपके फ़ोन की अपनी आवाज़-पहचान सेवा तक जाती है, जो Google या Apple की होती है। डिब्बों पर उँगली रखकर पढ़ने में वह भी नहीं जाती।
       <a href="../nijta.html#saathi" target="_blank" rel="noopener">निजता का पन्ना</a></p>
 
     <!-- आवाज़ का चुनाव। हर फ़ोन की अपनी आवाज़ होती है और सबको एक जैसी
@@ -269,15 +272,13 @@ li{line-height:1.6}
     <p id="home-lead" style="font-size:1.02rem">किस बारे में पूछना है? किसी भी डिब्बे पर उँगली रखिए, वह ख़ुद बोलेगा।</p>
     <div class="grid" id="topics"></div>
     <hr>
-    <p class="note" style="font-weight:700;color:var(--ink);font-size:.95rem">या अपने शब्दों में पूछिए</p>
-    <div class="ask">
-      <input id="q" type="text" placeholder="यहाँ लिखिए" autocomplete="off" aria-label="अपना सवाल लिखिए">
-      <button class="mic" id="b-mic" aria-label="बोलकर पूछिए" title="बोलकर पूछिए">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg>
-      </button>
-    </div>
-    <button class="big" id="b-ask">पूछिए</button>
-    <p class="note" id="nam-lead" style="margin-top:1rem">क्या पूछ सकते हैं, इसके नमूने :</p>
+    <p class="note" style="font-weight:700;color:var(--ink);font-size:.95rem">या अपने शब्दों में बोलकर पूछिए</p>
+    <button class="big" id="b-mic" aria-label="बोलकर पूछिए">
+      <svg class="mic-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg>
+      बोलकर पूछिए
+    </button>
+    <p class="note" id="mic-note">बटन दबाइए और हिंदी में अपना सवाल बोलिए।</p>
+    <p class="note" id="nam-lead" style="margin-top:1rem">या इनमें से कोई सवाल छूकर पूछिए :</p>
     <div class="namune" id="namune"></div>
   </section>
 
@@ -335,13 +336,6 @@ li{line-height:1.6}
 </main>
 
 <footer class="wide">
-  <div class="card">
-    <h2>यह पन्ना क्या है</h2>
-    <div class="flow" id="legend"></div>
-    <hr>
-    <p class="note"><b style="color:var(--ink)">जवाब अभी मंज़ूर नहीं हैं।</b> यहाँ जो जवाब दिखते हैं वे दिखाने भर के लिए लिखे गए हैं। असली जवाब केंद्र से मंज़ूर होकर आएँगे, और ऊँचे जोखिम वाले जवाब चिकित्सक से जँचकर।</p>
-    <p class="note">सवालों का मिलान 320 सवालों पर चल रहा है, जो टीम के भेजे दस्तावेज़ से बने हैं। अब हर सवाल विषय के पेड़ में छूकर भी पढ़ा जा सकता है, सिर्फ़ लिखकर ढूँढ़ने पर निर्भर नहीं। इनमें से 43 के जवाब लिख दिए गए हैं। <code>loksankalp.org/sawal</code> से अब तक आए आठ असली सवालों पर नापकर देखा गया कि यह मिलान आठ में से सिर्फ़ एक पर सही जोड़ निकालता है। इसीलिए पुष्टि का क़दम और साफ़ इनकार, दोनों ज़रूरी हैं।</p><p class="note"><b style="color:var(--ink)">यह पता किसी को आम तौर पर मत भेजिए।</b> पन्ना खोज के नतीजों में नहीं आता, पर पता जानने वाला इसे खोल सकता है।</p>
-  </div>
   <div class="card">
     <h2>जँचे हुए नंबर</h2>
     <div class="lines" id="lines2"></div>
@@ -990,7 +984,7 @@ li{line-height:1.6}
     return false;
   }
   function ask(q){
-    if(!q){ say('कुछ लिखिए या बोलिए, फिर पूछिए।'); return; }
+    if(!q){ say('कुछ सुनाई नहीं दिया। दोबारा बोलिए।'); return; }
     /* पहला फाटक : ख़तरे के शब्द सीधे सवाल में। यह सूची से पहले चलता है। */
     if(hasAny(q, AAPAT)){ state.cand={id:'',c:'',r:'Emergency',q:q}; answer(state.cand); return; }
     var hi = hasAny(q, UNCHA);
@@ -1030,7 +1024,6 @@ li{line-height:1.6}
       say('आपने पूछा, '+q+'  इस बारे में पुस्तिका '+c.t+' में लिखा हुआ है। सुनाऊँ? हाँ या ना।');
     }, 600);
   }
-  $('b-ask').addEventListener('click', function(){ ask($('q').value.trim()) });
 
   /* समझ न आने पर।
 
@@ -1076,28 +1069,30 @@ li{line-height:1.6}
     say(bole + 'या चौदह हज़ार चार सौ छियालीस पर बात कीजिए।');
   }
   function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML }
-  $('q').addEventListener('keydown', function(e){ if(e.key==='Enter') $('b-ask').click(); });
 
-  /* माइक। Android के Chrome पर एक बार में एक ही वाक्य लिया जा सकता है,
-     और iPhone पर home screen से खोलने पर यह चलता ही नहीं। इसलिए हर हाल
-     में लिखकर पूछने का रास्ता खुला रखा गया है। */
+  /* माइक। 12 नवंबर 2026 से यही अपने शब्दों में पूछने का इकलौता रास्ता है;
+     लिखने का खाना हटा दिया गया।
+
+     जहाँ यह नहीं चलता (Firefox, iPhone पर home screen से खुला पन्ना, और
+     कई Android WebView) वहाँ आदमी के लिए विषयों के डिब्बे रहते हैं, जिनमें
+     320 सवाल छूकर पढ़े जा सकते हैं। इसलिए कोई पूरी तरह बाहर नहीं होता।
+     नीचे हर नाकामी पर उन्हीं डिब्बों की तरफ़ भेजा जाता है। */
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var rec=null, listening=false;
   if(!SR){ $('b-mic').title='इस ब्राउज़र में बोलकर पूछना नहीं चलता'; }
   $('b-mic').addEventListener('click', function(){
     if(!SR){
-      say('इस फ़ोन के ब्राउज़र में बोलकर पूछना नहीं चलता। लिखकर पूछिए।');
-      $('q').focus(); return;
+      say('इस फ़ोन के ब्राउज़र में बोलकर पूछना नहीं चलता। ऊपर दिए डिब्बों में से अपना विषय चुनिए।');
+      return;
     }
     if(listening){ try{ rec.stop() }catch(e){} return; }
     try{ speechSynthesis.cancel() }catch(e){}
     rec = new SR();
     rec.lang='hi-IN'; rec.interimResults=false; rec.maxAlternatives=1;
-    rec.onstart=function(){ listening=true; $('b-mic').style.borderColor='var(--crit)'; status('सुन रहा है, बोलिए') };
+    rec.onstart=function(){ listening=true; $('b-mic').classList.add('sun-raha'); status('सुन रहा है, बोलिए') };
     rec.onresult=function(ev){
       var t='';
       try{ t=ev.results[0][0].transcript||'' }catch(e){}
-      $('q').value=t;
       status('तैयार');
       if(t.trim()) ask(t.trim());
     };
@@ -1105,15 +1100,15 @@ li{line-height:1.6}
       status('तैयार');
       var c=(ev && ev.error)||'';
       if(c==='not-allowed'||c==='service-not-allowed'){
-        say('माइक की इजाज़त नहीं मिली। ब्राउज़र की सेटिंग में माइक चालू कीजिए, या लिखकर पूछिए।');
+        say('माइक की इजाज़त नहीं मिली। ब्राउज़र की सेटिंग में माइक चालू कीजिए, या ऊपर दिए डिब्बों में से चुनिए।');
       } else if(c==='no-speech'){
         say('कुछ सुनाई नहीं दिया। दोबारा दबाकर बोलिए।');
       } else {
-        say('अभी सुन नहीं पाया। लिखकर पूछिए।');
+        say('अभी सुन नहीं पाया। दोबारा दबाइए, या ऊपर दिए डिब्बों में से चुनिए।');
       }
     };
-    rec.onend=function(){ listening=false; $('b-mic').style.borderColor=''; if(status) status('तैयार') };
-    try{ rec.start() }catch(e){ listening=false; say('माइक चालू नहीं हो पाया। लिखकर पूछिए।') }
+    rec.onend=function(){ listening=false; $('b-mic').classList.remove('sun-raha'); if(status) status('तैयार') };
+    try{ rec.start() }catch(e){ listening=false; say('माइक चालू नहीं हो पाया। ऊपर दिए डिब्बों में से चुनिए।') }
   });
 
   $('b-no').addEventListener('click', function(){
@@ -1121,14 +1116,17 @@ li{line-height:1.6}
        और आदमी ने "नहीं" दबाया, तो उसे ख़ाली मत लौटाइए। */
     var c=state.cand;
     if(c && (c.r==='High' || c.r==='Emergency')){ answer(c); return; }
-    say('ठीक है। डिब्बों में से चुनिए, या दोबारा लिखिए।');
+    say('ठीक है। डिब्बों में से चुनिए, या दोबारा बोलिए।');
     show('s-home');
   });
   /* ---------- नमूना सवाल ----------
-     जाँचने वाले को यह पता ही नहीं होता कि क्या पूछा जा सकता है, तो वह
-     डिब्बों से आगे बढ़ता ही नहीं और लिखकर पूछने का रास्ता बिना आज़माया
-     रह जाता है। ये छहों पाठ ऊपर के मिलान पर चलाकर देखे गए हैं कि सही
-     सवाल पर ही जाते हैं। इन्हें बदलिए तो दोबारा चलाकर देख लीजिए। */
+     आदमी को यह पता ही नहीं होता कि क्या पूछा जा सकता है, तो वह डिब्बों से
+     आगे बढ़ता ही नहीं और बोलकर पूछने का रास्ता बिना आज़माया रह जाता है।
+     ये छहों पाठ ऊपर के मिलान पर चलाकर देखे गए हैं कि सही सवाल पर ही जाते
+     हैं। इन्हें बदलिए तो दोबारा चलाकर देख लीजिए।
+
+     इनका एक और काम है : जिस फ़ोन में माइक नहीं चलता, वहाँ ये छह सवाल और
+     विषयों के डिब्बे ही पूरा रास्ता हैं। */
   var NAMUNE=[
     'शादी में शराब परोसना कैसे रोकें',
     'नशा करने वाले बेटे को कैसे समझाएं',
@@ -1143,7 +1141,7 @@ li{line-height:1.6}
     NAMUNE.forEach(function(t){
       var b=document.createElement('button');
       b.type='button'; b.textContent=t;
-      b.addEventListener('click', function(){ $('q').value=t; ask(t); });
+      b.addEventListener('click', function(){ ask(t); });
       g.appendChild(b);
     });
   }
@@ -1236,7 +1234,7 @@ li{line-height:1.6}
     }catch(e){ b.textContent='नक़ल नहीं हो पाई' }
   });
 
-  $('b-again').addEventListener('click', function(){ $('q').value=''; show('s-home'); });
+  $('b-again').addEventListener('click', function(){ show('s-home'); });
 
   $('b-yes').addEventListener('click', function(){ answer(state.cand); });
 
@@ -1501,33 +1499,11 @@ li{line-height:1.6}
   }
 
   /* ---------- नीचे की समझाइश ---------- */
-  var LEG=[
-    [1,'मशीन होने की घोषणा पहले दस सेकंड में, आवाज़ में',1],
-    [0,'320 सवाल, 13 विषयों में बँटे हुए, छूकर पढ़ने लायक़',1],
-    [2,'उम्र का फाटक : 18 से कम पर बनाया हुआ जवाब कभी नहीं',1],
-    [3,'बड़े चिह्न वाले बटन, हर बटन ख़ुद बोलता है',1],
-    [4,'बोलकर पूछना, हिंदी में',1],
-    [5,'रोमन अक्षरों में लिखा सवाल भी पकड़ में आता है',1],
-    [6,'पुष्टि का क़दम : मशीन जो समझी वह दोहराकर पूछती है',1],
-    [7,'ठीक से समझ न आए तो अंदाज़ा नहीं, साफ़ इनकार',1],
-    [8,'जोखिम का फाटक : आपातकाल पर जवाब बनता ही नहीं',1],
-    [9,'जवाब हिंदी में बोलकर सुनाया जाता है',1],
-    [10,'जँचे हुए सरकारी नंबर, छूकर नक़ल करने लायक़',1],
-    [11,'अभियान की सोलहों पुस्तिकाओं से जवाब, पन्ने का हवाला देकर',1],
-    [12,'ख़तरे के शब्द सीधे सवाल में भी पकड़े जाते हैं',1],
-    [13,'आवाज़ चुनने और रफ़्तार बदलने का रास्ता',1],
-    [14,'हर जवाब पर राय : काम का लगा या नहीं, इसी फ़ोन में दर्ज',1],
-    [15,'संकट पर चौबीसों घंटे चलने वाली सरकारी हेल्पलाइन, कोई निजी नंबर नहीं',1],
-    [16,'मंज़ूर किए हुए जवाब : 197 सवालों पर, हर एक के साथ उसका आधार',1],
-    [17,'कोश से न मिले तो बनाया हुआ जवाब : जान बूझकर बंद है',0]
-  ];
-  var lg=$('legend');
-  LEG.forEach(function(L){
-    var d=el('div','fs'+(L[2]?'':' off'));
-    d.appendChild(el('b',null,L[2]?'✓':'·'));
-    d.appendChild(el('span',null,L[1]));
-    lg.appendChild(d);
-  });
+  /* 12 नवंबर 2026 : यहाँ "यह पन्ना क्या है" वाली सत्रह पंक्तियों की सूची
+     थी, जो पन्ने की हर ख़ूबी गिनाती थी। वह भीतर के काम की चीज़ थी, गाँव के
+     आदमी के किसी काम की नहीं, और हर बदलाव पर पुरानी भी पड़ती जाती थी।
+     हटा दी गई। जो बातें आदमी को सचमुच जाननी चाहिए (मशीन है, उम्र का फाटक,
+     सवाल कहीं नहीं जाता) वे पहले पर्दे पर पहले से कही जाती हैं। */
   var l2=$('lines2'); var lb=linesBox(); while(lb.firstChild) l2.appendChild(lb.firstChild);
 
   /* ---------- तैयारी ---------- */
