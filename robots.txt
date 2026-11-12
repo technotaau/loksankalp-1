@@ -11,6 +11,9 @@ Disallow: /docs/
 # /sawal सिर्फ़ एक मोड़ है जो Google Form पर भेजता है। पृष्ठ में भी noindex
 # लिखा है; यह उसी बात का दूसरा ताला है।
 Disallow: /sawal/
-Disallow: /saathi-nmuna/
+
+# 12 नवंबर 2026 : /saathi-nmuna/ यहाँ रुका हुआ था, क्योंकि वह भीतरी
+# नमूना था। अब वह /saathi/ है, मंज़ूर जवाबों के साथ सार्वजनिक, और
+# मुख्य मेन्यू में भी है, इसलिए रोक हटा दी गई।
 
 Sitemap: https://loksankalp.org/sitemap.xml

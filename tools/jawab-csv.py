@@ -23,8 +23,8 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-KACCHE = ROOT / 'saathi-nmuna' / 'jawab-kacche.json'
-BANK = ROOT / 'saathi-nmuna' / 'bank.json'
+KACCHE = ROOT / 'saathi' / 'jawab-kacche.json'
+BANK = ROOT / 'saathi' / 'bank.json'
 OUT = ROOT / 'tools' / 'jawab-sheet.csv'
 
 KHANE = ['id', 'सवाल', 'जवाब', 'स्रोत', 'मंज़ूरी', 'मंज़ूर करने वाला', 'तारीख़']

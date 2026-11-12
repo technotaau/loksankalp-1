@@ -323,7 +323,7 @@ def check_long_dashes():
     """
     pats = ('*.html', '*.xml', '*.txt', '*.webmanifest',
             'css/*.css', 'js/*.js', 'booklets/*.json', 'parivar/*.json',
-            'assets/img/*.svg', 'sawal/*.html', 'saathi-nmuna/*.html')
+            'assets/img/*.svg', 'sawal/*.html', 'saathi/*.html')
     for pat in pats:
         for path in sorted(glob.glob(os.path.join(ROOT, pat))):
             rel = os.path.relpath(path, ROOT).replace(os.sep, '/')
@@ -417,7 +417,7 @@ def check_form_wiring():
 
 
 def check_saathi_jawab():
-    """saathi-nmuna/jawab.json : हर जवाब मंज़ूर होकर आया हो, और असली सवाल पर हो.
+    """saathi/jawab.json : हर जवाब मंज़ूर होकर आया हो, और असली सवाल पर हो.
 
     यह द्वार इसलिए है कि बिना मंज़ूरी का जवाब साइट पर न चढ़ सके. मंज़ूरी का
     मतलब है शीट में मंज़ूर करने वाले का नाम और तारीख़. tools/jawab-lao.py
@@ -426,10 +426,10 @@ def check_saathi_jawab():
 
     फ़ाइल न हो तो कुछ नहीं कहा जाता : साथी तब नमूने के जवाबों पर चलता है.
     """
-    f = os.path.join(ROOT, 'saathi-nmuna', 'jawab.json')
+    f = os.path.join(ROOT, 'saathi', 'jawab.json')
     if not os.path.exists(f):
         return
-    name = 'saathi-nmuna/jawab.json'
+    name = 'saathi/jawab.json'
     try:
         rows = json.load(open(f, encoding='utf-8'))
     except Exception as e:
@@ -439,7 +439,7 @@ def check_saathi_jawab():
         err(name, 'JSON में सूची होनी चाहिए')
         return
 
-    bank_f = os.path.join(ROOT, 'saathi-nmuna', 'bank.json')
+    bank_f = os.path.join(ROOT, 'saathi', 'bank.json')
     bank = {}
     if os.path.exists(bank_f):
         try:
@@ -462,8 +462,17 @@ def check_saathi_jawab():
             err(name, '%s : जवाब खाली' % i)
         if '\u2014' in a or '\u2013' in a:
             err(name, '%s : dash है' % i)
-        elif a and not (400 <= len(a) <= 1100):
-            err(name, '%s : लंबाई %d, 400 से 1100 के बीच होनी चाहिए' % (i, len(a)))
+        elif a and not (330 <= len(a) <= 1100):
+            err(name, '%s : लंबाई %d, 330 से 1100 के बीच होनी चाहिए' % (i, len(a)))
+        # 12 नवंबर 2026 : नीचे की सीमा 400 से 330 की गई। कारण यह है कि वह 400
+        # पुस्तिकाओं से बने जवाबों पर नापकर चुनी गई थी, जो खुलकर लिखे जाते हैं।
+        # स्रोतों से बने जवाब कसे हुए हैं : पाँच वाक्य में कारण, क़दम और यह कि
+        # कब डॉक्टर के पास जाना है। उनमें सबसे छोटा 344 अक्षर का है और पतला
+        # नहीं है। सीमा घटाने के बदले उससे मज़बूत दरवाज़ा नीचे जोड़ा गया है :
+        # अक्षर गिनने से वाक्य गिनना बेहतर पैमाना है, क्योंकि एक लंबा वाक्य
+        # 400 अक्षर पार कर सकता है पर काम का नहीं होता।
+        if a and a.count('।') < 4:
+            err(name, '%s : सिर्फ़ %d वाक्य, कम से कम 4 चाहिए' % (i, a.count('।')))
         if a and re.search(r'\d+\s*(mg|मिग्रा|मिलीग्राम|ml|एमएल|गोली|गोलियाँ|खुराक)', a, re.I):
             err(name, '%s : मात्रा या खुराक है' % i)
         if '1800-11-2356' in a:

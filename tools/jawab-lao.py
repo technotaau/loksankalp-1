@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Google Sheet से मंज़ूर हो चुके जवाब लाकर saathi-nmuna/jawab.json लिखता है.
+"""Google Sheet से मंज़ूर हो चुके जवाब लाकर saathi/jawab.json लिखता है.
 
 चलाइए:  python3 tools/jawab-lao.py
 
@@ -19,7 +19,7 @@ import sys
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-S = ROOT / 'saathi-nmuna'
+S = ROOT / 'saathi'
 OUT = S / 'jawab.json'
 
 DAWA = re.compile(

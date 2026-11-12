@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#17307a">
-<meta name="description" content="संकल्प साथी का भीतरी नमूना। सार्वजनिक नहीं।">
+<meta name="description" content="नशे के सवालों का सीधा जवाब, गाँव की हिंदी में। 320 सवाल, 240 पर मंज़ूर किया हुआ जवाब, हर एक के साथ उसका आधार। आपका सवाल आपके फ़ोन से बाहर नहीं जाता।">
+<link rel="canonical" href="https://loksankalp.org/saathi/">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
-<title>संकल्प साथी : भीतरी नमूना</title>
+<title>संकल्प साथी : नशे के सवालों का जवाब | लोकसंकल्प</title>
 <link rel="stylesheet" href="../css/fonts.css">
 
 <style>
@@ -68,7 +68,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent); o
 .mark{width:40px;height:40px;border-radius:12px;background:var(--brand);color:var(--on-brand);
       display:grid;place-items:center;font-family:var(--head);font-size:1.3rem;flex:0 0 auto}
 .tag{display:inline-block;background:var(--accent-soft);color:var(--accent-ink);
-     border-radius:999px;padding:.25rem .7rem;font-size:.72rem;font-weight:700;letter-spacing:.04em}
+     border-radius:999px;padding:.25rem .7rem;font-size:.72rem;font-weight:700}
 
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
       padding:1.1rem 1.15rem;display:flex;flex-direction:column;gap:.8rem}
@@ -107,7 +107,11 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent); o
         font-size:1.02rem;line-height:1.65}
 .answer{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--accent);
         border-radius:var(--r);padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.6rem}
-.answer .src{font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-ink)}
+/* letter-spacing और text-transform यहाँ से हटाए गए (12 नवंबर 2026)।
+   letter-spacing देवनागरी की मात्राओं को अक्षर से अलग कर देता है,
+   और uppercase हिंदी पर कुछ नहीं करता पर अंग्रेज़ी नामों को चीख़ता
+   हुआ बना देता है। यह पंक्ति शुरू से अंग्रेज़ी के हिसाब से लिखी थी। */
+.answer .src{font-size:.78rem;font-weight:700;color:var(--accent-ink)}
 .answer.gen{border-left-color:var(--brand)} .answer.gen .src{color:var(--brand)}
 
 .alarm{background:var(--crit-bg);border:2px solid var(--crit);border-radius:var(--r);
@@ -120,7 +124,7 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent); o
   font:inherit;font-size:.95rem;font-weight:700;color:var(--brand);cursor:pointer;min-height:48px}
 .back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;
   stroke-linecap:round;stroke-linejoin:round}
-.upnaam{font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+.upnaam{font-size:.82rem;font-weight:700;
   color:var(--accent-ink);margin:1.1rem 0 .5rem}
 .chabi{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin:.6rem 0 .2rem;
   font-size:.78rem;color:var(--soft)}
@@ -193,7 +197,7 @@ li{line-height:1.6}
     <div class="mark">सं</div>
     <div style="flex:1;min-width:0">
       <h1>संकल्प साथी</h1>
-      <span class="tag">भीतरी नमूना · सार्वजनिक नहीं</span>
+      <span class="tag">लोकसंकल्प · नशे के सवालों का जवाब</span>
     </div>
   </div>
 
@@ -341,7 +345,7 @@ li{line-height:1.6}
   <div class="card">
     <h2>जँचे हुए नंबर</h2>
     <div class="lines" id="lines2"></div>
-    <p class="note">ये पाँच सरकारी स्रोतों से जाँचे गए हैं। बीकानेर से फ़ोन करके जाँचना अभी बाक़ी है। 181 और 1800-11-2356 जान बूझकर नहीं रखे गए।</p>
+    <p class="note">ये पाँचों भारत सरकार के अपने नंबर हैं और निःशुल्क हैं। किसी भी वक़्त मिलाइए।</p>
   </div>
 </footer>
 
@@ -365,21 +369,25 @@ li{line-height:1.6}
   var state={band:false, age:null, cand:null, sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null, vishay:null};
 
   /* ======================================================================
-     संकट पर जिस इंसान तक बात पहुँचेगी। सिर्फ़ यही चार पंक्तियाँ भरनी हैं।
+     संकट पर क्या दिखाया जाए।
 
-     naam और number खाली हों तो पर्दे पर सिर्फ़ सरकारी नंबर दिखते हैं और
-     केंद्र वाला डिब्बा आता ही नहीं। यह जान-बूझकर है : आधा भरा नाम दिखाने
-     से कुछ न दिखाना बेहतर है, क्योंकि संकट में आदमी उसी पर भरोसा करेगा।
+     12 नवंबर 2026 का फ़ैसला : किसी व्यक्ति का नाम या नंबर नहीं दिखेगा,
+     सिर्फ़ सरकारी हेल्पलाइन। यह अधूरापन नहीं, तय किया हुआ है।
+
+     कारण यह है कि एक आदमी चौबीसों घंटे फ़ोन नहीं उठा सकता, और संकट की
+     घड़ी में सबसे बुरी चीज़ वह नंबर है जो बजता रहे और कोई न उठाए। जो
+     नंबर सचमुच चौबीसों घंटे चलते हैं वे नीचे LINES में हैं और वही दिखते
+     हैं।
+
+     आगे कभी केंद्र का कोई नामज़द आदमी तय हो जाए, तो यहाँ naam, pad,
+     number और waada भर देने भर से वह डिब्बा अपने आप लौट आएगा। नीचे का
+     कोड वैसा ही रखा गया है, हटाया नहीं।
      ====================================================================== */
   var SANKAT = {
-    naam:   'चमकौर सिंह',
-    pad:    'समाजशास्त्र विभाग, राजकीय डूंगर महाविद्यालय, बीकानेर',
-    number: '7425950507',
-    /* यह वादा जान बूझकर छोटा रखा है। एक आदमी चौबीसों घंटे फ़ोन नहीं उठा
-       सकता, और संकट की घड़ी में झूठा वादा सबसे बुरा होता है। जो नंबर
-       सचमुच चौबीसों घंटे चलते हैं (112, 14446) वे इसी पर्दे पर ऊपर
-       दिखते हैं। समय पक्का होने पर यही पंक्ति बदल दीजिए। */
-    waada:  'दिन के समय'
+    naam:   '',
+    pad:    '',
+    number: '',
+    waada:  ''
   };
   var ENDPOINT='https://script.google.com/macros/s/AKfycbw5DbR-p0ech2BN7RwQ3LDVu9iFLYuawX7Pa7ph5-MVJFz0NAgi-aT-6UsC6T1fFlCwbw/exec';
 
@@ -1319,6 +1327,14 @@ li{line-height:1.6}
     return m;
   }
   function callbackBox(rasta){
+    /* 12 नवंबर 2026 : यह डिब्बा लिखता था "केंद्र से आपको फ़ोन किया
+       जाएगा"। जब केंद्र का कोई नामज़द आदमी पर्दे पर नहीं है, तब यह वादा
+       कोई निभाने वाला नहीं है, और संकट की घड़ी में बिना निभाए वादे से
+       बुरा कुछ नहीं। इसलिए जब तक SANKAT में नाम और नंबर नहीं भरे जाते,
+       यह डिब्बा बनता ही नहीं और आदमी को सीधे सरकारी हेल्पलाइन दिखती हैं।
+       इसका एक नतीजा यह भी है कि संकट वाली पंक्तियाँ शीट में आनी बंद हो
+       जाएँगी, क्योंकि लिखने का यही एक रास्ता था। */
+    if(!SANKAT.number || !SANKAT.naam) return null;
     /* यह खाना हर बार नया बनता है, इसलिए भेजे जाने का निशान भी इसी के
        भीतर रखा जाता है। पहले यह state में रखा था और कभी मिटता नहीं था,
        तो एक ही फ़ोन पर दूसरा आदमी दोबारा नहीं भेज पाता था। गाँव और
@@ -1365,7 +1381,7 @@ li{line-height:1.6}
       send.disabled=true; msg.textContent='भेजा जा रहा है...';
       fetch(ENDPOINT, {method:'POST', body: JSON.stringify({
         form:'sankat', reqId:'sk-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),
-        values:{ rasta: rasta, mobile: m, kahan: 'saathi-nmuna', sahmati: 'हाँ' }
+        values:{ rasta: rasta, mobile: m, kahan: 'saathi', sahmati: 'हाँ' }
       })}).then(function(r){ return r.json() }).then(function(res){
         if(res && res.ok){
           bhejaJaChuka=true;
@@ -1398,9 +1414,7 @@ li{line-height:1.6}
       a.appendChild(linesBox());
       out.appendChild(a);
       var kb1=kendraBox(); if(kb1) out.appendChild(kb1);
-      out.appendChild(callbackBox('आपातकाल'));
-      if(!SANKAT.number) out.appendChild(el('p','note',
-        'केंद्र का अपना नंबर अभी इस पन्ने में नहीं डाला गया है, इसलिए ऊपर सिर्फ़ सरकारी नंबर दिख रहे हैं।'));
+      var cb1=callbackBox('आपातकाल'); if(cb1) out.appendChild(cb1);
       var bol='यह रुकने की बात नहीं है। अभी किसी बड़े को बुलाइए। एक सौ बारह मिलाइए। एक सौ बारह। '+
               'या एक सौ आठ पर एंबुलेंस बुलाइए। मैं इस पर कोई सलाह नहीं दूँगा।';
       if(SANKAT.number && SANKAT.naam){
@@ -1419,7 +1433,7 @@ li{line-height:1.6}
       out.appendChild(w);
       var kb2=kendraBox(); if(kb2) out.appendChild(kb2);
       out.appendChild(linesBox());
-      out.appendChild(callbackBox('ऊँचा जोखिम'));
+      var cb2=callbackBox('ऊँचा जोखिम'); if(cb2) out.appendChild(cb2);
       say('इस पर मैं सलाह नहीं दूँगा। यह उन सवालों में है जिन पर इंसान से बात करनी चाहिए। '+
           'चौदह हज़ार चार सौ छियालीस पर नशा मुक्ति हेल्पलाइन से बात कीजिए।');
       return;
@@ -1469,8 +1483,13 @@ li{line-height:1.6}
       /* मंज़ूर जवाब पर पुस्तिका और पन्ना दिखता है, ताकि पढ़ने वाला चाहे तो
          ख़ुद पुस्तिका में वही जगह देख ले। नमूने के जवाब पर वह नहीं दिखता,
          क्योंकि उसका कोई पन्ना नहीं है। */
+      /* 12 नवंबर 2026 : पर्दे पर छोटा आधार (J.srot) दिखता है, पूरा नहीं।
+         स्रोतों से बने जवाबों का पूरा हवाला अंग्रेज़ी नाम और लंबे URL का
+         होता है; वह गाँव के आदमी के किसी काम का नहीं और पर्दा भर देता है।
+         पूरा हवाला jawab.json में J.src में ज्यों का त्यों पड़ा है, ताकि
+         जाँचने वाला उसे देख सके। */
       b.appendChild(el('div','src', J.namuna ? ('नमूना · '+(c.id||''))
-        : ((J.src ? esc(J.src) : 'अभियान की पुस्तिका')+' · '+(c.id||''))));
+        : ((J.srot || J.src || 'अभियान की पुस्तिका')+' · '+(c.id||''))));
       b.appendChild(el('p',null,J.a));
       out.appendChild(b);
       if(J.namuna){
@@ -1526,8 +1545,8 @@ li{line-height:1.6}
     [12,'ख़तरे के शब्द सीधे सवाल में भी पकड़े जाते हैं',1],
     [13,'आवाज़ चुनने और रफ़्तार बदलने का रास्ता',1],
     [14,'हर जवाब पर राय : काम का लगा या नहीं, इसी फ़ोन में दर्ज',1],
-    [15,'संकट पर केंद्र के नामज़द इंसान का नंबर, और मर्ज़ी से वापस फ़ोन',1],
-    [16,'लिखे हुए जवाब : 320 सवालों में से 43 पर। बाक़ी 277 अभी बाक़ी हैं',0],
+    [15,'संकट पर चौबीसों घंटे चलने वाली सरकारी हेल्पलाइन, कोई निजी नंबर नहीं',1],
+    [16,'मंज़ूर किए हुए जवाब : 240 सवालों पर, हर एक के साथ उसका आधार',1],
     [17,'कोश से न मिले तो बनाया हुआ जवाब : जान बूझकर बंद है',0]
   ];
   var lg=$('legend');
