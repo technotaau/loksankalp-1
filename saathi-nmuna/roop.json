@@ -22,7 +22,8 @@
   "घर की औरत पैसे माँगती रहती है और हिसाब नहीं देती",
   "महिला चिड़चिड़ी रहती है और रात को जागती है नशे की पहचान",
   "patni ki aankhein suji rehti hai aur haath kaampte hai lat hai kya",
-  "aurat ke kapdon se daru ki bu aati hai kaise pehchane"
+  "aurat ke kapdon se daru ki bu aati hai kaise pehchane",
+  "महिलाओं में addiction की पहचान कैसे करें?"
  ],
  "WOM_002": [
   "औरतें इलाज कराने से क्यों डरती हैं",
@@ -36,7 +37,8 @@
   "aurat ilaj karane se kyun hichakti hai",
   "mahila treatment lene se kyun darti hai",
   "samaj ke dar se mahila ilaj nahi kara rahi",
-  "women treatment se kyun avoid karti hain"
+  "women treatment se kyun avoid karti hain",
+  "महिलाएं treatment लेने से क्यों हिचकती हैं?"
  ],
  "WOM_003": [
   "गरभ में दारू पीना ठीक है क्या",
@@ -50,7 +52,8 @@
   "garbh mein sharab peena theek hai kya",
   "pregnancy mein daru ka kya asar hota hai",
   "pet se hoon thodi pee lun to chalega",
-  "pregnancy mein drugs ka asar kya"
+  "pregnancy mein drugs ka asar kya",
+  "pregnancy में alcohol या drugs का क्या प्रभाव पड़ता है?"
  ],
  "WOM_004": [
   "गरभ में गुटखा खाना ठीक है क्या",
@@ -64,7 +67,8 @@
   "garbh mein gutkha khana theek hai",
   "pregnancy mein tambaku ka asar kya",
   "pet se hoon khaini chhod doon kya",
-  "pregnancy mein tobacco kitna harmful"
+  "pregnancy mein tobacco kitna harmful",
+  "pregnancy में tobacco का क्या प्रभाव है?"
  ],
  "WOM_005": [
   "पति दारू पीकर मारता है क्या करूं",
@@ -78,7 +82,8 @@
   "pati daru peekar maarta hai kya karun",
   "pati nashe mein peetta hai madad kahan",
   "sharab peekar maar peet karta hai kahan jaun",
-  "domestic violence ho rahi hai pati pita hai"
+  "domestic violence ho rahi hai pati pita hai",
+  "पति के नशे और domestic violence की स्थिति में महिला क्या करे?"
  ],
  "WOM_006": [
   "औरतों के लिए अलग नशा मुक्ति केंद्र क्यों",
@@ -92,7 +97,8 @@
   "auraton ke liye alag rehab kyun chahiye",
   "mahila ke liye alag nasha mukti kendra behtar hai",
   "women ke liye separate rehab zaroori hai kya",
-  "gender sensitive ilaj ka matlab kya"
+  "gender sensitive ilaj ka matlab kya",
+  "महिलाओं के लिए gender-sensitive rehabilitation क्यों जरूरी है?"
  ],
  "N1_122": [
   "औरतें नशा क्यों छिपाती हैं",
@@ -120,7 +126,8 @@
   "doodh pilate waqt sharab peena theek hai",
   "breastfeeding mein alcohol safe hai kya",
   "jaapa mein daru pee sakti hoon",
-  "breastfeeding ke time daru ka asar"
+  "breastfeeding ke time daru ka asar",
+  "breastfeeding के दौरान alcohol सुरक्षित है?"
  ],
  "N1_124": [
   "गरभवती औरत को नशे की लत है क्या करें",
@@ -148,7 +155,8 @@
   "nasha aur ghar ki maar peet ka rishta",
   "lat se gharelu hinsa kyun badhti hai",
   "daru aur jhagde ka kya sambandh hai",
-  "domestic violence aur addiction ka link kya"
+  "domestic violence aur addiction ka link kya",
+  "domestic violence और addiction में क्या संबंध है?"
  ],
  "N1_126": [
   "पति के नशे का असर पेट वाली पत्नी पर",
@@ -261,7 +269,8 @@
   "bete ko counsellor ke pass kab le jaye",
   "kab doctor ko dikhana chahiye bacche ko",
   "kab professional help leni chahiye",
-  "when to take teen to counsellor"
+  "when to take teen to counsellor",
+  "बच्चे को counsellor या psychiatrist के पास कब ले जाएं?"
  ],
  "PAR_008": [
   "नशा छोड़ रहे बेटे पर भरोसा कैसे रखूं",
@@ -275,7 +284,8 @@
   "bete par bharosa kaise rakhu",
   "recovery me bacche se trust kaise banaye",
   "hamesha nazar rakhna sahi hai kya",
-  "rebuilding trust with recovering teen"
+  "rebuilding trust with recovering teen",
+  "नशा छोड़ रहे बच्चे के साथ trust कैसे बनाए रखें?"
  ],
  "N1_025": [
   "बच्चे का व्यवहार अचानक बदल गया क्यों",
@@ -317,7 +327,8 @@
   "bete ke kamre me shak wali cheez mili",
   "bacche ke bag me kuch mila kya karu",
   "kamre me suspicious saman mila",
-  "found suspicious items in child room"
+  "found suspicious items in child room",
+  "अगर बच्चे के कमरे में suspicious चीजें मिलें तो क्या करें?"
  ],
  "N1_028": [
   "बच्चे को डांटें या प्यार से समझाएं",
@@ -557,7 +568,8 @@
   "ek baar try karne se kya hoga",
   "sirf ek baar lene me kya harj hai",
   "ek dafa chakhne me kya bigdega",
-  "just try once answer"
+  "just try once answer",
+  "एक बार try करने से क्या होगा?—इसका सही जवाब क्या है?"
  ],
  "N1_042": [
   "पहली बार नशा करने से भी नुकसान होता है क्या",
@@ -595,7 +607,8 @@
   "padhai ke liye stimulant lena safe hai",
   "padhne ke liye goli lena theek hai",
   "study drugs safe hai kya",
-  "stimulant for studying safe"
+  "stimulant for studying safe",
+  "क्या पढ़ाई के लिए stimulant लेना सुरक्षित है?"
  ],
  "N1_044": [
   "परीक्षा में जागने के लिए गोली लेना सही है",
@@ -609,7 +622,8 @@
   "exam me jagne ke liye pills lena sahi hai",
   "ratbhar jagne ki goli theek hai",
   "neend bhagane ki dawa exam me",
-  "pills to stay awake for exams"
+  "pills to stay awake for exams",
+  "परीक्षा के दौरान जागने के लिए pills लेना सही है?"
  ],
  "N1_045": [
   "जिम में ताकत के लिए दवा लेना सुरक्षित है",
@@ -623,7 +637,8 @@
   "gym me taqat ke liye dawa lena safe hai",
   "body banane ke liye injection sahi hai",
   "gym supplement substance safe kya",
-  "gym performance enhancing substances safe"
+  "gym performance enhancing substances safe",
+  "gym में performance बढ़ाने के लिए substances लेना सुरक्षित है?"
  ],
  "N1_046": [
   "ब्रेकअप के बाद नशे से कैसे बचूं",
@@ -637,7 +652,8 @@
   "breakup ke baad nashe se kaise bachu",
   "dil toota hai nasha karne ka man hai",
   "gam me daru se kaise bachu",
-  "avoid drugs after breakup"
+  "avoid drugs after breakup",
+  "breakup के बाद नशे से कैसे बचें?"
  ],
  "N1_047": [
   "कॉलेज में नशे के माहौल से कैसे बचूं",
@@ -665,7 +681,8 @@
   "hostel me nashe ke dabav se kaise nipte",
   "hostel me roommate nasha karta hai",
   "chhatravas me pressure kaise jhelu",
-  "hostel drug pressure how to handle"
+  "hostel drug pressure how to handle",
+  "hostel में नशे के दबाव से कैसे निपटें?"
  ],
  "N1_049": [
   "दोस्त की लत की बात उसके घरवालों को बताऊं",
@@ -679,7 +696,8 @@
   "dost ki addiction uske parents ko batau",
   "yaar ke nashe ki baat ghar me kahu",
   "friend nasha karta hai batana chahiye",
-  "should I tell friend parents about addiction"
+  "should I tell friend parents about addiction",
+  "किसी दोस्त की addiction की बात उसके माता-पिता को बतानी चाहिए?"
  ],
  "N1_050": [
   "क्या नशे से हिम्मत बढ़ती है",
@@ -693,7 +711,8 @@
   "kya nashe se himmat badhti hai",
   "peene se confidence aata hai kya",
   "nasha karke bedhadak ho jate hain kya",
-  "does alcohol boost confidence"
+  "does alcohol boost confidence",
+  "क्या नशा confidence बढ़ाता है?"
  ],
  "N1_051": [
   "क्या दारू से झिझक कम होती है",
@@ -707,7 +726,8 @@
   "kya daru se jhijhak kam hoti hai",
   "sharab se ghabrahat kam hoti hai kya",
   "alcohol social anxiety kam karta hai",
-  "does drinking reduce social anxiety"
+  "does drinking reduce social anxiety",
+  "क्या alcohol social anxiety कम करता है?"
  ],
  "N1_052": [
   "क्या गांजा पढ़ाई में मदद करता है",
@@ -721,7 +741,8 @@
   "kya ganja padhai me madad karta hai",
   "bhang se dimag tez hota hai kya",
   "ganja creativity badhata hai kya",
-  "does cannabis improve creativity study"
+  "does cannabis improve creativity study",
+  "क्या cannabis पढ़ाई या creativity बढ़ाती है?"
  ],
  "N1_053": [
   "वेप से बीड़ी छोड़ना सुरक्षित है क्या",
@@ -735,7 +756,8 @@
   "vape se cigarette chhodna safe hai kya",
   "e cigarette se tobacco chhutti hai kya",
   "vaping cigarette chhodne ka tarika",
-  "is vaping safe way to quit smoking"
+  "is vaping safe way to quit smoking",
+  "क्या vaping cigarette छोड़ने का सुरक्षित तरीका है?"
  ],
  "N1_054": [
   "एनर्जी ड्रिंक और दारू साथ लेना खतरनाक है",
@@ -749,7 +771,8 @@
   "energy drink aur daru sath lena khatarnak",
   "sharab me energy drink milana theek hai",
   "mix karke peena nuksan karta hai kya",
-  "mixing energy drinks with alcohol dangerous"
+  "mixing energy drinks with alcohol dangerous",
+  "क्या energy drinks और alcohol का combination खतरनाक है?"
  ],
  "N1_055": [
   "खाली बैठे जवान नशे की तरफ क्यों जाते हैं",
@@ -763,7 +786,8 @@
   "khali baithe jawan nasha kyu karte hain",
   "boredom me nasha kyu shuru hota hai",
   "time pass ke liye nasha kyu",
-  "why bored youth turn to drugs"
+  "why bored youth turn to drugs",
+  "युवा boredom से नशे की ओर क्यों जाते हैं?"
  ],
  "N1_056": [
   "खेल और शौक नशे से बचाने में कैसे मदद करते हैं",
@@ -777,7 +801,8 @@
   "khel aur shauk nashe se kaise bachate hain",
   "khelkud se nashe se bachav kaise",
   "hobby rakhne se kya fayda nashe me",
-  "how sports hobbies prevent drug use"
+  "how sports hobbies prevent drug use",
+  "sports और hobbies नशे से बचाव में कैसे मदद करते हैं?"
  ],
  "N1_195": [
   "मेरे दोस्त मुझे नशा करने को मजबूर कर रहे हैं",
@@ -829,7 +854,8 @@
   "student nashe ki halat me school aaye to kya kare",
   "bacha peekar school aa gaya kya karu",
   "class me nashe me aaya student",
-  "student comes to school intoxicated what to do"
+  "student comes to school intoxicated what to do",
+  "छात्र नशे की हालत में स्कूल आए तो क्या करें?"
  ],
  "EDUV_003": [
   "कॉलेज में दोस्तों के दबाव से कैसे बचें",
@@ -843,7 +869,8 @@
   "college me peer pressure se kaise bache",
   "classmate smoke karne ko majbur karte hain",
   "college me doston ke dabav se kaise nipte",
-  "peer pressure in college"
+  "peer pressure in college",
+  "कॉलेज में peer pressure से कैसे बचें?"
  ],
  "EDUV_004": [
   "अच्छा नशा मुक्ति कार्यक्रम कैसा होना चाहिए",
@@ -857,7 +884,8 @@
   "effective anti drug programme kaisa ho",
   "school me awareness programme kaise kare",
   "sirf lecture se kaam chalega kya",
-  "effective anti drug programme design"
+  "effective anti drug programme design",
+  "effective anti-drug programme कैसा होना चाहिए?"
  ],
  "EDUV_005": [
   "माँ बाप और मास्टरजी मिलकर बचाव कैसे करें",
@@ -871,7 +899,8 @@
   "parents aur teachers milkar prevention kaise kare",
   "ghar aur school milkar kya kare",
   "mata pita aur teacher ka talmel",
-  "parents teachers working together prevention"
+  "parents teachers working together prevention",
+  "parents और teachers मिलकर prevention कैसे करें?"
  ],
  "EDUV_006": [
   "छात्र गुप्त मदद कहां ले सकता है",
@@ -885,7 +914,8 @@
   "student confidential help kahan le sakta hai",
   "kisi ko pata na chale aisi madad kahan",
   "teacher ko batane me dar lagta hai",
-  "confidential help for students"
+  "confidential help for students",
+  "छात्र confidential help कहां ले सकता है?"
  ],
  "EDUV_007": [
   "कॉलेज को नशा मुक्त कैसे बनाएं",
@@ -899,7 +929,8 @@
   "drug free campus kaise banaye",
   "campus me nasha kaise khatam kare",
   "college me nashe ki culture kam karna",
-  "practical steps for drug free campus"
+  "practical steps for drug free campus",
+  "drug-free campus बनाने के practical उपाय क्या हैं?"
  ],
  "EDUV_008": [
   "छात्र खुद नशा रोकने में क्या मदद कर सकते हैं",
@@ -913,7 +944,8 @@
   "student groups nasha rokne me kaise madad kare",
   "vidyarthi khud kya kar sakte hain",
   "sathi chhatra ek dusre ki madad kaise kare",
-  "student peer groups drug prevention"
+  "student peer groups drug prevention",
+  "student peer groups नशा रोकने में कैसे मदद कर सकते हैं?"
  ],
  "N1_136": [
   "बच्चों को डराए बिना नशे के नुकसान कैसे समझाएं",
@@ -951,7 +983,8 @@
   "school counsellor ka kaam kya hona chahiye",
   "counsellor school me kya kare",
   "vidyalaya me counsellor ki bhumika",
-  "role of school counsellor"
+  "role of school counsellor",
+  "स्कूल counsellor की क्या भूमिका होनी चाहिए?"
  ],
  "N1_138": [
   "शिक्षक किन आदतों पर ध्यान दें",
@@ -975,7 +1008,8 @@
   "विद्यार्थी के नंबर अचानक गिर गए शिक्षक किन बातों पर गौर करें",
   "छात्र ने साफ सफाई छोड़ दी और बर्ताव बदल गया टीचर देखें",
   "bacha class me sota rehta hai shikshak kya samjhe",
-  "chhatra ki hazri ghat gayi master ji dhyan de"
+  "chhatra ki hazri ghat gayi master ji dhyan de",
+  "शिक्षक किन behavioural signs पर ध्यान दें?"
  ],
  "N1_139": [
   "स्कूल में गुप्त काउंसलिंग कैसे हो",
@@ -989,7 +1023,8 @@
   "school me confidential counselling kaise ho",
   "vidyalaya me gopniya baatchit kaise",
   "bacche ki baat raaz kaise rahe school me",
-  "confidential counselling in school"
+  "confidential counselling in school",
+  "स्कूल में confidential counselling कैसे हो?"
  ],
  "N1_140": [
   "सजा देने से छात्र नशा छोड़ देता है क्या",
@@ -1003,7 +1038,8 @@
   "saza se student nasha chhod deta hai kya",
   "dand se bacha sudharta hai kya",
   "punishment se nasha chhutta hai kya",
-  "does punishment stop student drug use"
+  "does punishment stop student drug use",
+  "क्या punishment से छात्र नशा छोड़ देता है?"
  ],
  "N1_141": [
   "अनुशासन और सलाह में संतुलन कैसे रखें",
@@ -1017,7 +1053,8 @@
   "discipline aur counselling me balance kaise rakhe",
   "sakhti aur narmi ka talmel kaise",
   "niyam aur counselling sath kaise chale",
-  "balance discipline and counselling"
+  "balance discipline and counselling",
+  "discipline और counselling में संतुलन कैसे रखा जाए?"
  ],
  "N1_142": [
   "स्कूल की सभा में नशा मुक्ति की बात कैसे कहें",
@@ -1031,7 +1068,8 @@
   "school assembly me nasha mukti sandesh kaise de",
   "prarthana sabha me nashe par kya bole",
   "assembly me bachchon ko kaise samjhaye",
-  "drug free message in school assembly"
+  "drug free message in school assembly",
+  "स्कूल assembly में नशा मुक्ति संदेश कैसे दिए जाएं?"
  ],
  "N1_143": [
   "एनएसएस एनसीसी के छात्र नशा मुक्ति में क्या करें",
@@ -1045,7 +1083,8 @@
   "NSS NCC students nasha mukti me kya kare",
   "NCC wale ladke kya kar sakte hain",
   "NSS ke vidyarthi nasha rokne me kya kare",
-  "NSS NCC role in drug prevention"
+  "NSS NCC role in drug prevention",
+  "NSS/NCC students नशा मुक्ति में क्या कर सकते हैं?"
  ],
  "N1_144": [
   "कॉलेज में नशा छोड़ चुके लोगों की कहानी सुनाना ठीक है",
@@ -1059,7 +1098,8 @@
   "recovered logon ki stories college me sunana theek hai",
   "jisne nasha chhoda uski kahani batana",
   "sudhre huye logon ko college bulana sahi hai",
-  "sharing recovery stories in college useful"
+  "sharing recovery stories in college useful",
+  "कॉलेज में recovered persons की stories साझा करना उपयोगी है?"
  ],
  "QUIT_001": [
   "नशा छोड़ना है शुरू कहां से करूं",
@@ -1087,7 +1127,8 @@
   "rehab jaye bina chhodna ho jayega",
   "घरवाले साथ दें तो घर पे छूटे",
   "क्या घर पर छोड़ना मुमकिन है",
-  "rehab ke bina quit possible hai"
+  "rehab ke bina quit possible hai",
+  "क्या मैं घर पर नशा छोड़ सकता हूं?"
  ],
  "QUIT_003": [
   "छोड़ने का plan कैसे बनाऊं",
@@ -1115,7 +1156,8 @@
   "craving aane par kya karna chahiye",
   "craving पर क्या उपाय करूं",
   "इच्छा उठने पर क्या करूं",
-  "पीने का मन हुआ तो क्या करूं"
+  "पीने का मन हुआ तो क्या करूं",
+  "craving आने पर क्या करना चाहिए?"
  ],
  "QUIT_005": [
   "कितनी बार कोशिश की फिर भी नहीं छूटता",
@@ -1143,7 +1185,8 @@
   "gym karne se craving kam hogi",
   "खेलकूद से आदत छूटने में फायदा",
   "routine बनाने से क्या फर्क पड़ता है",
-  "exercise से लत में असर पड़ता है"
+  "exercise से लत में असर पड़ता है",
+  "exercise और routine नशा छोड़ने में कैसे मदद करते हैं?"
  ],
  "QUIT_007": [
   "छोड़ने के बाद पुराने यार कैसे संभालूं",
@@ -1171,7 +1214,8 @@
   "addiction se full recovery hoti hai",
   "क्या recovery पूरी हो पाती है",
   "सामान्य जिंदगी लौट आएगी",
-  "जिंदगी दोबारा पटरी पर आएगी"
+  "जिंदगी दोबारा पटरी पर आएगी",
+  "क्या addiction से पूरी तरह recovery संभव है?"
  ],
  "N1_071": [
   "नशा कैसे छूटे",
@@ -1185,7 +1229,8 @@
   "nasha chhodne ka tarika",
   "lat kaise chhutegi",
   "quit करने का तरीका क्या है",
-  "पीना कैसे बंद करें"
+  "पीना कैसे बंद करें",
+  "नशा कैसे छोड़ा जाए?"
  ],
  "N1_072": [
   "एकदम बंद कर देना ठीक है क्या",
@@ -1227,7 +1272,8 @@
   "kitne din me lat chhutegi",
   "quit होने में कितना समय",
   "इसमें कितनी देर लगती है",
-  "कितने रोज में ठीक हो जाता है"
+  "कितने रोज में ठीक हो जाता है",
+  "नशा छोड़ने में कितना समय लगता है?"
  ],
  "N1_075": [
   "छोड़ते वक्त तोड़ क्या होता है",
@@ -1241,7 +1287,8 @@
   "withdrawal kya hota hai chhodne par",
   "withdrawal का मतलब बताओ",
   "छोड़ते वक्त की तकलीफ क्या कहलाती",
-  "नशा बंद करने पर तोड़ क्या है"
+  "नशा बंद करने पर तोड़ क्या है",
+  "नशा छोड़ते समय withdrawal क्या होता है?"
  ],
  "N1_076": [
   "तोड़ में कौनसी तकलीफ आम है",
@@ -1267,7 +1314,8 @@
   "छोड़ने के बाद सिर दर्द और कमजोरी रहती है",
   "छोड़ने के बाद मन घबराता है यह आम लक्षण है क्या",
   "chhodne ke baad ulti ho rahi hai aam baat hai kya",
-  "tambaku chhoda to talab aur bechaini ho rahi hai"
+  "tambaku chhoda to talab aur bechaini ho rahi hai",
+  "withdrawal के कौन से लक्षण सामान्य हैं?"
  ],
  "N1_077": [
   "तलब क्या होती है",
@@ -1281,7 +1329,8 @@
   "पीने की इच्छा को क्या कहते हैं",
   "तलब का अर्थ क्या है",
   "craving किसे बोलते हैं",
-  "तलब क्या होता है समझाओ"
+  "तलब क्या होता है समझाओ",
+  "craving क्या है?"
  ],
  "N1_078": [
   "ध्यान करने से फायदा होता है",
@@ -1295,7 +1344,8 @@
   "meditation kitna kaam aata hai",
   "meditation का कितना असर है",
   "ध्यान का क्या काम है इसमें",
-  "ध्यान लगाना कितना असरदार"
+  "ध्यान लगाना कितना असरदार",
+  "meditation कितना उपयोगी है?"
  ],
  "N1_079": [
   "बस मन पक्का हो तो छूट जाएगा",
@@ -1323,7 +1373,8 @@
   "मन का इलाज करने वाले से क्या मदद",
   "काउंसलिंग कितनी काम की है",
   "सलाह मशविरा से फायदा क्या",
-  "counselling से क्या फर्क पड़ता है"
+  "counselling से क्या फर्क पड़ता है",
+  "counselling की क्या भूमिका है?"
  ],
  "N1_081": [
   "दवा कब काम आती है",
@@ -1337,7 +1388,8 @@
   "medicine kab zaroori hoti hai",
   "medicines का क्या रोल है कब",
   "कब दवा से मदद मिलती है",
-  "दवाई कब काम की होती है"
+  "दवाई कब काम की होती है",
+  "medicines कब उपयोगी होती हैं?"
  ],
  "N1_082": [
   "केंद्र में कितने दिन रहना पड़ता है",
@@ -1351,7 +1403,8 @@
   "kendra me kitna time rukna padta hai",
   "rehab में कितना लंबा रहना होता है",
   "भरती होकर कितने दिन निकालने पड़ते",
-  "केंद्र में ठहरने की अवधि कितनी"
+  "केंद्र में ठहरने की अवधि कितनी",
+  "कितने समय rehab में रहना पड़ता है?"
  ],
  "N1_083": [
   "छोड़ने के बाद आदमी पहले जैसा जी सकता है",
@@ -1421,7 +1474,8 @@
   "tod kyu lagta hai",
   "withdrawal kya hota hai",
   "नशा बंद करने पर तकलीफ क्यों होती है",
-  "withdrawal में बदन को क्या होता है"
+  "withdrawal में बदन को क्या होता है",
+  "withdrawal क्या होता है?"
  ],
  "WDL_002": [
   "तलब कितने दिन तक रहती है",
@@ -1435,7 +1489,8 @@
   "craving kitne samay tak rehti hai",
   "craving कब तक रहेगी",
   "मन मचलना कितने दिन चलता है",
-  "तलब जाने में कितना वक्त लगता है"
+  "तलब जाने में कितना वक्त लगता है",
+  "craving कितने समय तक रह सकती है?"
  ],
  "WDL_003": [
   "छोड़ने के बाद नींद क्यों नहीं आती",
@@ -1449,7 +1504,8 @@
   "raat bhar so nahi pata kyu",
   "नींद नहीं आ रही क्या withdrawal है",
   "सोने में दिक्कत क्यों हो रही छोड़ने पर",
-  "neend na aana chhodne ke baad kyu"
+  "neend na aana chhodne ke baad kyu",
+  "नशा छोड़ने के बाद नींद क्यों नहीं आती?"
  ],
  "WDL_004": [
   "तोड़ में चिड़चिड़ापन क्यों होता है",
@@ -1463,7 +1519,8 @@
   "chhodne par khijh kyu aati hai",
   "withdrawal में irritation क्यों होती है",
   "तोड़ में सब्र क्यों नहीं रहता",
-  "छोड़ने के बाद चिढ़ क्यों मचती है"
+  "छोड़ने के बाद चिढ़ क्यों मचती है",
+  "withdrawal में चिड़चिड़ापन क्यों होता है?"
  ],
  "WDL_005": [
   "हाथ कांपना तोड़ की निशानी है",
@@ -1477,7 +1534,8 @@
   "kampkampi tod ka lakshan hai kya",
   "हाथ कांपे तो क्या समझें",
   "कंपकंपी withdrawal की निशानी है",
-  "बदन में कंपन क्यों है छोड़ने पर"
+  "बदन में कंपन क्यों है छोड़ने पर",
+  "कंपकंपी withdrawal का संकेत हो सकती है?"
  ],
  "WDL_006": [
   "तोड़ में कब डॉक्टर के पास जाना चाहिए",
@@ -1503,7 +1561,8 @@
   "दो दिन से कुछ खाया पिया नहीं तोड़ में डाक्टर चाहिए",
   "छोड़ने पर दौरा पड़े तो कब डॉक्टर के पास जाएँ",
   "chhodne ke baad jhatke aa rahe hai doctor dikhaye kya",
-  "tod me behosh ho gaya hospital le jaye"
+  "tod me behosh ho gaya hospital le jaye",
+  "किन withdrawal symptoms में डॉक्टर की जरूरत है?"
  ],
  "WDL_007": [
   "तोड़ में दौरे क्यों पड़ते हैं",
@@ -1517,7 +1576,8 @@
   "chhodne ke baad fit aa gaya kya kare",
   "छोड़ने पर seizure क्यों आता है",
   "दौरा आया अब क्या करें",
-  "नशा छोड़ने पर दौरे का क्या कारण"
+  "नशा छोड़ने पर दौरे का क्या कारण",
+  "withdrawal में दौरे क्यों पड़ सकते हैं?"
  ],
  "WDL_008": [
   "तोड़ में भ्रम होना हो सकता है",
@@ -1531,7 +1591,8 @@
   "use aisi cheeze dikh rahi jo nahi hai",
   "hallucination तोड़ का हिस्सा है",
   "छोड़ने पर बहकना क्या तोड़ है",
-  "सपने जैसा जागते में दिखना क्यों"
+  "सपने जैसा जागते में दिखना क्यों",
+  "भ्रम या hallucination withdrawal का हिस्सा हो सकता है?"
  ],
  "N1_178": [
   "रात को तलब बहुत होती है कैसे रोकूं",
@@ -1545,7 +1606,8 @@
   "raat ko craving badh jati hai kya karu",
   "रात में craving कैसे रोकें",
   "रात में तलब से कैसे बचूं",
-  "रात को तलब आती है कैसे टालूं"
+  "रात को तलब आती है कैसे टालूं",
+  "रात में बहुत craving होती है, इसे कैसे रोकूं?"
  ],
  "N1_183": [
   "छोड़ने पर बहुत गुस्सा आता है क्या ये आम है",
@@ -1573,7 +1635,8 @@
   "mujhe abhi craving ho rahi hai",
   "अभी craving बहुत तेज है",
   "इस वक्त खुद को रोक नहीं पा रहा",
-  "अभी तलब चढ़ गई है"
+  "अभी तलब चढ़ गई है",
+  "मुझे अभी बहुत craving हो रही है।"
  ],
  "REL_001": [
   "दोबारा शुरू हो जाना क्या कहलाता है",
@@ -1587,7 +1650,8 @@
   "phir se peene lagna kya hota hai",
   "क्या फिर शुरू होना इलाज की नाकामी है",
   "relapse किसे बोलते हैं",
-  "दोबारा लग जाना इसका मतलब क्या"
+  "दोबारा लग जाना इसका मतलब क्या",
+  "relapse क्या है?"
  ],
  "REL_002": [
   "किन हालात में दोबारा शुरू होने का डर ज्यादा",
@@ -1601,7 +1665,8 @@
   "dobara shuru hone ki aam wajah kya",
   "किन वजहों से लोग वापस पीने लगते हैं आमतौर पर",
   "common triggers कौनसे होते हैं",
-  "कब वापस शुरू होने का डर सबसे ज्यादा"
+  "कब वापस शुरू होने का डर सबसे ज्यादा",
+  "relapse के common triggers क्या हैं?"
  ],
  "REL_003": [
   "फिर पी लिया अब क्या करूं",
@@ -1629,7 +1694,8 @@
   "sharm aur guilt ka kya karu",
   "शर्मिंदगी से कैसे उबरूं फिर शुरू होने पर",
   "shame se kaise bahar aau",
-  "फिर पीने के बाद मन का बोझ कैसे हटे"
+  "फिर पीने के बाद मन का बोझ कैसे हटे",
+  "relapse के बाद guilt और shame से कैसे निपटें?"
  ],
  "REL_005": [
   "परिवार दोबारा शुरू होने के शुरुआती संकेत कैसे देखे",
@@ -1653,7 +1719,8 @@
   "नींद बिगड़ने लगी और भूख कम हो गई शुरुआती संकेत है क्या",
   "वह शादी ब्याह में जाने की जिद करने लगा शुरुआती संकेत है क्या",
   "wo phir purane doston ke saath baithne laga warning hai kya",
-  "meeting aur ilaj par jana band kar diya chetawani hai"
+  "meeting aur ilaj par jana band kar diya chetawani hai",
+  "परिवार relapse के शुरुआती संकेत कैसे पहचाने?"
  ],
  "REL_006": [
   "दोबारा न हो इसकी तैयारी कैसे करूं",
@@ -1667,7 +1734,8 @@
   "dobara shuru na ho iski taiyari kaise",
   "बचाव का plan कैसे तैयार करूं",
   "अगली तलब के लिए पहले से क्या तय करूं",
-  "फिर न लगे इसका इंतजाम कैसे"
+  "फिर न लगे इसका इंतजाम कैसे",
+  "relapse prevention plan कैसे बनाएं?"
  ],
  "REL_007": [
   "शादी ब्याह में दोबारा शुरू होने से कैसे बचूं",
@@ -1681,7 +1749,8 @@
   "shadi me peene se kaise bachu",
   "function में जाकर कैसे बचूं",
   "शादी ब्याह के मौकों पर क्या करूं",
-  "जहां दारू चल रही हो वहां कैसे रहूं"
+  "जहां दारू चल रही हो वहां कैसे रहूं",
+  "शादी-पार्टी में relapse से कैसे बचें?"
  ],
  "REL_008": [
   "फिर शुरू हो गया तो इलाज दोबारा चालू करूं",
@@ -1695,7 +1764,8 @@
   "dobara rehab jana padega kya",
   "फिर शुरू होने पर treatment दोबारा लें",
   "क्या फिर डाक्टर के पास जाना चाहिए",
-  "दोबारा इलाज की जरूरत है या नहीं"
+  "दोबारा इलाज की जरूरत है या नहीं",
+  "relapse के बाद treatment दोबारा शुरू करना चाहिए?"
  ],
  "N1_084": [
   "छोड़ने के बाद लोग फिर क्यों शुरू कर देते हैं",
@@ -1709,7 +1779,8 @@
   "log dobara nasha kyu karne lagte hai",
   "छोड़ने के बाद वापसी क्यों होती है",
   "quit karne ke baad log phir kyu lagte hai",
-  "छूट चुके लोग दोबारा क्यों शुरू करते हैं"
+  "छूट चुके लोग दोबारा क्यों शुरू करते हैं",
+  "नशा छोड़ने के बाद लोग फिर शुरू क्यों कर देते हैं?"
  ],
  "N1_085": [
   "तलब अचानक वापस क्यों आ जाती है",
@@ -1723,7 +1794,8 @@
   "craving achanak kyu lautti hai",
   "craving अचानक वापस आने का कारण",
   "बहुत वक्त बाद तलब क्यों हुई",
-  "तलब दोबारा क्यों सिर उठाती है"
+  "तलब दोबारा क्यों सिर उठाती है",
+  "craving अचानक वापस क्यों आती है?"
  ],
  "N1_086": [
   "पुराने दोस्तों से मिलने पर तलब क्यों बढ़ती है",
@@ -1737,7 +1809,8 @@
   "dosto se milte hi craving kyu badhti hai",
   "पुराने दोस्तों से craving क्यों बढ़ जाती",
   "यारों के साथ बैठते ही तलब क्यों उठती",
-  "पुराने यार देखकर तलब तेज क्यों होती"
+  "पुराने यार देखकर तलब तेज क्यों होती",
+  "पुराने दोस्तों से मिलने पर craving क्यों बढ़ती है?"
  ],
  "N1_087": [
   "फिर शुरू हो गया तो सारी मेहनत बेकार हो जाती है",
@@ -1751,7 +1824,8 @@
   "ek baar phir pee li to sab bekar",
   "क्या मेहनत पर पानी फिर गया",
   "relapse के बाद शुरू से करना पड़ेगा सब बेकार",
-  "अब तक का रुका हुआ वक्त जाया हो गया"
+  "अब तक का रुका हुआ वक्त जाया हो गया",
+  "relapse होने पर क्या सारी मेहनत बेकार हो जाती है?"
  ],
  "N1_088": [
   "अपने trigger कैसे पहचानूं",
@@ -1775,7 +1849,8 @@
   "ठेके के सामने से निकलते ही मन मचलता है",
   "काम की थकान पर पीने का मन करता है इसे कैसे पहचानूँ",
   "tankhwah milne ke din peene ka man karta hai yahi karan hai kya",
-  "ghar me jhagda hone par peene ka man karta hai yahi trigger hai kya"
+  "ghar me jhagda hone par peene ka man karta hai yahi trigger hai kya",
+  "अपने triggers कैसे पहचानें?"
  ],
  "N1_089": [
   "तनाव से दोबारा शुरू होने का क्या नाता है",
@@ -1789,7 +1864,8 @@
   "tension me dobara kyu shuru ho jata hai",
   "stress relapse की वजह कैसे बनता है",
   "घर की परेशानी से फिर क्यों पीने लगते",
-  "तनाव क्यों वापस खींच लाता है"
+  "तनाव क्यों वापस खींच लाता है",
+  "तनाव relapse का कारण कैसे बनता है?"
  ],
  "N1_090": [
   "ठीक होने के दौरान किन लोगों से दूर रहूं",
@@ -1803,7 +1879,8 @@
   "recovery me kinse doori rakhe",
   "recovery के दौरान किनसे बचें",
   "किन लोगों से मेल जोल घटाऊं",
-  "इस दौर में किनसे दूर रहना बेहतर"
+  "इस दौर में किनसे दूर रहना बेहतर",
+  "recovery के दौरान किन लोगों से दूरी रखनी चाहिए?"
  ],
  "N1_091": [
   "परिवार कैसे पहचाने कि फिर शुरू हो गया",
@@ -1827,7 +1904,8 @@
   "दवा बंद कर दी और झूठ बोलने लगा फिर पीने लगा क्या",
   "वजन घटने लगा और नींद बिगड़ गई दोबारा लग गया",
   "phir se munh se bu aane lagi wapas peene laga kya",
-  "ghar se paise gayab hone lage dobara shuru kar diya"
+  "ghar se paise gayab hone lage dobara shuru kar diya",
+  "परिवार relapse को कैसे पहचान सकता है?"
  ],
  "N1_181": [
   "कई बार छोड़ चुका हूं फिर शुरू हो जाता है",
@@ -1855,7 +1933,8 @@
   "dobara pee liya sharm aa rahi hai",
   "relapse हो गया और शर्म महसूस हो रही है",
   "मैं relapse कर बैठा खुद पर शर्म है",
-  "फिर पी लिया बहुत बुरा लग रहा है"
+  "फिर पी लिया बहुत बुरा लग रहा है",
+  "मैं relapse कर गया हूं और बहुत शर्मिंदा हूं।"
  ],
  "FAM_001": [
   "पति दारू नहीं छोड़ रहा क्या करूं",
@@ -1910,7 +1989,8 @@
   "enabling क्या होता है परिवार में",
   "घर की आदतों से नशे को शह मिलती है क्या",
   "हम घरवाले कहां गलती कर रहे हैं",
-  "अनजाने में हम ही सहारा दे रहे हैं क्या"
+  "अनजाने में हम ही सहारा दे रहे हैं क्या",
+  "परिवार addiction को अनजाने में कैसे बढ़ावा देता है?"
  ],
  "FAM_005": [
   "इलाज को तैयार नहीं तो क्या करें",
@@ -1924,7 +2004,8 @@
   "wo doctor ke paas nahi jata",
   "treatment को मना करे तो घरवाले क्या करें",
   "खुद इलाज नहीं चाहता तब क्या करें",
-  "राजी न हो तो परिवार क्या करे"
+  "राजी न हो तो परिवार क्या करे",
+  "यदि व्यक्ति treatment के लिए तैयार न हो तो क्या करें?"
  ],
  "FAM_006": [
   "नशे में मारपीट करता है क्या करें",
@@ -1952,7 +2033,8 @@
   "trust वापस कैसे आएगा घर में",
   "नशा छोड़ा है पर शक रहता है",
   "विश्वास टूट गया वापस कैसे हो",
-  "परिवार का यकीन फिर कैसे जमे"
+  "परिवार का यकीन फिर कैसे जमे",
+  "नशा छोड़ने के बाद family trust कैसे वापस आए?"
  ],
  "FAM_008": [
   "फिर से पी लिया अब क्या करें",
@@ -1966,7 +2048,8 @@
   "relapse हो गया परिवार क्या करे",
   "नशा लौट आया अब कैसे संभालें",
   "छोड़ने के बाद फिर लग जाए तो क्या",
-  "फिर पीने लगा तो कैसा बरताव करें"
+  "फिर पीने लगा तो कैसा बरताव करें",
+  "relapse होने पर परिवार कैसे प्रतिक्रिया दे?"
  ],
  "N1_057": [
   "पत्नी नशा करती है क्या करें",
@@ -2036,7 +2119,8 @@
   "प्यार कहां जाकर गलत हो जाता है",
   "दुलार और शह देने में क्या अंतर",
   "अपनापन और छूट में फर्क बताओ",
-  "प्यार करना कहीं गलत तो नहीं हो रहा"
+  "प्यार करना कहीं गलत तो नहीं हो रहा",
+  "प्यार और enabling में क्या फर्क है?"
  ],
  "N1_062": [
   "नशा करने वाले से कैसे बात करें",
@@ -2064,7 +2148,8 @@
   "aakhri chetavni dena theek hai",
   "ultimatum देने से फायदा होगा क्या",
   "सख्ती से शर्त रखना ठीक है",
-  "अंतिम चेतावनी देनी चाहिए घरवालों को"
+  "अंतिम चेतावनी देनी चाहिए घरवालों को",
+  "क्या ultimatum देना सही है?"
  ],
  "N1_064": [
   "घरवाले कब बाहर से मदद लें",
@@ -2078,7 +2163,8 @@
   "kab bahar se madad lena jaruri hai",
   "घरवाले अकेले कब तक संभालें",
   "कब विशेषज्ञ की मदद जरूरी हो जाती है",
-  "परिवार को कब सलाह लेनी पड़ती है"
+  "परिवार को कब सलाह लेनी पड़ती है",
+  "परिवार कब professional help ले?"
  ],
  "N1_065": [
   "बच्चों पर नशे का क्या असर",
@@ -2102,7 +2188,8 @@
   "लत की वजह से बच्चे को रिश्तेदारों के पास रहना पड़ता है",
   "घर में लत से बच्चा लोगों से शरमाने लगा है",
   "ghar me lat hai bachche ki padhai chhut gayi",
-  "nashe ki wajah se bachche ka school chhut gaya"
+  "nashe ki wajah se bachche ka school chhut gaya",
+  "addiction से बच्चों पर क्या असर पड़ता है?"
  ],
  "N1_066": [
   "घर में दारू रखना ठीक है क्या",
@@ -2130,7 +2217,8 @@
   "नशे की बात किसी को बतानी चाहिए",
   "बदनामी होगी तो भी बताएं क्या",
   "relatives से share करना चाहिए क्या",
-  "गांव में बात फैले तो भी बताना चाहिए"
+  "गांव में बात फैले तो भी बताना चाहिए",
+  "रिश्तेदारों से addiction की बात साझा करनी चाहिए?"
  ],
  "N1_068": [
   "नशे से शादी टूट रही है क्या करें",
@@ -2172,7 +2260,8 @@
   "घर के लोगों को कब मन की मदद चाहिए",
   "कब घरवाले सलाहकार से मिलें",
   "परिवार को समझाने वाले की जरूरत कब",
-  "घरवालों को भी बैठकर बात कब करनी पड़े"
+  "घरवालों को भी बैठकर बात कब करनी पड़े",
+  "परिवार को counselling की जरूरत कब होती है?"
  ],
  "N1_175": [
   "कहता है दोस्तों के साथ ही पीता है",
@@ -2200,7 +2289,8 @@
   "husband रोज पीते हैं addiction नहीं मानते",
   "रोज पीना लत है या नहीं",
   "पति को लत नहीं लगी ऐसा कहते हैं",
-  "रोज की दारू को आदत नहीं बताते"
+  "रोज की दारू को आदत नहीं बताते",
+  "मेरे पति रोज पीते हैं लेकिन कहते हैं कि उन्हें addiction नहीं है।"
  ],
  "N1_180": [
   "घरवालों को बताऊं तो मारेंगे किससे कहूं",
@@ -2256,7 +2346,8 @@
   "detoxification किसे कहते हैं",
   "डिटॉक्स में क्या क्या किया जाता है",
   "सफाई वाला इलाज क्या है",
-  "नशा शरीर से निकालने का तरीका क्या है"
+  "नशा शरीर से निकालने का तरीका क्या है",
+  "detoxification क्या है?"
  ],
  "TRT_002": [
   "किस डॉक्टर के पास जाएं",
@@ -2270,7 +2361,8 @@
   "psychologist और psychiatrist में अंतर",
   "मन के डॉक्टर और काउंसलर में फर्क क्या",
   "तीनों में क्या फर्क है डॉक्टर काउंसलर",
-  "कौन दवा देगा कौन बात करेगा"
+  "कौन दवा देगा कौन बात करेगा",
+  "psychiatrist, psychologist और counsellor में क्या अंतर है?"
  ],
  "TRT_003": [
   "केंद्र में भर्ती कब जरूरी है",
@@ -2284,7 +2376,8 @@
   "किस हालत में केंद्र जरूरी है",
   "नशा मुक्ति केंद्र की जरूरत कब पड़ती है",
   "भर्ती की जरूरत कब होती है",
-  "किस वक्त केंद्र में भर्ती करवाना चाहिए"
+  "किस वक्त केंद्र में भर्ती करवाना चाहिए",
+  "rehabilitation centre कब जरूरी होता है?"
  ],
  "TRT_004": [
   "घर पर इलाज हो सकता है",
@@ -2298,7 +2391,8 @@
   "OPD से इलाज हो सकता है क्या",
   "घर पर रहकर इलाज संभव है",
   "अस्पताल में रहना जरूरी है या घर से",
-  "घर में रहकर दवा से इलाज हो जाएगा"
+  "घर में रहकर दवा से इलाज हो जाएगा",
+  "क्या घर से treatment संभव है?"
  ],
  "TRT_005": [
   "दवा से नशा छूट सकता है",
@@ -2312,7 +2406,8 @@
   "medicine से नशा छूटता है क्या",
   "नशा छुड़ाने में दवा का क्या रोल",
   "दवाई लेने से लत कम होती है क्या",
-  "दवा किस तरह असर करती है इलाज में"
+  "दवा किस तरह असर करती है इलाज में",
+  "addiction treatment में medicines कैसे मदद करती हैं?"
  ],
  "TRT_006": [
   "घरवालों की काउंसलिंग क्यों जरूरी",
@@ -2326,7 +2421,8 @@
   "family counselling की जरूरत क्यों पड़ती है",
   "हम घरवालों की सलाह से क्या होगा",
   "परिवार के साथ बैठक क्यों होती है",
-  "घरवालों का इलाज में क्या काम"
+  "घरवालों का इलाज में क्या काम",
+  "family counselling क्यों जरूरी है?"
  ],
  "TRT_007": [
   "इलाज कितने दिन चलता है",
@@ -2340,7 +2436,8 @@
   "rehab के बाद भी इलाज जारी रहेगा",
   "कब तक चलेगा सारा इलाज",
   "इलाज की अवधि कितनी होती है",
-  "कितने दिन का इलाज होता है"
+  "कितने दिन का इलाज होता है",
+  "treatment कितने समय तक चलता है?"
  ],
  "TRT_008": [
   "अच्छा केंद्र कैसे चुनें",
@@ -2364,7 +2461,8 @@
   "सरकारी नशा मुक्ति केंद्र चुनें या निजी कैसे तय करें",
   "केंद्र में काउंसलिंग होती है या सिर्फ बंद रखते हैं कैसे पता करें",
   "nasha mukti kendra ka license dekhna chahiye kya",
-  "kendra me doctor aur nurse rehte hai ya nahi kaise dekhe"
+  "kendra me doctor aur nurse rehte hai ya nahi kaise dekhe",
+  "अच्छा de-addiction centre कैसे चुनें?"
  ],
  "N1_145": [
   "डिटॉक्स और केंद्र के इलाज में फर्क",
@@ -2378,7 +2476,8 @@
   "दोनों इलाज में क्या फरक है",
   "नशा मुक्ति केंद्र और डिटॉक्स में फर्क",
   "rehab और detox एक जैसा होता है",
-  "डिटॉक्स और रिहैब में कौन क्या है"
+  "डिटॉक्स और रिहैब में कौन क्या है",
+  "rehabilitation और detox में क्या अंतर है?"
  ],
  "N1_146": [
   "हर नशे में भर्ती जरूरी है क्या",
@@ -2392,7 +2491,8 @@
   "क्या सबका इलाज भर्ती से ही होता है",
   "हर नशे वाले को केंद्र में रखना पड़ता है",
   "भर्ती के बिना किसी का इलाज नहीं होता",
-  "हर लत में अस्पताल में दाखिल होना पड़ता है"
+  "हर लत में अस्पताल में दाखिल होना पड़ता है",
+  "क्या हर addiction के लिए admission जरूरी है?"
  ],
  "N1_147": [
   "कब बाहर से इलाज काफी है",
@@ -2406,7 +2506,8 @@
   "बिना दाखिल हुए इलाज कब पूरा पड़ता है",
   "कब केंद्र में रुकने की जरूरत नहीं होती",
   "घर से आकर इलाज कब चलता है",
-  "कब बाहरी इलाज से काम बन जाता है"
+  "कब बाहरी इलाज से काम बन जाता है",
+  "outpatient treatment कब पर्याप्त होता है?"
  ],
  "N1_148": [
   "मन का डॉक्टर नशे में कैसे मदद करता है",
@@ -2420,7 +2521,8 @@
   "psychologist के पास जाने से क्या होगा",
   "मन का इलाज करने वाला नशे में क्या करता है",
   "मनोवैज्ञानिक से मिलकर क्या फायदा",
-  "psychologist लत में किस तरह काम आता है"
+  "psychologist लत में किस तरह काम आता है",
+  "psychologist addiction में कैसे मदद करता है?"
  ],
  "N1_149": [
   "ग्रुप में बैठकर बात करने से फायदा",
@@ -2434,7 +2536,8 @@
   "सामूहिक बैठक से मदद मिलती है",
   "ग्रुप वाली बात काम आती है क्या",
   "दूसरों के साथ मिलकर इलाज ठीक है",
-  "group therapy useful है क्या"
+  "group therapy useful है क्या",
+  "क्या group therapy उपयोगी है?"
  ],
  "N1_150": [
   "केंद्र के बाद दोबारा दिखाना क्यों जरूरी",
@@ -2448,7 +2551,8 @@
   "follow-up से क्या फायदा होता है",
   "केंद्र से निकलने के बाद क्यों दिखाना पड़ता है",
   "घर आने के बाद भी डॉक्टर के पास क्यों",
-  "बार बार जाना क्यों जरूरी बताते हैं"
+  "बार बार जाना क्यों जरूरी बताते हैं",
+  "rehabilitation के बाद follow-up क्यों जरूरी है?"
  ],
  "N1_151": [
   "दवा की आदत पड़ जाएगी क्या",
@@ -2462,7 +2566,8 @@
   "इलाज की गोली की आदत होती है क्या",
   "दवा का नशा हो जाता है क्या",
   "दवा खाते खाते उसी की लत लगेगी",
-  "इलाज में दी दवा से निर्भरता हो सकती है"
+  "इलाज में दी दवा से निर्भरता हो सकती है",
+  "क्या इलाज के दौरान medicines की dependency हो सकती है?"
  ],
  "N1_152": [
   "सरकारी इलाज कहां मिलता है",
@@ -2490,7 +2595,8 @@
   "मरीज को कौन कौन से हक हैं केंद्र में",
   "भर्ती होने पर मरीज के rights क्या",
   "केंद्र वाले मरीज के साथ क्या नहीं कर सकते",
-  "मरीज के हक की जानकारी चाहिए केंद्र में"
+  "मरीज के हक की जानकारी चाहिए केंद्र में",
+  "rehabilitation centre में patient के क्या अधिकार होते हैं?"
  ],
  "N1_154": [
   "जबरदस्ती भर्ती कराना ठीक है",
@@ -2504,7 +2610,8 @@
   "ना मानने पर जबरन भर्ती करें क्या",
   "जबरदस्ती इलाज कराना उचित होता है",
   "बिना पूछे केंद्र भेजना ठीक है",
-  "जबरन नशा मुक्ति केंद्र भेजना चाहिए क्या"
+  "जबरन नशा मुक्ति केंद्र भेजना चाहिए क्या",
+  "क्या किसी व्यक्ति को जबरदस्ती rehab भेजना उचित है?"
  ],
  "N1_182": [
   "डॉक्टर के पास जाने में शर्म आती है",
@@ -2546,7 +2653,8 @@
   "किसके पास जाऊं मदद के लिए",
   "कौन सा जानकार मेरी मदद करेगा",
   "किससे मिलूं नशा छुड़ाने के लिए",
-  "मदद के लिए किस तरह के आदमी से मिलूं"
+  "मदद के लिए किस तरह के आदमी से मिलूं",
+  "मुझे किस तरह के professional से संपर्क करना चाहिए?"
  ],
  "WORK_001": [
   "कर्मचारी नशा करता है कैसे पहचानें",
@@ -2560,7 +2668,8 @@
   "karmchari nasha karta hai kaise pehchanen",
   "office mein uska behaviour badal gaya kya karen",
   "kaam par aadmi ke nashe ki nishani kya",
-  "employee ke substance abuse ke signs kya"
+  "employee ke substance abuse ke signs kya",
+  "कर्मचारी के substance abuse के संकेत क्या हो सकते हैं?"
  ],
  "WORK_002": [
   "काम के तनाव से नशे की ओर जाने से कैसे बचें",
@@ -2574,7 +2683,8 @@
   "kaam ke tanav se nashe se kaise bachen",
   "job tension ke baad roj peene laga hoon",
   "kaam ki thakan mein daru se kaise door rahun",
-  "work stress se addiction se kaise bachen"
+  "work stress se addiction se kaise bachen",
+  "work stress से नशे की ओर जाने से कैसे बचें?"
  ],
  "WORK_003": [
   "बेरोजगारी से नशे का खतरा क्यों बढ़ता है",
@@ -2588,7 +2698,8 @@
   "berojgari se nashe ka khatra kyun badhta hai",
   "kaam nahi hai isliye dinbhar nasha karta hai",
   "khali baithne se lat kyun lag jaati hai",
-  "unemployment se addiction ka risk kyun badhta hai"
+  "unemployment se addiction ka risk kyun badhta hai",
+  "बेरोजगारी addiction का risk क्यों बढ़ा सकती है?"
  ],
  "WORK_004": [
   "मालिक नशे वाले कर्मचारी की मदद कैसे करे",
@@ -2602,7 +2713,8 @@
   "malik nashe wale karmchari ki madad kaise kare",
   "use naukri se nikalen ya ilaj ka mauka den",
   "seth apne aadmi ka ilaj kaise karwaye",
-  "employer addiction wale employee ki help kaise kare"
+  "employer addiction wale employee ki help kaise kare",
+  "employer addiction वाले कर्मचारी की मदद कैसे कर सकता है?"
  ],
  "WORK_005": [
   "नशा छोड़ने के बाद काम पर कैसे लौटें",
@@ -2616,7 +2728,8 @@
   "nasha chhodne ke baad kaam par kaise lauten",
   "rehab ke baad naukri shuru karne mein dar lag raha hai",
   "ilaj ke baad kaam par wapas kaise jaun",
-  "recovery ke baad job par return kaise karen"
+  "recovery ke baad job par return kaise karen",
+  "recovery के बाद व्यक्ति काम पर कैसे वापस लौटे?"
  ],
  "WORK_006": [
   "काम की जगह नशे की बात गुप्त रहनी चाहिए",
@@ -2630,7 +2743,8 @@
   "kaam ki jagah nashe ki baat gupt rehni chahiye",
   "boss ko batana zaroori hai kya",
   "office mein kisi ko pata chalna chahiye",
-  "workplace mein addiction ki baat confidential rehni chahiye"
+  "workplace mein addiction ki baat confidential rehni chahiye",
+  "workplace में addiction की जानकारी confidential रहनी चाहिए?"
  ],
  "MH_001": [
   "उदासी और नशे का क्या नाता है",
@@ -2654,7 +2768,8 @@
   "भूख नहीं लगती मन भारी रहता है और पीना बढ़ गया",
   "उदासी की दवा चल रही है और पीता भी हूँ क्या संबंध है",
   "raat bhar neend nahi aati isliye daru par nirbhar ho gaya hoon",
-  "akelapan lagta hai to daru peeta hoon ye bimari hai kya"
+  "akelapan lagta hai to daru peeta hoon ye bimari hai kya",
+  "depression और addiction में क्या संबंध है?"
  ],
  "MH_002": [
   "घबराहट मिटाने को नशा करना दिक्कत बढ़ाएगा",
@@ -2668,7 +2783,8 @@
   "ghabrahat ke liye nasha karna theek hai kya",
   "peene se anxiety kam hoti hai kya galat hai",
   "bechaini mitane ko daru lena nuksan hai",
-  "anxiety ke liye nasha problem badha deta hai kya"
+  "anxiety ke liye nasha problem badha deta hai kya",
+  "anxiety के लिए नशा करना समस्या को बढ़ा सकता है?"
  ],
  "MH_003": [
   "नींद के लिए दारू या गोली लेना सुरक्षित है",
@@ -2682,7 +2798,8 @@
   "neend ke liye daru ya goli lena safe hai",
   "bina sharab neend nahi aati kya karun",
   "sone ke liye goli roj lena theek hai",
-  "sleeping pills ya alcohol neend ke liye safe hai"
+  "sleeping pills ya alcohol neend ke liye safe hai",
+  "नींद के लिए शराब या pills लेना सुरक्षित है?"
  ],
  "MH_004": [
   "कोई बुरी घटना के बाद नशा क्यों बढ़ता है",
@@ -2696,7 +2813,8 @@
   "sadme ke baad nasha kyun badh jata hai",
   "buri ghatna ke baad peena badh gaya",
   "haadse ke baad lat kyun lag jaati hai",
-  "trauma ke baad addiction ka risk kyun badhta hai"
+  "trauma ke baad addiction ka risk kyun badhta hai",
+  "trauma के बाद addiction का risk क्यों बढ़ता है?"
  ],
  "MH_005": [
   "नशे से भ्रम और शक हो सकता है क्या",
@@ -2710,7 +2828,8 @@
   "nashe se bhram ho sakta hai kya",
   "use lagta hai log peecha kar rahe hain",
   "nashe se shak ki bimari ho jaati hai kya",
-  "nashe se hallucination ya paranoia hota hai"
+  "nashe se hallucination ya paranoia hota hai",
+  "नशे के कारण hallucination या paranoia हो सकता है?"
  ],
  "MH_006": [
   "नशा करने वाला मरने की बात करे तो क्या करें",
@@ -2738,7 +2857,8 @@
   "man ki bimari aur lat ka ilaj saath chale kya",
   "pehle depression theek karen ya nasha",
   "dono ka ilaj ek saath hona chahiye kya",
-  "mental illness aur addiction ka treatment saath"
+  "mental illness aur addiction ka treatment saath",
+  "addiction और mental illness का इलाज साथ में होना चाहिए?"
  ],
  "MH_008": [
   "नशे की वजह से शर्म और ग्लानि कैसे कम करें",
@@ -2752,7 +2872,8 @@
   "nashe ki wajah se sharm aati hai kaise kam karen",
   "khud se nafrat hone lagi hai kya karun",
   "apne kiye par pachhtawa bahut hai",
-  "guilt aur low self esteem kaise kam karen"
+  "guilt aur low self esteem kaise kam karen",
+  "नशे के कारण guilt और low self-esteem कैसे कम करें?"
  ],
  "N1_092": [
   "बेचैनी और नशे में क्या संबंध है",
@@ -2766,7 +2887,8 @@
   "bechaini aur nashe mein kya sambandh hai",
   "ghabrahat ki bimari aur lat ka rishta",
   "anxiety wale log nasha jyada karte hain kya",
-  "anxiety aur nashe ka kya connection hai"
+  "anxiety aur nashe ka kya connection hai",
+  "anxiety और नशे में क्या संबंध है?"
  ],
  "N1_093": [
   "पुराने सदमे से लत लग सकती है",
@@ -2780,7 +2902,8 @@
   "purane sadme se lat lag sakti hai kya",
   "man par gehri chot se nasha ho jaata hai",
   "bachpan ke bure din se lat lag sakti hai",
-  "PTSD se addiction ho sakti hai kya"
+  "PTSD se addiction ho sakti hai kya",
+  "PTSD के कारण addiction हो सकती है?"
  ],
  "N1_094": [
   "नशा उदासी बढ़ा देता है क्या",
@@ -2794,7 +2917,8 @@
   "nasha udasi badha deta hai kya",
   "peene se man aur udas ho jaata hai",
   "nashe se mayoosi gehri hoti hai kya",
-  "nasha depression ko badha sakta hai"
+  "nasha depression ko badha sakta hai",
+  "नशा depression को बढ़ा सकता है?"
  ],
  "N1_095": [
   "नशे से घबराहट का दौरा पड़ सकता है",
@@ -2808,7 +2932,8 @@
   "nashe se ghabrahat ka daura pad sakta hai",
   "nasha karne par achanak ghabrahat kyun",
   "lat se dar ka attack hota hai kya",
-  "nasha panic attack kar sakta hai kya"
+  "nasha panic attack kar sakta hai kya",
+  "नशा panic attack पैदा कर सकता है?"
  ],
  "N1_096": [
   "नशे के बाद वह बहुत डर रहा है क्या करें",
@@ -2836,7 +2961,8 @@
   "nasha aur jaan dene ke khatre ka rishta",
   "nashe se marne ke khayal kyun aate hain",
   "lat se suicide ka khatra badhta hai kya",
-  "nasha aur suicide risk ka kya sambandh"
+  "nasha aur suicide risk ka kya sambandh",
+  "नशा और suicide risk में क्या संबंध है?"
  ],
  "N1_098": [
   "लत में दिमाग के डॉक्टर के पास कब जाएँ",
@@ -2850,7 +2976,8 @@
   "lat mein dimag ke doctor kab chahiye",
   "man ke doctor ki zarurat kab padti hai",
   "kab mental doctor dikhana chahiye nashe mein",
-  "addiction mein psychiatrist kab zaroori hai"
+  "addiction mein psychiatrist kab zaroori hai",
+  "addiction के साथ psychiatrist कब जरूरी है?"
  ],
  "N1_099": [
   "उदासी की दवा के साथ दारू ले सकते हैं",
@@ -2864,7 +2991,8 @@
   "udasi ki dawa ke saath daru le sakte hain",
   "man ki dawa chal rahi hai pee sakta hoon",
   "depression ki goli aur sharab saath theek hai",
-  "antidepressants ke saath alcohol safe hai kya"
+  "antidepressants ke saath alcohol safe hai kya",
+  "क्या antidepressants के साथ alcohol लेना सुरक्षित है?"
  ],
  "N1_100": [
   "घबराहट की दवा की आदत पड़ सकती है",
@@ -2878,7 +3006,8 @@
   "ghabrahat ki dawa ki aadat pad sakti hai kya",
   "man shaant karne ki goli ki lat lag jaati hai",
   "bechaini ki dawa roj lene se aadat ho jaayegi",
-  "anxiety medicine ki dependency ho sakti hai kya"
+  "anxiety medicine ki dependency ho sakti hai kya",
+  "क्या anxiety medicine की dependency हो सकती है?"
  ],
  "N1_101": [
   "मन की बीमारी ठीक बिना लत छूटेगी क्या",
@@ -2892,7 +3021,8 @@
   "man ki bimari theek bina lat chhutegi kya",
   "bina mental ilaj nasha mukt ho sakte hain",
   "dimagi bimari rehti hai to nasha chhutega",
-  "mental illness theek bina addiction theek hogi"
+  "mental illness theek bina addiction theek hogi",
+  "क्या मानसिक बीमारी ठीक किए बिना addiction ठीक हो सकती है?"
  ],
  "N1_102": [
   "दो बीमारी साथ होने को क्या कहते हैं",
@@ -2906,7 +3036,8 @@
   "do bimari saath hone ko kya kehte hain",
   "dual diagnosis ka matlab kya hai",
   "lat aur dimagi rog saath ho to kya kehte",
-  "dual diagnosis kya hai samjhaiye"
+  "dual diagnosis kya hai samjhaiye",
+  "dual diagnosis क्या है?"
  ],
  "N1_185": [
   "टेंशन कम करने को पीता हूँ दूसरा तरीका क्या",
@@ -2920,7 +3051,8 @@
   "tension kam karne ko peeta hoon doosra tarika kya",
   "chinta bhoolne ke liye peeta hoon aur kya karun",
   "tanav mitane ka peene ke alawa rasta",
-  "stress ke liye nashe ki jagah kya karun"
+  "stress ke liye nashe ki jagah kya karun",
+  "मैं tension कम करने के लिए पीता हूं, इसका दूसरा तरीका क्या है?"
  ],
  "N1_194": [
   "नशे के बिना खुशी नहीं मिलती",
@@ -2948,7 +3080,8 @@
   "nasha chhodna hi sab hai ya jeene ka dhang bhi badalna",
   "sirf nasha chhoot jaye to kaafi hai kya",
   "theek hone ka matlab kya hota hai",
-  "recovery ka matlab sirf quit karna hai kya"
+  "recovery ka matlab sirf quit karna hai kya",
+  "recovery का मतलब केवल नशा छोड़ना है या जीवनशैली बदलना भी?"
  ],
  "N1_156": [
   "छोड़ने के बाद दिनभर का काम कैसा रखें",
@@ -2962,7 +3095,8 @@
   "chhodne ke baad dinbhar ka kaam kaisa rakhen",
   "nasha chhoda ab din kaise bitaun",
   "roj ki dincharya kaisi honi chahiye",
-  "recovery mein daily routine kaisa hona chahiye"
+  "recovery mein daily routine kaisa hona chahiye",
+  "recovery के दौरान daily routine कैसा होना चाहिए?"
  ],
  "N1_157": [
   "कौनसे शौक सुधरने में मदद करते हैं",
@@ -2986,7 +3120,8 @@
   "छोड़ने के बाद ढोलक या बाँसुरी सीखूँ क्या",
   "छोड़ने के बाद किताब पढ़ना और सिलाई सीखना मदद करेगा क्या",
   "chhodne ke baad kheti aur baagwani me man lagaun kya",
-  "roz daudne aur kasrat se nasha chhodne me madad milegi kya"
+  "roz daudne aur kasrat se nasha chhodne me madad milegi kya",
+  "कौन सी hobbies recovery में मदद करती हैं?"
  ],
  "N1_158": [
   "सुधरने में कसरत का क्या फायदा",
@@ -3000,7 +3135,8 @@
   "sudhrne mein kasrat ka kya faida",
   "chhodne ke baad exercise karni chahiye kya",
   "daudna tehelna madad karta hai kya",
-  "recovery mein exercise ka kya role hai"
+  "recovery mein exercise ka kya role hai",
+  "recovery में exercise की क्या भूमिका है?"
  ],
  "N1_159": [
   "घरवालों का साथ कितना जरूरी है",
@@ -3014,7 +3150,8 @@
   "gharwalon ka saath kitna zaroori hai",
   "parivar ka sahara kitna mayne rakhta hai",
   "ghar ka saath mile to kya farak padta hai",
-  "family support kitna important hai"
+  "family support kitna important hai",
+  "family support कितना महत्वपूर्ण है?"
  ],
  "N1_160": [
   "नशा छोड़ने के बाद रोजगार कैसे शुरू करें",
@@ -3028,7 +3165,8 @@
   "nasha chhodne ke baad rozgar kaise shuru karen",
   "sudhrne ke baad kaam dhandha kaise khada karen",
   "chhodne ke baad apna kaam kaise jamayen",
-  "recovery ke baad career kaise shuru karen"
+  "recovery ke baad career kaise shuru karen",
+  "recovery के बाद career कैसे शुरू करें?"
  ],
  "N1_161": [
   "पुराने दोस्तों से दूरी कब जरूरी है",
@@ -3056,7 +3194,8 @@
   "chhodne ke baad naye log kaise jodein",
   "naye achhe dost kaise banayen",
   "achhi sangat kaise jodein sudhrne ke baad",
-  "recovery mein naye social connections kaise banayen"
+  "recovery mein naye social connections kaise banayen",
+  "recovery में नए social connections कैसे बनाएं?"
  ],
  "N1_163": [
   "पछतावा और शर्म से बाहर कैसे निकलें",
@@ -3070,7 +3209,8 @@
   "pachhtawa aur sharm se bahar kaise niklen",
   "kiye hue par man mein bojh hai kaise utre",
   "andar ki sharmindagi kaise mite",
-  "guilt aur shame se bahar kaise aayen"
+  "guilt aur shame se bahar kaise aayen",
+  "guilt और shame से कैसे बाहर आएं?"
  ],
  "N1_164": [
   "परिवार का भरोसा वापस कैसे जीतें",
@@ -3084,7 +3224,8 @@
   "parivar ka bharosa wapas kaise jeeten",
   "gharwale phir yakeen kaise karen",
   "toota bharosa dubara kaise bane",
-  "family ka trust wapas kaise jeeten"
+  "family ka trust wapas kaise jeeten",
+  "परिवार का trust वापस कैसे जीतें?"
  ],
  "N1_165": [
   "नशा छोड़ने के बाद शादी करना ठीक है",
@@ -3098,7 +3239,8 @@
   "nasha chhodne ke baad shaadi karna theek hai",
   "sudhrne ke baad byah kar lena sahi rahega",
   "lat chhoot gayi ab shaadi kar lun",
-  "recovery ke baad marriage safe hai kya"
+  "recovery ke baad marriage safe hai kya",
+  "recovery के बाद शादी करना सुरक्षित है?"
  ],
  "N1_166": [
   "अपना पुराना किस्सा दूसरों को बताना चाहिए",
@@ -3112,7 +3254,8 @@
   "apna purana kissa doosron ko batana chahiye",
   "apni purani lat ki baat batau ya chhipau",
   "naye logon ko apna past batana chahiye",
-  "recovered banda apna past batana chahiye kya"
+  "recovered banda apna past batana chahiye kya",
+  "recovered व्यक्ति को अपना past बताना चाहिए?"
  ],
  "N1_167": [
   "भगवान का सहारा छोड़ने में मदद करता है",
@@ -3126,7 +3269,8 @@
   "bhagwan ka sahara chhodne mein madad karta hai",
   "pooja path se lat chhodne mein fayda hai",
   "dharm bhakti se man sambhalta hai kya",
-  "spirituality recovery mein madad karti hai kya"
+  "spirituality recovery mein madad karti hai kya",
+  "recovery में spirituality मदद कर सकती है?"
  ],
  "N1_168": [
   "कितने समय बाद आदमी ठीक माना जाता है",
@@ -3140,7 +3284,8 @@
   "kitne samay baad aadmi theek mana jata hai",
   "kab manen ki nasha pura chhoot gaya",
   "kitne mahine baad sudhra hua kehlayega",
-  "kitne time baad recovered kaha ja sakta hai"
+  "kitne time baad recovered kaha ja sakta hai",
+  "कितने समय बाद व्यक्ति को recovered कहा जा सकता है?"
  ],
  "N1_169": [
   "क्या उमरभर दुबारा लगने का डर रहता है",
@@ -3154,7 +3299,8 @@
   "kya umarbhar dubara lagne ka dar rehta hai",
   "zindagi bhar phir pakadne ka khatra rahega",
   "kabhi bhi dubara lat lag sakti hai kya",
-  "lifelong relapse ka khatra rehta hai kya"
+  "lifelong relapse ka khatra rehta hai kya",
+  "क्या जीवनभर relapse का खतरा रहता है?"
  ],
  "N1_196": [
   "क्या सच में नशा छूट सकता है",
@@ -3168,7 +3314,8 @@
   "kya sach mein nasha chhoot sakta hai",
   "sachmuch theek hona mumkin hai kya",
   "log sachmuch chhod pate hain kya",
-  "kya recovery really possible hai"
+  "kya recovery really possible hai",
+  "क्या recovery सच में संभव है?"
  ],
  "SOC_001": [
   "नशे को समाज मान्यता क्यों दे देता है",
@@ -3182,7 +3329,8 @@
   "samaj mein nashe ko normal manna galat kyun hai",
   "gaon mein nasha aam baat kyun mani jaati hai",
   "nashe ki samajik manyata ka matlab kya",
-  "social acceptance of nasha problem kyun hai"
+  "social acceptance of nasha problem kyun hai",
+  "नशे की सामाजिक स्वीकृति क्या होती है?"
  ],
  "SOC_002": [
   "शादी में दारू तंबाकू परोसना कैसे रोकें",
@@ -3388,7 +3536,8 @@
   "मेहमानों को दारू के बदले जूस और ठंडाई देना ठीक रहेगा",
   "त्योहार पर नशे के बदले मिठाई और खेल रख सकते हैं",
   "shaadi me daru ki jagah chaach aur sharbat rakhe kya",
-  "samaroh me gutkha ki jagah saunf elaichi den kya"
+  "samaroh me gutkha ki jagah saunf elaichi den kya",
+  "social events में intoxicants की जगह कौन से सकारात्मक विकल्प हो सकते हैं?"
  ],
  "N1_134": [
   "नशामुक्त विवाह अभियान कैसे चलाएँ",
@@ -3444,7 +3593,8 @@
   "aadat aur lat me fark",
   "roj peena hi addiction hai kya",
   "habit aur addiction me antar",
-  "दोनों में अंतर बताओ आदत लत"
+  "दोनों में अंतर बताओ आदत लत",
+  "आदत और addiction में क्या अंतर है?"
  ],
  "EDU_003": [
   "नशे के बिना रह नहीं पाता कैसे पता",
@@ -3468,7 +3618,8 @@
   "बिना खैनी के काम में हाथ नहीं चलता यह निर्भरता है",
   "छोड़ने की कोशिश की पर दो दिन में वापस लेने लगा",
   "subah uthte hi pehla kaam peena hai nirbharta hai kya",
-  "bina piye haath kaampte hai aur paseena aata hai"
+  "bina piye haath kaampte hai aur paseena aata hai",
+  "किसी व्यक्ति में dependence कैसे पहचानें?"
  ],
  "EDU_004": [
   "लत क्यों लग जाती है",
@@ -3482,7 +3633,8 @@
   "लत लगने के पीछे क्या होता है",
   "lat kyon lag jati hai",
   "nashe ki lat lagne ka karan",
-  "addiction kyun hota hai"
+  "addiction kyun hota hai",
+  "लोगों को नशे की लत क्यों लगती है?"
  ],
  "EDU_005": [
   "नशा दिमाग पर क्या असर करता है",
@@ -3520,7 +3672,8 @@
   "lat bimari hai ya buri aadat",
   "sirf will power se nasha chhut jata hai",
   "addiction disease hai kya",
-  "यह इलाज वाली बीमारी है या नहीं"
+  "यह इलाज वाली बीमारी है या नहीं",
+  "क्या addiction एक बीमारी है या बुरी आदत?"
  ],
  "EDU_007": [
   "शुरू शुरू के लक्षण क्या हैं",
@@ -3569,7 +3722,8 @@
   "अब अकेले में भी पीता है और किसी से मिलता नहीं",
   "कई बार छोड़ने की कोशिश की पर नहीं छूटा हालत गंभीर है क्या",
   "naukri chhut gayi aur karz ho gaya nashe se halat gambhir hai",
-  "ghar ka saman bechne laga hai lat badh gayi kya"
+  "ghar ka saman bechne laga hai lat badh gayi kya",
+  "गंभीर addiction के संकेत क्या हैं?"
  ],
  "N1_001": [
   "नशा क्या है",
@@ -3635,7 +3789,8 @@
   "har peene wala addict hota hai",
   "jo nasha karta hai sab aadi hote hain",
   "every drinker addict hota hai kya",
-  "क्या सभी नशा करने वाले आदी होते"
+  "क्या सभी नशा करने वाले आदी होते",
+  "क्या हर नशा करने वाला व्यक्ति addicted होता है?"
  ],
  "N1_005": [
   "किसी को जल्दी लत क्यों लग जाती है",
@@ -3725,7 +3880,8 @@
   "daru aur tambaku ki lat me fark",
   "sharab tambaku addiction me antar",
   "alcohol aur tobacco addiction difference",
-  "लत का रूप नशे के हिसाब से बदलता है"
+  "लत का रूप नशे के हिसाब से बदलता है",
+  "शराब, तंबाकू और दूसरे नशों में addiction किस प्रकार अलग होता है?"
  ],
  "N1_010": [
   "डॉक्टर की दवा का भी नशा होता है",
@@ -3739,7 +3895,8 @@
   "doctor ki dawa ka bhi nasha hota hai",
   "prescription dawa se lat lag sakti hai",
   "medicine ka addiction hota hai kya",
-  "इलाज वाली दवा भी नशा बन जाती है"
+  "इलाज वाली दवा भी नशा बन जाती है",
+  "क्या prescription medicines का भी नशा हो सकता है?"
  ],
  "N1_011": [
   "दर्द की गोली की आदत लग जाती है",
@@ -3753,7 +3910,8 @@
   "painkiller ki aadat lag sakti hai",
   "painkillers ki lat lagti hai kya",
   "pain killer addiction hota hai",
-  "दर्द की दवा की लत का खतरा"
+  "दर्द की दवा की लत का खतरा",
+  "क्या painkillers की आदत लग सकती है?"
  ],
  "N1_012": [
   "नींद की गोली की लत लग जाती है",
@@ -3767,7 +3925,8 @@
   "neend ki goli ki lat lagti hai",
   "sleeping pills ki aadat",
   "sleeping pill addiction hota hai kya",
-  "neend ki dawa ka nasha"
+  "neend ki dawa ka nasha",
+  "क्या sleeping pills की लत लग सकती है?"
  ],
  "N1_013": [
   "खांसी की दवा का नशा होता है",
@@ -3781,7 +3940,8 @@
   "cough syrup ka nasha hota hai",
   "khansi ki dawa se nasha",
   "syrup se nasha karna",
-  "cough syrup abuse kya hai"
+  "cough syrup abuse kya hai",
+  "क्या cough syrup का दुरुपयोग नशे के रूप में हो सकता है?"
  ],
  "N1_014": [
   "हुक्का सिगरेट से कम नुकसान करता है",
@@ -3819,7 +3979,8 @@
   "मैं नशे में फंस गया हूं क्या",
   "mujhe lat hai ya nahi samajh nahi aata",
   "main addict hoon kya",
-  "mujhe addiction hai ya nahi"
+  "mujhe addiction hai ya nahi",
+  "मुझे समझ नहीं आ रहा कि मुझे addiction है या नहीं।"
  ],
  "RISK_001": [
   "दोस्तों की वजह से नशा शुरू होता है कितना",
@@ -3847,7 +4008,8 @@
   "घबराहट में पीने लगता हूं",
   "tension me peena shuru kar deta hoon",
   "tanav se nasha shuru hota hai kya",
-  "stress me nasha kyon karte hain"
+  "stress me nasha kyon karte hain",
+  "क्या तनाव के कारण नशे की शुरुआत हो सकती है?"
  ],
  "RISK_003": [
   "अकेले में पीने का मन करता है",
@@ -3875,7 +4037,8 @@
   "घर में अनबन और बच्चे का नशा",
   "ghar ke jhagde se nasha",
   "family clash ke baad bachcha peeta hai",
-  "family tension aur addiction ka sambandh"
+  "family tension aur addiction ka sambandh",
+  "पारिवारिक तनाव और addiction में क्या संबंध है?"
  ],
  "RISK_005": [
   "बच्चे जिज्ञासा में नशा क्यों आजमाते हैं",
@@ -3889,7 +4052,8 @@
   "बच्चे ने सिर्फ चख कर देखा क्यों",
   "bachche curiosity me nasha kyon try karte hain",
   "ek baar try kiya tha bachcha kehta hai",
-  "teenage curiosity aur nasha"
+  "teenage curiosity aur nasha",
+  "किशोर curiosity में नशा क्यों आजमाते हैं?"
  ],
  "RISK_006": [
   "उदासी में नशे का मन क्यों करता है",
@@ -3903,7 +4067,8 @@
   "depression me nasha kyon karte hain",
   "udasi me peene ka mann kyon",
   "anxiety se nashe ka khatra badhta hai",
-  "depression anxiety nashe ka risk"
+  "depression anxiety nashe ka risk",
+  "depression और anxiety नशे का जोखिम कैसे बढ़ाते हैं?"
  ],
  "RISK_007": [
   "आसानी से मिल जाए तो लत बढ़ती है",
@@ -3928,7 +4093,8 @@
   "ठेका पास होने से बच्चों को कैसे बचाऊँ",
   "सस्ता मिलने से लड़के रोज़ खरीद लेते हैं",
   "school ke bahar thele par gutkha milta hai bachche le aate hain",
-  "gaon me theka khul gaya ladke peene lage"
+  "gaon me theka khul gaya ladke peene lage",
+  "नशे की आसान उपलब्धता addiction को कैसे प्रभावित करती है?"
  ],
  "RISK_008": [
   "पिता पीते हैं तो बेटे को खतरा है",
@@ -3942,7 +4108,8 @@
   "pita daru peete hain to bete ko khatra",
   "baap ki lat bete me aati hai kya",
   "family me addiction ho to bachchon ka risk",
-  "parents ki lat se bachchon ka khatra"
+  "parents ki lat se bachchon ka khatra",
+  "क्या परिवार में addiction होने से बच्चों का risk बढ़ जाता है?"
  ],
  "N1_015": [
   "लोग नशा शुरू क्यों करते हैं",
@@ -4050,7 +4217,8 @@
   "वंश परंपरा से नशा",
   "genetic reason se lat lagti hai",
   "khoon me lat aati hai kya",
-  "genetics ka role addiction me"
+  "genetics ka role addiction me",
+  "क्या आनुवंशिक कारण भी addiction में भूमिका निभाते हैं?"
  ],
  "N1_022": [
   "पढ़ाई के तनाव से नशा",
@@ -4078,7 +4246,8 @@
   "दिल टूटने के बाद लत क्यों लगती है",
   "heartbreak ke baad nasha kyon",
   "pyar me dhokha aur nasha",
-  "breakup ke baad nashe ki aadat"
+  "breakup ke baad nashe ki aadat",
+  "heartbreak के बाद नशे की आदत क्यों बढ़ सकती है?"
  ],
  "N1_024": [
   "हाथ में पैसा हो तो नशा बढ़ता है",
@@ -4106,7 +4275,8 @@
   "daru ki lat lag gayi kaise pata chale",
   "roj peeta hoon addiction hai kya",
   "sharab ki aadat lat ban gayi hai kya",
-  "drinking addiction ban gayi kaise jaane"
+  "drinking addiction ban gayi kaise jaane",
+  "कैसे पता चले कि drinking addiction बन गई है?"
  ],
  "ALC_002": [
   "एक दिन में बहुत पी लेना क्या है",
@@ -4120,7 +4290,8 @@
   "binge drinking kya hota hai",
   "hafte mein ek din bahut peena problem hai",
   "ek hi din mein jyada peena galat hai kya",
-  "occasional heavy drinking bhi issue hai"
+  "occasional heavy drinking bhi issue hai",
+  "binge drinking क्या है?"
  ],
  "ALC_003": [
   "दारू से लिवर खराब होता है क्या",
@@ -4144,7 +4315,8 @@
   "दारू छोड़ दें तो लिवर ठीक हो जाता है क्या",
   "रोज एक पैग से भी लिवर पर असर पड़ता है क्या",
   "daru peene se pet phool jata hai liver kharab hai kya",
-  "sharab se aankhein peeli pad jaati hai kya"
+  "sharab se aankhein peeli pad jaati hai kya",
+  "शराब liver को कैसे प्रभावित करती है?"
  ],
  "ALC_004": [
   "दारू पीने से नींद अच्छी आती है क्या",
@@ -4172,7 +4344,8 @@
   "dawa ke saath daru peena khatarnak hai",
   "neend ki goli aur sharab saath le sakte hain",
   "medicine ke saath daru ka kya khatra",
-  "sleeping pill aur alcohol saath lena safe hai"
+  "sleeping pill aur alcohol saath lena safe hai",
+  "शराब और medicines साथ लेने का क्या खतरा है?"
  ],
  "ALC_006": [
   "दारू एकदम बंद करना खतरनाक है क्या",
@@ -4200,7 +4373,8 @@
   "daru peekar gaadi chalana kitna khatarnak",
   "do peg lekar bike chala sakta hoon",
   "peekar driving karna theek hai kya",
-  "drink karke driving kitni risky hai"
+  "drink karke driving kitni risky hai",
+  "शराब पीकर driving कितनी खतरनाक है?"
  ],
  "ALC_008": [
   "दारू के कारण घर में झगड़ा हो तो क्या करें",
@@ -4228,7 +4402,8 @@
   "kitni daru peena safe hai",
   "kitne peg tak theek rehta hai",
   "safe limit kitni hai sharab ki",
-  "kitna alcohol safe mana jata hai"
+  "kitna alcohol safe mana jata hai",
+  "कितना alcohol सुरक्षित माना जाता है?"
  ],
  "N1_114": [
   "रोज थोड़ी दारू पीना ठीक है क्या",
@@ -4256,7 +4431,8 @@
   "wine sehat ke liye achhi hoti hai kya",
   "angoor ki sharab faydemand hai kya",
   "red wine health ke liye achhi hai",
-  "wine peena healthy hai kya"
+  "wine peena healthy hai kya",
+  "क्या wine स्वास्थ्य के लिए अच्छी होती है?"
  ],
  "N1_116": [
   "हैंगओवर क्या होता है",
@@ -4270,7 +4446,8 @@
   "hangover kya hota hai",
   "peene ke agle din sir bhari kyun",
   "subah utar ke baad halat kaisi hoti hai",
-  "hangover ka matlab kya hai"
+  "hangover ka matlab kya hai",
+  "hangover क्या होता है?"
  ],
  "N1_117": [
   "दारू छोड़ते वक्त तोड़ खतरनाक क्यों",
@@ -4284,7 +4461,8 @@
   "daru chhodte waqt withdrawal khatarnak kyun",
   "sharab chhodne par halat kyun bigadti hai",
   "tod ke time khatra kyun hota hai",
-  "alcohol withdrawal kyun dangerous hai"
+  "alcohol withdrawal kyun dangerous hai",
+  "शराब छोड़ते समय withdrawal क्यों खतरनाक हो सकता है?"
  ],
  "N1_118": [
   "दारू से याद कमजोर क्यों होती है",
@@ -4298,7 +4476,8 @@
   "daru se yaad kyun kamzor hoti hai",
   "sharab peene se bhoolne lagta hai kyun",
   "peene wale ki yaadast kyun kam ho jaati hai",
-  "alcohol se memory kyun weak hoti hai"
+  "alcohol se memory kyun weak hoti hai",
+  "शराब के कारण memory क्यों कमजोर होती है?"
  ],
  "N1_119": [
   "दारू और बीपी का क्या संबंध",
@@ -4312,7 +4491,8 @@
   "daru aur bp ka kya rishta hai",
   "sharab se blood pressure badhta hai kya",
   "peene se bp par kya asar padta hai",
-  "alcohol aur blood pressure ka link kya"
+  "alcohol aur blood pressure ka link kya",
+  "शराब और blood pressure में क्या संबंध है?"
  ],
  "N1_120": [
   "दारू से मर्दाना ताकत पर असर",
@@ -4326,7 +4506,8 @@
   "daru se mardana taqat par asar padta hai",
   "sharab se sexual kamzori hoti hai kya",
   "peene se pati patni ke rishte par asar",
-  "alcohol ka sexual health par kya effect"
+  "alcohol ka sexual health par kya effect",
+  "शराब और sexual health पर क्या असर पड़ता है?"
  ],
  "N1_121": [
   "दारू छोड़ने के बाद नींद कब ठीक होगी",
@@ -4340,7 +4521,8 @@
   "sharab chhodne ke baad neend nahi aati kab theek hogi",
   "daru chhodi to neend kab wapas aayegi",
   "kitne din mein neend normal ho jaati hai",
-  "alcohol chhodne ke baad sleep kab theek hoti hai"
+  "alcohol chhodne ke baad sleep kab theek hoti hai",
+  "शराब छोड़ने के बाद sleep कब सामान्य होती है?"
  ],
  "N1_184": [
   "रात में नींद नहीं आती इसलिए दारू पीता हूँ",
@@ -4393,7 +4575,8 @@
   "बीड़ी पीने से साँस फूलती है और दम घुटता है",
   "बीड़ी पीने वाले को भी टीबी का खतरा रहता है क्या",
   "beedi se phephde kharab hote hai kya sigret se kam",
-  "beedi me nicotine kam hota hai to nuksan kam kya"
+  "beedi me nicotine kam hota hai to nuksan kam kya",
+  "क्या बीड़ी सिगरेट से कम नुकसानदायक है?"
  ],
  "TOB_003": [
   "गुटखा और खैनी से क्या नुकसान होता है",
@@ -4431,7 +4614,8 @@
   "nicotine withdrawal kya hai",
   "cigarette chhodne par bechaini kyun hoti hai",
   "tambaku chhodne par talab kyun lagti hai",
-  "nicotine ka tod kya hota hai"
+  "nicotine ka tod kya hota hai",
+  "nicotine withdrawal क्या है?"
  ],
  "TOB_005": [
   "निकोटीन गम काम करती है क्या",
@@ -4445,7 +4629,8 @@
   "nicotine gum madad karti hai kya",
   "nicotine replacement therapy kya hoti hai",
   "chhodne ke liye gum ya patch kaam karta hai",
-  "NRT ka matlab kya hai"
+  "NRT ka matlab kya hai",
+  "nicotine replacement therapy क्या है?"
  ],
  "TOB_006": [
   "वेप पीना सुरक्षित है क्या",
@@ -4459,7 +4644,8 @@
   "vape peena safe hai kya",
   "e cigarette se nuksan hota hai kya",
   "vape karna theek rahega cigarette ki jagah",
-  "is vaping safe kya"
+  "is vaping safe kya",
+  "क्या vaping सुरक्षित है?"
  ],
  "TOB_007": [
   "घर के बच्चों पर धुएँ का क्या असर",
@@ -4483,7 +4669,8 @@
   "बच्चे के सामने हुक्का पीने से उसे साँस की तकलीफ होगी",
   "धुएँ में रहने से बच्चा बार बार बीमार पड़ता है क्या",
   "ghar me bidi peene se bachche ko khansi rehti hai kya",
-  "dhuen se bachche ko dama ho jata hai kya"
+  "dhuen se bachche ko dama ho jata hai kya",
+  "passive smoking बच्चों को कैसे प्रभावित करती है?"
  ],
  "TOB_008": [
   "तंबाकू खाने वाले में कैंसर की निशानी क्या",
@@ -4509,7 +4696,8 @@
   "दाँत हिलने लगे और मुँह में गिल्टी है खैनी खाता हूँ",
   "जीभ पर सफेद या लाल दाग है तंबाकू वाले को कैंसर का संकेत",
   "munh ka chhala teen hafte se theek nahi ho raha tambaku khata hoon",
-  "gale me ganth nikal aayi hai khaini khata hoon"
+  "gale me ganth nikal aayi hai khaini khata hoon",
+  "तंबाकू लेने वाले व्यक्ति में cancer के warning signs क्या हैं?"
  ],
  "N1_103": [
   "सिगरेट कैसे छोड़ें",
@@ -4551,7 +4739,8 @@
   "tambaku chhodne par talab kitne din rehti hai",
   "craving kitne din tak rehti hai",
   "kitne din tak man karta rahega khaini ka",
-  "quit karne ke baad craving kitne din"
+  "quit karne ke baad craving kitne din",
+  "तंबाकू छोड़ने पर craving कितने दिन रहती है?"
  ],
  "N1_106": [
   "सिगरेट छोड़ने पर वजन क्यों बढ़ता है",
@@ -4565,7 +4754,8 @@
   "smoking chhodne par wajan kyun badhta hai",
   "cigarette chhodi aur mota ho gaya kyun",
   "chhodne ke baad bhook kyun badhti hai",
-  "quit karne par weight gain kyun hota hai"
+  "quit karne par weight gain kyun hota hai",
+  "smoking छोड़ने पर वजन क्यों बढ़ता है?"
  ],
  "N1_107": [
   "वेप सिगरेट से कम खतरनाक है क्या",
@@ -4579,7 +4769,8 @@
   "vape cigarette se kam khatarnak hai kya",
   "vape aur sigret mein kaunsi kam buri",
   "sigret se vape par aana behtar hai kya",
-  "vaping safer than smoking hai kya"
+  "vaping safer than smoking hai kya",
+  "क्या vaping smoking से सुरक्षित है?"
  ],
  "N1_108": [
   "गरभ में बीड़ी पीने का असर क्या",
@@ -4605,7 +4796,8 @@
   "गर्भ में धुएँ से बच्चे की जान को खतरा रहता है क्या",
   "गर्भवती को तुरंत बीड़ी छोड़ देनी चाहिए क्या असर पड़ेगा",
   "garbh me dhuen se bacha kamzor aur kam vajan ka paida hota hai",
-  "pet se hoon aur bidi peeti hoon bacha samay se pehle ho jayega"
+  "pet se hoon aur bidi peeti hoon bacha samay se pehle ho jayega",
+  "pregnancy में smoking का क्या असर पड़ता है?"
  ],
  "N1_109": [
   "घर में बीड़ी पीने से परिवार पर क्या असर",
@@ -4629,7 +4821,8 @@
   "घर में पीता हूँ तो परिवार में झगड़ा और पैसे की तंगी रहती है",
   "घर में धुआँ भरा रहने से सबकी नींद खराब होती है क्या",
   "ghar ke andar sigret peene se patni ko saans aur khansi ki takleef",
-  "ghar ke bujurg ko dhuen se saans ki takleef hoti hai kya"
+  "ghar ke bujurg ko dhuen se saans ki takleef hoti hai kya",
+  "घर में smoking करने से परिवार पर क्या असर होता है?"
  ],
  "N1_110": [
   "मुँह के कैंसर के पहले लक्षण क्या",
@@ -4643,7 +4836,8 @@
   "munh ke cancer ke pehle lakshan kya",
   "munh mein chhala theek nahi ho raha",
   "munh ka cancer shuru mein kaise dikhta hai",
-  "oral cancer ke early signs kya hote hain"
+  "oral cancer ke early signs kya hote hain",
+  "oral cancer के शुरुआती संकेत क्या हो सकते हैं?"
  ],
  "N1_111": [
   "सालों से तंबाकू खाता हूँ कौनसी जांच कराऊँ",
@@ -4669,7 +4863,8 @@
   "तंबाकू वाले की गले की दूरबीन से जाँच होती है क्या",
   "पुराने सिगरेट पीने वाले को दिल की जाँच करानी चाहिए",
   "bees saal se bidi peeta hoon x ray karaun kya",
-  "khaini khane wale ko munh ki jaanch kahan karaye"
+  "khaini khane wale ko munh ki jaanch kahan karaye",
+  "लंबे समय से tobacco लेने वाले को कौन सी जांच करवानी चाहिए?"
  ],
  "N1_112": [
   "तंबाकू छोड़ने पर शरीर में क्या अच्छा होता है",
@@ -4725,7 +4920,8 @@
   "overdose kaise pata chalega",
   "overdose ke lakshan bataiye",
   "bahut jyada drug le li hai pehchan",
-  "overdose signs kya hote hain"
+  "overdose signs kya hote hain",
+  "overdose के संकेत क्या हैं?"
  ],
  "EMG_004": [
   "तोड़ में दौरा पड़ गया",
@@ -4739,7 +4935,8 @@
   "दारू छोड़ी तो दौरे पड़ रहे",
   "jhatke aa rahe hain kya karen",
   "withdrawal mein daura pad gaya",
-  "seizure aa gaya nashe mein"
+  "seizure aa gaya nashe mein",
+  "नशे या withdrawal के दौरान seizure आए तो क्या करें?"
  ],
  "EMG_005": [
   "मरने की बात कर रहा है",
@@ -4753,7 +4950,8 @@
   "अपने को मार लेने की बात",
   "marne ki baat kar raha hai",
   "aaj khud ko khatam kar lega keh raha",
-  "suicide ki baat kar raha hai"
+  "suicide ki baat kar raha hai",
+  "नशा करने वाला व्यक्ति suicide की बात कर रहा है, क्या करें?"
  ],
  "EMG_006": [
   "नशे में मारपीट कर रहा है",
@@ -4793,7 +4991,8 @@
   "मेरा पति नशे में डर रहा है और अजनबी की तरह घूर रहा है",
   "नशे में उसे दिन रात का पता नहीं चल रहा",
   "nashe ke baad deewar se baatein kar raha hai",
-  "peene ke baad use saanp dikh rahe hai kya karun"
+  "peene ke baad use saanp dikh rahe hai kya karun",
+  "नशे के बाद severe confusion या hallucination हो तो क्या करें?"
  ],
  "EMG_008": [
   "पता नहीं क्या लिया हालत खराब",
@@ -4835,7 +5034,8 @@
   "नशा लिया फिर दौरा आ गया",
   "nashe ke baad daure pad rahe",
   "fits aa rahe hain nasha karne ke baad",
-  "seizure ho gaya nashe ke baad"
+  "seizure ho gaya nashe ke baad",
+  "नशे के बाद seizures हों तो क्या करें?"
  ],
  "N1_173": [
   "एम्बुलेंस कब बुलाएं",
@@ -4849,7 +5049,8 @@
   "किस हालत में फोन करके गाड़ी बुलाएं",
   "ambulance kab bulani chahiye",
   "emergency kab bulana hai",
-  "emergency service kab bulaye"
+  "emergency service kab bulaye",
+  "कब ambulance या emergency service बुलानी चाहिए?"
  ],
  "N1_187": [
   "दोस्त ने ज्यादा नशा किया उठ नहीं रहा",
