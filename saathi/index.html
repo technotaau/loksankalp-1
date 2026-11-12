@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#17307a">
-<meta name="description" content="नशे के सवालों का सीधा जवाब, गाँव की हिंदी में। 320 सवाल, 240 पर मंज़ूर किया हुआ जवाब, हर एक के साथ उसका आधार। आपका सवाल लोकसंकल्प तक नहीं आता।">
+<meta name="description" content="नशे के सवालों का सीधा जवाब, गाँव की हिंदी में। 320 सवाल, मंज़ूर किए हुए जवाब, हर एक के साथ उसका आधार। बोलकर पूछिए, हिंदी में।">
 <link rel="canonical" href="https://loksankalp.org/saathi/">
 <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
 <title>संकल्प साथी : नशे के सवालों का जवाब | लोकसंकल्प</title>
@@ -217,7 +217,7 @@ li{line-height:1.6}
     <p style="font-size:1.05rem">यह लोकसंकल्प का साथी है। नशे के बारे में जो पूछना हो, पूछिए। जवाब बोलकर सुनाया जाएगा।</p>
     <button class="big" id="b-start">शुरू कीजिए</button>
     <p class="note">दबाते ही आवाज़ चालू होगी। फ़ोन का साइलेंट बंद कर लीजिए।</p>
-    <p class="note">आपका नाम नहीं पूछा जाता। जवाब ढूँढ़ने का सारा काम आपके ही फ़ोन में होता है, और आपका सवाल लोकसंकल्प तक नहीं आता। एक बात साफ़ जान लीजिए : बोलकर पूछने पर आपकी आवाज़ आपके फ़ोन की अपनी आवाज़-पहचान सेवा तक जाती है, जो Google या Apple की होती है। डिब्बों पर उँगली रखकर पढ़ने में वह भी नहीं जाती।
+    <p class="note">आपका नाम और नंबर नहीं पूछा जाता। आपने क्या पूछा, यह केंद्र के पास दर्ज होता है, ताकि साथी आगे बेहतर जवाब दे सके। उसके साथ आपकी कोई पहचान नहीं जाती।
       <a href="../nijta.html#saathi" target="_blank" rel="noopener">निजता का पन्ना</a></p>
 
     <!-- 12 नवंबर 2026 : यहाँ आवाज़ चुनने और रफ़्तार बदलने के दो डिब्बे थे।
@@ -358,7 +358,7 @@ li{line-height:1.6}
     return null;
   }
 
-  var state={band:false, age:null, cand:null, sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null, vishay:null};
+  var state={band:false, age:null, cand:null, poocha:'', sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null, vishay:null};
 
   /* ======================================================================
      संकट पर क्या दिखाया जाए।
@@ -1014,11 +1014,42 @@ li{line-height:1.6}
     }
     return false;
   }
+  /* ===== पूछे गए सवाल दर्ज करना ====================================
+     12 नवंबर 2026 का फ़ैसला : मिलान सुधारने के लिए पूछे गए सवाल केंद्र
+     तक आएँ। इसके बिना यह पता ही नहीं चलता कि लोग सचमुच क्या पूछते हैं
+     और मशीन कहाँ चूकती है।
+
+     सिर्फ़ चार बातें जाती हैं : सवाल, मशीन ने क्या जोड़ा, उसका जोखिम,
+     और आदमी ने उसे माना या नहीं।
+
+     नाम, मोबाइल या कोई पहचान नहीं जाती। वह जानबूझकर नहीं भेजी जाती :
+     मिलान सुधारने में उसका कोई काम नहीं है, और उसके बिना पूरा फ़ायदा
+     मिल जाता है।
+
+     सबसे काम की पंक्ति वह है जिसमें natija "नहीं, यह नहीं" हो। वहाँ
+     मशीन ने जोड़ तो लगाया, पर आदमी ने ख़ुद कहा कि यह मेरा सवाल नहीं है।
+     वही पंक्तियाँ बताती हैं कि कौन सा जोड़ ग़लत बैठ रहा है।
+
+     भेजना चुपचाप होता है। न चले तो आदमी को कुछ नहीं दिखता और साथी वैसे
+     ही चलता रहता है : दर्ज करना जवाब देने से कभी आगे नहीं आता। ====== */
+  function sawalDarj(sawal, mila, jokhim, natija){
+    if(!ENDPOINT || !window.fetch || !sawal) return;
+    try{
+      fetch(ENDPOINT, {method:'POST', body: JSON.stringify({
+        form:'sawal',
+        reqId:'sw-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),
+        values:{ sawal:String(sawal).slice(0,300), mila:mila||'',
+                 jokhim:jokhim||'', natija:natija||'' }
+      })}).catch(function(){});
+    }catch(e){}
+  }
+
   function ask(q){
     if(!q){ say('कुछ सुनाई नहीं दिया। दोबारा बोलिए।'); return; }
     /* सुनने की भूल पहले सुधारिए, मिलान से भी पहले। सुधरा हुआ वाक्य ही
        आगे दिखाया जाता है, ताकि आदमी को पता रहे कि मशीन ने क्या समझा। */
     q = sunaSudharo(q);
+    state.poocha = q;
     /* पहला फाटक : ख़तरे के शब्द सीधे सवाल में। यह सूची से पहले चलता है। */
     if(hasAny(q, AAPAT)){ state.cand={id:'',c:'',r:'Emergency',q:q}; answer(state.cand); return; }
     var hi = hasAny(q, UNCHA);
@@ -1120,6 +1151,7 @@ li{line-height:1.6}
 
     out.appendChild(el('p','note','या <b>14446</b> पर नशा मुक्ति हेल्पलाइन से बात कीजिए।'));
     out.appendChild(linesBox());
+    sawalDarj(q, '', '', 'समझ नहीं आया');
     say(bole + 'दोबारा बोलकर देखिए, या विषयों में से चुनिए, या चौदह हज़ार चार सौ छियालीस पर बात कीजिए।');
   }
   function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML }
@@ -1169,6 +1201,8 @@ li{line-height:1.6}
     /* दूसरा ताला : अगर किसी वजह से जोखिम वाला सवाल पुष्टि तक पहुँच गया
        और आदमी ने "नहीं" दबाया, तो उसे ख़ाली मत लौटाइए। */
     var c=state.cand;
+    /* यही सबसे काम की पंक्ति है : मशीन ने जोड़ लगाया, आदमी ने नकार दिया */
+    sawalDarj(state.poocha, (c&&c.id)||'', (c&&c.r)||'', 'नहीं, यह नहीं');
     if(c && (c.r==='High' || c.r==='Emergency')){ answer(c); return; }
     say('ठीक है। डिब्बों में से चुनिए, या दोबारा बोलिए।');
     show('s-home');
@@ -1290,7 +1324,11 @@ li{line-height:1.6}
 
   $('b-again').addEventListener('click', function(){ show('s-home'); });
 
-  $('b-yes').addEventListener('click', function(){ answer(state.cand); });
+  $('b-yes').addEventListener('click', function(){
+    var c=state.cand||{};
+    sawalDarj(state.poocha, c.id||'', c.r||'', 'हाँ, यही');
+    answer(state.cand);
+  });
 
   function el(tag, cls, html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
   function linesBox(){

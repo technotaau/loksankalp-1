@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 35;          // bump when this file changes; shown in every response
+var CODE_VERSION = 37;          // bump when this file changes; shown in every response
 
 // ---- संकल्प साथी का बंद करने का स्विच ------------------------------------
 //
@@ -102,6 +102,21 @@ var FORMS = {
   /* सहमति का खाना 7 नवंबर 2026 को जोड़ा गया। बाक़ी सब खानों में यह
      पहले से था; संकट वाले में ही नहीं था, जबकि डेटा वहीं सबसे नाज़ुक
      है। must में डालने से बिना सहमति की पंक्ति ठुकरा दी जाती है। */
+  /* पूछे गए सवाल। 12 नवंबर 2026 से साथी हर पूछा हुआ सवाल यहाँ भेजता है,
+     ताकि पता चले कि लोग सचमुच क्या पूछते हैं और मशीन कहाँ चूकती है।
+
+     चार ही खाने हैं और उनमें कोई पहचान नहीं : सवाल, मशीन ने क्या जोड़ा,
+     उसका जोखिम, और आदमी ने माना या नहीं। नाम और मोबाइल जानबूझकर नहीं
+     माँगे जाते, क्योंकि मिलान सुधारने में उनका कोई काम नहीं।
+
+     must ख़ाली है : अधूरी पंक्ति भी आ जाए तो आने दीजिए। यह गिनती का
+     काग़ज़ है, किसी का पंजीकरण नहीं, और एक पंक्ति ठुकराने से कुछ नहीं
+     मिलता। honeypot फिर भी लगा रहता है।
+
+     सबसे काम की पंक्ति वह है जिसमें नतीजा "नहीं, यह नहीं" हो। वहाँ मशीन
+     ने जोड़ लगाया और आदमी ने ख़ुद नकार दिया। */
+  sawal:    { tab: 'पूछे गए सवाल',
+              fields: ['sawal', 'mila', 'jokhim', 'natija'] },
   sankat:   { must: ['mobile', 'sahmati'], tab: 'संकट',
               fields: ['rasta', 'mobile', 'kahan', 'sahmati'], alert: true },
   /* नशामुक्त मतदान : दशहरे से पंचायत चुनाव तक। यह संकल्प जगह का है जितना
@@ -199,6 +214,8 @@ var LABELS = {
   rajya: 'राज्य', desh: 'देश', deshAnya: 'देश (लिखा हुआ)',
   aayuVarg: 'आयु वर्ग',
   rasta: 'कौन सा रास्ता', kahan: 'कहाँ से',
+  sawal: 'पूछा गया सवाल', mila: 'मशीन ने क्या जोड़ा', jokhim: 'जोखिम',
+  natija: 'आदमी ने माना या नहीं',
   // तंबाकू मुक्त आतिथ्य
   abhibhavak: 'अभिभावक / शिक्षक',
   email: 'ईमेल', basaav: 'ग्रामीण / शहरी', sahayata: 'सहायता चाहिए',
@@ -359,6 +376,12 @@ function doGet(e) {
   // "हाँ" लिखा है और मंज़ूर करने वाले का नाम भरा है। बाक़ी छूट जाती हैं।
   if (e && e.parameter && e.parameter.jawab) {
     return json(JSON.stringify(manzoorJawab()));
+  }
+  /* पूछे गए सवाल, मिलान सुधारने के लिए। tools/sawal-lao.py यही पढ़ता है।
+     इसमें कोई पहचान नहीं होती, क्योंकि शीट में भी कोई पहचान नहीं जाती।
+     सबसे नई पंक्तियाँ पहले, ताकि ज़्यादा न माँगनी पड़ें। */
+  if (e && e.parameter && e.parameter.sawal) {
+    return json(JSON.stringify(pooche_gaye_sawal(Number(e.parameter.kitne) || 500)));
   }
   if (!e || !e.parameter || !e.parameter.stats) {
     return reply(true, 'लोकसंकल्प फ़ॉर्म सेवा चालू है');
@@ -1351,6 +1374,29 @@ function reply(ok, message, regNo) {
  * certificate for. On the very first call it starts above whatever rows the
  * sheet already has, so an existing tab does not restart at 1.
  */
+/* पूछे गए सवालों की पंक्तियाँ लौटाता है, सबसे नई पहले।
+
+   यह शीट किसी की पहचान नहीं रखती : उसमें सिर्फ़ सवाल, मशीन ने क्या जोड़ा,
+   जोखिम और आदमी का हाँ या ना होता है। इसीलिए इसे ऐसे ही पढ़ा जा सकता है। */
+function pooche_gaye_sawal(kitne) {
+  var spec = FORMS.sawal;
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(spec.tab);
+  if (!sheet) return { ok: true, pankti: [] };
+  var last = sheet.getLastRow();
+  if (last < 2) return { ok: true, pankti: [] };
+  var head = expectedHeader(spec);
+  var shuru = Math.max(2, last - kitne + 1);
+  var vals = sheet.getRange(shuru, 1, last - shuru + 1, head.length).getValues();
+  var out = [];
+  for (var i = vals.length - 1; i >= 0; i--) {
+    var r = {};
+    for (var j = 0; j < head.length; j++) r[head[j]] = String(vals[i][j] || '');
+    out.push(r);
+  }
+  return { ok: true, kul: last - 1, pankti: out };
+}
+
 function nextRegNo(spec, sheet) {
   var props = PropertiesService.getScriptProperties();
   var key = 'regno-' + spec.tab;
