@@ -789,6 +789,12 @@ table.data tbody tr:hover { background: #fbfcff; }
    पढ़ते आदमी के लिए बाहर निकलने का सबसे सीधा रास्ता। */
 .crumbs li { display: flex; align-items: center; }
 .crumbs a { display: inline-flex; align-items: center; min-height: var(--ls-tap); }
+/* ब्रेडक्रम्ब पर राष्ट्रीय अभियान का नाम। हल्का रखा गया है, ताकि वह
+   पन्ने का पता न लगे और उससे टकराए भी नहीं। letter-spacing नहीं है :
+   वह देवनागरी की मात्राएँ तोड़ता है। */
+.crumb-abhiyan { opacity: .78; font-weight: 400; white-space: nowrap;
+  /* .crumbs li flex है, इसलिए बीच की जगह मिट जाती है। यहाँ लौटाई गई। */
+  margin-inline-start: .4rem; }
 
 /* Accordion (FAQ / long content) */
 details.acc {
