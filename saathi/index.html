@@ -220,22 +220,20 @@ li{line-height:1.6}
     <p class="note">आपका नाम नहीं पूछा जाता। जवाब ढूँढ़ने का सारा काम आपके ही फ़ोन में होता है, और आपका सवाल लोकसंकल्प तक नहीं आता। एक बात साफ़ जान लीजिए : बोलकर पूछने पर आपकी आवाज़ आपके फ़ोन की अपनी आवाज़-पहचान सेवा तक जाती है, जो Google या Apple की होती है। डिब्बों पर उँगली रखकर पढ़ने में वह भी नहीं जाती।
       <a href="../nijta.html#saathi" target="_blank" rel="noopener">निजता का पन्ना</a></p>
 
-    <!-- आवाज़ का चुनाव। हर फ़ोन की अपनी आवाज़ होती है और सबको एक जैसी
-         नहीं भाती, इसलिए चुनने का रास्ता खुला रखा है। चुना हुआ याद रह
-         जाता है, ताकि अगली बार दोबारा न चुनना पड़े। -->
-    <div id="awaz-box" hidden>
-      <hr>
-      <p class="note" style="font-weight:700;color:var(--ink)">आवाज़</p>
-      <label class="note" for="awaz-sel">कौन सी आवाज़</label>
-      <select id="awaz-sel" style="width:100%;padding:.75rem;border:2px solid var(--line);border-radius:12px;font:inherit;margin-bottom:.6rem"></select>
-      <label class="note" for="awaz-rate">रफ़्तार</label>
-      <select id="awaz-rate" style="width:100%;padding:.75rem;border:2px solid var(--line);border-radius:12px;font:inherit;margin-bottom:.6rem">
-        <option value="0.72">धीमी</option>
-        <option value="0.86" selected>सामान्य</option>
-        <option value="1">तेज़</option>
-      </select>
-      <button class="big alt" id="b-awaz-test">सुनकर देखिए</button>
-    </div>
+    <!-- 12 नवंबर 2026 : यहाँ आवाज़ चुनने और रफ़्तार बदलने के दो डिब्बे थे।
+         दोनों हटा दिए गए।
+
+         आवाज़ की सूची फ़ोन में मौजूद हिंदी आवाज़ों से बनती थी, और लगभग हर
+         फ़ोन में हिंदी की एक ही आवाज़ होती है (iPhone पर Lekha, Android पर
+         Google की अपनी)। यानी सूची में चुनने को कुछ होता ही नहीं था, बस
+         एक नाम दिखता था जिसका आदमी को कोई मतलब समझ नहीं आता।
+
+         रफ़्तार अब तय है : 0.86, वही जो पहले "सामान्य" लिखी थी। मशीन की
+         अपनी रफ़्तार 1.0 होती है; यह उससे ज़रा धीमी जानबूझकर रखी गई है,
+         क्योंकि गाँव में सुनने वाले के लिए वही ठीक बैठती है।
+
+         जिस फ़ोन में हिंदी आवाज़ है ही नहीं, उसके लिए नीचे वाली चेतावनी
+         ज्यों की त्यों है। -->
 
     <!-- फ़ोन में हिंदी आवाज़ न हो तो पहले साथी चुपचाप बैठ जाता था। -->
     <div id="awaz-nahi" class="caut" style="margin-top:.8rem" hidden>
@@ -465,22 +463,16 @@ li{line-height:1.6}
     return t;
   }
 
-  /* आवाज़ का चुनाव। पहले जो पहली हिंदी आवाज़ मिलती थी वही ले ली जाती थी,
-     और वह फ़ोन-फ़ोन पर अलग निकलती है, किसी पर भली किसी पर भद्दी। अब सूची
-     दिखती है और सुनने वाला ख़ुद चुन सकता है। */
+  /* फ़ोन में जो पहली हिंदी आवाज़ मिले, वही। 12 नवंबर 2026 तक यहाँ चुनने
+     की सूची थी, पर लगभग हर फ़ोन में हिंदी की एक ही आवाज़ होती है, इसलिए
+     वह सूची कभी कुछ चुनने को देती ही नहीं थी। */
   function hindiVoices(){
     var vs=(window.speechSynthesis&&speechSynthesis.getVoices())||[];
     return vs.filter(function(v){return /^hi(\b|-)/i.test(v.lang||'')});
   }
   function pickVoice(){
     var hi=hindiVoices();
-    if(!hi.length) return null;
-    var yaad=null;
-    try{ yaad=localStorage.getItem('ls-saathi-awaz'); }catch(e){}
-    if(yaad){
-      for(var i=0;i<hi.length;i++) if(hi[i].name===yaad) return hi[i];
-    }
-    return hi[0];
+    return hi.length ? hi[0] : null;
   }
   function say(text, done){
     if(state.band){ if(done)done(); return; }   // बंद है तो कुछ नहीं बोला जाता
@@ -1509,47 +1501,19 @@ li{line-height:1.6}
   /* ---------- तैयारी ---------- */
   /* आवाज़ की सूची भरना। getVoices() पहली बार अक्सर ख़ाली लौटता है और
      थोड़ी देर बाद भरता है, इसलिए onvoiceschanged पर दोबारा भरा जाता है। */
+  /* अब सिर्फ़ यह देखना है कि फ़ोन में हिंदी की कोई आवाज़ है या नहीं।
+     चुनने को कुछ नहीं, इसलिए सूची बनाने की ज़रूरत भी नहीं। */
   function bharoAwaz(){
-    var sel=$('awaz-sel'); if(!sel) return;
-    var hi=hindiVoices();
-    $('awaz-box').hidden = !hi.length;
-    $('awaz-nahi').hidden = !!hi.length;
-    if(!hi.length) return;
-    var ab=state.voice && state.voice.name;
-    sel.innerHTML='';
-    hi.forEach(function(v){
-      var o=document.createElement('option');
-      o.value=v.name; o.textContent=v.name;
-      if(v.name===ab) o.selected=true;
-      sel.appendChild(o);
-    });
+    var box=$('awaz-nahi'); if(!box) return;
+    box.hidden = hindiVoices().length > 0;
   }
-  (function(){
-    var sel=$('awaz-sel'), rate=$('awaz-rate'), test=$('b-awaz-test');
-    if(!sel) return;
-    sel.addEventListener('change', function(){
-      var hi=hindiVoices();
-      for(var i=0;i<hi.length;i++) if(hi[i].name===sel.value) state.voice=hi[i];
-      try{ localStorage.setItem('ls-saathi-awaz', sel.value); }catch(e){}
-    });
-    rate.addEventListener('change', function(){
-      state.rate=parseFloat(rate.value)||0.86;
-      try{ localStorage.setItem('ls-saathi-rate', rate.value); }catch(e){}
-    });
-    try{
-      var r=localStorage.getItem('ls-saathi-rate');
-      if(r){ rate.value=r; state.rate=parseFloat(r)||0.86; }
-    }catch(e){}
-    test.addEventListener('click', function(){
-      say('नमस्ते। मैं लोकसंकल्प का साथी हूँ। नशा मुक्ति हेल्पलाइन 14446 है।');
-    });
-  }());
 
   if(window.speechSynthesis){
     state.voice=pickVoice(); bharoAwaz();
     speechSynthesis.onvoiceschanged=function(){ state.voice=pickVoice(); bharoAwaz(); };
   } else {
-    $('awaz-box').hidden=true; $('awaz-nahi').hidden=false;
+    /* ब्राउज़र में बोलने की सुविधा ही नहीं। चेतावनी दिखा दीजिए। */
+    $('awaz-nahi').hidden=false;
   }
   raySangrah();
   show('s-start');
