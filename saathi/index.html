@@ -474,18 +474,36 @@ li{line-height:1.6}
     var hi=hindiVoices();
     return hi.length ? hi[0] : null;
   }
+  /* आवाज़ चली या नहीं, यह सूची देखकर नहीं, सचमुच बोलकर तय होता है।
+     देखिए awazKaFaisla() की टिप्पणी। */
+  var awazChali=false, awazPehliBaar=true;
+
   function say(text, done){
     if(state.band){ if(done)done(); return; }   // बंद है तो कुछ नहीं बोला जाता
     if(!window.speechSynthesis){ if(done)done(); return; }
     try{ speechSynthesis.cancel(); }catch(e){}
     var u=new SpeechSynthesisUtterance(bolneLayak(text));
     u.lang='hi-IN'; u.rate=state.rate||0.86; u.pitch=1;
+    /* आवाज़ मिले तो वही, न मिले तो खाना ख़ाली छोड़ दीजिए। तब ब्राउज़र
+       lang='hi-IN' देखकर ख़ुद चुनता है, और Android पर अक्सर चल जाता है
+       भले getVoices() ने कुछ न लौटाया हो। अंग्रेज़ी की आवाज़ ज़बरदस्ती
+       लगाना इससे बुरा होता : वह हिंदी को अंग्रेज़ी की तरह पढ़ती है। */
     if(!state.voice) state.voice=pickVoice();
     if(state.voice) u.voice=state.voice;
-    u.onstart=function(){ status('बोल रहा है', true) };
+
+    var pehli = awazPehliBaar; awazPehliBaar=false;
+    var bola=false;
+    u.onstart=function(){
+      bola=true; awazChali=true;
+      var b=$('awaz-nahi'); if(b) b.hidden=true;   // चल गई, चेतावनी हटाइए
+      status('बोल रहा है', true);
+    };
     u.onend=function(){ status('तैयार'); if(done)done() };
-    u.onerror=function(){ status('आवाज़ नहीं चली'); if(done)done() };
-    try{ speechSynthesis.speak(u); }catch(e){ if(done)done(); }
+    u.onerror=function(){ status('आवाज़ नहीं चली'); if(pehli) awazKaFaisla(false); if(done)done() };
+    try{ speechSynthesis.speak(u); }catch(e){ if(pehli) awazKaFaisla(false); if(done)done(); return; }
+    /* पहली बार बोलने पर पहरा : ढाई सेकंड में कुछ न बोला गया तो मान
+       लीजिए कि इस फ़ोन में हिंदी आवाज़ नहीं है। */
+    if(pehli) setTimeout(function(){ if(!bola) awazKaFaisla(false); }, 2500);
   }
   function status(t, speaking){
     $('st').innerHTML = speaking
@@ -1639,21 +1657,43 @@ li{line-height:1.6}
      सवाल कहीं नहीं जाता) वे पहले पर्दे पर पहले से कही जाती हैं। */
   var l2=$('lines2'); var lb=linesBox(); while(lb.firstChild) l2.appendChild(lb.firstChild);
 
-  /* ---------- तैयारी ---------- */
-  /* आवाज़ की सूची भरना। getVoices() पहली बार अक्सर ख़ाली लौटता है और
-     थोड़ी देर बाद भरता है, इसलिए onvoiceschanged पर दोबारा भरा जाता है। */
-  /* अब सिर्फ़ यह देखना है कि फ़ोन में हिंदी की कोई आवाज़ है या नहीं।
-     चुनने को कुछ नहीं, इसलिए सूची बनाने की ज़रूरत भी नहीं। */
-  function bharoAwaz(){
+  /* ---------- तैयारी ----------
+
+     12 नवंबर 2026 : यह चेतावनी एक असली Android फ़ोन पर ग़लत दिख रही थी।
+     पहले यह पन्ना खुलते ही getVoices() देखकर तय कर लेती थी। पर Android
+     के Chrome में वह सूची पन्ना खुलने के वक़्त अक्सर ख़ाली होती है और
+     थोड़ी देर बाद भरती है, कभी-कभी पहली बार बोलने के बाद ही।
+
+     इससे भी बड़ी बात : say() हर बार lang='hi-IN' भेजता है, इसलिए सूची
+     ख़ाली होने पर भी आवाज़ अक्सर चल जाती है। यानी सूची देखकर यह तय करना
+     ही ग़लत तरीक़ा था।
+
+     अब फ़ैसला सचमुच बोलकर होता है :
+       1. चेतावनी शुरू में दिखती ही नहीं
+       2. सूची तीन सेकंड तक बार-बार पढ़ी जाती है
+       3. आवाज़ एक बार चल गई तो चेतावनी पक्की तौर पर हट जाती है
+       4. पहली बार बोलने पर ढाई सेकंड में कुछ न बोला गया, या गड़बड़ हुई,
+          तभी चेतावनी दिखती है */
+  function awazKaFaisla(chaliHai){
     var box=$('awaz-nahi'); if(!box) return;
-    box.hidden = hindiVoices().length > 0;
+    if(chaliHai){ awazChali=true; box.hidden=true; return; }
+    if(awazChali) return;              // एक बार चल चुकी है, चेतावनी मत दिखाइए
+    box.hidden=false;
   }
 
   if(window.speechSynthesis){
-    state.voice=pickVoice(); bharoAwaz();
-    speechSynthesis.onvoiceschanged=function(){ state.voice=pickVoice(); bharoAwaz(); };
+    state.voice=pickVoice();
+    speechSynthesis.onvoiceschanged=function(){ if(!state.voice) state.voice=pickVoice(); };
+    /* Android पर सूची देर से भरती है। तीन सेकंड तक झाँकते रहिए। */
+    (function(){
+      var baar=0;
+      var t=setInterval(function(){
+        if(!state.voice) state.voice=pickVoice();
+        if(state.voice || ++baar>=6) clearInterval(t);
+      }, 500);
+    }());
   } else {
-    /* ब्राउज़र में बोलने की सुविधा ही नहीं। चेतावनी दिखा दीजिए। */
+    /* ब्राउज़र में बोलने की सुविधा ही नहीं। यह पक्का है, इसलिए अभी दिखाइए। */
     $('awaz-nahi').hidden=false;
   }
   raySangrah();
