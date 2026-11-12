@@ -31,6 +31,11 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SAATHI = ROOT / 'saathi'
 KHANE = ('पूछा गया सवाल', 'मशीन ने क्या जोड़ा', 'जोखिम', 'आदमी ने माना या नहीं')
 
+# जाँच के लिए भेजी गई पंक्तियाँ। 12 नवंबर 2026 को deploy जाँचते वक़्त दो
+# पंक्तियाँ शीट में गईं। वे आँकड़ों में नहीं गिनी जानी चाहिए, वरना "यह सवाल
+# समझ नहीं आया" की सूची में हमारी अपनी जाँच ऊपर बैठी रहेगी।
+PARIKSHA = re.compile(r'परीक्षा की पंक्ति|जाँच की पंक्ति|TEST_')
+
 
 def endpoint() -> str:
     cfg = (ROOT / 'js' / 'config.js').read_text(encoding='utf-8')
@@ -76,9 +81,14 @@ def main() -> int:
         return 0
 
     samjha_nahi, nakara, sab = Counter(), defaultdict(Counter), Counter()
+    chhodi = 0
     for r in rows:
         q = shirsh(r, KHANE[0])
         if not q:
+            continue
+        # जाँच के लिए भेजी गई पंक्तियाँ गिनती में नहीं आनी चाहिए
+        if PARIKSHA.search(q) or shirsh(r, KHANE[3]) == 'परीक्षा':
+            chhodi += 1
             continue
         sab[q] += 1
         natija = shirsh(r, KHANE[3])
@@ -132,6 +142,8 @@ def main() -> int:
 
     print('\n' + '=' * 66)
     print('कुल %d पंक्तियाँ, %d अलग-अलग सवाल' % (sum(sab.values()), len(sab)))
+    if chhodi:
+        print('(जाँच के लिए भेजी गई %d पंक्तियाँ गिनती से बाहर रखी गईं)' % chhodi)
     print('बदलाव करने के बाद कसौटी ज़रूर चलाइए :')
     print('  python3 -m http.server 8765 &')
     print('  OUT=/tmp/naap.json node tools/pariksha/milan-naap.cjs')
