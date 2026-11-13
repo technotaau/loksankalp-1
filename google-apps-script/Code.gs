@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 37;          // bump when this file changes; shown in every response
+var CODE_VERSION = 38;          // bump when this file changes; shown in every response
 
 // ---- संकल्प साथी का बंद करने का स्विच ------------------------------------
 //
@@ -197,7 +197,12 @@ var FORM_SHUT = {
   // नशामुक्त मतदान : वही घड़ी जो js/site.js के CAMPAIGNS.matdan.closes में है।
   // चुनाव की असली तारीख़ तय होने पर दोनों जगह एक साथ बदलिए।
   matdan:      Date.UTC(2026, 10, 30, 18, 30),  // 1 दिस॰ 00:00 IST
-  matdanSabha: Date.UTC(2026, 10, 30, 18, 30)
+  matdanSabha: Date.UTC(2026, 10, 30, 18, 30),
+  /* आतिथ्य का व्यक्तिगत संकल्प। यह बीता हुआ आयोजन नहीं है : यह फ़ॉर्म
+     13 नवंबर 2026 को पृष्ठ से हटाया गया, क्योंकि वही शपथ mera-sankalp.html
+     पर पहले से है। पुरानी पंक्तियाँ गिनी जाती रहती हैं; नई नहीं ली जातीं,
+     ताकि किसी के ब्राउज़र में अटका पुराना पृष्ठ चुपचाप पंक्ति न लिख दे। */
+  atithya:     Date.UTC(2026, 10, 13, 0, 0)
 };
 
 // Human-readable column headings.
@@ -844,6 +849,9 @@ function computeStats() {
   var sdRows       = rows(ss, FORMS.sankalpDoot.tab);
   var mdRows       = rows(ss, FORMS.matdan.tab);
   var msRows       = rows(ss, FORMS.matdanSabha.tab);
+  var taRows       = rows(ss, FORMS.atithya.tab);
+  var tapRows      = rows(ss, FORMS.atithyaParivar.tab);
+  var tagRows      = rows(ss, FORMS.atithyaGram.tab);
 
   /* "जुड़े हुए गाँव" हर गाँव को एक बार गिनता है, चाहे वह कितने ही फ़ॉर्मों में
      आए। एक ही गाँव के दस लोग उस गाँव को दस बार नहीं बना देते, और जिस गाँव में सभा
@@ -972,6 +980,45 @@ function computeStats() {
   };
   mdEk(FORMS.matdan, mdRows, false);
   mdEk(FORMS.matdanSabha, msRows, true);
+
+  /* तंबाकू मुक्त आतिथ्य की अपनी गिनती।
+
+     तीनों फ़ॉर्म की संख्याएँ अलग अलग भेजी जाती हैं और जोड़कर "कुल लोग" कभी
+     नहीं निकाली जातीं। कारण वही है जो FORMS में ऊपर लिखा है : एक परिवार का
+     निर्णय उसके सब सदस्यों की शपथ नहीं है, और सभा में बैठे दो सौ लोग दो सौ
+     व्यक्तिगत संकल्प नहीं हैं। इसी कारण यह गिनती मुखपृष्ठ वाली "संकल्प"
+     संख्या में भी नहीं जोड़ी जाती, जैसे इंकलाब 28 नहीं जोड़ा जाता।
+
+     गाँव और जिले जगहें हैं, इसलिए तीनों फ़ॉर्म मिलाकर एक बार गिने जाते हैं।
+     ये जान-बूझकर मुखपृष्ठ वाली villages और kulJileSet से अलग रखे गए हैं :
+     आतिथ्य की प्रथा बदलने का निर्णय नशामुक्ति की सभा से अलग चीज़ है, और उसे
+     चुपचाप उसी संख्या में मिला देने पर उस संख्या का अर्थ बदल जाता। */
+  var taGaon = {}, taJile = {}, tapVayask = 0, tagUpasthit = 0;
+
+  var taJagah = function (spec, rowsArr) {
+    var g = colOf(ss, spec, 'gaon');
+    var j = colOf(ss, spec, 'jila');
+    rowsArr.forEach(function (r) {
+      if (g >= 0) { var v = normPlace(r[g]); if (isPlace(v)) taGaon[v] = 1; }
+      if (j >= 0) { var d = normPlace(r[j]); if (RAJ_JILA[d]) taJile[d] = 1; }
+    });
+  };
+  taJagah(FORMS.atithya, taRows);
+  taJagah(FORMS.atithyaParivar, tapRows);
+  taJagah(FORMS.atithyaGram, tagRows);
+
+  /* परिवार के सहमत वयस्क। खाना वैकल्पिक है, इसलिए ख़ाली, शून्य या बेतुकी
+     संख्या पर भी एक गिना जाता है : जिसने फ़ॉर्म भरा वह तो सहमत है ही। यही
+     नियम इंकलाब 28 के परिवारों पर भी लगता है। */
+  var tapVIdx = colOf(ss, FORMS.atithyaParivar, 'vayaskSadasya');
+  tapRows.forEach(function (r) {
+    tapVayask += (tapVIdx >= 0 ? count(r[tapVIdx]) : 0) || 1;
+  });
+
+  /* सभा की उपस्थिति। यह उपस्थिति है, व्यक्तिगत संकल्पों की संख्या नहीं;
+     फ़ॉर्म पर भी यही लिखा है। इसीलिए नाम upasthit रखा है, sankalp नहीं। */
+  var tagSIdx = colOf(ss, FORMS.atithyaGram, 'sankhya');
+  if (tagSIdx >= 0) tagRows.forEach(function (r) { tagUpasthit += count(r[tagSIdx]); });
 
   var sdGaon = {}, sdJile = {}, sdRajya = {}, sdDesh = {};
   var gSD = colOf(ss, FORMS.sankalpDoot, 'gaon');
@@ -1116,6 +1163,17 @@ function computeStats() {
     kulJileSuchi:  Object.keys(kulJileSet).sort(),
     kulRajyaSuchi: Object.keys(kulRajyaSet).sort(),
     kulDeshSuchi:  Object.keys(kulDeshSet).sort(),
+    /* तंबाकू मुक्त आतिथ्य। ऊपर की "संकल्प" और "गाँव" वाली संख्याओं से
+       जान-बूझकर अलग, कारण ऊपर लिखा है। atithyaVyakti का फ़ॉर्म 13 नवंबर
+       2026 को पृष्ठ से हटा दिया गया था, इसलिए वह संख्या अब बढ़ेगी नहीं;
+       पुरानी पंक्तियाँ गिनती में बनी रहती हैं। */
+    atithyaVyakti:        taRows.length,
+    atithyaParivar:       tapRows.length,
+    atithyaParivarVayask: tapVayask,
+    atithyaSabhaen:       tagRows.length,
+    atithyaSabhaUpasthit: tagUpasthit,
+    atithyaGaon:          Object.keys(taGaon).length,
+    atithyaJile:          Object.keys(taJile).length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
