@@ -40,15 +40,29 @@ tab(F.atithyaParivar, [
   {regNo:'LS-TAP-0001', naam:'ख', gaon:'कूजटी',  jila:'बीकानेर', vayaskSadasya:4},
   {regNo:'LS-TAP-0002', naam:'ग', gaon:'Churu',  jila:'बीकानेर', vayaskSadasya:''},   // ख़ाली -> 1; Churu -> चूरू
   {regNo:'LS-TAP-0003', naam:'घ', gaon:'नोखा',   jila:'जोधपुर',  vayaskSadasya:'दो'}, // बेतुका -> 1
+  // राजस्थान से बाहर : राज्यों में गिना जाए, जिलों में नहीं
+  {regNo:'LS-TAP-0004', naam:'ङ', gaon:'मंडी',   rajya:'पंजाब',  vayaskSadasya:2},
 ]);
 tab(F.atithyaGram, [
-  {regNo:'LS-TAG-0001', gaon:'कूजटी', jila:'बीकानेर', sankhya:150},
-  {regNo:'LS-TAG-0002', gaon:'चूरू',  jila:'चूरू',   sankhya:'80'},
+  // पूरे गाँव की सभा -> ग्राम संकल्प में गिनी जाएगी
+  {regNo:'LS-TAG-0001', gaon:'कूजटी', jila:'बीकानेर', sankhya:150,
+   dayra:'पूरे गाँव या वार्ड की सार्वजनिक सभा'},
+  // उसी गाँव की दूसरी सभा -> गाँव दोबारा नहीं गिना जाएगा
+  {regNo:'LS-TAG-0003', gaon:'कूजटी', jila:'बीकानेर', sankhya:50,
+   dayra:'पूरे गाँव या वार्ड की सार्वजनिक सभा'},
+  // केवल कुछ परिवार -> ग्राम संकल्प में नहीं, पर सभाओं में गिनी जाएगी
+  {regNo:'LS-TAG-0002', gaon:'चूरू',  jila:'चूरू',   sankhya:'80',
+   dayra:'केवल भागीदार परिवारों का संकल्प'},
 ]);
 
 const s = ctx.computeStats();
-const चाहिए = { atithyaVyakti:1, atithyaParivar:3, atithyaParivarVayask:6,
-                atithyaSabhaen:2, atithyaSabhaUpasthit:230, atithyaGaon:3, atithyaJile:3 };
+const चाहिए = { atithyaVyakti:1, atithyaParivar:4, atithyaParivarVayask:8,
+                atithyaSabhaen:3, atithyaSabhaUpasthit:280,
+                atithyaGramSankalp:1,      // कूजटी एक बार, चूरू नहीं (दायरा छोटा)
+                atithyaGaon:4,             // कूजटी, चूरू, नोखा, मंडी
+                atithyaJile:3,             // बीकानेर, जोधपुर, चूरू
+                atithyaRajya:2,            // पंजाब + राजस्थान (क्योंकि जिले हैं)
+                atithyaKulVyakti:289 };    // 1 + 8 + 280
 let सब_ठीक = true;
 for (const k in चाहिए) {
   const ok = s[k] === चाहिए[k];
@@ -62,8 +76,7 @@ console.log((s.sankalp === 0 ? '✓' : '✗') + '  मुखपृष्ठ क�
 // दूसरी हालत : एक भी टैब नहीं बना (आज की असली स्थिति)
 for (const k in TABS) delete TABS[k];
 const z = ctx.computeStats();
-const ज = ['atithyaVyakti','atithyaParivar','atithyaParivarVayask','atithyaSabhaen',
-           'atithyaSabhaUpasthit','atithyaGaon','atithyaJile'];
+const ज = Object.keys(चाहिए);
 const शून्य = ज.every(k => z[k] === 0);
 console.log((शून्य ? '✓' : '✗') + '  कोई टैब न हो तो सब शून्य, कोई ख़राबी नहीं : ' +
             ज.map(k => k + '=' + z[k]).join(' '));

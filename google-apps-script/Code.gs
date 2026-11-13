@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 38;          // bump when this file changes; shown in every response
+var CODE_VERSION = 39;          // bump when this file changes; shown in every response
 
 // ---- संकल्प साथी का बंद करने का स्विच ------------------------------------
 //
@@ -142,7 +142,13 @@ var FORMS = {
      चीज़ें हैं। इन्हें एक शीट में मिला देने पर गिनती झूठी हो जाती :
      परिवार का एक प्रतिनिधि अपने घर के सब लोगों की शपथ नहीं है, और सभा
      में बैठे दो सौ लोग दो सौ व्यक्तिगत संकल्प नहीं हैं। इसीलिए तीनों
-     की गिनती अलग दिखती है और जोड़कर "कुल लोग" कभी नहीं निकाली जाती।
+     की गिनती अलग अलग भेजी जाती है।
+
+     13 नवंबर 2026 : डैशबोर्ड के लिए इनका जोड़ भी भेजा जाने लगा है,
+     atithyaKulVyakti में। वह पहुँच की संख्या है, अलग अलग गिने हुए लोगों
+     की नहीं, और उसके तीनों हिस्से अलग से भेजे जाते रहते हैं ताकि पूछने पर
+     बताया जा सके कि वह किससे बना है। मुखपृष्ठ की "संकल्प" संख्या में यह
+     जोड़ अब भी नहीं जुड़ता।
 
      क्रमांक LS-TA-0001 बनता है। दस्तावेज़ में LS-TA-2026-0001 लिखा था,
      पर nextRegNo की गिनती शीट के साथ चलती रहती है, साल के साथ नहीं।
@@ -993,14 +999,21 @@ function computeStats() {
      ये जान-बूझकर मुखपृष्ठ वाली villages और kulJileSet से अलग रखे गए हैं :
      आतिथ्य की प्रथा बदलने का निर्णय नशामुक्ति की सभा से अलग चीज़ है, और उसे
      चुपचाप उसी संख्या में मिला देने पर उस संख्या का अर्थ बदल जाता। */
-  var taGaon = {}, taJile = {}, tapVayask = 0, tagUpasthit = 0;
+  var taGaon = {}, taJile = {}, taRajya = {}, taDesh = {};
+  var tapVayask = 0, tagUpasthit = 0;
 
+  /* जिला, राज्य और देश वही kahanSe() तय करता है जो बाक़ी हर फ़ॉर्म पर लगता
+     है : खाना नहीं, नाम देखकर। किसी ने "अन्य देश" में राज्य का नाम लिख दिया
+     तो वह देशों की सूची में नहीं जाता। */
   var taJagah = function (spec, rowsArr) {
     var g = colOf(ss, spec, 'gaon');
-    var j = colOf(ss, spec, 'jila');
+    var idx = jagahIdx(ss, spec);
     rowsArr.forEach(function (r) {
       if (g >= 0) { var v = normPlace(r[g]); if (isPlace(v)) taGaon[v] = 1; }
-      if (j >= 0) { var d = normPlace(r[j]); if (RAJ_JILA[d]) taJile[d] = 1; }
+      var j = kahanSe(r, idx);
+      if (j && j.kya === 'देश')       taDesh[j.naam] = 1;
+      else if (j && j.kya === 'राज्य') taRajya[j.naam] = 1;
+      else if (j)                      taJile[j.naam] = 1;
     });
   };
   taJagah(FORMS.atithya, taRows);
@@ -1019,6 +1032,24 @@ function computeStats() {
      फ़ॉर्म पर भी यही लिखा है। इसीलिए नाम upasthit रखा है, sankalp नहीं। */
   var tagSIdx = colOf(ss, FORMS.atithyaGram, 'sankhya');
   if (tagSIdx >= 0) tagRows.forEach(function (r) { tagUpasthit += count(r[tagSIdx]); });
+
+  /* "ग्राम संकल्प" वे गाँव हैं जिन्होंने पूरे गाँव या वार्ड की सार्वजनिक सभा
+     में निर्णय लिया। "केवल भागीदार परिवारों का संकल्प", "एक संस्था का" और
+     "एक विशिष्ट आयोजन का" इसमें नहीं गिने जाते : फ़ॉर्म पर दायरे का खाना
+     इसीलिए सबसे ज़रूरी बताया गया है, और उसे अनदेखा करके गिन लेने पर एक छोटी
+     बैठक पूरे गाँव का फ़ैसला दिखने लगती। एक ही गाँव की दो सभाएँ एक गाँव हैं।
+
+     सभाओं की कुल संख्या atithyaSabhaen में अलग से जाती है, इसलिए कुछ छूटता
+     नहीं; दोनों का अर्थ अलग है और दोनों भेजे जाते हैं। */
+  var PURA_GAON = 'पूरे गाँव या वार्ड की सार्वजनिक सभा';
+  var tagSankalpGaon = {};
+  var tagDIdx = colOf(ss, FORMS.atithyaGram, 'dayra');
+  var tagGIdx = colOf(ss, FORMS.atithyaGram, 'gaon');
+  if (tagDIdx >= 0 && tagGIdx >= 0) tagRows.forEach(function (r) {
+    if (String(r[tagDIdx] || '').trim() !== PURA_GAON) return;
+    var v = normPlace(r[tagGIdx]);
+    if (isPlace(v)) tagSankalpGaon[v] = 1;
+  });
 
   var sdGaon = {}, sdJile = {}, sdRajya = {}, sdDesh = {};
   var gSD = colOf(ss, FORMS.sankalpDoot, 'gaon');
@@ -1172,8 +1203,22 @@ function computeStats() {
     atithyaParivarVayask: tapVayask,
     atithyaSabhaen:       tagRows.length,
     atithyaSabhaUpasthit: tagUpasthit,
+    atithyaGramSankalp:   Object.keys(tagSankalpGaon).length,
     atithyaGaon:          Object.keys(taGaon).length,
+    /* जिले और राज्य उसी नियम से जो मुखपृष्ठ पर लगता है : एक भी जिला जुड़ा है
+       तो राजस्थान जुड़ा है, इसलिए वह राज्यों में एक गिना जाता है। बिना इसके
+       जिस राज्य से यह अभियान चल रहा है वही उसकी अपनी गिनती से छूट जाता। */
     atithyaJile:          Object.keys(taJile).length,
+    atithyaRajya:         Object.keys(taRajya).length +
+                          (Object.keys(taJile).length > 0 ? 1 : 0),
+    /* कुल व्यक्ति : तीनों फ़ॉर्म जोड़कर। 13 नवंबर 2026 को यह तय हुआ, ताकि
+       डैशबोर्ड पर आतिथ्य की पहुँच एक संख्या में दिखे। सभा की उपस्थिति इसमें
+       उसी तरह जुड़ती है जैसे मुखपृष्ठ की "संकल्प" संख्या में सभा के प्रतिभागी
+       जुड़ते हैं। ध्यान रहे, यह ली गई प्रतिबद्धताओं की पहुँच है, अलग अलग
+       गिने हुए लोगों की संख्या नहीं : एक ही आदमी सभा में भी बैठा हो और अपने
+       घर का निर्णय भी दर्ज कराए तो दो बार गिना जाता है। हर हिस्सा ऊपर अलग
+       से भेजा जाता है, ताकि कोई पूछे तो बताया जा सके कि यह किससे बना है। */
+    atithyaKulVyakti:     taRows.length + tapVayask + tagUpasthit,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
