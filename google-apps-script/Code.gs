@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 39;          // bump when this file changes; shown in every response
+var CODE_VERSION = 40;          // bump when this file changes; shown in every response
 
 // ---- संकल्प साथी का बंद करने का स्विच ------------------------------------
 //
@@ -175,7 +175,29 @@ var FORMS = {
                        'rajya', 'tithi', 'sthal', 'sankhya', 'samuh', 'dayra',
                        'prabhaviTithi', 'naam', 'pad', 'mobile',
                        'pushti1', 'pushti1Mobile', 'pushti2', 'pushti2Mobile',
-                       'anuvarti', 'sahmati'] }
+                       'anuvarti', 'sahmati'] },
+
+  /* ===== किसान संकल्प 23 =============================================
+     चौधरी चरण सिंह जयंती और राष्ट्रीय किसान दिवस, 23 दिसंबर 2026।
+     इंकलाब 28 जैसा एक दिन का आयोजन, पर दो फ़ॉर्म के साथ।
+
+     पहला फ़ॉर्म एक व्यक्ति का अपना पंजीकरण है। दूसरा गाँव, वार्ड या संस्था
+     के आयोजन की सूचना है, और उसमें जो संख्याएँ आती हैं वे अनुमान हैं,
+     गिनी हुई नहीं। इसीलिए दोनों अलग शीट में जाते हैं और उनकी गिनती कभी
+     जोड़कर नहीं दिखाई जाती : एक आयोजन में दो सौ लोगों के आने का अनुमान
+     दो सौ पंजीकरण नहीं है। मसौदे में भी यही लिखा है। */
+  kisan23: { must: ['naam', 'mobile', 'gaon', 'vayask', 'sahmati'],
+              tab: 'किसान संकल्प 23', regPrefix: 'KS23',
+              fields: ['regNo', 'naam', 'mobile', 'gaon', 'block', 'jila',
+                       'rajya', 'desh', 'deshAnya', 'vayask', 'sahmati',
+                       'naamSarvajanik'] },
+
+  kisan23Aayojan: { must: ['aayojanNaam', 'prakar', 'gaon', 'naam', 'mobile', 'sahmati'],
+              tab: 'किसान संकल्प 23 आयोजन', regPrefix: 'KS23A',
+              fields: ['regNo', 'aayojanNaam', 'prakar', 'gaon', 'block', 'jila',
+                       'rajya', 'desh', 'deshAnya', 'sthal', 'samay', 'gatividhi',
+                       'karyayojana', 'upvaasAnumanit', 'sahyogAnumanit',
+                       'naam', 'pad', 'mobile', 'sahmati'] }
 };
 
 /* जिसे संकट की सूचना जाएगी। खाली छोड़ दीजिए तो कोई मेल नहीं जाती और
@@ -208,7 +230,11 @@ var FORM_SHUT = {
      13 नवंबर 2026 को पृष्ठ से हटाया गया, क्योंकि वही शपथ mera-sankalp.html
      पर पहले से है। पुरानी पंक्तियाँ गिनी जाती रहती हैं; नई नहीं ली जातीं,
      ताकि किसी के ब्राउज़र में अटका पुराना पृष्ठ चुपचाप पंक्ति न लिख दे। */
-  atithya:     Date.UTC(2026, 10, 13, 0, 0)
+  atithya:     Date.UTC(2026, 10, 13, 0, 0),
+  /* किसान संकल्प 23 : वही घड़ी जो js/site.js के CAMPAIGNS.kisan23.closes
+     में है। आयोजन 23 दिसंबर को है, इसलिए पंजीकरण उसी रात बंद होता है। */
+  kisan23:        Date.UTC(2026, 11, 23, 18, 30),   // 24 दिस॰ 00:00 IST
+  kisan23Aayojan: Date.UTC(2026, 11, 23, 18, 30)
 };
 
 // Human-readable column headings.
@@ -236,7 +262,13 @@ var LABELS = {
   dayra: 'निर्णय का दायरा', prabhaviTithi: 'निर्णय की प्रभावी तिथि',
   pushti1: 'पुष्टिकर्ता 1', pushti1Mobile: 'पुष्टिकर्ता 1 मोबाइल',
   pushti2: 'पुष्टिकर्ता 2', pushti2Mobile: 'पुष्टिकर्ता 2 मोबाइल',
-  anuvarti: 'अनुवर्ती जाँच की सहमति'
+  anuvarti: 'अनुवर्ती जाँच की सहमति',
+  // किसान संकल्प 23
+  vayask: '18 वर्ष या अधिक', aayojanNaam: 'आयोजन का नाम',
+  prakar: 'आयोजन का प्रकार', samay: 'प्रस्तावित समय',
+  gatividhi: 'गतिविधि', karyayojana: 'स्थानीय कार्ययोजना',
+  upvaasAnumanit: 'अनुमानित उपवास सहभागी',
+  sahyogAnumanit: 'अनुमानित सहयोग सहभागी'
 };
 
 // ---- entry point ---------------------------------------------------------
@@ -858,6 +890,8 @@ function computeStats() {
   var taRows       = rows(ss, FORMS.atithya.tab);
   var tapRows      = rows(ss, FORMS.atithyaParivar.tab);
   var tagRows      = rows(ss, FORMS.atithyaGram.tab);
+  var k23Rows      = rows(ss, FORMS.kisan23.tab);
+  var k23aRows     = rows(ss, FORMS.kisan23Aayojan.tab);
 
   /* "जुड़े हुए गाँव" हर गाँव को एक बार गिनता है, चाहे वह कितने ही फ़ॉर्मों में
      आए। एक ही गाँव के दस लोग उस गाँव को दस बार नहीं बना देते, और जिस गाँव में सभा
@@ -874,7 +908,8 @@ function computeStats() {
    [kahaniRows, FORMS.kahani], [yuvaRows, FORMS.yuva],
    [s21Rows, FORMS.sankalp21], [k21Rows, FORMS.karuna21],
    [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot],
-   [mdRows, FORMS.matdan], [msRows, FORMS.matdanSabha]].forEach(function (pair) {
+   [mdRows, FORMS.matdan], [msRows, FORMS.matdanSabha],
+   [k23Rows, FORMS.kisan23], [k23aRows, FORMS.kisan23Aayojan]].forEach(function (pair) {
     var idx = colOf(ss, pair[1], 'gaon');
     if (idx < 0) return;
     pair[0].forEach(function (r) {
@@ -1051,6 +1086,40 @@ function computeStats() {
     if (isPlace(v)) tagSankalpGaon[v] = 1;
   });
 
+  /* किसान संकल्प 23 की अपनी गिनती।
+
+     दो फ़ॉर्म, दो अलग अर्थ। व्यक्तिगत पंजीकरण गिने हुए लोग हैं। आयोजन
+     सूचना में संयोजक जो संख्याएँ लिखता है वे अनुमान हैं, और 23 दिसंबर से
+     पहले लिखी जाती हैं। इसीलिए दोनों कभी जोड़कर नहीं भेजी जातीं, और अनुमान
+     वाले खानों के नाम में Anumanit लिखा है ताकि आगे कोई उन्हें गिनी हुई
+     संख्या समझकर न छापे। मसौदे की भी यही शर्त है।
+
+     गाँव, जिले, राज्य और देश बाक़ी हर अभियान की तरह ऊपर की साझा सूचियों में
+     भी जुड़ते हैं, क्योंकि वे जगहें हैं : जिस गाँव तक अभियान पहुँचा वह
+     मुखपृष्ठ की गिनती से बाहर नहीं रहना चाहिए। */
+  var k23Gaon = {}, k23Jile = {}, k23Rajya = {}, k23Desh = {};
+  var k23Jagah = function (spec, rowsArr) {
+    var g = colOf(ss, spec, 'gaon');
+    var idx = jagahIdx(ss, spec);
+    rowsArr.forEach(function (r) {
+      if (g >= 0) { var v = normPlace(r[g]); if (isPlace(v)) k23Gaon[v] = 1; }
+      var j = kahanSe(r, idx);
+      if (j && j.kya === 'देश')       k23Desh[j.naam] = 1;
+      else if (j && j.kya === 'राज्य') k23Rajya[j.naam] = 1;
+      else if (j)                      k23Jile[j.naam] = 1;
+    });
+  };
+  k23Jagah(FORMS.kisan23, k23Rows);
+  k23Jagah(FORMS.kisan23Aayojan, k23aRows);
+
+  var k23UpvaasAnumanit = 0, k23SahyogAnumanit = 0;
+  var k23UIdx = colOf(ss, FORMS.kisan23Aayojan, 'upvaasAnumanit');
+  var k23SIdx = colOf(ss, FORMS.kisan23Aayojan, 'sahyogAnumanit');
+  k23aRows.forEach(function (r) {
+    if (k23UIdx >= 0) k23UpvaasAnumanit += count(r[k23UIdx]);
+    if (k23SIdx >= 0) k23SahyogAnumanit += count(r[k23SIdx]);
+  });
+
   var sdGaon = {}, sdJile = {}, sdRajya = {}, sdDesh = {};
   var gSD = colOf(ss, FORMS.sankalpDoot, 'gaon');
   var iSD = jagahIdx(ss, FORMS.sankalpDoot);
@@ -1104,7 +1173,8 @@ function computeStats() {
    [yuvaRows, FORMS.yuva], [sammanRows, FORMS.samman],
    [s21Rows, FORMS.sankalp21], [k21Rows, FORMS.karuna21],
    [i28Rows, FORMS.inqlab28], [sdRows, FORMS.sankalpDoot],
-   [mdRows, FORMS.matdan], [msRows, FORMS.matdanSabha]].forEach(function (pair) {
+   [mdRows, FORMS.matdan], [msRows, FORMS.matdanSabha],
+   [k23Rows, FORMS.kisan23], [k23aRows, FORMS.kisan23Aayojan]].forEach(function (pair) {
     var idx = jagahIdx(ss, pair[1]);
     pair[0].forEach(function (r) {
       var j = kahanSe(r, idx);
@@ -1219,6 +1289,23 @@ function computeStats() {
        घर का निर्णय भी दर्ज कराए तो दो बार गिना जाता है। हर हिस्सा ऊपर अलग
        से भेजा जाता है, ताकि कोई पूछे तो बताया जा सके कि यह किससे बना है। */
     atithyaKulVyakti:     taRows.length + tapVayask + tagUpasthit,
+    /* किसान संकल्प 23. 23 दिसंबर 2026, चौधरी चरण सिंह जयंती।
+
+       ये मुखपृष्ठ की "संकल्प" संख्या में अभी नहीं जुड़ते। वह संख्या पहले से
+       प्रचारित है और इसमें चुपचाप एक नया अभियान जोड़ देने पर उसका अर्थ बदल
+       जाता। जोड़ना हो तो ऊपर sankalp की पंक्ति में k23Rows.length लिख देना
+       काफ़ी है, पर वह सोच-समझकर लिया गया फ़ैसला होना चाहिए, चूक नहीं।
+
+       अनुमानित वाले दोनों खाने संयोजकों के बताए अनुमान हैं। इन्हें
+       kisan23Vyakti के साथ जोड़कर कोई "कुल" नहीं बनाया जाता। */
+    kisan23Vyakti:          k23Rows.length,
+    kisan23Aayojan:         k23aRows.length,
+    kisan23UpvaasAnumanit:  k23UpvaasAnumanit,
+    kisan23SahyogAnumanit:  k23SahyogAnumanit,
+    kisan23Gaon:            Object.keys(k23Gaon).length,
+    kisan23Jile:            Object.keys(k23Jile).length,
+    kisan23Rajya:           Object.keys(k23Rajya).length,
+    kisan23Desh:            Object.keys(k23Desh).length,
     sahayata:   0        // no form feeds this; set it in the मैनुअल आँकड़े tab
   };
 
