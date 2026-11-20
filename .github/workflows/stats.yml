@@ -1,0 +1,45 @@
+# आँकड़ों की तैयार प्रति, अपने आप ताज़ा।
+#
+# Apps Script ठंडा पड़ा हो तो पहला जवाब 20 सेकंड से ऊपर ले लेता है, और
+# पहली बार आने वाला आदमी तब तक ख़ाली डिब्बे देखता है। stats.json उसी CDN
+# से आती है जिससे पन्ना आता है, इसलिए तुरंत पहुँचती है।
+#
+# यह दिन में चार बार चलता है। कोई नई प्रविष्टि आए तो पन्ना असली आँकड़े
+# ख़ुद ले आता है; यह प्रति सिर्फ़ पहले क्षण के लिए है, इसलिए दिन में चार
+# बार काफ़ी है। हाथ से चलाना हो तो Actions में "Run workflow" दबाइए।
+name: आँकड़ों की प्रति ताज़ा कीजिए
+
+on:
+  schedule:
+    - cron: '0 1,7,13,19 * * *'      # 6:30, 12:30, 18:30, 00:30 IST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stats-snapshot
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: claude/website-hindi-content-build-f4hhg9
+
+      - name: आँकड़े लाइए
+        run: python3 tools/stats-snapshot.py
+
+      - name: बदला हो तो ही commit कीजिए
+        run: |
+          if git diff --quiet -- stats.json; then
+            echo "कोई बदलाव नहीं।"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stats.json
+          git commit -m "आँकड़ों की प्रति ताज़ा ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+          git push

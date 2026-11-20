@@ -1,0 +1,1751 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#17307a">
+<meta name="description" content="नशे के सवालों का सीधा जवाब, गाँव की हिंदी में। 320 सवाल, मंज़ूर किए हुए जवाब, हर एक के साथ उसका आधार। बोलकर पूछिए, हिंदी में।">
+<link rel="canonical" href="https://loksankalp.org/saathi/">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<title>संकल्प साथी : नशे के सवालों का जवाब | लोकसंकल्प</title>
+<link rel="stylesheet" href="../css/fonts.css">
+
+<style>
+/* बनावट : फ़ोन के लिए एक ही स्तंभ, बड़े छूने लायक़ बटन, और हर पर्दे पर
+   एक ही काम। रंग अभियान के अपने tokens से, गहरे रूप के लिए दोबारा चुने हुए। */
+:root{
+  --bg:#fffdf8; --surface:#ffffff; --surface-2:#f4f6fb; --line:#e3e6ef;
+  --ink:#16192b; --soft:#4a5068; --faint:#646b80;
+  --brand:#17307a; --brand-soft:#eaeefb; --on-brand:#ffffff;
+  --accent:#c25c05; --accent-soft:#fdf0e3; --accent-ink:#9a4903;
+  --crit:#b3261e; --crit-bg:#fdecea; --crit-ink:#7c1a14;
+  --warn:#8a5a00; --warn-bg:#fdf3df;
+  --ok:#1b7a34; --ok-soft:#e8f4ea;
+  --head:"Tiro Devanagari Hindi","Noto Serif Devanagari",Georgia,serif;
+  --body:"Noto Sans Devanagari",system-ui,-apple-system,sans-serif;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#12131c; --surface:#1a1c27; --surface-2:#222534; --line:#2e3242;
+    --ink:#e9ecf5; --soft:#aeb5c9; --faint:#8d95ae;
+    --brand:#8fa6e8; --brand-soft:#1b2136; --on-brand:#12131c;
+    --accent:#d9761a; --accent-soft:#2a1d10; --accent-ink:#d9761a;
+    --crit:#f07167; --crit-bg:#2e1614; --crit-ink:#ffc9c2;
+    --warn:#e0a53a; --warn-bg:#2b2211;
+    --ok:#5cc274; --ok-soft:#142a1a;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#12131c; --surface:#1a1c27; --surface-2:#222534; --line:#2e3242;
+  --ink:#e9ecf5; --soft:#aeb5c9; --faint:#8d95ae;
+  --brand:#8fa6e8; --brand-soft:#1b2136; --on-brand:#12131c;
+  --accent:#d9761a; --accent-soft:#2a1d10; --accent-ink:#d9761a;
+  --crit:#f07167; --crit-bg:#2e1614; --crit-ink:#ffc9c2;
+  --warn:#e0a53a; --warn-bg:#2b2211;
+  --ok:#5cc274; --ok-soft:#142a1a;
+}
+html{-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+body{background:var(--bg); color:var(--ink); font-family:var(--body);
+     font-size:17px; line-height:1.7; margin:0;
+     padding-block:1.25rem 3rem; padding-left:1rem; padding-right:1rem;
+     -webkit-text-size-adjust:100%}
+.app{max-width:30rem; margin:0 auto; display:flex; flex-direction:column; gap:1rem}
+.wide{max-width:46rem; margin:2.5rem auto 0; display:flex; flex-direction:column; gap:1rem}
+h1,h2{font-family:var(--head); font-weight:400; margin:0; line-height:1.3; text-wrap:balance}
+h1{font-size:1.9rem}
+h2{font-size:1.3rem}
+p{margin:0}
+button{font-family:var(--body); font-size:1rem; cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+
+.top{display:flex; align-items:center; gap:.7rem}
+.mark{width:40px;height:40px;border-radius:12px;background:var(--brand);color:var(--on-brand);
+      display:grid;place-items:center;font-family:var(--head);font-size:1.3rem;flex:0 0 auto}
+.tag{display:inline-block;background:var(--accent-soft);color:var(--accent-ink);
+     border-radius:999px;padding:.25rem .7rem;font-size:.72rem;font-weight:700}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+      padding:1.1rem 1.15rem;display:flex;flex-direction:column;gap:.8rem}
+.note{font-size:.85rem;color:var(--faint);line-height:1.55}
+
+.big{width:100%;border:0;border-radius:var(--r);padding:1.05rem 1.1rem;
+     background:var(--brand);color:var(--on-brand);font-weight:700;font-size:1.08rem;
+     display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:60px}
+.big.alt{background:var(--surface);color:var(--ink);border:2px solid var(--line)}
+.big.warnb{background:var(--crit);color:#fff}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.topic{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);
+       padding:.95rem .7rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+       min-height:112px;justify-content:center;color:var(--ink);text-align:center}
+.topic svg{width:34px;height:34px;stroke:var(--accent);fill:none;stroke-width:1.7;
+           stroke-linecap:round;stroke-linejoin:round}
+.topic span{font-weight:700;font-size:.95rem;line-height:1.3;text-wrap:balance}
+.topic:active{border-color:var(--accent);background:var(--accent-soft)}
+/* तुरंत मदद : बाक़ी से अलग दिखे, बिना पढ़े पहचान में आ जाए */
+.topic.turant{border-color:var(--crit);background:var(--crit-bg)}
+.topic.turant svg{stroke:var(--crit)}
+.topic.turant span{color:var(--crit-ink)}
+
+.ask{display:flex;gap:.5rem;align-items:stretch}
+.ask input{flex:1;min-width:0;border:2px solid var(--line);border-radius:var(--r);
+           padding:.85rem .9rem;font-size:1rem;font-family:var(--body);
+           background:var(--surface);color:var(--ink)}
+.big.sun-raha{background:var(--crit);border-color:var(--crit)}
+.mic-ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;margin-inline-end:.4rem}
+.mic{flex:0 0 auto;width:58px;border:2px solid var(--line);border-radius:var(--r);
+     background:var(--surface);display:grid;place-items:center}
+.mic svg{width:24px;height:24px;stroke:var(--brand);fill:none;stroke-width:1.8;
+         stroke-linecap:round;stroke-linejoin:round}
+
+.bubble{background:var(--brand-soft);border-radius:var(--r);padding:.9rem 1rem;
+        font-size:1.02rem;line-height:1.65}
+.answer{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--accent);
+        border-radius:var(--r);padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.6rem}
+/* letter-spacing और text-transform यहाँ से हटाए गए (12 नवंबर 2026)।
+   letter-spacing देवनागरी की मात्राओं को अक्षर से अलग कर देता है,
+   और uppercase हिंदी पर कुछ नहीं करता पर अंग्रेज़ी नामों को चीख़ता
+   हुआ बना देता है। यह पंक्ति शुरू से अंग्रेज़ी के हिसाब से लिखी थी। */
+.answer .src{font-size:.78rem;font-weight:700;color:var(--accent-ink)}
+.answer.gen{border-left-color:var(--brand)} .answer.gen .src{color:var(--brand)}
+
+.alarm{background:var(--crit-bg);border:2px solid var(--crit);border-radius:var(--r);
+       padding:1.1rem;display:flex;flex-direction:column;gap:.85rem;color:var(--crit-ink)}
+.alarm h2{color:var(--crit)}
+.caut{background:var(--warn-bg);border:2px solid var(--warn);border-radius:var(--r);
+      padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.6rem}
+
+.back{display:inline-flex;align-items:center;gap:.3rem;background:none;border:0;padding:.5rem .2rem;
+  font:inherit;font-size:.95rem;font-weight:700;color:var(--brand);cursor:pointer;min-height:48px}
+.back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round}
+.upnaam{font-size:.82rem;font-weight:700;
+  color:var(--accent-ink);margin:1.1rem 0 .5rem}
+.chabi{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin:.6rem 0 .2rem;
+  font-size:.78rem;color:var(--soft)}
+.chabi span{display:inline-flex;align-items:center;gap:.3rem}
+.chabi .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);display:inline-block}
+.chabi .dot.na{background:var(--line)} .chabi .dot.hi{background:var(--warn)}
+.chabi .dot.em{background:var(--crit)}
+.qlist{display:flex;flex-direction:column;gap:.45rem}
+.qrow{display:flex;gap:.6rem;align-items:flex-start;width:100%;text-align:left;
+  background:var(--surface);border:2px solid var(--line);border-radius:var(--r);
+  padding:.8rem .85rem;font:inherit;font-size:.98rem;color:var(--ink);
+  min-height:48px;cursor:pointer;line-height:1.4}
+.qrow:active{border-color:var(--accent);background:var(--accent-soft)}
+.qrow .dot{flex:0 0 auto;width:9px;height:9px;border-radius:50%;margin-top:.42rem;background:var(--ok)}
+.qrow .dot.na{background:var(--line)}
+.qrow .dot.hi{background:var(--warn)}
+.qrow .dot.em{background:var(--crit)}
+.namune{display:flex;flex-wrap:wrap;gap:.5rem}
+.namune button{background:var(--surface);border:2px solid var(--line);border-radius:999px;
+  padding:.6rem .9rem;font:inherit;font-size:.9rem;font-weight:600;color:var(--ink);
+  min-height:48px;cursor:pointer;text-align:left}
+.namune button:active{border-color:var(--accent);background:var(--accent-soft)}
+.ray{border-top:2px solid var(--line);margin-top:1.1rem;padding-top:1rem}
+.ray>p:first-child{font-weight:700;margin-bottom:.6rem}
+.ray-btn{display:flex;gap:.5rem;flex-wrap:wrap}
+.ray-btn button{flex:1 1 10rem;background:var(--surface);border:2px solid var(--line);
+  border-radius:var(--r);padding:.8rem;font:inherit;font-weight:700;color:var(--ink);
+  min-height:48px;cursor:pointer}
+.ray-btn button:active{border-color:var(--accent);background:var(--accent-soft)}
+.ray-btn button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+#ray-kyon{margin-top:.7rem;display:flex;gap:.5rem;flex-wrap:wrap}
+#ray-kyon label{flex:1 1 100%}
+#ray-kyon input{flex:1 1 10rem;min-width:0;border:2px solid var(--line);
+  border-radius:var(--r);padding:.75rem;font:inherit;min-height:48px}
+#ray-kyon button{background:var(--brand);color:var(--on-brand);border:0;border-radius:var(--r);
+  padding:.75rem 1.1rem;font:inherit;font-weight:700;min-height:48px;cursor:pointer}
+.lines{display:flex;flex-direction:column;gap:.5rem}
+.line{display:flex;align-items:center;gap:.7rem;background:var(--surface);
+      border:1px solid var(--line);border-radius:12px;padding:.6rem .8rem}
+.line b{font-family:var(--head);font-size:1.4rem;color:var(--ink);
+        font-variant-numeric:tabular-nums;flex:0 0 auto;min-width:4.6rem}
+.line span{font-size:.88rem;color:var(--soft);line-height:1.4;flex:1;min-width:0}
+.line button{border:1px solid var(--line);background:var(--surface-2);color:var(--ink);
+             border-radius:9px;padding:.4rem .6rem;font-size:.8rem;flex:0 0 auto}
+
+.bar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;
+     background:var(--surface-2);border-radius:12px;padding:.6rem .75rem;font-size:.85rem}
+.bar b{font-variant-numeric:tabular-nums}
+.speaking{display:inline-flex;gap:3px;align-items:flex-end;height:14px}
+.speaking i{width:3px;background:var(--accent);border-radius:2px;animation:eq .9s ease-in-out infinite}
+.speaking i:nth-child(2){animation-delay:.15s} .speaking i:nth-child(3){animation-delay:.3s}
+@keyframes eq{0%,100%{height:4px}50%{height:14px}}
+@media (prefers-reduced-motion:reduce){.speaking i{animation:none;height:9px}}
+
+.flow{display:flex;flex-direction:column;gap:.45rem}
+.fs{display:grid;grid-template-columns:1.7rem 1fr;gap:.7rem;align-items:start;font-size:.92rem}
+.fs b{font-family:var(--head);color:var(--accent);font-weight:400;font-size:1.05rem}
+.fs.off b{color:var(--faint)}
+.fs.off{color:var(--soft)}
+hr{border:none;border-top:1px solid var(--line);margin:.2rem 0}
+ul{margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:.35rem}
+li{line-height:1.6}
+</style>
+</head>
+<body>
+
+<main class="app">
+
+  <div class="top">
+    <div class="mark">सं</div>
+    <div style="flex:1;min-width:0">
+      <h1>संकल्प साथी</h1>
+      <span class="tag">लोकसंकल्प · नशे के सवालों का जवाब</span>
+    </div>
+  </div>
+
+  <!-- पर्दा 0 : शुरुआत और मशीन होने की घोषणा -->
+  <!-- बंद का पर्दा। Apps Script में SAATHI_BAND को true करने पर यही दिखता है।
+       बाक़ी सब छिप जाता है, ताकि कोई जवाब ग़लती से भी न दिखे। -->
+  <section id="s-band" class="card" hidden>
+    <h2 style="margin-top:0">साथी अभी बंद है</h2>
+    <p id="band-sandesh" style="font-size:1.05rem"></p>
+    <div id="band-lines"></div>
+  </section>
+
+  <section id="s-start" class="card">
+    <p style="font-size:1.05rem">यह लोकसंकल्प का साथी है। नशे के बारे में जो पूछना हो, पूछिए। जवाब बोलकर सुनाया जाएगा।</p>
+    <button class="big" id="b-start">शुरू कीजिए</button>
+    <p class="note">दबाते ही आवाज़ चालू होगी। फ़ोन का साइलेंट बंद कर लीजिए।</p>
+    <p class="note">आपका नाम और नंबर नहीं पूछा जाता। आपने क्या पूछा, यह केंद्र के पास दर्ज होता है, ताकि साथी आगे बेहतर जवाब दे सके। उसके साथ आपकी कोई पहचान नहीं जाती।
+      <a href="../nijta.html#saathi" target="_blank" rel="noopener">निजता का पन्ना</a></p>
+
+    <!-- 12 नवंबर 2026 : यहाँ आवाज़ चुनने और रफ़्तार बदलने के दो डिब्बे थे।
+         दोनों हटा दिए गए।
+
+         आवाज़ की सूची फ़ोन में मौजूद हिंदी आवाज़ों से बनती थी, और लगभग हर
+         फ़ोन में हिंदी की एक ही आवाज़ होती है (iPhone पर Lekha, Android पर
+         Google की अपनी)। यानी सूची में चुनने को कुछ होता ही नहीं था, बस
+         एक नाम दिखता था जिसका आदमी को कोई मतलब समझ नहीं आता।
+
+         रफ़्तार अब तय है : 0.86, वही जो पहले "सामान्य" लिखी थी। मशीन की
+         अपनी रफ़्तार 1.0 होती है; यह उससे ज़रा धीमी जानबूझकर रखी गई है,
+         क्योंकि गाँव में सुनने वाले के लिए वही ठीक बैठती है।
+
+         जिस फ़ोन में हिंदी आवाज़ है ही नहीं, उसके लिए नीचे वाली चेतावनी
+         ज्यों की त्यों है। -->
+
+    <!-- फ़ोन में हिंदी आवाज़ न हो तो पहले साथी चुपचाप बैठ जाता था। -->
+    <div id="awaz-nahi" class="caut" style="margin-top:.8rem" hidden>
+      <p><b>इस फ़ोन में हिंदी बोलने वाली आवाज़ नहीं मिली।</b></p>
+      <p class="note" style="margin-top:.4rem">साथी फिर भी चलेगा, जवाब पढ़कर दिखाया जाएगा। आवाज़ चाहिए तो फ़ोन की सेटिंग में Google की वाक् सेवा और उसमें हिंदी डाल लीजिए।</p>
+    </div>
+
+    <!-- जो राय इस फ़ोन में दर्ज हुई है, उसे नक़ल करके केंद्र तक भेजा जा
+         सकता है। राय किसी सर्वर पर नहीं जाती, इसी फ़ोन में रहती है, और
+         जाँचने वाले के भेजने पर ही आगे जाती है। -->
+    <div id="ray-sangrah" hidden>
+      <hr>
+      <p class="note" style="font-weight:700;color:var(--ink)">आपकी दर्ज की हुई राय</p>
+      <p class="note" id="ray-ginti"></p>
+      <button class="big alt" id="b-ray-nakal">राय नक़ल कीजिए</button>
+      <button class="big alt" id="b-ray-mitao" style="margin-top:.5rem">राय मिटाइए</button>
+      <p class="note">राय इसी फ़ोन में रखी है, कहीं अपने आप नहीं जाती। इसमें वह भी रहता है जो आपने अपने शब्दों में लिखा था। एक फ़ोन कई लोग चलाते हों तो भेजने के बाद मिटा दीजिए।</p>
+    </div>
+  </section>
+
+  <!-- पर्दा 1 : उम्र का फाटक -->
+  <section id="s-age" class="card" hidden>
+    <h2>एक बात पहले</h2>
+    <p id="age-q" style="font-size:1.05rem">क्या आपकी उम्र 18 साल से कम है?</p>
+    <div class="pair">
+      <button class="big alt" data-age="1">हाँ, कम है</button>
+      <button class="big alt" data-age="0">नहीं, 18 से ऊपर</button>
+    </div>
+    <p class="note">यह इसलिए पूछा जाता है कि 18 से कम उम्र वालों को मशीन का बनाया हुआ जवाब कभी नहीं दिया जाता। उन्हें सिर्फ़ मंज़ूर किया हुआ जवाब और इंसान तक का रास्ता मिलता है।</p>
+  </section>
+
+  <!-- पर्दा 2 : मुख्य -->
+  <section id="s-home" class="card" hidden>
+    <p id="home-lead" style="font-size:1.02rem">किस बारे में पूछना है? किसी भी डिब्बे पर उँगली रखिए, वह ख़ुद बोलेगा।</p>
+    <div class="grid" id="topics"></div>
+    <hr>
+    <p class="note" style="font-weight:700;color:var(--ink);font-size:.95rem">या अपने शब्दों में बोलकर पूछिए</p>
+    <button class="big" id="b-mic" aria-label="बोलकर पूछिए">
+      <svg class="mic-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg>
+      बोलकर पूछिए
+    </button>
+    <p class="note" id="mic-note">बटन दबाइए और हिंदी में अपना सवाल बोलिए।</p>
+    <p class="note" id="nam-lead" style="margin-top:1rem">या इनमें से कोई सवाल छूकर पूछिए :</p>
+    <div class="namune" id="namune"></div>
+  </section>
+
+  <!-- पर्दा : एक विषय के सारे सवाल। आदमी अपना सवाल ख़ुद चुनता है,
+       इसलिए यहाँ से सीधे जवाब पर जाया जाता है, पुष्टि माँगे बिना। -->
+  <section id="s-list" class="card" hidden>
+    <button class="back" id="b-back" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      सब विषय
+    </button>
+    <h2 id="list-head" style="margin:.4rem 0 .2rem"></h2>
+    <p class="note" id="list-lead"></p>
+    <div class="chabi" aria-hidden="true">
+      <span><i class="dot"></i>जवाब तैयार</span>
+      <span><i class="dot na"></i>जवाब अभी नहीं</span>
+      <span><i class="dot hi"></i>इंसान से बात</span>
+      <span><i class="dot em"></i>तुरंत मदद</span>
+    </div>
+    <div id="list-body"></div>
+  </section>
+
+  <!-- पर्दा 3 : पुष्टि -->
+  <section id="s-confirm" class="card" hidden>
+    <span class="tag">पुष्टि</span>
+    <p class="note">यह वही क़दम है जो ग़लत सुने हुए सवाल को ग़लत जवाब बनने से रोकता है।</p>
+    <div class="bubble" id="heard"></div>
+    <div class="pair">
+      <button class="big" id="b-yes">हाँ, यही</button>
+      <button class="big alt" id="b-no">नहीं</button>
+    </div>
+  </section>
+
+  <!-- पर्दा 4 : जवाब -->
+  <section id="s-out" class="card" hidden>
+    <div id="out"></div>
+    <div class="ray" id="ray" hidden>
+      <p id="ray-lead">यह जवाब काम का लगा?</p>
+      <div class="ray-btn">
+        <button type="button" id="b-ray-ha">हाँ, काम का लगा</button>
+        <button type="button" id="b-ray-na">नहीं, ठीक नहीं लगा</button>
+      </div>
+      <div id="ray-kyon" hidden>
+        <label class="note" for="ray-note">क्या कमी रही? दो शब्द में लिख दीजिए।</label>
+        <input id="ray-note" type="text" autocomplete="off" placeholder="जैसे, समझ नहीं आया">
+        <button type="button" id="b-ray-bhejo">दर्ज कीजिए</button>
+      </div>
+      <p class="note" id="ray-dhanyavad" hidden>दर्ज हो गई। धन्यवाद।</p>
+    </div>
+    <button class="big alt" id="b-again">दूसरा सवाल पूछिए</button>
+  </section>
+
+  <div class="bar" id="statusbar">
+    <span id="st">तैयार</span>
+  </div>
+</main>
+
+<footer class="wide">
+  <div class="card">
+    <h2>जँचे हुए नंबर</h2>
+    <div class="lines" id="lines2"></div>
+    <p class="note">ये पाँचों भारत सरकार के अपने नंबर हैं और निःशुल्क हैं। किसी भी वक़्त मिलाइए।</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var BANK=[];
+  /* शीट से मंज़ूर होकर आए जवाब। jawab.json में सिर्फ़ वे जाते हैं जिनकी
+     शीट में मंज़ूरी हाँ है और मंज़ूर करने वाले का नाम भरा है, यह tools/jawab-lao.py
+     देखता है। फ़ाइल न हो तो साथी नमूने के जवाबों पर चलता रहता है। */
+  var MANZOOR={};
+
+  /* किसी सवाल का जवाब। मंज़ूर जवाब पहले, नमूने का जवाब बाद में।
+     namuna सच हो तो पर्दे पर साफ़ लिखा जाता है कि यह नमूना है। */
+  function jawabKa(id){
+    if(MANZOOR[id]) return MANZOOR[id];
+    if(ANS[id]) return { a: ANS[id], namuna: true };
+    return null;
+  }
+
+  var state={band:false, age:null, cand:null, poocha:'', sample:null, voice:null, rate:0.86, started:false, sankatBheja:false, rayPar:null, vishay:null};
+
+  /* ======================================================================
+     संकट पर क्या दिखाया जाए।
+
+     12 नवंबर 2026 का फ़ैसला : किसी व्यक्ति का नाम या नंबर नहीं दिखेगा,
+     सिर्फ़ सरकारी हेल्पलाइन। यह अधूरापन नहीं, तय किया हुआ है।
+
+     कारण यह है कि एक आदमी चौबीसों घंटे फ़ोन नहीं उठा सकता, और संकट की
+     घड़ी में सबसे बुरी चीज़ वह नंबर है जो बजता रहे और कोई न उठाए। जो
+     नंबर सचमुच चौबीसों घंटे चलते हैं वे नीचे LINES में हैं और वही दिखते
+     हैं।
+
+     आगे कभी केंद्र का कोई नामज़द आदमी तय हो जाए, तो यहाँ naam, pad,
+     number और waada भर देने भर से वह डिब्बा अपने आप लौट आएगा। नीचे का
+     कोड वैसा ही रखा गया है, हटाया नहीं।
+     ====================================================================== */
+  var SANKAT = {
+    naam:   '',
+    pad:    '',
+    number: '',
+    waada:  ''
+  };
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbw5DbR-p0ech2BN7RwQ3LDVu9iFLYuawX7Pa7ph5-MVJFz0NAgi-aT-6UsC6T1fFlCwbw/exec';
+
+  var LINES=[
+    ['112','किसी भी आपात स्थिति में'],
+    ['14446','नशा मुक्ति हेल्पलाइन, 24 घंटे'],
+    ['14416','टेली मानस, मन की तकलीफ़'],
+    ['1098','बच्चों के लिए'],
+    ['108','एंबुलेंस, राजस्थान']
+  ];
+
+  /* निशान। हर विषय का अपना, ताकि पढ़ने से पहले पहचान में आ जाए।
+     ये सीधी लकीरों वाले हैं, छोटे पर्दे पर भी साफ़ दिखने के लिए। */
+  var ICON={
+    turant:'<path d="M12 3L2 20h20z"/><path d="M12 10v4"/><path d="M12 17h.01"/>',
+    samajh:'<circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.4a2.9 2.9 0 1 1 3.6 2.8V14"/><path d="M12.4 17.2h.01"/>',
+    chhodna:'<path d="M5 19L19 5"/><circle cx="12" cy="12" r="8.5"/>',
+    ghar:'<path d="M3.5 11L12 4l8.5 7"/><path d="M6 10.5V20h12v-9.5"/><path d="M10 20v-5h4v5"/>',
+    bachche:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.4 2.7-6 6-6s6 2.6 6 6"/><circle cx="17.5" cy="10.5" r="2.2"/><path d="M15 20c0-2.4 1.3-4.2 3.3-4.2S21.5 17.6 21.5 20"/>',
+    ilaj:'<path d="M12 5v14"/><path d="M5 12h14"/><rect x="3" y="3" width="18" height="18" rx="4"/>',
+    nayi:'<path d="M12 21s-7-4.6-7-10a4.6 4.6 0 0 1 7-3.9A4.6 4.6 0 0 1 19 11c0 5.4-7 10-7 10z"/>',
+    sharab:'<path d="M5 4h14l-7 8z"/><path d="M12 12v6"/><path d="M8.5 20h7"/>',
+    tambaku:'<rect x="3" y="11" width="14" height="5" rx="1.5"/><path d="M19 9c1.2.9 1.2 2.1 0 3"/><path d="M20 16h1"/>',
+    man:'<path d="M9 3.5A5 5 0 0 0 4.5 11c0 1.3.5 2.4 1.3 3.2V18a2 2 0 0 0 2 2h1"/><path d="M15 3.5A5 5 0 0 1 19.5 11c0 1.3-.5 2.4-1.3 3.2V18a2 2 0 0 1-2 2h-1"/><path d="M12 3v17"/>',
+    auraten:'<circle cx="12" cy="8" r="4.2"/><path d="M12 12.5V21"/><path d="M9 18h6"/>',
+    samaj:'<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.6 2.6 14.4 0 17"/>',
+    kaam:'<rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 13h18"/>'
+  };
+  /* विषयों का पेड़ ped.json से आता है : 13 मुख्य विषय, 20 उप-विषय,
+     320 सवाल। पहले यहाँ छह डिब्बे हाथ से लिखे थे और हर डिब्बा एक ही
+     सवाल पर ले जाता था, यानी बाक़ी 314 सवाल किसी को दिखते ही नहीं थे। */
+  var PED=[], ROOP={};
+
+  /* दिखाने भर के जवाब। असली जवाब केंद्र से मंज़ूर होकर आएँगे। */
+  var ANS={};
+  /* 12 नवंबर 2026 : यहाँ 43 नमूने के जवाब पड़े थे, जो अभियान के शुरुआती
+     दौर में परख के लिए लिखे गए थे। उनका कोई आधार दर्ज नहीं था और किसी ने
+     उन्हें मंज़ूर नहीं किया था। पर्दे पर वे "नमूना" लिखकर दिखते थे, यानी
+     छिपाए नहीं गए थे, फिर भी बिना आधार का जवाब जवाब ही है।
+
+     इसलिए वे हटा दिए गए। अब उन 43 सवालों पर साथी वही करता है जो किसी भी
+     अनजान सवाल पर करता है : साफ़ कह देता है कि जवाब तैयार नहीं है और
+     14446 पर भेज देता है।
+
+     हटाए गए सवालों की पूरी सूची saathi/nmune-43.md में है। दोबारा लिखते
+     समय उन पर वही दस दरवाज़े लगेंगे जो बाक़ी 197 पर लगे। */
+
+  /* ---------- बोलना ---------- */
+
+  /* मशीन कुछ शब्द और अंक बिगाड़कर बोलती है। बोलने से ठीक पहले पाठ थोड़ा
+     बदल देने से वह ठीक सुनाई देने लगता है। यह पर्दे पर लिखे को नहीं छूता,
+     सिर्फ़ आवाज़ को दिया जाने वाला रूप बदलता है।
+
+     सबसे ज़रूरी अंक हैं : 14446 को मशीन "चौदह हज़ार चार सौ छियालीस" पढ़
+     देती थी, जो हेल्पलाइन के नंबर के लिए बेकार है। उसे एक-एक अंक करके
+     बुलवाया जाता है, ठहराव के साथ, जैसे आदमी नंबर बोलता है। */
+  var BOL={
+    '14446':'एक, चार, चार, चार, छह',
+    '14416':'एक, चार, चार, एक, छह',
+    '1098' :'एक, शून्य, नौ, आठ',
+    '112'  :'एक, एक, दो',
+    '108'  :'एक, शून्य, आठ',
+    'NDPS' :'एन डी पी एस',
+    'OPD'  :'ओ पी डी',
+    'TB'   :'टी बी',
+    'HIV'  :'एच आई वी'
+  };
+  function bolneLayak(t){
+    t=String(t||'');
+    /* <b> जैसे चिह्न हटाइए, वरना मशीन उन्हें भी पढ़ती है */
+    t=t.replace(/<[^>]*>/g,' ');
+    Object.keys(BOL).forEach(function(k){
+      t=t.replace(new RegExp(k,'g'), BOL[k]);
+    });
+    /* बाक़ी अंकों को छेड़िए मत। पहले सब चार-अंकी संख्याएँ तोड़ दी जाती
+       थीं, तो "साल 2026" भी "दो, शून्य, दो, छह" बोला जाने लगा था। ऊपर की
+       सूची में जो नंबर हैं वही नंबर हैं; बाक़ी अंक साल, गिनती या मात्रा
+       होते हैं और उन्हें मशीन अपने आप ठीक पढ़ती है। */
+    /* पूर्ण विराम के बाद ठहराव, ताकि वाक्य चिपके हुए न लगें */
+    t=t.replace(/।/g,'। ').replace(/\s+/g,' ').trim();
+    return t;
+  }
+
+  /* फ़ोन में जो पहली हिंदी आवाज़ मिले, वही। 12 नवंबर 2026 तक यहाँ चुनने
+     की सूची थी, पर लगभग हर फ़ोन में हिंदी की एक ही आवाज़ होती है, इसलिए
+     वह सूची कभी कुछ चुनने को देती ही नहीं थी। */
+  function hindiVoices(){
+    var vs=(window.speechSynthesis&&speechSynthesis.getVoices())||[];
+    return vs.filter(function(v){return /^hi(\b|-)/i.test(v.lang||'')});
+  }
+  function pickVoice(){
+    var hi=hindiVoices();
+    return hi.length ? hi[0] : null;
+  }
+  /* आवाज़ चली या नहीं, यह सूची देखकर नहीं, सचमुच बोलकर तय होता है।
+     देखिए awazKaFaisla() की टिप्पणी। */
+  var awazChali=false, awazPehliBaar=true;
+
+  function say(text, done){
+    if(state.band){ if(done)done(); return; }   // बंद है तो कुछ नहीं बोला जाता
+    if(!window.speechSynthesis){ if(done)done(); return; }
+    try{ speechSynthesis.cancel(); }catch(e){}
+    var u=new SpeechSynthesisUtterance(bolneLayak(text));
+    u.lang='hi-IN'; u.rate=state.rate||0.86; u.pitch=1;
+    /* आवाज़ मिले तो वही, न मिले तो खाना ख़ाली छोड़ दीजिए। तब ब्राउज़र
+       lang='hi-IN' देखकर ख़ुद चुनता है, और Android पर अक्सर चल जाता है
+       भले getVoices() ने कुछ न लौटाया हो। अंग्रेज़ी की आवाज़ ज़बरदस्ती
+       लगाना इससे बुरा होता : वह हिंदी को अंग्रेज़ी की तरह पढ़ती है। */
+    if(!state.voice) state.voice=pickVoice();
+    if(state.voice) u.voice=state.voice;
+
+    var pehli = awazPehliBaar; awazPehliBaar=false;
+    var bola=false;
+    u.onstart=function(){
+      bola=true; awazChali=true;
+      var b=$('awaz-nahi'); if(b) b.hidden=true;   // चल गई, चेतावनी हटाइए
+      status('बोल रहा है', true);
+    };
+    u.onend=function(){ status('तैयार'); if(done)done() };
+    u.onerror=function(){ status('आवाज़ नहीं चली'); if(pehli) awazKaFaisla(false); if(done)done() };
+    try{ speechSynthesis.speak(u); }catch(e){ if(pehli) awazKaFaisla(false); if(done)done(); return; }
+    /* पहली बार बोलने पर पहरा : ढाई सेकंड में कुछ न बोला गया तो मान
+       लीजिए कि इस फ़ोन में हिंदी आवाज़ नहीं है। */
+    if(pehli) setTimeout(function(){ if(!bola) awazKaFaisla(false); }, 2500);
+  }
+  function status(t, speaking){
+    $('st').innerHTML = speaking
+      ? '<span class="speaking"><i></i><i></i><i></i></span> &nbsp;'+t
+      : t;
+  }
+
+  /* ---------- मिलान ---------- */
+  /* गाँव से आने वाले सवाल अक्सर रोमन अक्षरों में आते हैं। जो आठ असली सवाल
+     अब तक आए, उनमें से तीन रोमन में थे। इसलिए मिलान से पहले नशों के नाम
+     और कुछ आम शब्द देवनागरी में बदल दिए जाते हैं। */
+  var ROMAN={
+    nasha:'नशा', nashe:'नशा', nasha:'नशा', sharab:'शराब', sarab:'शराब',
+    daru:'शराब', alcohol:'शराब', drink:'शराब', drinking:'शराब', wine:'शराब',
+    beer:'शराब', gutkha:'गुटखा', gutka:'गुटखा', guthka:'गुटखा', khaini:'खैनी',
+    tambaku:'तंबाकू', tambakhu:'तंबाकू', tamakhu:'तंबाकू', tobacco:'तंबाकू',
+    bidi:'बीड़ी', beedi:'बीड़ी', cigarette:'सिगरेट', sigret:'सिगरेट',
+    smoking:'सिगरेट', charas:'चरस', ganja:'गांजा', gaanja:'गांजा',
+    bhang:'भांग', afeem:'अफ़ीम', afim:'अफ़ीम', opium:'अफ़ीम', amal:'अफ़ीम',
+    doda:'डोडा', post:'पोस्त', chitta:'चिट्टा', smack:'स्मैक', ladka:'बेटा',
+    beta:'बेटा', beti:'बेटी', bacha:'बच्चा', bachcha:'बच्चा', bachche:'बच्चे',
+    pati:'पति', patni:'पत्नी', papa:'पिता', ghar:'घर', pariwar:'परिवार',
+    parivar:'परिवार', dost:'दोस्त', school:'स्कूल', college:'कॉलेज',
+    chhodna:'छोड़ना', chodna:'छोड़ना', chhodne:'छोड़ना', lat:'लत',
+    aadat:'आदत', adat:'आदत', ilaj:'इलाज', dawa:'दवा', doctor:'डॉक्टर',
+    peena:'पीना', pine:'पीना', pita:'पीना', khana:'खाना', tension:'तनाव',
+    gussa:'गुस्सा', nind:'नींद', neend:'नींद', madad:'मदद', kaise:'कैसे',
+    kya:'क्या', kyon:'क्यों', vyakti:'व्यक्ति', aadmi:'आदमी',
+    anand:'आनंद', ghinn:'घिन', ghin:'घिन', sharam:'शर्म', dar:'डर',
+    karne:'करना', karta:'करना', vale:'वाला', wale:'वाला', khane:'खाना',
+    lene:'लेना', aata:'आना', aati:'आना', kabhi:'कभी', apne:'अपना',
+    saman:'समान', bimari:'बीमारी', nuksan:'नुक़सान', fayda:'फ़ायदा',
+
+    /* संकट के शब्द। ये पहले इस सूची में थे ही नहीं, इसलिए रोमन में लिखा
+       "mujhe jeene ka mann nahi karta" पकड़ में नहीं आता था और आदमी को
+       "समझ नहीं आया" मिलता था। देवनागरी में वही बात पकड़ी जाती थी।
+       नीचे के शब्द उसी छेद को बंद करते हैं। इन्हें घटाइए मत। */
+    mujhe:'मुझे', mera:'मेरा', meri:'मेरी', mann:'मन', man:'मन',
+    nahi:'नहीं', nahin:'नहीं', nai:'नहीं', ka:'का', ki:'की',
+    raha:'रहा', rahi:'रही', rha:'रहा', rhi:'रही', aa:'आ',
+    behosh:'बेहोश', behoshi:'बेहोश', hosh:'होश',
+    marna:'मरना', marne:'मरने', marunga:'मर जाऊं', marungi:'मर जाऊं',
+    mar:'मर', jaan:'जान', jan:'जान', khatam:'खत्म', khatm:'खत्म',
+    atmahatya:'आत्महत्या', aatmahatya:'आत्महत्या', khudkushi:'खुदकुशी',
+    suicide:'आत्महत्या', jeene:'जीने', jine:'जीने', jeena:'जीना', jina:'जीना',
+    maarpeet:'मारपीट', marpeet:'मारपीट', marta:'मारता', marti:'मारती',
+    peetta:'पीटता', pitta:'पीटता', peette:'पीटते', hinsa:'हिंसा',
+    khoon:'खून', khun:'खून', saans:'सांस', sans:'सांस',
+    daura:'दौरा', dora:'दौरा', zahar:'जहर', jahar:'जहर', nas:'नस',
+    ulti:'उल्टी', ultee:'उल्टी',
+
+    /* आम क्रियाएँ और जोड़ने वाले शब्द। इनके बिना "mujhe marna hai" का
+       "hai" अंग्रेज़ी ही रह जाता था और "मरना है" वाला वाक्यांश टूट जाता
+       था। ये पूरे मिलान को भी सुधारते हैं। */
+    hai:'है', hain:'हैं', he:'है', hu:'हूं', hoon:'हूं', hun:'हूं',
+    ho:'हो', tha:'था', thi:'थी', the:'थे', hoti:'होती', hota:'होता',
+    kar:'कर', karu:'करूं', karun:'करूं', karoon:'करूं', karni:'करना',
+    chahta:'चाहता', chahti:'चाहती', chahiye:'चाहिए', chahta_hoon:'चाहता',
+    lagta:'लगता', lagti:'लगती', laga:'लगा', lag:'लग',
+    gaya:'गया', gayi:'गई', gai:'गई', diya:'दिया', liya:'लिया',
+    sab:'सब', bahut:'बहुत', roj:'रोज', roz:'रोज', phir:'फिर',
+    koi:'कोई', mere:'मेरे', uska:'उसका', uski:'उसकी', unka:'उनका'
+  };
+  function roman(q){
+    return (q||'').replace(/[A-Za-z]+/g, function(w){
+      var k=w.toLowerCase();
+      return ROMAN[k] ? ROMAN[k] : w;
+    });
+  }
+
+  /* रुकने वाले शब्द। इनका कोई मतलब नहीं होता, इसलिए मिलान में नहीं गिने
+     जाते। पहले यहाँ क्रिया के सिर्फ़ कुछ रूप थे, तो "करती" जैसा सिर्फ़
+     व्याकरण का शब्द भी वज़नदार सबूत बन जाता था और अकेले ही ढँकाव की सीमा
+     पार करवा देता था। अब रूप भी भरे हैं। */
+  var STOP=('का की के को में से है हैं और या पर कि यह वह ये एक कोई कुछ नहीं ना तो ही भी अगर जब तक लिए '+
+            'क्या कैसे कौन कब क्यों मैं मेरा मेरी मेरे मुझे हम हमें आप आपका आपकी इस उस उसका उसकी उन्हें '+
+            'अपने अपना अपनी कर करना करने करता करती करते करें करूं किया किये की जाए जाता जाती जाते जाना '+
+            'होता होती होते हो होना हुआ हुई था थी थे रहा रही रहे रहना सकता सकती सकते चाहिए दे देना '+
+            'जो बहुत साथ वाला वाले वाली वालों आना लेना कभी वो ऐसा ऐसी तरह बात लगता लगती ओर आदि आदमी व्यक्ति ').split(' ');
+  var SW={}; STOP.forEach(function(w){SW[w]=1});
+  /* asliToks : सिर्फ़ पूरे शब्द।
+     toks     : पूरे शब्द और उनके पाँच अक्षर वाले सिरे, दोनों।
+
+     सिरा इसलिए रखा जाता है कि "नुकसान" और "नुकसानदायक" एक दूसरे से मिल
+     जाएँ। पर वह ढँकाव के हिसाब में नहीं गिना जाना चाहिए, वरना एक ही शब्द
+     दो बार गिना जाता है। नापकर देखा था : "नुकसान" अकेला पूरे सबूत का
+     64% बन जाता था, क्योंकि वह और उसका सिरा दोनों गिने जाते थे। */
+  /* शब्दों के समूह।
+
+     एक ही बात कहने के कई शब्द होते हैं। गाँव में withdrawal को "तोड़"
+     कहते हैं, नशा मुक्ति केंद्र को सिर्फ़ "केंद्र"। सूची किताबी भाषा में
+     लिखी है, इसलिए ये शब्द मशीन के लिए थे ही नहीं।
+
+     हर पंक्ति एक समूह है और उसका पहला शब्द उस समूह का नाम है। समूह का
+     कोई भी शब्द लिखिए, मशीन पहला शब्द समझती है। यह सवाल और सूची, दोनों
+     पर चलता है।
+
+     एक बात जो पहले ग़लत की थी : भांग, गांजा और अफ़ीम को सीधे "नशा" बना
+     दिया था। वे एक चीज़ नहीं हैं, और वैसा करने से भांग का सवाल शराब के
+     सवाल पर जा सकता था। अब वे अपना नाम रखते हैं और उनके साथ "नशा" भी
+     जुड़ जाता है, ताकि आम सवालों से भी मिल सकें और अपनी पहचान भी न खोएँ।
+     यह नीचे NASHE की सूची से होता है। */
+  var SAMUH=[
+    ['withdrawal','तोड','तोड़','छुड़ाई'],
+    ['craving','तलब','तलप','लालसा'],
+    ['rehabilitation','rehab','केंद्र','केन्द्र','नशामुक्ति'],
+    ['इलाज','उपचार','नुस्खा','दवादारू'],
+    ['भर्ती','दाखिल','admission','एडमिशन'],
+    /* यह पहले एक ही समूह था : लक्षण, दर्द, उल्टी, दस्त, घबराहट, भूख,
+       बेचैनी, मितली। वह ग़लत था। ये पर्यायवाची नहीं हैं, ये आठ अलग
+       तकलीफ़ें हैं। एक समूह में डालने से सब एक ही शब्द "लक्षण" बन जाते थे,
+       और "उल्टी और दस्त हो रहे हैं" के असली शब्द बनते थे "लक्षण लक्षण",
+       यानी दो शब्द का सवाल एक शब्द का रह जाता था और कम से कम दो की शर्त
+       पर गिर जाता था। समूह में सिर्फ़ वे शब्द रहें जो सचमुच एक ही बात
+       कहते हैं। */
+    ['उल्टी','मितली','कै'],
+    ['घबराहट','बेचैनी','बेचैन'],
+    ['कंपकंपी','कांप','कंपन','थरथराहट'],
+    ['seizure','दौरा','दौरे','मिर्गी'],
+    ['memory','याददाश्त','याद्दाश्त','स्मृति'],
+    ['sexual','नामर्दी','मर्दानगी','नपुंसकता'],
+    ['हिंसक','हिंसा','मारपीट','पिटाई'],
+    ['शरीर','बदन','देह','तन'],
+    ['sports','खेल','खेलकूद'],
+    ['परीक्षा','कोचिंग','इम्तिहान','बोर्ड'],
+    ['vaping','वेप','वैप','ईसिगरेट'],
+    ['गुटखा','पान','मसाला','पानमसाला','जर्दा'],
+    ['तंबाकू','खैनी','तमाखू','सुरती'],
+    ['परिवार','ससुराल','कुनबा','घरवाले'],
+    ['पैसा','पैसे','खर्चा','खर्च','जेब','रुपया','रुपये'],
+    ['बच्चा','बच्चे','बेटा','बेटी','बेटे','लड़का','लड़की','संतान'],
+    ['डर','डरे','डरना','भय','घबराना'],
+    ['शराब','दारू','दारु','मदिरा','liquor','alcohol'],
+    /* बीड़ी को सिगरेट से अलग रखा गया है। एक सवाल ठीक इन दोनों की तुलना
+       करता है : क्या बीड़ी सिगरेट से कम नुक़सानदायक है। दोनों को एक मानने
+       से वह सवाल मिट जाता था। */
+    ['सिगरेट','धूम्रपान','smoking'],
+    ['बीड़ी','बीडी'],
+    ['दोस्त','यार','संगत','साथी','मित्र'],
+    ['मनुहार','आग्रह','जिद','इसरार'],
+    ['शादी','विवाह','ब्याह','लगन'],
+    ['अकेलापन','तनहाई','एकाकीपन'],
+    ['तनाव','टेंशन','stress','दबाव','चिंता']
+  ];
+  /* नशों के नाम : अपना नाम रखते हैं, पर "नशा" भी साथ जुड़ता है */
+  var NASHE={'अफीम':1,'अमल':1,'गांजा':1,'गांजे':1,'भांग':1,'चरस':1,'स्मैक':1,
+             'डोडा':1,'पोस्त':1,'चिट्टा':1,'शराब':1,'सिगरेट':1,'गुटखा':1,'तंबाकू':1};
+  var PARYAY={};
+  (function(){
+    for(var i=0;i<SAMUH.length;i++)
+      for(var j=0;j<SAMUH[i].length;j++) PARYAY[SAMUH[i][j]]=SAMUH[i][0];
+  }());
+
+  /* हिज्जे एक से कीजिए।
+
+     हिंदी में एक ही शब्द दो तरह लिखा जाता है और दोनों सही माने जाते हैं :
+     नुक़सान और नुकसान, जाँच और जांच, ज़्यादा और ज्यादा, करूँ और करूं।
+     मशीन के लिए वे अलग शब्द थे। नापकर देखा गया कि गाँव के साठ सवालों में
+     120 शब्द सूची से बाहर थे, और उनमें से आधे से ज़्यादा सिर्फ़ इसी वजह
+     से बाहर थे : वही शब्द सूची में दूसरे हिज्जे से मौजूद था।
+
+     दो काम किए जाते हैं। नुक़्ता हटाया जाता है, और चंद्रबिंदु को अनुस्वार
+     बना दिया जाता है। यह सवाल और सूची, दोनों पर एक जैसा चलता है, इसलिए
+     कोई जानकारी खोती नहीं, सिर्फ़ दोनों एक रूप में आ जाते हैं। */
+  function sahiHijje(t){
+    return (t||'').normalize('NFD')
+      .replace(/\u093C/g,'')        /* नुक़्ता : क़ क, ज़ ज, ड़ ड */
+      .replace(/\u0901/g,'\u0902')  /* चंद्रबिंदु अनुस्वार बने */
+      .normalize('NFC');
+  }
+  /* ===== सुनने की भूल सुधारना =====================================
+     12 नवंबर 2026 को गाँव की जाँच में यह निकला। किसी ने बोला "आदत और लत
+     में क्या अंतर है", और फ़ोन ने सुना "आदत और **लात** में क्या अन्तर है"।
+     सवाल मिलना ही था, पर एक शब्द बिगड़ने से पूरा मिलान टूट गया।
+
+     यह मिलान की ख़राबी नहीं है। सही शब्द से वही सवाल ठीक पहुँचता है।
+     यह सुनने की ख़राबी है, और सुनने का काम फ़ोन की अपनी आवाज़-पहचान सेवा
+     करती है, जो हमारे हाथ में नहीं। इसलिए सुधार यहाँ किया जाता है।
+
+     नियम, जिनके बिना कोई शब्द इस सूची में नहीं डाला जाएगा :
+
+     1. ग़लत शब्द सवालों, उनके रूपों और कोश, तीनों में कहीं न आता हो।
+        वरना सुधार ही असली मेल तोड़ देगा। `tools/sunne-ki-bhool.py` यही
+        जाँचता है। इसी जाँच ने "दवाई को दवा कर दो" वाला सुझाव रोका था :
+        दवाई नौ जगह असली में इस्तेमाल होता है।
+     2. पूरा शब्द बदले, शब्द का टुकड़ा नहीं। देवनागरी में \b नहीं चलता,
+        इसलिए आगे-पीछे देवनागरी न होने की शर्त लगाई गई है।
+     3. जोड़ने के बाद साठ सवालों की कसौटी दोबारा चले और गिनती घटे नहीं।
+
+     नया मामला मिलते ही यहाँ एक पंक्ति जोड़िए और tools/sunne-ki-bhool.py
+     चला लीजिए। ================================================= */
+  var SUNNE_KI_BHOOL = {
+    'लात'  : 'लत',      /* गाँव की जाँच में सचमुच मिला */
+    'तलाब' : 'तलब',     /* वही भूल : बीच में आ का स्वर घुस जाना */
+    'गंजा' : 'गांजा',   /* उल्टी भूल : आ का स्वर गिर जाना */
+    'बिड़ी': 'बीड़ी'    /* छोटी इ और बड़ी ई का फ़र्क़ */
+  };
+  var BHOOL_RE = (function(){
+    var k = Object.keys(SUNNE_KI_BHOOL);
+    if(!k.length) return null;
+    /* देवनागरी में शब्द की सीमा \b से नहीं पकड़ी जाती */
+    return new RegExp('(?<![\u0900-\u097F])(' + k.join('|') + ')(?![\u0900-\u097F])', 'g');
+  }());
+  function sunaSudharo(t){
+    if(!t || !BHOOL_RE) return t;
+    try{ return t.replace(BHOOL_RE, function(m){ return SUNNE_KI_BHOOL[m] || m; }); }
+    catch(e){ return t; }   /* पुराने ब्राउज़र में lookbehind नहीं चलता */
+  }
+
+  function asliToks(s){
+    s=sahiHijje(roman(s||'')).toLowerCase().replace(/[^ऀ-ॿa-z0-9]+/g,' ');
+    var o=[],p=s.split(' ');
+    for(var i=0;i<p.length;i++){
+      var w=p[i];
+      var nasha = NASHE[w] || NASHE[PARYAY[w]];
+      if(PARYAY[w]) w=PARYAY[w];
+      if(w.length<2||SW[w]) continue;
+      o.push(w);
+      if(nasha) o.push('नशा');
+    }
+    return o;
+  }
+  function toks(s){
+    var a=asliToks(s), o=[];
+    for(var i=0;i<a.length;i++){ o.push(a[i]); if(a[i].length>5) o.push(a[i].slice(0,5)); }
+    return o;
+  }
+  var DOCS=[], DF={}, Nd=0, IDF={}, IDF_MAX=1, AVG=1, TF=[];
+  var KOSH=[], KD=[], KS=[], KN=0, KIDF={}, KIDF_MAX=1, KAVG=1, KTF=[];
+  function index(){
+    /* हर सवाल के साथ उसके लिखे हुए रूप भी सूची में जाते हैं।
+
+       वजह नाप से निकली : मशीन दूसरे शब्दों में पूछे गए सवाल को ढूँढ़
+       नहीं पाती, क्योंकि सवाल और उसके दूसरे रूप में साझा शब्द बहुत कम
+       होते हैं। उसे चतुर बनाने के बजाय उसे वे शब्द दे दिए गए हैं जो
+       लोग सचमुच बोलते हैं। */
+    DOCS=BANK.map(function(b){
+      var t=b.q+' '+(b.v||'');
+      var r=ROOP[b.id];
+      if(r) t += ' ' + r.join(' ');
+      return toks(t);
+    });
+    Nd=DOCS.length; DF={};
+    DOCS.forEach(function(d){ var seen={}; d.forEach(function(w){ if(!seen[w]){seen[w]=1; DF[w]=(DF[w]||0)+1} }) });
+    IDF={}; IDF_MAX=0;
+    for(var w in DF){ IDF[w]=Math.log(1+(Nd-DF[w]+0.5)/(DF[w]+0.5)); if(IDF[w]>IDF_MAX) IDF_MAX=IDF[w]; }
+    AVG=DOCS.reduce(function(a,d){return a+d.length},0)/Nd;
+    TF=DOCS.map(function(d){ var t={}; d.forEach(function(w){t[w]=(t[w]||0)+1}); return t });
+    SEEDHA=null;
+  }
+  /* पुस्तिकाओं का कोश : 1,198 टुकड़े, सोलह पुस्तिकाओं के 452 पन्नों से।
+     हर टुकड़े के साथ लिखा है कि वह किस पुस्तिका के किस पन्ने से आया। */
+  /* पुस्तिका के ढाँचे वाले नाम। ये किसी सवाल का जवाब नहीं होते : ये
+     अध्याय के लेबल हैं, जैसे "प्रस्तावना" या "अध्याय सार"।
+
+     नापकर निकला। "ससुराल वाले साथ नहीं देते" पर साथी «आवरण संदेश» दिखा
+     देता था, और "तोड़ में घरेलू नुस्खा कोई है क्या" पर «मोबाइल और सोशल
+     मीडिया पर संवाद»। टुकड़े का पाठ कुछ भी हो, जिस खंड का नाम ही
+     "प्रस्तावना" है वह किसी पूछे हुए सवाल का जवाब नहीं बनता।
+
+     सिर्फ़ लंबाई से नहीं छाँटा जा सकता : "डिजिटल अनुशासन" और "परिवार का
+     महत्व" छोटे हैं पर असली विषय हैं। इसलिए नाम गिनकर लिखे गए हैं। */
+  var DHANCHA = {
+    'प्रस्तावना':1, 'भूमिका':1, 'प्रकाशकीय':1, 'समर्पण':1, 'अध्याय सार':1,
+    'अध्याय आरंभ':1, 'आरम्भिक विचार':1, 'आरंभिक विचार':1, 'आवरण संदेश':1,
+    'समापन संदेश':1, 'अंतिम संदेश':1, 'लोकसंकल्प संदेश':1, 'प्रेरक संदेश':1,
+    'प्रेरक प्रसंग':1, 'उदाहरण':1, 'उदाहरण के लिए':1, 'कल्पना कीजिए':1,
+    'याद रखिए':1, 'स्वयं से पूछे':1, 'संवाद':1, 'हम मानते हैं कि':1,
+    'उत्तर':1, 'इसके बजाय':1, 'विशेष नोट':1
+  };
+  function dhanchaHai(h){
+    h=(h||'').trim();
+    if(DHANCHA[h]) return true;
+    return /^अध्याय\s*\d+\s*(का)?\s*सार$/.test(h) || /^अध्याय\s*\d+$/.test(h);
+  }
+
+  function indexKosh(){
+    /* ढाँचे वाले टुकड़े छाँट दीजिए, वरना वे किसी भी सवाल पर आ टपकते हैं */
+    KOSH = KOSH.filter(function(c){ return !dhanchaHai(c.h); });
+    KD=KOSH.map(function(c){ return toks(c.h+' '+c.x) });
+    KS=KD.map(function(d){ var o={}; d.forEach(function(w){o[w]=1}); return o });
+    KN=KD.length; var kdf={};
+    KS.forEach(function(o){ for(var w in o) kdf[w]=(kdf[w]||0)+1 });
+    KIDF={}; KIDF_MAX=0;
+    for(var w in kdf){ KIDF[w]=Math.log(1+(KN-kdf[w]+0.5)/(kdf[w]+0.5));
+                       if(KIDF[w]>KIDF_MAX) KIDF_MAX=KIDF[w]; }
+    KAVG=KD.reduce(function(a,d){return a+d.length},0)/KN;
+    KTF=KD.map(function(d){ var t={}; d.forEach(function(w){t[w]=(t[w]||0)+1}); return t });
+  }
+  function searchKosh(q){
+    if(!KN) return {i:-1, cover:0, got:0};
+    var qt=toks(q), qs={}, k;
+    qt.forEach(function(w){ qs[w]=1 });
+    var best=-1, bs=0;
+    for(var i=0;i<KN;i++){
+      var dl=KD[i].length, sc=0;
+      for(var j=0;j<qt.length;j++){
+        var f=KTF[i][qt[j]]||0;
+        if(f) sc+=(KIDF[qt[j]]||0)*(f*2.5)/(f+1.5*(0.25+0.75*dl/KAVG));
+      }
+      sc *= (KOSH[i].w||1);
+      if(sc>bs){bs=sc;best=i}
+    }
+    if(best<0) return {i:-1, cover:0, got:0};
+    var tot=0, got=0, n=0;
+    /* 12 नवंबर 2026 : यहाँ पहले `KIDF[k] || 1` लिखा था, यानी जो शब्द
+       पुस्तिकाओं में है ही नहीं उसे सबसे कम वज़न मिलता था। नतीजा उल्टा
+       था : वही शब्द जो सवाल को दायरे से बाहर करता है, अंक पर सबसे कम
+       असर डालता था।
+
+       नापकर देखा गया। "मैं चाय बहुत ज़्यादा पीता हूँ इसे कैसे कम करूँ"
+       पर साथी पुस्तिका का "मोबाइल और सोशल मीडिया पर संवाद" दिखा देता
+       था, क्योंकि "कम" और "करूँ" मिल जाते थे और "चाय" का वज़न 1 था।
+
+       अब अनजान शब्द को सबसे ज़्यादा वज़न मिलता है। सवाल-सूची वाले रास्ते
+       पर यही सुधार पहले से लगा था (IDF_MAX); कोश वाले रास्ते पर रह गया
+       था। */
+    for(k in qs){ var w8=(KIDF[k]!==undefined ? KIDF[k] : KIDF_MAX);
+                  tot+=w8; if(KTF[best][k]){ got+=w8; n++ } }
+    return {i:best, cover: tot? got/tot : 0, got:n};
+  }
+  /* क्रम BM25 से लगता है, पर स्वीकार करने का फ़ैसला ढकाव से होता है :
+     सवाल के अपने शब्दों में से कितने उस जोड़ में सचमुच मौजूद हैं। यह 0 से
+     1 के बीच रहता है, इसलिए इसकी सीमा का कोई मतलब बनता है। */
+  /* हूबहू वही सवाल : सीधे वहीं भेजिए, ढँकाव का हिसाब किए बिना।
+
+     सीमा 0.50 करने के बाद पकड़ा गया कि दो सवाल अपने ही शब्दों से लिखने
+     पर भी नहीं मिल रहे थे। जो सवाल सूची में अक्षर दर अक्षर मौजूद है,
+     उस पर कोई हिसाब लगाना ही नहीं चाहिए। यह डिब्बों, नमूनों और उन
+     लोगों के लिए भी है जो सूची में से पढ़कर लिखते हैं। */
+  var SEEDHA=null;
+  function seedhaBanao(){
+    SEEDHA={};
+    for(var i=0;i<BANK.length;i++){
+      var a=asliToks(BANK[i].q).join(' ');
+      if(a && SEEDHA[a]===undefined) SEEDHA[a]=i;
+      if(BANK[i].v){
+        var b=asliToks(BANK[i].v).join(' ');
+        if(b && SEEDHA[b]===undefined) SEEDHA[b]=i;
+      }
+      var rr=ROOP[BANK[i].id];
+      if(rr) for(var k=0;k<rr.length;k++){
+        var c=asliToks(rr[k]).join(' ');
+        if(c && SEEDHA[c]===undefined) SEEDHA[c]=i;
+      }
+    }
+  }
+  function search(q){
+    if(SEEDHA===null) seedhaBanao();
+    var sidha=SEEDHA[asliToks(q).join(' ')];
+    if(sidha!==undefined) return {i:sidha, cover:1, got:99, paas:[]};
+
+    var qt=toks(q), best=-1, bs=0, qs={}, k;
+    qt.forEach(function(w){ qs[w]=1 });
+    var ank=[];
+    for(var i=0;i<Nd;i++){
+      var dl=DOCS[i].length, sc=0;
+      for(var j=0;j<qt.length;j++){
+        var f=TF[i][qt[j]]||0;
+        if(f) sc+=(IDF[qt[j]]||0)*(f*2.5)/(f+1.5*(0.25+0.75*dl/AVG));
+      }
+      if(sc>0) ank.push([sc,i]);
+      if(sc>bs){bs=sc;best=i}
+    }
+    if(best<0) return {i:-1, cover:0, got:0, paas:[]};
+    /* क़रीबी सवाल। सीमा से नीचे रह जाने पर मशीन अंदाज़ा नहीं लगाती, पर
+       चुपचाप हाथ भी नहीं खड़े करती : ऊपर के तीन सवाल दिखाकर पूछ लेती है
+       कि इनमें से कोई आपका सवाल है क्या। चुनना आदमी का काम है, मशीन का
+       नहीं, इसलिए यहाँ कोई ग़लत जवाब नहीं बनता। */
+    /* पाँच सुझाव, अंक की हद 0.45, ढँकाव की हद 0.30। यह नापकर चुना है,
+       अंदाज़े से नहीं। 60 सवालों की कसौटी पर :
+         3 सुझाव : दस छूटे सवालों में से 0 बचे, बाहर के सवालों पर शोर 16
+         5 सुझाव : 3 बच गए, शोर 16 ही रहा
+         8 सुझाव : 4 बचे, पर शोर 21 हो गया
+       इसलिए पाँच। आठ पर एक सवाल के बदले पाँच जगह बेमतलब सूची दिखती है। */
+    ank.sort(function(a,b){ return b[0]-a[0] });
+    var paas=[];
+    for(var z=0; z<ank.length && paas.length<5; z++){
+      var ci=ank[z][1];
+      if(ank[z][0] < bs*0.45) break;          /* बहुत पीछे वाले मत दिखाइए */
+      if(dhankav(q, ci) < 0.30) continue;      /* जिसमें सवाल का तीस फ़ीसद भी नहीं, वह नहीं */
+      /* आपातकाल के सवाल सुझाव में नहीं। ब्राउज़र में देखा गया कि "दोस्त
+         छूटते नहीं क्या करूँ" के पहले सुझाव में "withdrawal के दौरान
+         seizure आए तो क्या करें" आ गया। कमज़ोर मेल पर किसी को आपातकाल
+         का सवाल दिखाना बेवजह डराना है, और संकट के शब्द तो पहला फाटक
+         ख़ुद पकड़ लेता है, उसे सुझाव का सहारा नहीं चाहिए। */
+      if(BANK[ci].r==='Emergency') continue;
+      paas.push(ci);
+    }
+    /* ढँकाव : सवाल का कितना हिस्सा मिले हुए सवाल में सचमुच है।
+
+       यहाँ दो बातें बदली गईं।
+
+       पहली, हिसाब सिर्फ़ पूरे शब्दों पर होता है, सिरों पर नहीं।
+
+       दूसरी, जो शब्द पूरी सूची में कहीं है ही नहीं उसका वज़न पहले 1 रखा
+       था, जबकि आम शब्दों का वज़न 3 से 4 तक जाता है। इसका नतीजा उल्टा था :
+       सवाल का असली विषय, जो अक्सर वही अनजान शब्द होता है, मुफ़्त में
+       अनदेखा हो जाता था। "क्या भांग नुकसान करती है" में भांग का वज़न 1
+       और नुकसान का 3.9 था, इसलिए भांग छोड़कर भी ढँकाव 0.91 निकलता और
+       मशीन पूरे भरोसे से किसी और सवाल पर चली जाती।
+
+       अब अनजान शब्द का वज़न सबसे ऊँचा है। जो शब्द हमारी सूची में कहीं
+       नहीं, वही सबसे ख़ास शब्द है, और उसे अनदेखा करना सबसे महँगा होना
+       चाहिए। */
+    var g=ginti(q, best);
+    return {i:best, cover:g.cover, got:g.got, paas:paas};
+  }
+
+  /* सवाल का कितना हिस्सा i वें सवाल में सचमुच है, और कितने शब्द मिले। */
+  function ginti(q, i){
+    var asli={}; asliToks(q).forEach(function(w){ asli[w]=1 });
+    var tot=0, got=0, nGot=0;
+    for(var k in asli){
+      var w8=(IDF[k]!==undefined ? IDF[k] : IDF_MAX);
+      tot+=w8;
+      if(TF[i][k]){ got+=w8; nGot++ }
+    }
+    return { cover: tot? got/tot : 0, got:nGot };
+  }
+  function dhankav(q, i){ return ginti(q, i).cover; }
+
+  /* ---------- पर्दे ---------- */
+  function show(id){
+    if(state.band && id!=='s-band') return;   // बंद है तो कोई और पर्दा नहीं खुलता
+    ['s-band','s-start','s-age','s-home','s-list','s-confirm','s-out'].forEach(function(x){ $(x).hidden = (x!==id) });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  $('b-start').addEventListener('click', function(){
+    state.started=true;
+    show('s-age');
+    say('नमस्कार। यह एक मशीन है, कोई डॉक्टर या काउंसलर नहीं। यह सिर्फ़ जानकारी देती है और राह दिखाती है। '+
+        'एक बात पहले पूछनी है। क्या आपकी उम्र अठारह साल से कम है?');
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-age]'), function(b){
+    b.addEventListener('click', function(){
+      state.age = b.getAttribute('data-age')==='1' ? 'child' : 'adult';
+      buildTopics();
+      buildNamune();
+      $('home-lead').textContent = state.age==='child'
+        ? 'ठीक है। आपके लिए सिर्फ़ मंज़ूर किए हुए जवाब रहेंगे। किस बारे में पूछना है?'
+        : 'किस बारे में पूछना है? किसी भी डिब्बे पर उँगली रखिए, वह ख़ुद बोलेगा।';
+      show('s-home');
+      say(state.age==='child'
+        ? 'ठीक है। आपके लिए सिर्फ़ मंज़ूर किए हुए जवाब रहेंगे, मशीन का बनाया हुआ जवाब नहीं। अब बताइए, किस बारे में पूछना है?'
+        : 'ठीक है। अब बताइए, किस बारे में पूछना है? किसी भी डिब्बे पर उँगली रखिए।');
+    });
+  });
+
+  function buildTopics(){
+    var g=$('topics'); g.innerHTML='';
+    PED.forEach(function(m){
+      var b=document.createElement('button');
+      b.className='topic'+(m.id==='turant'?' turant':''); b.type='button';
+      b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+(ICON[m.id]||ICON.samaj)+'</svg>'+
+                  '<span>'+esc(m.naam)+'</span>';
+      b.addEventListener('click', function(){ kholoVishay(m); });
+      g.appendChild(b);
+    });
+  }
+
+  /* एक विषय के सारे सवाल, उप-विषय के नीचे बँटे हुए।
+
+     यहाँ से सीधे जवाब पर जाया जाता है, पुष्टि माँगे बिना। वजह साफ़ है :
+     आदमी ने सवाल ख़ुद पढ़कर चुना है, तो दोहराकर पूछने की कोई बात नहीं।
+     पुष्टि सिर्फ़ तब चाहिए जब मशीन ने अंदाज़ा लगाया हो। */
+  function kholoVishay(m){
+    state.vishay=m;
+    $('list-head').textContent=m.naam;
+    $('list-lead').textContent=m.lead||'';
+    var box=$('list-body'); box.innerHTML='';
+    m.up.forEach(function(u){
+      if(!u.sawal.length) return;
+      if(m.up.length>1) box.appendChild(el('div','upnaam', esc(u.naam)));
+      var L=el('div','qlist');
+      u.sawal.forEach(function(qid){
+        var r=null;
+        for(var i=0;i<BANK.length;i++) if(BANK[i].id===qid){ r=BANK[i]; break; }
+        if(!r) return;
+        var b=document.createElement('button');
+        b.className='qrow'; b.type='button';
+        var kaisa = r.r==='Emergency' ? 'em' : r.r==='High' ? 'hi' : jawabKa(r.id) ? '' : 'na';
+        b.innerHTML='<span class="dot '+kaisa+'" aria-hidden="true"></span><span>'+esc(r.q)+'</span>';
+        b.addEventListener('click', function(){ state.cand=r; answer(r); });
+        L.appendChild(b);
+      });
+      box.appendChild(L);
+    });
+    show('s-list');
+    say(m.naam+'। नीचे की सूची में से अपना सवाल चुनिए।');
+  }
+  $('b-back').addEventListener('click', function(){ show('s-home'); });
+
+  function askConfirm(q){
+    $('heard').textContent='आपने यह पूछा : “'+q+'”';
+    show('s-confirm');
+    setTimeout(function(){ say('मैंने यह समझा। '+q+'  सही है? हाँ या ना।'); }, 650);
+  }
+
+  /* आठ असली सवालों पर नापकर देखा गया कि यह मिलान आठ में से सिर्फ़ एक पर
+     सही जोड़ निकालता है। इसलिए कमज़ोर मेल पर कोई अंदाज़ा नहीं लगाया जाता :
+     साफ़ कह दिया जाता है कि समझ नहीं आया, और डिब्बे दिखा दिए जाते हैं। */
+  /* 0.40 और कम से कम दो शब्द। यह सीमा उन आठ असली सवालों पर नापकर चुनी गई
+     है जो loksankalp.org/sawal से आए : आठ में से सात ठीक से छँट जाते हैं,
+     और जो एक ग़लत निकल आता है उसे पुष्टि का क़दम पकड़ लेता है। */
+  /* सीमाएँ नापकर चुनी गई हैं, अंदाज़े से नहीं।
+
+     कसौटी : गाँव की भाषा वाले 60 सवाल, जिनमें 34 सूची के दायरे में हैं
+     और 26 बाहर के। बाहर वालों पर इनकार करना भी सही गिना जाता है।
+
+     3,840 वाक्य जुड़ने के बाद यह झाड़ू दोबारा फेरी गई, क्योंकि सूची
+     बदलने पर सबसे अच्छी सीमा भी बदल जाती है। अनजान शब्द के वज़न और इस
+     सीमा के 28 जोड़े आज़माए गए।
+
+     0.60 पर दायरे के 15 सवाल सही निकलते हैं, जो किसी भी जोड़े पर सबसे
+     ज़्यादा है, और ग़लत जवाब सबसे कम रह जाते हैं। इससे नीचे ग़लत जवाब
+     तेज़ी से बढ़ते हैं : 0.40 पर 24 हो जाते हैं। ऊपर सही जवाब गिरने
+     लगते हैं : 0.70 पर 12 रह जाते हैं। */
+  var PAKKA=0.60, KAM_SE_KAM=2, KOSH_PAKKA=0.45;
+
+  /* कोश वाला रास्ता सवाल-सूची को छोड़ देता है, इसलिए ख़तरे की छँटाई सीधे
+     सवाल के शब्दों पर भी करनी पड़ती है, वरना फाटक बच निकलेगा। */
+  /* ख़तरे के शब्द। जिसमें जगह (space) है वह वाक्यांश है और टुकड़े से मिलाया
+     जाता है; बाक़ी पूरे शब्द हैं और पूरे शब्द से ही मिलते हैं।
+
+     पहले सब कुछ टुकड़े से मिलाया जाता था, तो "सांस्कृतिक" के भीतर "सांस"
+     बैठ जाता था और एक सीधा सवाल आपातकाल के पर्दे पर चला जाता था। इसी तरह
+     "खूनी रिश्ते" और "दवाखाना" भी। अब ऐसा नहीं होगा।
+
+     मारपीट वाले शब्द जान बूझकर UNCHA में रखे हैं, AAPAT में नहीं। वहाँ से
+     आदमी इंसान के रास्ते पर जाता है और सरकारी नंबर भी उसी पर्दे पर दिखते
+     हैं। AAPAT में रखने पर "नशा आदमी को मारता है" जैसा आम वाक्य भी
+     आपातकाल बन जाता। */
+  var AAPAT=['बेहोश','ओवरडोज','ओवरडोज़','आत्महत्या','खुदकुशी','ख़ुदकुशी','सुसाइड',
+             'दौरा','दौरे','झाग','जहर','ज़हर','सांस','साँस','खून','लहू',
+             'overdose','seizure','fits','suicide',
+             'होश नहीं','उठ नहीं','मर जाऊ','मर जाउ','मर जाऊं','मरना चाहता','मरना चाहती',
+             'जान दे','जान देने','खत्म कर द','ख़त्म कर द','खत्म कर लू','ख़त्म कर लू',
+             'जीने का मन नहीं','जीने की इच्छा नहीं','जीने का मन नही','मरने का मन',
+             'नस काट','नस काटने','ज़हर खा','जहर खा','फांसी','फाँसी',
+             'मरना है','मरना चाह','मर जाना है','मरने की सोच','जीना नहीं चाह'];
+  var UNCHA=['गर्भ','गर्भवती','pregnan','दवा','दवाई','दवाइयाँ','गोली','गोलियाँ','मात्रा','dose','खुराक',
+             'withdrawal','कंपकंपी','काँप','कांप','detox','इंजेक्शन','सुई',
+             'डिप्रेशन','depression','मारपीट','हिंसा','मारता','मारती','पीटता','पीटती','पीटते',
+             'घर पर छुड़','मानसिक रोग','मार रहा','मार रही','मारने लग','पीटने लग'];
+  /* सवाल को एक ही रूप में लाइए : रोमन से देवनागरी, छोटे अक्षर, और चिह्न
+     हटाकर अकेली जगहें। आगे पीछे एक एक जगह रहती है ताकि पहला और आख़िरी
+     शब्द भी सीमा के साथ मिलाया जा सके। */
+  function normQ(q){
+    return ' ' + sahiHijje(roman(q||'')).toLowerCase()
+      .replace(/[^ऀ-ॿa-z0-9]+/g,' ').replace(/\s+/g,' ').trim() + ' ';
+  }
+  function hasAny(q, list){
+    var t = normQ(q);
+    var words = t.trim() ? t.trim().split(' ') : [];
+    for(var i=0;i<list.length;i++){
+      var term = list[i];
+      if(term.indexOf(' ')>=0){
+        /* वाक्यांश : शुरुआत शब्द की सीमा पर हो, अंत अधूरा चल जाता है
+           ताकि "खत्म कर द" से दूं, दे, दिया तीनों पकड़े जाएँ */
+        if(t.indexOf(' '+term)>=0) return true;
+      } else {
+        for(var j=0;j<words.length;j++) if(words[j]===term) return true;
+      }
+    }
+    return false;
+  }
+  /* ===== पूछे गए सवाल दर्ज करना ====================================
+     12 नवंबर 2026 का फ़ैसला : मिलान सुधारने के लिए पूछे गए सवाल केंद्र
+     तक आएँ। इसके बिना यह पता ही नहीं चलता कि लोग सचमुच क्या पूछते हैं
+     और मशीन कहाँ चूकती है।
+
+     सिर्फ़ चार बातें जाती हैं : सवाल, मशीन ने क्या जोड़ा, उसका जोखिम,
+     और आदमी ने उसे माना या नहीं।
+
+     नाम, मोबाइल या कोई पहचान नहीं जाती। वह जानबूझकर नहीं भेजी जाती :
+     मिलान सुधारने में उसका कोई काम नहीं है, और उसके बिना पूरा फ़ायदा
+     मिल जाता है।
+
+     सबसे काम की पंक्ति वह है जिसमें natija "नहीं, यह नहीं" हो। वहाँ
+     मशीन ने जोड़ तो लगाया, पर आदमी ने ख़ुद कहा कि यह मेरा सवाल नहीं है।
+     वही पंक्तियाँ बताती हैं कि कौन सा जोड़ ग़लत बैठ रहा है।
+
+     भेजना चुपचाप होता है। न चले तो आदमी को कुछ नहीं दिखता और साथी वैसे
+     ही चलता रहता है : दर्ज करना जवाब देने से कभी आगे नहीं आता। ====== */
+  function sawalDarj(sawal, mila, jokhim, natija){
+    if(!ENDPOINT || !window.fetch || !sawal) return;
+    try{
+      fetch(ENDPOINT, {method:'POST', body: JSON.stringify({
+        form:'sawal',
+        reqId:'sw-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),
+        values:{ sawal:String(sawal).slice(0,300), mila:mila||'',
+                 jokhim:jokhim||'', natija:natija||'' }
+      })}).catch(function(){});
+    }catch(e){}
+  }
+
+  function ask(q){
+    if(!q){ say('कुछ सुनाई नहीं दिया। दोबारा बोलिए।'); return; }
+    /* सुनने की भूल पहले सुधारिए, मिलान से भी पहले। सुधरा हुआ वाक्य ही
+       आगे दिखाया जाता है, ताकि आदमी को पता रहे कि मशीन ने क्या समझा। */
+    q = sunaSudharo(q);
+    state.poocha = q;
+    /* पहला फाटक : ख़तरे के शब्द सीधे सवाल में। यह सूची से पहले चलता है। */
+    if(hasAny(q, AAPAT)){ state.cand={id:'',c:'',r:'Emergency',q:q}; answer(state.cand); return; }
+    var hi = hasAny(q, UNCHA);
+    var r=search(q);
+    if(r.i>=0 && r.cover>=PAKKA && r.got>=KAM_SE_KAM){
+      state.cand=BANK[r.i];
+      if(hi && state.cand.r!=='Emergency') state.cand={id:BANK[r.i].id,c:BANK[r.i].c,r:'High',q:BANK[r.i].q};
+      /* ऊँचे जोखिम और आपातकाल पर पुष्टि मत माँगिए।
+
+         पहले यहाँ भी पुष्टि माँगी जाती थी, और उसका नतीजा यह था : एक चौदह
+         साल का लड़का "पिता रोज पीकर माँ को पीटता है" लिखता, मशीन कोई और
+         सवाल दोहराकर पूछती, वह सच बोलकर "नहीं" दबाता, और घर वाले पर्दे
+         पर बिना एक नंबर के लौट आता। संकट में आदमी से जिरह नहीं की जाती।
+
+         सीधे शब्दों से पकड़े गए संकट पर पुष्टि पहले भी नहीं माँगी जाती
+         थी। अब दोनों रास्ते एक जैसे चलते हैं। */
+      if(state.cand.r==='High' || state.cand.r==='Emergency'){ answer(state.cand); return; }
+      askConfirm(state.cand.q);
+      return;
+    }
+    if(hi){ state.cand={id:'',c:'',r:'High',q:q}; answer(state.cand); return; }
+    /* सूची में नहीं मिला। अब अभियान की अपनी पुस्तिकाओं में देखिए। */
+    var k=searchKosh(q);
+    if(k.i>=0 && k.cover>=KOSH_PAKKA && k.got>=KAM_SE_KAM){
+      state.cand={id:'',c:'',r:'',q:q,kosh:KOSH[k.i]};
+      askConfirmKosh(q, KOSH[k.i]);
+      return;
+    }
+    notUnderstood(q, r.paas);
+  }
+
+  function askConfirmKosh(q, c){
+    $('heard').innerHTML = 'आपने पूछा : <b>'+esc(q)+'</b><br><br>'+
+      'पुस्तिका <b>'+esc(c.t)+'</b> में इस बारे में यह लिखा है :<br>«'+esc(c.h||'')+'»';
+    show('s-confirm');
+    setTimeout(function(){
+      say('आपने पूछा, '+q+'  इस बारे में पुस्तिका '+c.t+' में लिखा हुआ है। सुनाऊँ? हाँ या ना।');
+    }, 600);
+  }
+
+  /* समझ न आने पर।
+
+     पहले यहाँ सिर्फ़ इनकार और हेल्पलाइन के डिब्बे थे। नापकर देखा गया कि
+     गाँव की भाषा वाले 60 सवालों में 10 ऐसे हैं जहाँ सही सवाल सूची में
+     मौजूद है पर सीमा से नीचे रह जाता है, और आदमी ख़ाली हाथ लौट जाता है।
+
+     अब बीच का रास्ता है : मशीन अंदाज़ा नहीं लगाती, पर जो तीन सवाल
+     नज़दीक लगे वे दिखाकर पूछ लेती है। चुनना आदमी का काम है। इसमें कोई
+     ग़लत जवाब नहीं बनता, क्योंकि जवाब तभी आता है जब आदमी ख़ुद चुने।
+
+     पक्का मेल नहीं है, यह बात ऊपर साफ़ लिखी रहती है, और हेल्पलाइन के
+     डिब्बे नीचे वैसे ही रहते हैं। */
+  function notUnderstood(q, paas){
+    var out=$('out'); out.innerHTML=''; show('s-out');
+    rayChhipao();
+    var k=el('div','caut');
+    k.appendChild(el('h2',null,'मुझे यह समझ नहीं आया'));
+    k.appendChild(el('p',null,'आपने पूछा : <b>'+esc(q)+'</b>'));
+    k.appendChild(el('p',null,'मैं अंदाज़े से कोई जवाब नहीं दूँगा, क्योंकि ग़लत जवाब न देने से बुरा होता है।'));
+    out.appendChild(k);
+
+    var bole = 'मुझे यह समझ नहीं आया। मैं अंदाज़े से जवाब नहीं दूँगा। ';
+    if(paas && paas.length){
+      var d=el('div','card');
+      d.appendChild(el('h2',null,'इनमें से कोई आपका सवाल है क्या?'));
+      d.appendChild(el('p','note','ये पक्के मेल नहीं हैं। जो आपका सवाल हो उसे छूकर देखिए।'));
+      var box=el('div','lines');
+      paas.forEach(function(i){
+        var b=BANK[i];
+        var row=el('button','qrow');
+        row.type='button';
+        row.appendChild(el('span','chabi', esc(b.q)));
+        row.addEventListener('click', function(){ state.cand=b; answer(b); });
+        box.appendChild(row);
+      });
+      d.appendChild(box);
+      out.appendChild(d);
+      bole += 'नीचे कुछ सवाल दिखाए हैं, उनमें कोई आपका हो तो उसे छूकर देखिए। ';
+    }
+    /* 12 नवंबर 2026 : यहाँ आदमी का रास्ता ख़त्म हो जाता था। समझ न आने पर
+       सिर्फ़ हेल्पलाइन दिखती थी, और वापस जाने का कोई बटन नहीं था; विषयों
+       के डिब्बों तक पहुँचने के लिए उसे ख़ुद ऊपर लौटना पड़ता। जिसका सवाल
+       ग़लत सुना गया हो, वह दूसरी बार कोशिश किए बिना ही चला जाता।
+       अब दो रास्ते यहीं दिए जाते हैं। */
+    var w=el('div','card');
+    w.appendChild(el('h2',null,'दो और रास्ते हैं'));
+    var b1=el('button','big');
+    b1.type='button'; b1.textContent='दोबारा बोलकर देखिए';
+    b1.addEventListener('click', function(){
+      show('s-home');
+      var m=$('b-mic'); if(m) m.click();
+    });
+    var b2=el('button','big alt');
+    b2.type='button'; b2.textContent='विषयों में से चुनिए';
+    b2.style.marginTop='.6rem';
+    b2.addEventListener('click', function(){ show('s-home'); window.scrollTo(0,0); });
+    w.appendChild(b1); w.appendChild(b2);
+    out.appendChild(w);
+
+    out.appendChild(el('p','note','या <b>14446</b> पर नशा मुक्ति हेल्पलाइन से बात कीजिए।'));
+    out.appendChild(linesBox());
+    sawalDarj(q, '', '', 'समझ नहीं आया');
+    say(bole + 'दोबारा बोलकर देखिए, या विषयों में से चुनिए, या चौदह हज़ार चार सौ छियालीस पर बात कीजिए।');
+  }
+  function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML }
+
+  /* माइक। 12 नवंबर 2026 से यही अपने शब्दों में पूछने का इकलौता रास्ता है;
+     लिखने का खाना हटा दिया गया।
+
+     जहाँ यह नहीं चलता (Firefox, iPhone पर home screen से खुला पन्ना, और
+     कई Android WebView) वहाँ आदमी के लिए विषयों के डिब्बे रहते हैं, जिनमें
+     320 सवाल छूकर पढ़े जा सकते हैं। इसलिए कोई पूरी तरह बाहर नहीं होता।
+     नीचे हर नाकामी पर उन्हीं डिब्बों की तरफ़ भेजा जाता है। */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var rec=null, listening=false;
+  if(!SR){ $('b-mic').title='इस ब्राउज़र में बोलकर पूछना नहीं चलता'; }
+  $('b-mic').addEventListener('click', function(){
+    if(!SR){
+      say('इस फ़ोन के ब्राउज़र में बोलकर पूछना नहीं चलता। ऊपर दिए डिब्बों में से अपना विषय चुनिए।');
+      return;
+    }
+    if(listening){ try{ rec.stop() }catch(e){} return; }
+    try{ speechSynthesis.cancel() }catch(e){}
+    rec = new SR();
+    rec.lang='hi-IN'; rec.interimResults=false; rec.maxAlternatives=1;
+    rec.onstart=function(){ listening=true; $('b-mic').classList.add('sun-raha'); status('सुन रहा है, बोलिए') };
+    rec.onresult=function(ev){
+      var t='';
+      try{ t=ev.results[0][0].transcript||'' }catch(e){}
+      status('तैयार');
+      if(t.trim()) ask(t.trim());
+    };
+    rec.onerror=function(ev){
+      status('तैयार');
+      var c=(ev && ev.error)||'';
+      if(c==='not-allowed'||c==='service-not-allowed'){
+        say('माइक की इजाज़त नहीं मिली। ब्राउज़र की सेटिंग में माइक चालू कीजिए, या ऊपर दिए डिब्बों में से चुनिए।');
+      } else if(c==='no-speech'){
+        say('कुछ सुनाई नहीं दिया। दोबारा दबाकर बोलिए।');
+      } else {
+        say('अभी सुन नहीं पाया। दोबारा दबाइए, या ऊपर दिए डिब्बों में से चुनिए।');
+      }
+    };
+    rec.onend=function(){ listening=false; $('b-mic').classList.remove('sun-raha'); if(status) status('तैयार') };
+    try{ rec.start() }catch(e){ listening=false; say('माइक चालू नहीं हो पाया। ऊपर दिए डिब्बों में से चुनिए।') }
+  });
+
+  $('b-no').addEventListener('click', function(){
+    /* दूसरा ताला : अगर किसी वजह से जोखिम वाला सवाल पुष्टि तक पहुँच गया
+       और आदमी ने "नहीं" दबाया, तो उसे ख़ाली मत लौटाइए। */
+    var c=state.cand;
+    /* यही सबसे काम की पंक्ति है : मशीन ने जोड़ लगाया, आदमी ने नकार दिया */
+    sawalDarj(state.poocha, (c&&c.id)||'', (c&&c.r)||'', 'नहीं, यह नहीं');
+    if(c && (c.r==='High' || c.r==='Emergency')){ answer(c); return; }
+    say('ठीक है। डिब्बों में से चुनिए, या दोबारा बोलिए।');
+    show('s-home');
+  });
+  /* ---------- नमूना सवाल ----------
+     आदमी को यह पता ही नहीं होता कि क्या पूछा जा सकता है, तो वह डिब्बों से
+     आगे बढ़ता ही नहीं और बोलकर पूछने का रास्ता बिना आज़माया रह जाता है।
+     ये छहों पाठ ऊपर के मिलान पर चलाकर देखे गए हैं कि सही सवाल पर ही जाते
+     हैं। इन्हें बदलिए तो दोबारा चलाकर देख लीजिए।
+
+     इनका एक और काम है : जिस फ़ोन में माइक नहीं चलता, वहाँ ये छह सवाल और
+     विषयों के डिब्बे ही पूरा रास्ता हैं। */
+  var NAMUNE=[
+    'शादी में शराब परोसना कैसे रोकें',
+    'नशा करने वाले बेटे को कैसे समझाएं',
+    'बच्चे से नशे के बारे में बात कैसे शुरू करें',
+    'आदत और लत में क्या अंतर है',
+    'बार बार कोशिश के बाद भी नशा क्यों नहीं छूटता',
+    'नशे के शुरुआती संकेत क्या हैं'
+  ];
+  function buildNamune(){
+    var g=$('namune'); if(!g) return;
+    g.innerHTML='';
+    NAMUNE.forEach(function(t){
+      var b=document.createElement('button');
+      b.type='button'; b.textContent=t;
+      b.addEventListener('click', function(){ ask(t); });
+      g.appendChild(b);
+    });
+  }
+
+  /* ---------- राय ----------
+     जाँच के लिए यह जानना ज़रूरी है कि कौन सा जवाब काम का लगा और कौन सा
+     नहीं। राय किसी सर्वर पर नहीं भेजी जाती : इसी फ़ोन में रखी जाती है
+     और जाँचने वाला उसे नक़ल करके केंद्र को भेजता है। ऐसा जान बूझकर है,
+     क्योंकि नमूने के लिए कोई नया खाना खोलना नहीं था। */
+  var RAY_KEY='ls-saathi-ray';
+  function rayPadho(){
+    try{ return JSON.parse(localStorage.getItem(RAY_KEY)||'[]') }catch(e){ return [] }
+  }
+  function rayLikho(a){
+    try{ localStorage.setItem(RAY_KEY, JSON.stringify(a.slice(-60))) }catch(e){}
+  }
+  function raySangrah(){
+    var a=rayPadho(), box=$('ray-sangrah');
+    if(!box) return;
+    box.hidden = a.length===0;
+    var th=0; for(var i=0;i<a.length;i++) if(a[i].ok) th++;
+    $('ray-ginti').textContent = (a.length===1? 'एक जवाब पर राय दर्ज है। ' : a.length+' जवाबों पर राय दर्ज है। ')+
+      (th===a.length? 'सब काम के लगे।' : th===0? 'कोई काम का नहीं लगा।' : th+' काम के लगे, '+(a.length-th)+' नहीं।');
+  }
+  function rayChhipao(){
+    var r=$('ray'); if(!r) return;
+    r.hidden=true; $('ray-kyon').hidden=true; $('ray-dhanyavad').hidden=true;
+    $('ray-lead').hidden=false;
+    $('b-ray-ha').setAttribute('aria-pressed','false');
+    $('b-ray-na').setAttribute('aria-pressed','false');
+    $('ray-note').value='';
+    state.rayPar=null;
+  }
+  function rayDikhao(kis){
+    var r=$('ray'); if(!r) return;
+    state.rayPar = kis || '';
+    r.hidden=false;
+  }
+  function rayDarj(ok, kyon){
+    var a=rayPadho();
+    a.push({ id: state.rayPar||'', ok: !!ok, kyon: kyon||'' });
+    rayLikho(a); raySangrah();
+    $('ray-lead').hidden=true;
+    $('ray-kyon').hidden=true;
+    $('ray-dhanyavad').hidden=false;
+  }
+  $('b-ray-ha').addEventListener('click', function(){
+    this.setAttribute('aria-pressed','true');
+    rayDarj(true,'');
+  });
+  $('b-ray-na').addEventListener('click', function(){
+    this.setAttribute('aria-pressed','true');
+    $('ray-kyon').hidden=false;
+    $('ray-note').focus();
+  });
+  $('b-ray-bhejo').addEventListener('click', function(){ rayDarj(false, $('ray-note').value.trim()); });
+  $('ray-note').addEventListener('keydown', function(e){ if(e.key==='Enter') $('b-ray-bhejo').click(); });
+
+  /* मिटाने का रास्ता। यह पहले था ही नहीं : राय फ़ोन में हमेशा के लिए पड़ी
+     रहती थी, और उसमें वह भी होता था जो आदमी ने अपने शब्दों में लिखा, जैसे
+     "मेरा भाई शराब पीता है"। गाँव और विद्यालय में एक फ़ोन कई हाथों में
+     जाता है, इसलिए मिटाना आदमी के अपने हाथ में होना चाहिए। */
+  $('b-ray-mitao').addEventListener('click', function(){
+    var b=this;
+    if(b.getAttribute('data-pakka')!=='1'){
+      b.setAttribute('data-pakka','1');
+      b.textContent='पक्का मिटाना है? दोबारा दबाइए';
+      setTimeout(function(){
+        if(b.getAttribute('data-pakka')==='1'){ b.setAttribute('data-pakka','0'); b.textContent='राय मिटाइए'; }
+      }, 5000);
+      return;
+    }
+    try{ localStorage.removeItem(RAY_KEY) }catch(e){}
+    b.setAttribute('data-pakka','0');
+    b.textContent='मिट गई';
+    raySangrah();
+  });
+
+  $('b-ray-nakal').addEventListener('click', function(){
+    var a=rayPadho(), b=this;
+    var t='लोकसंकल्प साथी, नमूने की राय\n';
+    a.forEach(function(r,i){
+      t += (i+1)+'. '+(r.id||'बिना पहचान')+' : '+(r.ok?'काम का लगा':'ठीक नहीं लगा')+
+           (r.kyon? ' ('+r.kyon+')':'')+'\n';
+    });
+    try{
+      navigator.clipboard.writeText(t).then(
+        function(){ b.textContent='नक़ल हो गई' },
+        function(){ b.textContent='नक़ल नहीं हो पाई' });
+    }catch(e){ b.textContent='नक़ल नहीं हो पाई' }
+  });
+
+  $('b-again').addEventListener('click', function(){ show('s-home'); });
+
+  $('b-yes').addEventListener('click', function(){
+    var c=state.cand||{};
+    sawalDarj(state.poocha, c.id||'', c.r||'', 'हाँ, यही');
+    answer(state.cand);
+  });
+
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; }
+  function linesBox(){
+    var d=el('div','lines');
+    LINES.forEach(function(L){
+      var row=el('div','line');
+      row.appendChild(el('b',null,L[0]));
+      row.appendChild(el('span',null,L[1]));
+      var c=el('button',null,'नक़ल');
+      c.addEventListener('click', function(){
+        try{ navigator.clipboard.writeText(L[0]).then(function(){c.textContent='हो गया'},function(){c.textContent=L[0]}); }
+        catch(e){ c.textContent=L[0]; }
+      });
+      row.appendChild(c); d.appendChild(row);
+    });
+    return d;
+  }
+
+  /* केंद्र के नामज़द इंसान का डिब्बा। नंबर छूते ही फ़ोन मिलता है, और
+     नक़ल का बटन इसलिए है कि संकट में नंबर याद नहीं रहता। */
+  function kendraBox(){
+    if(!SANKAT.number || !SANKAT.naam) return null;
+    var d=el('div','card');
+    d.style.border='2px solid var(--ok)';
+    d.appendChild(el('div','src','केंद्र से सीधे बात'));
+    d.querySelector('.src').style.color='var(--ok)';
+    d.appendChild(el('p',null,'<b>'+esc(SANKAT.naam)+'</b>'+(SANKAT.pad? '<br><span class="note">'+esc(SANKAT.pad)+'</span>':'')));
+    var row=el('div','line');
+    var a=document.createElement('a');
+    a.href='tel:'+SANKAT.number; a.textContent=SANKAT.number;
+    a.style.cssText='font-family:var(--head);font-size:1.5rem;color:var(--ink);text-decoration:none;flex:0 0 auto';
+    row.appendChild(a);
+    row.appendChild(el('span',null,esc(SANKAT.waada)));
+    var cp=el('button',null,'नक़ल');
+    cp.addEventListener('click', function(){
+      try{ navigator.clipboard.writeText(SANKAT.number).then(function(){cp.textContent='हो गया'},
+            function(){cp.textContent=SANKAT.number}); }catch(e){ cp.textContent=SANKAT.number; }
+    });
+    row.appendChild(cp); d.appendChild(row);
+    return d;
+  }
+
+  /* वापस फ़ोन : सिर्फ़ तभी, जब आदमी ख़ुद बटन दबाकर नंबर लिखे। बिना दबाए
+     कुछ भी नहीं भेजा जाता और कहीं कुछ दर्ज नहीं होता। */
+  /* भारत का मोबाइल दस अंकों का होता है और 6 से 9 के बीच से शुरू होता है।
+     पहले सिर्फ़ "दस से कम नहीं" देखा जाता था, तो "98765 43210 ext 7" से
+     ग्यारह अंक चले जाते और केंद्र को न मिलने वाला नंबर मिलता, जबकि आदमी
+     को लिख दिया जाता कि फ़ोन आएगा। संकट की घड़ी में यह सबसे बुरा है। */
+  function dasAnk(v){
+    var m=(v||'').replace(/\D/g,'');
+    if(m.length>10 && m.slice(0,2)==='91') m=m.slice(2);
+    if(m.length===11 && m.charAt(0)==='0') m=m.slice(1);
+    return m;
+  }
+  function callbackBox(rasta){
+    /* 12 नवंबर 2026 : यह डिब्बा लिखता था "केंद्र से आपको फ़ोन किया
+       जाएगा"। जब केंद्र का कोई नामज़द आदमी पर्दे पर नहीं है, तब यह वादा
+       कोई निभाने वाला नहीं है, और संकट की घड़ी में बिना निभाए वादे से
+       बुरा कुछ नहीं। इसलिए जब तक SANKAT में नाम और नंबर नहीं भरे जाते,
+       यह डिब्बा बनता ही नहीं और आदमी को सीधे सरकारी हेल्पलाइन दिखती हैं।
+       इसका एक नतीजा यह भी है कि संकट वाली पंक्तियाँ शीट में आनी बंद हो
+       जाएँगी, क्योंकि लिखने का यही एक रास्ता था। */
+    if(!SANKAT.number || !SANKAT.naam) return null;
+    /* यह खाना हर बार नया बनता है, इसलिए भेजे जाने का निशान भी इसी के
+       भीतर रखा जाता है। पहले यह state में रखा था और कभी मिटता नहीं था,
+       तो एक ही फ़ोन पर दूसरा आदमी दोबारा नहीं भेज पाता था। गाँव और
+       विद्यालय में एक फ़ोन कई हाथों में जाता है। */
+    var bhejaJaChuka = false;
+    var d=el('div','card');
+    d.style.border='1px solid var(--line)';
+    var b=el('button','big alt','मुझे केंद्र से फ़ोन करवाइए');
+    var form=el('div',null,''); form.hidden=true;
+    form.style.cssText='display:flex;flex-direction:column;gap:.6rem';
+    var inp=document.createElement('input');
+    inp.type='tel'; inp.inputMode='numeric'; inp.id='sankat-mob';
+    inp.placeholder='आपका मोबाइल नंबर';
+    inp.setAttribute('aria-label','आपका मोबाइल नंबर');
+    inp.style.cssText='border:2px solid var(--line);border-radius:var(--r);padding:.85rem .9rem;'+
+                      'font-size:1.05rem;font-family:var(--body);background:var(--surface);color:var(--ink)';
+    var send=el('button','big','भेजिए');
+    var msg=el('p','note','');
+    /* यह सूचना पहले लिखती थी "नंबर के सिवा कुछ नहीं भेजा जाता", जो पूरा
+       सच नहीं था : सवाल किस तरह का था, यह भी जाता है। अब पूरा लिखा है। */
+    form.appendChild(el('p','note',
+      'भेजने पर दो बातें जाती हैं : <b>आपका नंबर</b>, और यह कि सवाल किस तरह का था। '+
+      '<b>आपका सवाल नहीं जाता, न आपका नाम।</b> यह केंद्र की शीट में दर्ज होता है, '+
+      'जहाँ केंद्र के लोग ही देख सकते हैं। <a href="../nijta.html#saathi" target="_blank" rel="noopener">निजता का पन्ना</a>'));
+    var cw=el('label','note','');
+    cw.style.cssText='display:flex;gap:.6rem;align-items:flex-start;cursor:pointer;color:var(--ink);font-weight:600';
+    var chk=document.createElement('input');
+    chk.type='checkbox'; chk.id='sankat-sahmati';
+    chk.style.cssText='width:24px;height:24px;flex:0 0 auto;margin-top:2px';
+    cw.appendChild(chk);
+    cw.appendChild(el('span',null,'मैं चाहता या चाहती हूँ कि केंद्र मुझे इस नंबर पर फ़ोन करे।'));
+    form.appendChild(inp); form.appendChild(cw); form.appendChild(send); form.appendChild(msg);
+    b.addEventListener('click', function(){
+      b.hidden=true; form.hidden=false; inp.focus();
+      say('अपना मोबाइल नंबर लिखिए। केंद्र से आपको फ़ोन किया जाएगा।');
+    });
+    send.addEventListener('click', function(){
+      var m=dasAnk(inp.value);
+      if(m.length!==10 || !/^[6-9]/.test(m)){
+        msg.textContent='पूरा दस अंकों का मोबाइल नंबर लिखिए।'; return;
+      }
+      if(!chk.checked){ msg.textContent='फ़ोन करवाने के लिए ऊपर का डिब्बा छूकर हाँ कीजिए।'; return; }
+      if(bhejaJaChuka){ msg.textContent='भेज चुके हैं।'; return; }
+      send.disabled=true; msg.textContent='भेजा जा रहा है...';
+      fetch(ENDPOINT, {method:'POST', body: JSON.stringify({
+        form:'sankat', reqId:'sk-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),
+        values:{ rasta: rasta, mobile: m, kahan: 'saathi', sahmati: 'हाँ' }
+      })}).then(function(r){ return r.json() }).then(function(res){
+        if(res && res.ok){
+          bhejaJaChuka=true;
+          form.innerHTML='';
+          form.appendChild(el('p',null,'<b>भेज दिया गया।</b> केंद्र से आपको फ़ोन किया जाएगा। '+
+            'तब तक ऊपर दिया नंबर आप ख़ुद भी मिला सकते हैं।'));
+          say('भेज दिया गया। केंद्र से आपको फ़ोन किया जाएगा।');
+        } else {
+          send.disabled=false;
+          msg.textContent='अभी नहीं भेजा जा सका। ऊपर दिया नंबर ख़ुद मिलाइए।';
+        }
+      }).catch(function(){
+        send.disabled=false;
+        msg.textContent='अभी नहीं भेजा जा सका। ऊपर दिया नंबर ख़ुद मिलाइए।';
+      });
+    });
+    d.appendChild(b); d.appendChild(form);
+    return d;
+  }
+
+  function answer(c){
+    var out=$('out'); out.innerHTML=''; show('s-out');
+    rayChhipao();
+
+    /* 1. आपातकाल : जवाब बनाया ही नहीं जाता */
+    if(c.r==='Emergency'){
+      var a=el('div','alarm');
+      a.appendChild(el('h2',null,'यह रुकने की बात नहीं है'));
+      a.appendChild(el('p',null,'अभी किसी बड़े को बुलाइए और नीचे दिया नंबर मिलाइए। मैं इस पर कोई सलाह नहीं दूँगा।'));
+      a.appendChild(linesBox());
+      out.appendChild(a);
+      var kb1=kendraBox(); if(kb1) out.appendChild(kb1);
+      var cb1=callbackBox('आपातकाल'); if(cb1) out.appendChild(cb1);
+      var bol='यह रुकने की बात नहीं है। अभी किसी बड़े को बुलाइए। एक सौ बारह मिलाइए। एक सौ बारह। '+
+              'या एक सौ आठ पर एंबुलेंस बुलाइए। मैं इस पर कोई सलाह नहीं दूँगा।';
+      if(SANKAT.number && SANKAT.naam){
+        bol += ' केंद्र से सीधे बात करनी हो तो '+SANKAT.naam+' को फ़ोन कीजिए। नंबर पर्दे पर लिखा है।';
+      }
+      say(bol);
+      return;
+    }
+
+    /* 2. ऊँचा जोखिम : छोटी चेतावनी और इंसान का रास्ता */
+    if(c.r==='High'){
+      var w=el('div','caut');
+      w.appendChild(el('h2',null,'इस पर इंसान से बात कीजिए'));
+      w.appendChild(el('p',null,'यह सवाल उन में है जिन पर मशीन को सलाह नहीं देनी चाहिए। इसमें दवा, मात्रा, गर्भावस्था या सुरक्षा का मामला हो सकता है।'));
+      w.appendChild(el('p',null,'<b>14446</b> नशा मुक्ति हेल्पलाइन पर बात कीजिए, या नई किरण नशा मुक्ति केंद्र आइए।'));
+      out.appendChild(w);
+      var kb2=kendraBox(); if(kb2) out.appendChild(kb2);
+      out.appendChild(linesBox());
+      var cb2=callbackBox('ऊँचा जोखिम'); if(cb2) out.appendChild(cb2);
+      say('इस पर मैं सलाह नहीं दूँगा। यह उन सवालों में है जिन पर इंसान से बात करनी चाहिए। '+
+          'चौदह हज़ार चार सौ छियालीस पर नशा मुक्ति हेल्पलाइन से बात कीजिए।');
+      return;
+    }
+
+    /* 3. अठारह से कम उम्र : यह फाटक पहले यहाँ नहीं, नीचे था।
+
+       नतीजा यह था कि बच्चे को पुस्तिका का अंश मिल जाता था, क्योंकि
+       पुस्तिका वाली शाखा इससे ऊपर चलती थी, जबकि दूसरे सवाल पर उसी बच्चे
+       को "तुम्हारी उम्र कम है" कहकर रोक दिया जाता था। एक ही फाटक दो
+       जगह दो तरह से चल रहा था।
+
+       अब नियम एक ही है : अठारह से कम उम्र वाले को सिर्फ़ केंद्र से मंज़ूर
+       किया हुआ लिखा जवाब मिलता है। पुस्तिका का कच्चा अंश नहीं, क्योंकि
+       वह बड़ों के पढ़ने के लिए लिखा गया है। */
+    if(state.age==='child' && !jawabKa(c.id)){
+      var kb3=el('div','caut');
+      kb3.appendChild(el('h2',null,'इसका जवाब अभी तैयार नहीं है'));
+      kb3.appendChild(el('p',null,'आपकी उम्र 18 से कम है, इसलिए साथी आपको सिर्फ़ वही जवाब देता है जो केंद्र से मंज़ूर हो चुका हो। इस सवाल पर वैसा जवाब अभी तैयार नहीं हुआ। यह नियम जान बूझकर रखा गया है।'));
+      kb3.appendChild(el('p',null,'अपने शिक्षक से, घर के किसी बड़े से, या <b>1098</b> पर बात कीजिए।'));
+      out.appendChild(kb3);
+      out.appendChild(linesBox());
+      say('इस सवाल का जवाब अभी तैयार नहीं है। आपकी उम्र अठारह से कम है, इसलिए मैं सिर्फ़ मंज़ूर किया हुआ जवाब ही देता हूँ। '+
+          'अपने शिक्षक से या घर के किसी बड़े से बात कीजिए। या दस अट्ठानबे मिलाइए।');
+      return;
+    }
+
+    /* 4. अभियान की अपनी पुस्तिका से */
+    if(c.kosh){
+      var kb=el('div','answer');
+      kb.appendChild(el('div','src','पुस्तिका से · '+esc(c.kosh.t)+' · पन्ना '+c.kosh.p));
+      if(c.kosh.h) kb.appendChild(el('p',null,'<b>'+esc(c.kosh.h)+'</b>'));
+      kb.appendChild(el('p',null,esc(c.kosh.x)));
+      out.appendChild(kb);
+      out.appendChild(el('p','note','यह अभियान की अपनी पुस्तिका का पाठ है, जस का तस। '+
+        'मशीन ने इसे बनाया नहीं, सिर्फ़ ढूँढकर पढ़ा है। पूरी पुस्तिका '+
+        '<a href="../sansadhan.html">सामग्री केंद्र</a> में है।'));
+      rayDikhao('पुस्तिका : '+(c.kosh.t||'')+' पन्ना '+(c.kosh.p||''));
+      say((c.kosh.h? c.kosh.h+'। ':'')+c.kosh.x);
+      return;
+    }
+
+    /* 4. लिखा हुआ मंज़ूर जवाब */
+    var J = jawabKa(c.id);
+    if(J){
+      var b=el('div','answer');
+      /* मंज़ूर जवाब पर पुस्तिका और पन्ना दिखता है, ताकि पढ़ने वाला चाहे तो
+         ख़ुद पुस्तिका में वही जगह देख ले। नमूने के जवाब पर वह नहीं दिखता,
+         क्योंकि उसका कोई पन्ना नहीं है। */
+      /* 12 नवंबर 2026 : पर्दे पर छोटा आधार (J.srot) दिखता है, पूरा नहीं।
+         स्रोतों से बने जवाबों का पूरा हवाला अंग्रेज़ी नाम और लंबे URL का
+         होता है; वह गाँव के आदमी के किसी काम का नहीं और पर्दा भर देता है।
+         पूरा हवाला jawab.json में J.src में ज्यों का त्यों पड़ा है, ताकि
+         जाँचने वाला उसे देख सके। */
+      b.appendChild(el('div','src', J.namuna ? ('नमूना · '+(c.id||''))
+        : ((J.srot || J.src || 'अभियान की पुस्तिका')+' · '+(c.id||''))));
+      b.appendChild(el('p',null,J.a));
+      out.appendChild(b);
+      if(J.namuna){
+        out.appendChild(el('p','note','यह जवाब नमूने के लिए लिखा गया है। असली जवाब केंद्र से मंज़ूर होकर आएगा।'));
+      } else if(J.by){
+        /* 12 नवंबर 2026 : पहले यहाँ मंज़ूर करने वाले का पूरा नाम छपता था।
+           अब सिर्फ़ केंद्र का नाम और तारीख़ दिखती है। किसी व्यक्ति का नाम
+           पर्दे पर नहीं जाता। जवाबदेही का रिकॉर्ड jawab.json के `by` में
+           ज्यों का त्यों है, और check.py उसे अब भी ज़रूरी मानता है : बिना
+           नाम और तारीख़ का जवाब साइट पर चढ़ ही नहीं सकता। */
+        out.appendChild(el('p','note','यह जवाब नई किरण नशा मुक्ति केंद्र से मंज़ूर है'+(J.on? ', '+esc(J.on):'')+'।'));
+      }
+      rayDikhao(c.id||'');
+      say(J.a);
+      return;
+    }
+
+
+    /* यहाँ पहले एक दूसरी खोज चलती थी : सूची का सवाल लेकर पुस्तिकाओं में
+       ढूँढ़ो और जो मिले वह सुना दो। वह हटा दी गई है, दो वजहों से।
+
+       पहली, वह खोज आदमी के अपने शब्दों से नहीं, सूची के सवाल से चलती थी।
+       तो मिलान पहले ही ग़लत हो चुका हो तो जवाब उस सवाल का आता था जो आदमी
+       ने पूछा ही नहीं। नापकर देखा गया : "क्या भांग नुकसान करती है" पर
+       मशीन ने पुस्तिका के पन्ना 27 का हवाला देकर औरतों के बारे में एक
+       अंश सुना दिया।
+
+       दूसरी, पुस्तिका का अंश सुनाने से पहले हमेशा दोबारा पूछा जाता है
+       कि "पुस्तिका में यह लिखा है, सुनाऊँ?"। यह रास्ता वह पूछे बिना ही
+       सुना देता था, और हवाले के साथ, यानी सबसे भरोसेमंद रूप में।
+
+       अब जिस सवाल का मंज़ूर जवाब नहीं है, उस पर साफ़ कह दिया जाता है। */
+
+    var n=el('div','caut');
+    n.appendChild(el('h2',null,'इस सवाल का जवाब अभी लिखा नहीं गया'));
+    n.appendChild(el('p',null,'यह सवाल कोश में है, पर इसका मंज़ूर जवाब अभी तैयार नहीं हुआ। मैं अपने मन से जवाब नहीं बनाऊँगा।'));
+    n.appendChild(el('p',null,'<b>14446</b> नशा मुक्ति हेल्पलाइन पर बात कीजिए, या नई किरण नशा मुक्ति केंद्र, राजकीय डूंगर महाविद्यालय, बीकानेर आइए।'));
+    out.appendChild(n);
+    out.appendChild(linesBox());
+    say('इस सवाल का मंज़ूर जवाब अभी तैयार नहीं हुआ। मैं अपने मन से जवाब नहीं बनाऊँगा। '+
+        'चौदह हज़ार चार सौ छियालीस पर बात कीजिए।');
+  }
+
+  /* ---------- नीचे की समझाइश ---------- */
+  /* 12 नवंबर 2026 : यहाँ "यह पन्ना क्या है" वाली सत्रह पंक्तियों की सूची
+     थी, जो पन्ने की हर ख़ूबी गिनाती थी। वह भीतर के काम की चीज़ थी, गाँव के
+     आदमी के किसी काम की नहीं, और हर बदलाव पर पुरानी भी पड़ती जाती थी।
+     हटा दी गई। जो बातें आदमी को सचमुच जाननी चाहिए (मशीन है, उम्र का फाटक,
+     सवाल कहीं नहीं जाता) वे पहले पर्दे पर पहले से कही जाती हैं। */
+  var l2=$('lines2'); var lb=linesBox(); while(lb.firstChild) l2.appendChild(lb.firstChild);
+
+  /* ---------- तैयारी ----------
+
+     12 नवंबर 2026 : यह चेतावनी एक असली Android फ़ोन पर ग़लत दिख रही थी।
+     पहले यह पन्ना खुलते ही getVoices() देखकर तय कर लेती थी। पर Android
+     के Chrome में वह सूची पन्ना खुलने के वक़्त अक्सर ख़ाली होती है और
+     थोड़ी देर बाद भरती है, कभी-कभी पहली बार बोलने के बाद ही।
+
+     इससे भी बड़ी बात : say() हर बार lang='hi-IN' भेजता है, इसलिए सूची
+     ख़ाली होने पर भी आवाज़ अक्सर चल जाती है। यानी सूची देखकर यह तय करना
+     ही ग़लत तरीक़ा था।
+
+     अब फ़ैसला सचमुच बोलकर होता है :
+       1. चेतावनी शुरू में दिखती ही नहीं
+       2. सूची तीन सेकंड तक बार-बार पढ़ी जाती है
+       3. आवाज़ एक बार चल गई तो चेतावनी पक्की तौर पर हट जाती है
+       4. पहली बार बोलने पर ढाई सेकंड में कुछ न बोला गया, या गड़बड़ हुई,
+          तभी चेतावनी दिखती है */
+  function awazKaFaisla(chaliHai){
+    var box=$('awaz-nahi'); if(!box) return;
+    if(chaliHai){ awazChali=true; box.hidden=true; return; }
+    if(awazChali) return;              // एक बार चल चुकी है, चेतावनी मत दिखाइए
+    box.hidden=false;
+  }
+
+  if(window.speechSynthesis){
+    state.voice=pickVoice();
+    speechSynthesis.onvoiceschanged=function(){ if(!state.voice) state.voice=pickVoice(); };
+    /* Android पर सूची देर से भरती है। तीन सेकंड तक झाँकते रहिए। */
+    (function(){
+      var baar=0;
+      var t=setInterval(function(){
+        if(!state.voice) state.voice=pickVoice();
+        if(state.voice || ++baar>=6) clearInterval(t);
+      }, 500);
+    }());
+  } else {
+    /* ब्राउज़र में बोलने की सुविधा ही नहीं। यह पक्का है, इसलिए अभी दिखाइए। */
+    $('awaz-nahi').hidden=false;
+  }
+  raySangrah();
+  show('s-start');
+  status('कोश पढ़ा जा रहा है');
+  $('b-start').disabled=true;
+  /* साथी को बंद करना। Apps Script से हालत पूछी जाती है, एक बार, पन्ना
+     खुलते वक़्त। script न मिले या देर करे तो साथी चलता रहता है : उसके
+     जवाब पहले से मंज़ूर होकर इसी पन्ने में रखे हैं, और इंटरनेट की एक
+     झिझक पर मदद का रास्ता बंद कर देना ज़्यादा बड़ा नुक़सान है। */
+  function bandKaro(sandesh){
+    state.band=true;
+    try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+    $('band-sandesh').textContent = sandesh ||
+      'संकल्प साथी अभी बंद है। नशे से जुड़ी किसी भी बात के लिए 14446 पर बात कीजिए।';
+    var lb=$('band-lines'); lb.innerHTML=''; lb.appendChild(linesBox());
+    ['s-start','s-age','s-home','s-list','s-confirm','s-out'].forEach(function(x){ $(x).hidden=true });
+    $('s-band').hidden=false;
+    status('बंद है');
+    window.scrollTo({top:0});
+  }
+  (function haalatPoochho(){
+    if(!window.AbortController || !window.fetch) return;
+    var ac=new AbortController();
+    var ghanti=setTimeout(function(){ ac.abort() }, 5000);
+    fetch(ENDPOINT+'?saathi=1', {signal:ac.signal, cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : null })
+      .then(function(d){ if(d && d.band===true) bandKaro(d.sandesh) })
+      .catch(function(){ /* हालत नहीं मिली, साथी चलता रहेगा */ })
+      .then(function(){ clearTimeout(ghanti) });
+  })();
+
+  Promise.all([
+    fetch('bank.json', {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),
+    fetch('ped.json',  {cache:'no-cache'}).then(function(r){ if(!r.ok) throw 0; return r.json() }),
+    fetch('roop.json', {cache:'no-cache'}).then(function(r){ return r.ok? r.json() : {} }).catch(function(){ return {} }),
+    fetch('jawab.json',{cache:'no-cache'}).then(function(r){ return r.ok? r.json() : [] }).catch(function(){ return [] })
+  ])
+    .then(function(dono){
+      BANK=dono[0]; PED=dono[1]; ROOP=dono[2]||{};
+      (dono[3]||[]).forEach(function(j){ if(j && j.id && j.a) MANZOOR[j.id]=j });
+      index(); $('b-start').disabled=false; status('तैयार');
+      return fetch('kosh.json', {cache:'default'})
+        .then(function(r){ if(!r.ok) throw 0; return r.json() })
+        .then(function(k){ KOSH=k; indexKosh(); });
+    })
+    .catch(function(){
+      status('कोश नहीं खुला');
+      $('b-start').disabled=false;
+      $('b-start').textContent='कोश नहीं खुला, दोबारा खोलिए';
+    });
+})();
+</script>
+</body>
+</html>
