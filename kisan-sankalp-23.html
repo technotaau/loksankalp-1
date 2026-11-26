@@ -261,6 +261,12 @@
           <input type="text" id="k-naam" name="naam" autocomplete="name" required>
         </div>
         <div class="field">
+          <label for="k-sadasya">आपके सहित उपवास करने वाले परिवार के कुल सदस्य <span aria-hidden="true">*</span></label>
+          <input type="number" id="k-sadasya" name="upvaasSadasya" inputmode="numeric" min="1" max="20" step="1" required
+                 aria-describedby="k-sadasya-hint">
+          <span class="hint" id="k-sadasya-hint">अपने आप को भी गिनिए। अकेले उपवास रख रहे हैं तो 1 लिखिए।</span>
+        </div>
+        <div class="field">
           <label for="k-mobile">संपर्क मोबाइल नंबर <span aria-hidden="true">*</span></label>
           <input type="tel" id="k-mobile" name="mobile" autocomplete="tel" inputmode="numeric" required aria-describedby="k-mobile-hint">
           <span class="hint" id="k-mobile-hint">यह सार्वजनिक नहीं होता। आयोजन समन्वय के लिए रखा जाता है।</span>
@@ -770,6 +776,7 @@
     </div>
     <div class="counters">
       <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-users"></use></svg><b data-stat="kisan23Vyakti" data-count="0" data-loading>0</b><span>पंजीकृत व्यक्ति</span></div>
+      <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-parenting"></use></svg><b data-stat="kisan23UpvaasSadasya" data-count="0" data-loading>0</b><span>उपवास करने वाले सदस्य</span></div>
       <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-village"></use></svg><b data-stat="kisan23Gaon" data-count="0" data-loading>0</b><span>गाँव / शहर</span></div>
       <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-pin"></use></svg><b data-stat="kisan23Jile" data-count="0" data-loading>0</b><span data-jile-label>जुड़े हुए जिले</span></div>
       <div class="counter"><svg aria-hidden="true"><use href="assets/img/icons.svg#ic-calendar"></use></svg><b data-stat="kisan23Aayojan" data-count="0" data-loading>0</b><span>दर्ज आयोजन</span></div>

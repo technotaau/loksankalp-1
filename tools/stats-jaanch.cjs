@@ -57,9 +57,9 @@ tab(F.atithyaGram, [
 
 // किसान संकल्प 23
 tab(F.kisan23, [
-  {regNo:'KS23-0001', naam:'च', mobile:'9', gaon:'धीरेरां', jila:'बीकानेर'},
-  {regNo:'KS23-0002', naam:'छ', mobile:'9', gaon:'Dhirera', jila:'बीकानेर'},  // अलग हिज्जे, अलग गाँव
-  {regNo:'KS23-0003', naam:'ज', mobile:'9', gaon:'मंडी',   rajya:'पंजाब'},
+  {regNo:'KS23-0001', naam:'च', mobile:'9', gaon:'धीरेरां', jila:'बीकानेर', upvaasSadasya:5},
+  {regNo:'KS23-0002', naam:'छ', mobile:'9', gaon:'Dhirera', jila:'बीकानेर', upvaasSadasya:''},  // ख़ाली -> 1
+  {regNo:'KS23-0003', naam:'ज', mobile:'9', gaon:'मंडी',   rajya:'पंजाब',  upvaasSadasya:'तीन'}, // बेतुका -> 1
 ]);
 tab(F.kisan23Aayojan, [
   {regNo:'KS23A-0001', aayojanNaam:'धीरेरां ग्राम आयोजन', prakar:'गाँव', gaon:'धीरेरां',
@@ -76,7 +76,8 @@ const चाहिए = { atithyaVyakti:1, atithyaParivar:4, atithyaParivarVayas
                 atithyaJile:3,             // बीकानेर, जोधपुर, चूरू
                 atithyaRajya:2,            // पंजाब + राजस्थान (क्योंकि जिले हैं)
                 atithyaKulVyakti:289,      // 1 + 8 + 280
-                kisan23Vyakti:3, kisan23Aayojan:2,
+                kisan23Vyakti:3, kisan23UpvaasSadasya:7,   // 5 + 1 + 1
+                kisan23Aayojan:2,
                 kisan23UpvaasAnumanit:120,   // ख़ाली वाला शून्य ही रहता है
                 kisan23SahyogAnumanit:110,   // 80 + 30
                 kisan23Gaon:4,             // धीरेरां, dhirera, मंडी, नोखा

@@ -49,7 +49,7 @@ var MAX_SABHA_SANKHYA = 50000;
 // at runtime; the two are simply the same rule stated on both sides, and the
 // form must not let through what this refuses to count.
 var MAX_UPVAAS_SADASYA = 9;
-var CODE_VERSION = 40;          // bump when this file changes; shown in every response
+var CODE_VERSION = 41;          // bump when this file changes; shown in every response
 
 // ---- संकल्प साथी का बंद करने का स्विच ------------------------------------
 //
@@ -188,7 +188,7 @@ var FORMS = {
      दो सौ पंजीकरण नहीं है। मसौदे में भी यही लिखा है। */
   kisan23: { must: ['naam', 'mobile', 'gaon', 'vayask', 'sahmati'],
               tab: 'किसान संकल्प 23', regPrefix: 'KS23',
-              fields: ['regNo', 'naam', 'mobile', 'gaon', 'block', 'jila',
+              fields: ['regNo', 'naam', 'upvaasSadasya', 'mobile', 'gaon', 'block', 'jila',
                        'rajya', 'desh', 'deshAnya', 'vayask', 'sahmati',
                        'naamSarvajanik'] },
 
@@ -1112,6 +1112,19 @@ function computeStats() {
   k23Jagah(FORMS.kisan23, k23Rows);
   k23Jagah(FORMS.kisan23Aayojan, k23aRows);
 
+  /* सपरिवार उपवास रखने वाले कुल सदस्य। 26 नवंबर 2026 को यह खाना फ़ॉर्म में
+     जोड़ा गया, इसलिए उससे पहले की पंक्तियों में यह ख़ाली है। ख़ाली, शून्य या
+     बेतुकी संख्या पर एक गिना जाता है : जिसने पंजीकरण कराया वह तो उपवास रख
+     ही रहा है। यही नियम इंकलाब 28 के परिवारों पर भी लगता है।
+
+     यह kisan23Vyakti से अलग संख्या है : वह पंजीकरणों की गिनती है, यह उन
+     पंजीकरणों से जुड़े लोगों की। दोनों अलग भेजी जाती हैं। */
+  var k23UpvaasSadasya = 0;
+  var k23SIdx2 = colOf(ss, FORMS.kisan23, 'upvaasSadasya');
+  k23Rows.forEach(function (r) {
+    k23UpvaasSadasya += (k23SIdx2 >= 0 ? count(r[k23SIdx2]) : 0) || 1;
+  });
+
   var k23UpvaasAnumanit = 0, k23SahyogAnumanit = 0;
   var k23UIdx = colOf(ss, FORMS.kisan23Aayojan, 'upvaasAnumanit');
   var k23SIdx = colOf(ss, FORMS.kisan23Aayojan, 'sahyogAnumanit');
@@ -1299,6 +1312,7 @@ function computeStats() {
        अनुमानित वाले दोनों खाने संयोजकों के बताए अनुमान हैं। इन्हें
        kisan23Vyakti के साथ जोड़कर कोई "कुल" नहीं बनाया जाता। */
     kisan23Vyakti:          k23Rows.length,
+    kisan23UpvaasSadasya:   k23UpvaasSadasya,
     kisan23Aayojan:         k23aRows.length,
     kisan23UpvaasAnumanit:  k23UpvaasAnumanit,
     kisan23SahyogAnumanit:  k23SahyogAnumanit,
